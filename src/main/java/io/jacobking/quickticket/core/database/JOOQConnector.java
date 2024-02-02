@@ -1,2 +1,4 @@
-package io.jacobking.quickticket.core.database;public class JOOQConnector {
+package io.jacobking.quickticket.core.database;
+
+public class JOOQConnector {
 }

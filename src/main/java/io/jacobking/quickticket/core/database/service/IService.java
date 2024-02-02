@@ -1,2 +1,4 @@
-package io.jacobking.quickticket.core.database.service;public interface IService {
+package io.jacobking.quickticket.core.database.service;
+
+public interface IService {
 }
