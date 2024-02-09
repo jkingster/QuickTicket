@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 public class DashboardController extends Controller {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println();
     }
 
 }

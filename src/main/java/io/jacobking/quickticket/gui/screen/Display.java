@@ -1,26 +1,35 @@
 package io.jacobking.quickticket.gui.screen;
 
 
-import javafx.stage.Stage;
+import io.jacobking.quickticket.gui.data.DataRelay;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Display {
+    private static final Display instance = new Display();
     private static final String SCREEN_PACKAGE = "io.jacobking.quickticket.gui.screen.impl.%sScreen";
     private final Map<Route, Screen> screens = new HashMap<>();
 
-    public Display() {
+    private Display() {
         loadScreens();
     }
 
-    public void show(final Route route) {
+    public static Display getInstance() {
+        return instance;
+    }
+
+    public static void show(final Route route, final DataRelay dataRelay) {
+        getInstance().showRoute(route, dataRelay);
+    }
+
+    public void showRoute(final Route route, final DataRelay dataRelay) {
         final Screen screen = screens.get(route);
         if (screen == null) {
-            return;
+            throw new RuntimeException("Failed to load screen: " + route.getName());
         }
-        screen.show();
+        screen.display(dataRelay);
     }
 
     public void close(final Route route) {
@@ -41,9 +50,7 @@ public class Display {
             final String className = SCREEN_PACKAGE.formatted(target.getName());
             final Class<?> clazz = loadClass(className);
             final Constructor<?> constructor = loadConstructor(clazz);
-            final Screen screen = newScreenInstance(constructor);
-            screen.setStage(new Stage());
-            return screen;
+            return newScreenInstance(constructor);
         });
     }
 
@@ -57,7 +64,7 @@ public class Display {
 
     private Constructor<?> loadConstructor(final Class<?> clazz) {
         try {
-            return clazz.getConstructor(Display.class);
+            return clazz.getConstructor();
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +72,7 @@ public class Display {
 
     private Screen newScreenInstance(final Constructor<?> constructor) {
         try {
-            return (Screen) constructor.newInstance(this);
+            return (Screen) constructor.newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

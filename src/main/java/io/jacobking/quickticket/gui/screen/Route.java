@@ -2,7 +2,8 @@ package io.jacobking.quickticket.gui.screen;
 
 public enum Route {
 
-    DASHBOARD("Dashboard");
+    DASHBOARD("Dashboard"),
+    VIEWER("Viewer");
 
     private static final Route[] VALUES = values();
     private static final String BASE_PATH = "fxml/%s";

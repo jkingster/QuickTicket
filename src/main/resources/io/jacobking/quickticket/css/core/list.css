@@ -1,0 +1,21 @@
+@import url("base.css");
+
+.ticket-list-view {
+    -fx-background-color: derive(-fx-primary, 25%);
+}
+
+.ticket-list-view .list-cell {
+    -fx-background-color: derive(-fx-primary, 25%);
+}
+
+.ticket-list-view .list-cell .label {
+    -fx-text-fill: white;
+}
+
+.ticket-list-view .list-cell:hover {
+    -fx-background-color: -fx-primary;
+}
+
+.ticket-list-view .list-cell:selected {
+    -fx-background-color: -fx-primary;
+}

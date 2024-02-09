@@ -1,0 +1,47 @@
+@import url("base.css");
+
+.tab-pane {
+    -fx-tab-min-height: 2em;
+    -fx-tab-max-height: 2em;
+
+    -fx-tab-min-width: 5em;
+    -fx-tab-max-width: 5em;
+}
+
+.tab {
+    -fx-background-color: -fx-primary;
+}
+
+.tab .tab-label {
+    -fx-font-weight: bolder;
+    -fx-alignment: center;
+    -fx-text-fill: -fx-typography;
+    -fx-font-size: 1em;
+}
+
+.tab-pane:top > .tab-header-area > .tab-header-background {
+    -fx-background-color: derive(-fx-primary, 25%);
+}
+
+.tab-pane .tab-header-area {
+    -fx-padding: 10 25 0 20;
+}
+
+.tab:selected {
+    -fx-focus-color: transparent;
+    -fx-border-color: -fx-foreground;
+    -fx-border-style: hidden hidden hidden hidden;
+    -fx-border-width: 2px;
+    -fx-background-color: derive(-fx-primary, 80%);
+    -fx-text-fill: -fx-typography;
+}
+
+.tab:hover {
+    -fx-cursor: hand;
+    -fx-background-color: derive(-fx-primary, 80%);
+    -fx-text-fill: -fx-primary;
+}
+
+.tab:hover .tab-label {
+    -fx-text-fill: -fx-primary;
+}

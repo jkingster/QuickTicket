@@ -7,7 +7,7 @@ import io.jacobking.quickticket.gui.screen.Screen;
 import javafx.stage.Modality;
 
 public class DashboardScreen extends Screen {
-    public DashboardScreen(final Display display) {
-        super(display, Route.DASHBOARD, Modality.NONE, new DashboardController());
+    public DashboardScreen() {
+        super(Route.DASHBOARD, Modality.NONE, new DashboardController());
     }
 }

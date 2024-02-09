@@ -2,6 +2,7 @@ package io.jacobking.quickticket.gui.screen;
 
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.gui.controller.Controller;
+import io.jacobking.quickticket.gui.data.DataRelay;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -10,70 +11,89 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Screen {
+
     private static final String TITLE = "QuickTicket";
-    private final Display display;
     private final Route route;
     private final Modality modality;
-    private final Controller baseController;
-    private final FXMLLoader loader;
-
+    private FXMLLoader loader;
     private Stage stage;
+    private Scene scene;
+    private Controller controller;
 
-    public Screen(final Display display, final Route route, final Modality modality, final Controller baseController) {
-        this.display = display;
+    public Screen(Route route, Modality modality, Controller controller) {
         this.route = route;
         this.modality = modality;
-        this.baseController = baseController;
-        this.loader = getLoader();
-        initializeController();
+        this.controller = controller;
     }
 
-    public void show() {
-        if (stage != null) {
-            stage.show();
-        }
+    public Screen(Route route, Modality modality) {
+        this(route, modality, null);
+    }
+
+    public void display(final DataRelay dataRelay) {
+        configure();
+        show();
     }
 
     public void close() {
-        if (stage != null) {
+        if (this.stage != null) {
             stage.hide();
         }
     }
 
-    public void setStage(final Stage stage) {
-        this.stage = stage;
-        initializeStageDefaults();
-    }
-
-    private void initializeController() {
-        if (baseController != null) {
-            baseController.setDisplay(display);
-            loader.setController(baseController);
+    public void initializeController() {
+        if (this.controller != null) {
+            setController(controller);
         }
     }
 
-    private void initializeStageDefaults() {
-        if (stage == null) {
+    public void setController(final Controller controller) {
+        if (controller == null) {
             return;
         }
-        stage.centerOnScreen();
-        stage.setResizable(false);
-        stage.initModality(modality);
-        stage.setTitle(TITLE);
 
-        loadScene();
+        final FXMLLoader loader = setAndGetLoader();
+        this.controller = controller;
+        loader.setController(controller);
     }
 
-    private void loadScene() {
+    private void configure() {
+        initializeController();
+        initializeScene();
+
+        if (scene != null) {
+            initializeStageDefaults();
+        }
+    }
+
+    private void initializeScene() {
         try {
-            stage.setScene(new Scene(loader.load()));
+            this.scene = new Scene(loader.load());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private FXMLLoader getLoader() {
-        final String path = route.getPath();
-        return new FXMLLoader(App.class.getResource(path));
+    private void show() {
+        if (this.stage != null) {
+            stage.show();
+        }
     }
+
+    private void initializeStageDefaults() {
+        this.stage = new Stage();
+        stage.initModality(modality);
+        stage.setTitle(TITLE);
+        stage.centerOnScreen();
+        stage.setResizable(false);
+        stage.setScene(scene);
+    }
+
+    private FXMLLoader setAndGetLoader() {
+        final String path = route.getPath();
+        this.loader = new FXMLLoader(App.class.getResource(path));
+        return loader;
+    }
+
+
 }

@@ -36,8 +36,7 @@ javafx {
 
 dependencies {
   implementation('org.controlsfx:controlsfx:11.1.2')
-
-
+  implementation group: 'com.h2database', name: 'h2', version: '2.2.224'
 }
 
 jlink {
