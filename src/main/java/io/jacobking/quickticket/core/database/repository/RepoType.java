@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.core.database.repository;
 
+
 import io.jacobking.quickticket.core.database.repository.impl.TicketRepository;
 
 public enum RepoType {

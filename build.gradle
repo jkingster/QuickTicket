@@ -73,7 +73,7 @@ jooq {
 
   configurations {
     main {  // name of the jOOQ configuration
-      generateSchemaSourceOnCompilation = true  // default (can be omitted)
+      generateSchemaSourceOnCompilation = false  // default (can be omitted)
 
       generationTool {
         logging = Logging.WARN
@@ -117,7 +117,7 @@ task postProcessGeneratedPojos {
 
       // Append extends your base class
       // Append extends your base class and import statement
-      content = content.replaceAll('public class (\\w+)\\b', 'import io.jacobking.quickticket.core.database.Entity;\n\npublic class $1 extends Entity')
+      content = content.replaceAll('public class (\\w+)\\b', 'import io.jacobking.quickticket.core.database.repository.Entity;\n\npublic class $1 extends Entity')
 
       // Remove @SuppressWarnings annotation
       content = content.replaceAll('@SuppressWarnings\\(\\{.*?\\}\\)', '')

@@ -9,8 +9,6 @@ import io.jacobking.quickticket.gui.model.impl.UserModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -23,25 +21,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TicketController extends Controller {
-    private final ObservableList<TicketModel> tickets = FXCollections.observableArrayList(
-            new TicketModel(
-                    0,
-                    "This is a testing title. This is a testing title. This is a testing title. This is a testing title.",
-                    StatusType.OPEN,
-                    PriorityType.HIGH,
-                    new UserModel(0, "Jacob King"),
-                    "02/04/2000"
-            ),
-            new TicketModel(
-                    1,
-                    "This is a testing title. This is a testing title. This is a testing title. This is a testing title.",
-                    StatusType.OPEN,
-                    PriorityType.LOW,
-                    new UserModel(0, "Jacob King"),
-                    "02/04/2000"
-            )
-    );
-
 
     @FXML
     private TableView<TicketModel> ticketTable;
@@ -66,8 +45,6 @@ public class TicketController extends Controller {
     }
 
     private void configureTable() {
-        ticketTable.setItems(tickets);
-
         handleIndicatorColumn();
         handleActionsColumn();
         titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
@@ -75,6 +52,8 @@ public class TicketController extends Controller {
         priorityColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
         userColumn.setCellValueFactory(data -> data.getValue().userProperty());
         createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
+
+        ticketTable.setItems(ticket.getObservableList());
     }
 
     private void handleIndicatorColumn() {
@@ -107,6 +86,7 @@ public class TicketController extends Controller {
         if (ticketModel == null) {
             return;
         }
+        ticket.remove(ticketModel.getId());
     }
 
     private void onOpen(final TicketModel ticketModel) {

@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.model.impl;
 
+import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.gui.model.ViewModel;
@@ -24,6 +25,17 @@ public class TicketModel extends ViewModel<Ticket> {
         this.priorityProperty.setValue(priorityType);
         this.userProperty.setValue(userModel);
         this.createdProperty.setValue(created);
+    }
+
+    public TicketModel(final Ticket ticket) {
+        this(
+                ticket.getId(),
+                ticket.getTitle(),
+                StatusType.of(ticket.getStatus()),
+                PriorityType.of(ticket.getPriority()),
+                null, // change later
+                ticket.getCreatedOn()
+        );
     }
 
     public String getTitle() {

@@ -10,7 +10,6 @@ import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class RepoCrud {
-
     private final Map<RepoType, Repository<? extends Entity>> repositoryMap = new HashMap<>();
     private final DSLContext context;
 
@@ -47,7 +46,7 @@ public class RepoCrud {
         return (Repository<T>) repositoryMap.getOrDefault(repoType, null);
     }
 
-    private <T> void loadRepositories() {
+    private <T extends Entity> void loadRepositories() {
         for (RepoType value : RepoType.values()) {
             repositoryMap.computeIfAbsent(value, type -> switch (type) {
                 case TICKET -> (Repository<? extends Entity>) new TicketRepository();
