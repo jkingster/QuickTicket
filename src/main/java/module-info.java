@@ -4,7 +4,9 @@ module io.jacobking.quickticket {
     requires java.sql;
 
     requires org.controlsfx.controls;
-    requires com.h2database;
+    requires org.jooq;
+    requires org.apache.commons.io;
+    requires org.xerial.sqlitejdbc;
 
     opens io.jacobking.quickticket to javafx.fxml;
     exports io.jacobking.quickticket;

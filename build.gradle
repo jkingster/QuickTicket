@@ -4,6 +4,7 @@ plugins {
   id 'org.javamodularity.moduleplugin' version '1.8.12'
   id 'org.openjfx.javafxplugin' version '0.0.13'
   id 'org.beryx.jlink' version '2.25.0'
+  id 'nu.studer.jooq' version '8.2'
 }
 
 group 'io.jacobking'
@@ -34,9 +35,19 @@ javafx {
   modules = ['javafx.controls', 'javafx.fxml']
 }
 
+sourceSets {
+  main {
+    java {
+      srcDirs += 'build/generated-src/jooq'
+    }
+  }
+}
+
 dependencies {
   implementation('org.controlsfx:controlsfx:11.1.2')
-  implementation group: 'com.h2database', name: 'h2', version: '2.2.224'
+  implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+  implementation group: 'commons-io', name: 'commons-io', version: '2.15.0'
+  jooqGenerator 'org.xerial:sqlite-jdbc:3.42.0.0'
 }
 
 jlink {
@@ -50,3 +61,74 @@ jlink {
 jlinkZip {
   group = 'distribution'
 }
+
+import nu.studer.gradle.jooq.JooqEdition
+import org.jooq.meta.jaxb.Logging
+
+def generatedSourcesDir = file("${buildDir}/generated-src/jooq")
+
+jooq {
+  version = '3.18.6'  // default (can be omitted)
+  edition = JooqEdition.OSS  // default (can be omitted)
+
+  configurations {
+    main {  // name of the jOOQ configuration
+      generateSchemaSourceOnCompilation = true  // default (can be omitted)
+
+      generationTool {
+        logging = Logging.WARN
+        jdbc {
+          driver = 'org.sqlite.JDBC'
+          url = 'jdbc:sqlite:development.db'
+        }
+        generator {
+          name = 'org.jooq.codegen.DefaultGenerator'
+          database {
+            name = 'org.jooq.meta.sqlite.SQLiteDatabase'
+          }
+          generate {
+            deprecated = false
+            records = true
+            pojos = true
+            fluentSetters = true
+          }
+          target {
+            packageName = 'io.jacobking.quickticket'
+            directory = '/build/generated-src/jooq'
+          }
+          strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+        }
+      }
+    }
+  }
+}
+
+task postProcessGeneratedPojos {
+  dependsOn generateJooq
+
+  doLast {
+    // Get the directory where POJOs are generated
+    def pojosDir = file("${generatedSourcesDir}/io/jacobking/quickticket/tables/pojos")
+
+    // Iterate through each generated file
+    pojosDir.eachFile { generatedFile ->
+      // Read the contents of the file
+      def content = generatedFile.text
+
+      // Append extends your base class
+      // Append extends your base class and import statement
+      content = content.replaceAll('public class (\\w+)\\b', 'import io.jacobking.quickticket.core.database.Entity;\n\npublic class $1 extends Entity')
+
+      // Remove @SuppressWarnings annotation
+      content = content.replaceAll('@SuppressWarnings\\(\\{.*?\\}\\)', '')
+
+      // Write the modified content back to the file
+      generatedFile.write(content)
+
+      // Write the modified content back to the file
+    }
+  }
+}
+
+// Make the compileJava task depend on postProcessGeneratedPojos
+compileJava.dependsOn(postProcessGeneratedPojos)

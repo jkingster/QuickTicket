@@ -1,0 +1,58 @@
+package io.jacobking.quickticket.core.database.repository;
+
+import io.jacobking.quickticket.core.database.repository.impl.TicketRepository;
+import org.jooq.Condition;
+import org.jooq.DSLContext;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@SuppressWarnings("unchecked")
+public class RepoCrud {
+
+    private final Map<RepoType, Repository<? extends Entity>> repositoryMap = new HashMap<>();
+    private final DSLContext context;
+
+    public RepoCrud(final DSLContext context) {
+        this.context = context;
+        loadRepositories();
+    }
+
+    public <T extends Entity> T getById(final RepoType type, final int id) {
+        return (T) getRepository(type).getById(context, id);
+    }
+
+    public <T extends Entity> T save(final RepoType type, final T value) {
+        return (T) getRepository(type).save(context, value);
+    }
+
+    public <T extends Entity> boolean delete(final RepoType type, final int id) {
+        return getRepository(type).delete(context, id);
+    }
+
+    public <T extends Entity> boolean update(final RepoType type, final T value) {
+        return getRepository(type).update(context, value);
+    }
+
+    public <T extends Entity> List<T> getAll(final RepoType type) {
+        return (List<T>) getRepository(type).getAll(context);
+    }
+
+    public <T extends Entity> List<T> getAll(final RepoType type, final Condition condition) {
+        return (List<T>) getRepository(type).getAll(context, condition);
+    }
+
+    private <T extends Entity> Repository<T> getRepository(final RepoType repoType) {
+        return (Repository<T>) repositoryMap.getOrDefault(repoType, null);
+    }
+
+    private <T> void loadRepositories() {
+        for (RepoType value : RepoType.values()) {
+            repositoryMap.computeIfAbsent(value, type -> switch (type) {
+                case TICKET -> (Repository<? extends Entity>) new TicketRepository();
+            });
+        }
+    }
+
+}

@@ -1,11 +1,16 @@
 package io.jacobking.quickticket.core;
 
-import io.jacobking.quickticket.gui.screen.Display;
-import io.jacobking.quickticket.gui.screen.Route;
+import io.jacobking.quickticket.core.database.Database;
 
 public class QuickTicket {
+
+    private final Config config;
+    private final Database database;
+
     private QuickTicket() {
-        Display.show(Route.DASHBOARD, null);
+        this.config = Config.getInstance();
+        this.database = new Database();
+        //Display.show(Route.DASHBOARD, null);
     }
 
     public static void launch() {

@@ -1,10 +1,9 @@
 package io.jacobking.quickticket.gui.model;
 
-import io.jacobking.quickticket.core.database.entity.Entity;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class ViewModel<T extends Entity> {
+public class ViewModel<T> {
 
     private final IntegerProperty idProperty = new SimpleIntegerProperty();
 

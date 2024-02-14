@@ -1,15 +1,15 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.core.database.entity.impl.TicketEntity;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.tables.pojos.Ticket;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class TicketModel extends ViewModel<TicketEntity> {
+public class TicketModel extends ViewModel<Ticket> {
 
     private final StringProperty titleProperty = new SimpleStringProperty();
     private final ObjectProperty<StatusType> statusProperty = new SimpleObjectProperty<>();

@@ -1,11 +1,11 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.core.database.entity.impl.UserEntity;
 import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class UserModel extends ViewModel<UserEntity> {
+public class UserModel extends ViewModel<Employee> {
 
     private final StringProperty fullNameProperty = new SimpleStringProperty();
 

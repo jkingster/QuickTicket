@@ -11,4 +11,11 @@ public final class Checks {
         }
     }
 
+    public static void notEmpty(final String string, final String name) {
+        notNull(string, name);
+        if (string.isEmpty()) {
+            throw new IllegalArgumentException(name + " cannot be empty!");
+        }
+    }
+
 }

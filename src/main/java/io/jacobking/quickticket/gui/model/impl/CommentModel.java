@@ -1,11 +1,12 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.core.database.entity.impl.CommentEntity;
+
 import io.jacobking.quickticket.gui.model.ViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.jooq.User;
 
-public class CommentModel extends ViewModel<CommentEntity> {
+public class CommentModel extends ViewModel<User> {
 
     private final StringProperty commentProperty = new SimpleStringProperty();
     private final StringProperty commentedOnProperty = new SimpleStringProperty();
@@ -14,6 +15,14 @@ public class CommentModel extends ViewModel<CommentEntity> {
         super(id);
         this.commentProperty.setValue(comment);
         this.commentedOnProperty.setValue(commentedOn);
+    }
+
+    public String getComment() {
+        return commentProperty.getValueSafe();
+    }
+
+    public String getCommentDate() {
+        return commentedOnProperty.getValueSafe();
     }
 
     public StringProperty commentProperty() {
