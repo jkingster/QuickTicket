@@ -5,7 +5,7 @@ import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
-import io.jacobking.quickticket.gui.model.impl.UserModel;
+import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.tables.pojos.Comment;
@@ -29,7 +29,7 @@ public class TicketCreatorController extends Controller {
     private ComboBox<PriorityType> priorityTypeComboBox;
 
     @FXML
-    private SearchableComboBox<UserModel> employeeComboBox;
+    private SearchableComboBox<EmployeeModel> employeeComboBox;
 
     @FXML
     private TextField titleField;

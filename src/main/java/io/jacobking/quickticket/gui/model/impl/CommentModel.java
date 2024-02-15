@@ -43,4 +43,8 @@ public class CommentModel extends ViewModel<Comment> {
     }
 
 
+    @Override
+    public Comment toEntity() {
+        throw new UnsupportedOperationException("CommentModel#toEntity() not supported!");
+    }
 }

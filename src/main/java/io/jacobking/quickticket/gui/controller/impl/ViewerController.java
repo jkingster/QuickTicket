@@ -94,7 +94,7 @@ public class ViewerController extends Controller {
             protected void updateItem(CommentModel commentModel, boolean b) {
                 super.updateItem(commentModel, b);
                 if (commentModel == null || b) {
-                    setText(null);
+                    setGraphic(null);
                     return;
                 }
 
@@ -102,7 +102,7 @@ public class ViewerController extends Controller {
                 VBox.setVgrow(vBox, Priority.ALWAYS);
 
                 final Label date = new Label(commentModel.getPostedOn());
-                date.setStyle(StyleCommons.COMMENT_DATE_LABEL);
+                date.setStyle(StyleCommons.COMMON_LABEL_STYLE);
 
                 final Text comment = new Text(commentModel.getPost());
                 comment.setWrappingWidth(commentList.getWidth() - date.getBoundsInLocal().getWidth() - COMMENT_OFFSET);

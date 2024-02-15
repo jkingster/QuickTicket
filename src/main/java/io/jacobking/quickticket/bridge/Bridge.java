@@ -2,7 +2,6 @@ package io.jacobking.quickticket.bridge;
 
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.Entity;
-import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.model.ViewModel;
 import javafx.application.Platform;
@@ -74,6 +73,10 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
         }
 
         return model;
+    }
+
+    public void update(final V model) {
+        Database.call().update(repoType, model.toEntity());
     }
 
     public void remove(final int id) {

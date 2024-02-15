@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.gui.model.ViewModel;
@@ -15,10 +14,10 @@ public class TicketModel extends ViewModel<Ticket> {
     private final StringProperty titleProperty = new SimpleStringProperty();
     private final ObjectProperty<StatusType> statusProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<PriorityType> priorityProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<UserModel> userProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<EmployeeModel> userProperty = new SimpleObjectProperty<>();
     private final StringProperty createdProperty = new SimpleStringProperty();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, UserModel userModel, String created) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, EmployeeModel userModel, String created) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
@@ -58,7 +57,7 @@ public class TicketModel extends ViewModel<Ticket> {
         return priorityProperty;
     }
 
-    public ObjectProperty<UserModel> userProperty() {
+    public ObjectProperty<EmployeeModel> userProperty() {
         return userProperty;
     }
 
@@ -75,5 +74,11 @@ public class TicketModel extends ViewModel<Ticket> {
                 ", userProperty=" + userProperty +
                 ", createdProperty=" + createdProperty +
                 '}';
+    }
+
+
+    @Override
+    public Ticket toEntity() {
+        return null; // todo: implement
     }
 }

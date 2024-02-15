@@ -7,7 +7,7 @@
 
 .card-header {
     -fx-font-weight: bolder;
-    -fx-font-size: 2em;
+    -fx-font-size: 1.5em;
     -fx-text-fill: -fx-typography;
 }
 

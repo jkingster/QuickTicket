@@ -5,7 +5,7 @@ import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
-import io.jacobking.quickticket.gui.model.impl.UserModel;
+import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
@@ -35,7 +35,7 @@ public class TicketController extends Controller {
     @FXML
     private TableColumn<TicketModel, PriorityType> priorityColumn;
     @FXML
-    private TableColumn<TicketModel, UserModel> userColumn;
+    private TableColumn<TicketModel, EmployeeModel> userColumn;
     @FXML
     private TableColumn<TicketModel, String> createdColumn;
 
@@ -83,6 +83,11 @@ public class TicketController extends Controller {
     @FXML
     private void onCreate() {
         Display.show(Route.TICKET_CREATOR, DataRelay.of(ticketTable));
+    }
+
+    @FXML
+    private void onManageEmployees() {
+        Display.show(Route.EMPLOYEE_MANAGER, null);
     }
 
     private void onDelete(final TicketModel ticketModel) {

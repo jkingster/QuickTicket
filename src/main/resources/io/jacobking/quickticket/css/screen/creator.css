@@ -5,11 +5,6 @@
     -fx-background-color: -fx-primary;
 }
 
-.text-field {
-    -fx-background-color: derive(-fx-primary, 25%);
-    -fx-text-fill: -fx-typography;
-    -fx-font-weight: bolder;
-}
 
 .text-area .content {
     -fx-background-color: derive(-fx-primary, 25%);

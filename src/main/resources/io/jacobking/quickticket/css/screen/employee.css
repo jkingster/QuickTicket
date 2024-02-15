@@ -1,0 +1,6 @@
+@import url("../core/base.css");
+@import url("../core/button.css");
+
+.body {
+    -fx-background-color: -fx-primary;
+}

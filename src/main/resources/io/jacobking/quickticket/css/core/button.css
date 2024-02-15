@@ -23,3 +23,15 @@
     -fx-background-color: derive(-fx-error, 40%);
     -fx-cursor: hand;
 }
+
+.button-success {
+    -fx-background-color: -fx-success;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+}
+
+.button-success:hover {
+    -fx-background-color: derive(-fx-success, 40%);
+    -fx-cursor: hand;
+}

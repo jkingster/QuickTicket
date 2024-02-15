@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1280.0" styleClass="body" stylesheets="@../css/screen/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.TicketController">
    <children>
@@ -21,14 +22,17 @@
             </Pane>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Last Viewed" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Last Viewed" textAlignment="CENTER" />
                   <Button layoutX="38.0" layoutY="50.0" mnemonicParsing="false" prefWidth="85.0" styleClass="b" text="Open" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="User Portal" textAlignment="CENTER" />
-                  <Button layoutX="38.0" layoutY="50.0" mnemonicParsing="false" prefWidth="85.0" styleClass="b" text="Manage" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="-3.0" prefHeight="53.0" prefWidth="141.0" styleClass="card-header" text="Employee Portal" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="10.0" />
+                     </font></Label>
+                  <Button layoutX="38.0" layoutY="50.0" mnemonicParsing="false" onAction="#onManageEmployees" prefWidth="85.0" styleClass="b" text="Manage" />
                </children>
             </Pane>
             <Separator orientation="VERTICAL" prefHeight="200.0" />
@@ -60,7 +64,7 @@
       </HBox>
       <AnchorPane layoutX="14.0" layoutY="102.0" prefHeight="627.0" prefWidth="1262.0">
          <children>
-            <TableView fx:id="ticketTable" layoutY="8.0" prefHeight="618.0" prefWidth="1262.0" stylesheets="@../css/core/table.css">
+            <TableView fx:id="ticketTable" layoutY="5.0" prefHeight="618.0" prefWidth="1262.0" stylesheets="@../css/core/table.css">
               <columns>
                   <TableColumn fx:id="indicatorColumn" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" resizable="false" />
                 <TableColumn fx:id="actionsColumn" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" resizable="false" text="Actions" />
