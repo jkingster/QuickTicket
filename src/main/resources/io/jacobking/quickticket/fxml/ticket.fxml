@@ -15,7 +15,7 @@
          <children>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Button layoutX="38.0" layoutY="49.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="85.0" text="Create" />
+                  <Button layoutX="38.0" layoutY="49.0" mnemonicParsing="false" onAction="#onCreate" prefHeight="25.0" prefWidth="85.0" text="Create" />
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Ticket" textAlignment="CENTER" />
                </children>
             </Pane>

@@ -52,10 +52,8 @@ public class TicketController extends Controller {
         priorityColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
         userColumn.setCellValueFactory(data -> data.getValue().userProperty());
         createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
-
         ticketTable.setItems(ticket.getObservableList());
     }
-
     private void handleIndicatorColumn() {
         indicatorColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
         indicatorColumn.setCellFactory(data -> new TableCell<>() {
@@ -80,6 +78,11 @@ public class TicketController extends Controller {
                 setGraphic(indicator);
             }
         });
+    }
+
+    @FXML
+    private void onCreate() {
+        Display.show(Route.TICKET_CREATOR, DataRelay.of(ticketTable));
     }
 
     private void onDelete(final TicketModel ticketModel) {

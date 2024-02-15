@@ -24,6 +24,10 @@ public class Display {
         getInstance().showRoute(route, dataRelay);
     }
 
+    public static void close(final Route route) {
+        getInstance().closeRoute(route);
+    }
+
     public void showRoute(final Route route, final DataRelay dataRelay) {
         final Screen screen = screens.get(route);
         if (screen == null) {
@@ -32,7 +36,7 @@ public class Display {
         screen.display(dataRelay);
     }
 
-    public void close(final Route route) {
+    public void closeRoute(final Route route) {
         final Screen screen = screens.get(route);
         if (screen == null)
             return;
