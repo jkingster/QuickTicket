@@ -8,6 +8,7 @@ import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.model.impl.UserModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
+import io.jacobking.quickticket.tables.pojos.Comment;
 import io.jacobking.quickticket.tables.pojos.Ticket;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -97,14 +98,29 @@ public class TicketCreatorController extends Controller {
     @FXML
     private void onCreate() {
         final String title = titleField.getText();
-        ticket.createModel(new Ticket()
+        final TicketModel newTicket = ticket.createModel(new Ticket()
                 .setTitle(title)
                 .setCreatedOn(DateUtil.now())
                 .setPriority(getPriority())
                 .setStatus(getStatus())
                 .setUserId(0)
         );
+
+        insertInitialComment(newTicket);
         Display.close(Route.TICKET_CREATOR);
+    }
+
+    private void insertInitialComment(final TicketModel ticketModel) {
+        final String initialComment = commentField.getText();
+        if (initialComment.isEmpty())
+            return;
+
+        final int ticketId = ticketModel.getId();
+        comment.createModel(new Comment()
+                .setTicketId(ticketId)
+                .setPost(initialComment)
+                .setPostedOn(DateUtil.nowWithTime())
+        );
     }
 
     @FXML

@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.core.database.repository;
 
+import io.jacobking.quickticket.core.database.repository.impl.CommentRepository;
 import io.jacobking.quickticket.core.database.repository.impl.TicketRepository;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -50,6 +51,7 @@ public class RepoCrud {
         for (RepoType value : RepoType.values()) {
             repositoryMap.computeIfAbsent(value, type -> switch (type) {
                 case TICKET -> (Repository<? extends Entity>) new TicketRepository();
+                case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
             });
         }
     }

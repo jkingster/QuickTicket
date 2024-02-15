@@ -5,6 +5,8 @@ import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.CommentModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.utility.StyleCommons;
+import io.jacobking.quickticket.tables.pojos.Comment;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
@@ -17,8 +19,11 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ViewerController extends Controller {
-
     private static final int COMMENT_OFFSET = 50;
+
+    private int ticketId;
+
+    private ObservableList<CommentModel> comments;
 
     @FXML
     private TextField titleField;
@@ -47,18 +52,17 @@ public class ViewerController extends Controller {
 
         configureComments();
         postButton.disableProperty().bind(commentField.textProperty().isEmpty());
-
     }
 
     @FXML
     private void onPost() {
-        final String date = DateUtil.now();
-        final String comment = commentField.getText();
+        comment.createModel(new Comment()
+                .setPost(commentField.getText())
+                .setPostedOn(DateUtil.nowWithTime())
+                .setTicketId(ticketId));
 
-        final CommentModel model = new CommentModel(commentList.getItems().size() - 1, comment, date);
-        commentList.getItems().add(model);
         commentField.clear();
-
+        commentList.refresh();
         scrollTo(commentList.getItems().size() - 1);
     }
 
@@ -74,6 +78,8 @@ public class ViewerController extends Controller {
     }
 
     private void populateData(final TicketModel ticketModel) {
+        this.ticketId = ticketModel.getId();
+        this.comments = comment.getComments(ticketId);
         titleField.setText(ticketModel.getTitle());
         userField.textProperty().bind(ticketModel.userProperty().asString());
         creationField.setText(String.format("Date: %s", ticketModel.getCreation()));
@@ -82,6 +88,7 @@ public class ViewerController extends Controller {
     }
 
     private void configureComments() {
+        commentList.setItems(comments);
         commentList.setCellFactory(data -> new ListCell<>() {
             @Override
             protected void updateItem(CommentModel commentModel, boolean b) {
@@ -94,10 +101,10 @@ public class ViewerController extends Controller {
                 final VBox vBox = new VBox();
                 VBox.setVgrow(vBox, Priority.ALWAYS);
 
-                final Label date = new Label(commentModel.getCommentDate());
+                final Label date = new Label(commentModel.getPostedOn());
                 date.setStyle(StyleCommons.COMMENT_DATE_LABEL);
 
-                final Text comment = new Text(commentModel.getComment());
+                final Text comment = new Text(commentModel.getPost());
                 comment.setWrappingWidth(commentList.getWidth() - date.getBoundsInLocal().getWidth() - COMMENT_OFFSET);
                 comment.setFill(Color.WHITE);
 
@@ -105,6 +112,7 @@ public class ViewerController extends Controller {
                 setGraphic(vBox);
             }
         });
+
     }
 
     private void scrollTo(final int commentIndex) {

@@ -2,35 +2,44 @@ package io.jacobking.quickticket.gui.model.impl;
 
 
 import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.jooq.User;
 
-public class CommentModel extends ViewModel<User> {
+public class CommentModel extends ViewModel<Comment> {
 
-    private final StringProperty commentProperty = new SimpleStringProperty();
-    private final StringProperty commentedOnProperty = new SimpleStringProperty();
 
-    public CommentModel(int id, String comment, String commentedOn) {
+    private final int ticketId;
+    private final StringProperty postProperty = new SimpleStringProperty();
+    private final StringProperty postedOnProperty = new SimpleStringProperty();
+
+    public CommentModel(final int id, final int ticketId, final String post, final String postedOn) {
         super(id);
-        this.commentProperty.setValue(comment);
-        this.commentedOnProperty.setValue(commentedOn);
+        this.ticketId = ticketId;
+        this.postProperty.setValue(post);
+        this.postedOnProperty.setValue(postedOn);
     }
 
-    public String getComment() {
-        return commentProperty.getValueSafe();
+    public CommentModel(final Comment comment) {
+        this(
+                comment.getId(),
+                comment.getTicketId(),
+                comment.getPost(),
+                comment.getPostedOn()
+        );
     }
 
-    public String getCommentDate() {
-        return commentedOnProperty.getValueSafe();
+    public int getTicketId() {
+        return ticketId;
     }
 
-    public StringProperty commentProperty() {
-        return commentProperty;
+    public String getPost() {
+        return postProperty.getValueSafe();
     }
 
-    public StringProperty commentedOnProperty() {
-        return commentedOnProperty;
+    public String getPostedOn() {
+        return postedOnProperty.getValueSafe();
     }
 
 

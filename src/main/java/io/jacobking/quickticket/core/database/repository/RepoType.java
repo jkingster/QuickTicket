@@ -1,11 +1,13 @@
 package io.jacobking.quickticket.core.database.repository;
 
 
+import io.jacobking.quickticket.core.database.repository.impl.CommentRepository;
 import io.jacobking.quickticket.core.database.repository.impl.TicketRepository;
 
 public enum RepoType {
 
-    TICKET(new TicketRepository());
+    TICKET(new TicketRepository()),
+    COMMENT(new CommentRepository());
 
     private final Repository<? extends Entity> repository;
 
