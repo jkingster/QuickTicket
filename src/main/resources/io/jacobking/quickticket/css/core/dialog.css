@@ -1,0 +1,29 @@
+@import url("base.css");
+.dialog-pane {
+    -fx-background-color: -fx-primary;
+}
+
+.dialog-pane:header .header-panel {
+    -fx-background-color: -fx-primary;
+}
+
+.dialog-pane:header .header-panel .label{
+    -fx-text-fill: -fx-typography;
+}
+
+.dialog-pane .button {
+    -fx-background-color: -fx-offset-blue;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+}
+.dialog-pane > .content.label {
+    -fx-padding: 0.5em 0.5em 0.5em 0.5em;
+    -fx-text-fill: -fx-typography;
+    -fx-font-size: 1.5em;
+}
+
+.dialog-pane .button:hover {
+    -fx-cursor: hand;
+    -fx-background-color: derive(-fx-offset-blue, 40%);
+}

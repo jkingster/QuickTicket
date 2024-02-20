@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
+import io.jacobking.quickticket.gui.alert.Notify;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.utility.StyleCommons;
@@ -46,7 +47,7 @@ public class EmployeeManagerController extends Controller {
     private void onCreate() {
         final EmployeeModel selected = employeeList.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            // TODO: error  - clear selection.
+            Notify.showError("Failed to create employee.", "An employee is currently selected.", "You must deselect the employee first.");
             clearFields();
             return;
         }
@@ -66,7 +67,7 @@ public class EmployeeManagerController extends Controller {
     private void onDelete() {
         final EmployeeModel selected = employeeList.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            // TODO: error
+            Notify.showError("Failed to delete.", "No employee was deleted.", "You must select an employee first.");
             return;
         }
         employee.remove(selected.getId());

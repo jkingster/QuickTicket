@@ -1,10 +1,10 @@
 @import url("../core/base.css");
 @import url("../core/button.css");
+@import url("../core/text-field.css");
 
 .body {
     -fx-background-color: -fx-primary;
 }
-
 
 .text-area .content {
     -fx-background-color: derive(-fx-primary, 25%);

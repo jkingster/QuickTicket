@@ -1,1 +1,13 @@
 @import url("../core/button.css");
+
+.title {
+    -fx-text-fill: -fx-offset-blue;
+
+    -fx-font-size: 1.25em;
+}
+
+.version {
+    -fx-text-fill: derive(-fx-primary, 25%);
+    -fx-font-weight: bolder;
+    -fx-font-size: 1.00em;
+}

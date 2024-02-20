@@ -3,6 +3,7 @@ package io.jacobking.quickticket.gui.controller.impl.ticket;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
+import io.jacobking.quickticket.gui.alert.Notify;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
@@ -45,6 +46,7 @@ public class TicketCreatorController extends Controller {
         setDataRelay();
         configureStatusComboBox();
         configurePriorityComboBox();
+        configureEmployeeComboBox();
         createButton.disableProperty().bind(titleField.textProperty().isEmpty());
     }
 
@@ -54,10 +56,10 @@ public class TicketCreatorController extends Controller {
             return;
         }
 
-        dataRelay.mapFirstInto(TableView.class).ifPresentOrElse(tableView -> {
+        dataRelay.mapFirst(TableView.class).ifPresentOrElse(tableView -> {
             this.ticketTable = (TableView<TicketModel>) tableView;
         }, () -> {
-            throw new RuntimeException("Failed to pass over table view.");
+            Notify.showError("Data Relay Failure", "TicketTable<TicketModel> was not passed via data relay.", "Please report this.");
         });
     }
 
@@ -95,6 +97,20 @@ public class TicketCreatorController extends Controller {
         });
     }
 
+    private void configureEmployeeComboBox() {
+        employeeComboBox.setItems(employee.getObservableList());
+        employeeComboBox.setCellFactory(data -> new ListCell<>() {
+            @Override
+            protected void updateItem(EmployeeModel employeeModel, boolean b) {
+                super.updateItem(employeeModel, b);
+                if (employeeModel == null || b) {
+                    setText(null);
+                    return;
+                }
+                setText(employeeModel.getFullName());
+            }
+        });
+    }
     @FXML
     private void onCreate() {
         final String title = titleField.getText();

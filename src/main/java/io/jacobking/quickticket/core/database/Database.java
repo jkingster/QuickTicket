@@ -3,19 +3,32 @@ package io.jacobking.quickticket.core.database;
 import io.jacobking.quickticket.core.Config;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
 
+import java.sql.SQLException;
+import java.sql.SQLInput;
+
 public class Database {
 
     private static final Database instance = new Database();
+
+    private final SQLiteConnector sqLiteConnector;
+    private final JOOQConnector jooqConnector;
     private final RepoCrud repoCrud;
 
     private Database() {
-        final SQLiteConnector sqLiteConnector = new SQLiteConnector(Config.getInstance());
+        this.sqLiteConnector = new SQLiteConnector(Config.getInstance());
         SQLLoader.process(sqLiteConnector.getConnection());
 
-        final JOOQConnector jooqConnector = new JOOQConnector(sqLiteConnector);
+        this.jooqConnector = new JOOQConnector(sqLiteConnector);
         this.repoCrud = new RepoCrud(jooqConnector.getContext());
     }
 
+    public void close() {
+        try {
+            sqLiteConnector.getConnection().close();
+        } catch (SQLException e) {
+            // TODO: alert
+        }
+    }
     public static Database getInstance() {
         return instance;
     }

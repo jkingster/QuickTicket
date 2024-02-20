@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1280.0" styleClass="body" stylesheets="@../css/screen/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.TicketController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1280.0" styleClass="body" stylesheets="@../css/screen/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.ticket.TicketController">
    <children>
       <HBox alignment="CENTER" layoutX="12.0" layoutY="14.0" prefHeight="82.0" prefWidth="1256.0" spacing="25.0">
          <children>
@@ -23,7 +23,7 @@
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Last Viewed" textAlignment="CENTER" />
-                  <Button layoutX="38.0" layoutY="50.0" mnemonicParsing="false" prefWidth="85.0" styleClass="b" text="Open" />
+                  <Button disable="true" layoutX="38.0" layoutY="50.0" mnemonicParsing="false" prefWidth="85.0" styleClass="b" text="Open" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
@@ -38,25 +38,25 @@
             <Separator orientation="VERTICAL" prefHeight="200.0" />
             <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="200" />
+                  <Label fx:id="openLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="82.0" styleClass="card-text" text="Open Tickets" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="52" />
+                  <Label fx:id="activeLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="124.0" styleClass="card-text" text="Active Tickets" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
+                  <Label fx:id="pausedLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="124.0" styleClass="card-text" text="Paused Tickets" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="5210" />
+                  <Label fx:id="resolvedLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="124.0" styleClass="card-text" text="Resolved Tickets" />
                </children>
             </Pane>

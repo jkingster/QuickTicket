@@ -1,14 +1,17 @@
-package io.jacobking.quickticket.gui.controller.impl;
+package io.jacobking.quickticket.gui.controller.impl.ticket;
 
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
+import io.jacobking.quickticket.gui.alert.Notify;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
-import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
+import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
+import javafx.collections.ListChangeListener;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -21,6 +24,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TicketController extends Controller {
+
+    private final FilteredList<TicketModel> open = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.OPEN);
+    private final FilteredList<TicketModel> active = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.ACTIVE);
+    private final FilteredList<TicketModel> paused = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.PAUSED);
+    private final FilteredList<TicketModel> resolved = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.RESOLVED);
+
 
     @FXML
     private TableView<TicketModel> ticketTable;
@@ -38,10 +47,19 @@ public class TicketController extends Controller {
     private TableColumn<TicketModel, EmployeeModel> userColumn;
     @FXML
     private TableColumn<TicketModel, String> createdColumn;
+    @FXML
+    private Label openLabel;
+    @FXML
+    private Label activeLabel;
+    @FXML
+    private Label pausedLabel;
+    @FXML
+    private Label resolvedLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
+        configureLabels();
     }
 
     private void configureTable() {
@@ -54,6 +72,7 @@ public class TicketController extends Controller {
         createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
         ticketTable.setItems(ticket.getObservableList());
     }
+
     private void handleIndicatorColumn() {
         indicatorColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
         indicatorColumn.setCellFactory(data -> new TableCell<>() {
@@ -80,6 +99,27 @@ public class TicketController extends Controller {
         });
     }
 
+    private void configureLabels() {
+        openLabel.setText(String.valueOf(open.size()));
+        activeLabel.setText(String.valueOf(active.size()));
+        pausedLabel.setText(String.valueOf(paused.size()));
+        resolvedLabel.setText(String.valueOf(resolved.size()));
+
+        addListener(openLabel, open);
+        addListener(activeLabel, active);
+        addListener(pausedLabel, paused);
+        addListener(resolvedLabel, resolved);
+    }
+
+    private void addListener(final Label label, final FilteredList<TicketModel> filteredList) {
+        filteredList.addListener((ListChangeListener<? super TicketModel>) change -> {
+            while(change.next()) {
+                final int size = filteredList.size();
+                label.setText(String.valueOf(size));
+            }
+        });
+    }
+
     @FXML
     private void onCreate() {
         Display.show(Route.TICKET_CREATOR, DataRelay.of(ticketTable));
@@ -92,6 +132,7 @@ public class TicketController extends Controller {
 
     private void onDelete(final TicketModel ticketModel) {
         if (ticketModel == null) {
+            Notify.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
         ticket.remove(ticketModel.getId());
@@ -99,10 +140,11 @@ public class TicketController extends Controller {
 
     private void onOpen(final TicketModel ticketModel) {
         if (ticketModel == null) {
+            Notify.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
-        Display.show(Route.VIEWER, DataRelay.of(ticketModel));
+        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable));
     }
 
     private void handleActionsColumn() {

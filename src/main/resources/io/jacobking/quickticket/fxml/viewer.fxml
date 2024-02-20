@@ -24,11 +24,11 @@
       <TextField fx:id="creationField" editable="false" layoutX="265.0" layoutY="47.0" prefHeight="26.0" prefWidth="158.0" promptText="Undefined" />
       <HBox alignment="CENTER" layoutX="126.0" layoutY="447.0" prefHeight="37.0" prefWidth="442.0" spacing="5.0">
          <children>
-            <Button minWidth="105.0" mnemonicParsing="false" prefHeight="26.0" styleClass="button-primary" text="Update Priority" />
-            <Button minWidth="105.0" mnemonicParsing="false" prefHeight="26.0" styleClass="button-primary" text="Update Status" />
-            <Button minWidth="105.0" mnemonicParsing="false" prefHeight="26.0" styleClass="button-primary" text="Update User" />
-            <Button minWidth="105.0" mnemonicParsing="false" prefHeight="26.0" styleClass="button-primary" text="Mark Resolved" />
-            <Button minWidth="105.0" mnemonicParsing="false" prefHeight="26.0" styleClass="button-warning" text="Delete" />
+            <Button fx:id="priorityButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdatePriority" prefHeight="26.0" styleClass="button-primary" text="Update Priority" />
+            <Button fx:id="statusButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateStatus" prefHeight="26.0" styleClass="button-primary" text="Update Status" />
+            <Button fx:id="updateUserButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateUser" prefHeight="26.0" styleClass="button-primary" text="Update User" />
+            <Button fx:id="resolvedButton" minWidth="105.0" mnemonicParsing="false" onAction="#onMarkResolved" prefHeight="26.0" styleClass="button-primary" text="Mark Resolved" />
+            <Button minWidth="105.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="26.0" styleClass="button-warning" text="Delete" />
          </children>
       </HBox>
       <TextField fx:id="userField" editable="false" layoutX="38.0" layoutY="47.0" prefHeight="26.0" prefWidth="217.0" promptText="Undefined" />
@@ -58,7 +58,19 @@
                </font>
             </Label>
          </children></Pane>
-      <Pane layoutX="428.0" layoutY="47.0" prefHeight="26.0" prefWidth="112.0" styleClass="card" stylesheets="@../css/core/card.css" />
+      <Pane layoutX="428.0" layoutY="47.0" prefHeight="26.0" prefWidth="112.0" styleClass="card" stylesheets="@../css/core/card.css">
+         <children>
+            <Label fx:id="statusLabel111" contentDisplay="CENTER" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="99.0" styleClass="card-text" text="Comments:" textAlignment="RIGHT">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="totalCommentsLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="77.0" layoutY="5.0" prefHeight="17.0" prefWidth="24.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children></Pane>
    </children>
    <stylesheets>
       <URL value="@../css/core/base.css" />

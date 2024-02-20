@@ -65,6 +65,19 @@ public class TicketModel extends ViewModel<Ticket> {
         return createdProperty;
     }
 
+    public String getStatus() {
+        return statusProperty.getValue().name();
+    }
+
+    public String getPriority() {
+        return priorityProperty.getValue().name();
+    }
+
+    public int getEmployeeId() {
+        final EmployeeModel model = userProperty.getValue();
+        return (model == null) ? 0 : model.getId();
+    }
+
     @Override
     public String toString() {
         return "TicketModel{" +
@@ -79,6 +92,13 @@ public class TicketModel extends ViewModel<Ticket> {
 
     @Override
     public Ticket toEntity() {
-        return null; // todo: implement
+        return new Ticket(
+                getId(),
+                getTitle(),
+                getStatus(),
+                getPriority(),
+                getCreation(),
+                getEmployeeId()
+        );
     }
 }

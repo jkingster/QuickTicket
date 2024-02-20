@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="328.0" prefWidth="351.0" styleClass="body" stylesheets="@../css/screen/creator.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="TOP_CENTER" layoutX="3.0" layoutY="14.0" prefHeight="43.0" prefWidth="345.0" spacing="10.0">
@@ -20,7 +19,7 @@
       </HBox>
       <VBox layoutX="18.0" layoutY="47.0" prefHeight="235.0" prefWidth="316.0" spacing="10.0">
          <children>
-            <TextField fx:id="titleField" promptText="Ticket Title" styleClass="te" />
+            <TextField fx:id="titleField" promptText="Ticket Title" styleClass="text-field" />
             <TextArea fx:id="commentField" prefHeight="200.0" prefWidth="200.0" promptText="Any initial information...." />
             <SearchableComboBox fx:id="employeeComboBox" promptText="Employee" styleClass="sear" stylesheets="@../css/core/combo-box.css" />
          </children>

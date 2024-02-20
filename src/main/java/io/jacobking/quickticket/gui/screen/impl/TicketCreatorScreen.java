@@ -1,7 +1,5 @@
 package io.jacobking.quickticket.gui.screen.impl;
 
-import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.controller.impl.ViewerController;
 import io.jacobking.quickticket.gui.controller.impl.ticket.TicketCreatorController;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.screen.Route;
