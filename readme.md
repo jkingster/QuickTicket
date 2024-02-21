@@ -4,7 +4,7 @@
 -------------------------
 
 
-![Static Badge](https://img.shields.io/badge/Version-0.1.1--alpha-blue) 
+![Static Badge](https://img.shields.io/badge/Version-0.1.3--alpha-blue) 
 ![Static Badge](https://img.shields.io/badge/Pull%20Requests-Welcome-red)
 
 ## Description
