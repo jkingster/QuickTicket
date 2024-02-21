@@ -19,6 +19,11 @@
 
 .combo-box .list-cell:hover {
     -fx-background-color: derive(-fx-offset-blue, 40%);
+    -fx-cursor: hand;
+}
+
+.combo-box:hover {
+    -fx-cursor:hand;
 }
 
 .combo-box .combo-box-popup .list-view, .combo-box .combo-box-popup .list-cell {

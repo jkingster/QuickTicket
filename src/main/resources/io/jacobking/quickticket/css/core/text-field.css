@@ -5,3 +5,7 @@
     -fx-text-fill: -fx-typography;
     -fx-font-weight: bolder;
 }
+
+.text-field:hover {
+    -fx-cursor: hand;
+}
