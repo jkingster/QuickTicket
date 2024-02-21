@@ -4,7 +4,12 @@ import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class QuickTicket {
+
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(5);
 
     private final Config   config;
     private final Database database;
@@ -15,7 +20,15 @@ public class QuickTicket {
         Display.show(Route.DASHBOARD, null);
     }
 
+    public static void execute(final Runnable runnable) {
+        EXECUTOR_SERVICE.execute(runnable);
+    }
+
     public static void launch() {
         new QuickTicket();
+    }
+
+    public static void closeExecutorService() {
+        EXECUTOR_SERVICE.shutdown();
     }
 }
