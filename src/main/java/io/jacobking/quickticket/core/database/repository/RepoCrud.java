@@ -29,7 +29,7 @@ public class RepoCrud {
         return (T) getRepository(type).save(context, value);
     }
 
-    public <T extends Entity> boolean delete(final RepoType type, final int id) {
+    public boolean delete(final RepoType type, final int id) {
         return getRepository(type).delete(context, id);
     }
 

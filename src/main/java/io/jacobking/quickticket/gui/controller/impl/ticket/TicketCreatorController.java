@@ -23,48 +23,39 @@ import java.util.ResourceBundle;
 
 public class TicketCreatorController extends Controller {
 
-    private static final String TICKET_BODY =
-            """
-                     Your support ticket has been created. A tech will reach out to you as soon as possible.
-                     <br/>
-                     <br/>
-                     <b>Subject:</b> %s
-                     <br/>
-                     <b>Date:</b> %s
-                     <br/>
-                     <b>Ticket ID:</b> %d
-                    <br/>
-                     <br/>
-                     <b>Initial Comment:</b>
-                     <br/>
-                     %s
-                     """;
+    private static final String TICKET_BODY = """
+             Your support ticket has been created. A tech will reach out to you as soon as possible.
+             <br/>
+             <br/>
+             <b>Subject:</b> %s
+             <br/>
+             <b>Date:</b> %s
+             <br/>
+             <b>Ticket ID:</b> %d
+            <br/>
+             <br/>
+             <b>Initial Comment:</b>
+             <br/>
+             %s
+             """;
 
     private TableView<TicketModel> ticketTable;
 
-    @FXML
-    private ComboBox<StatusType> statusTypeComboBox;
+    @FXML private ComboBox<StatusType> statusTypeComboBox;
 
-    @FXML
-    private ComboBox<PriorityType> priorityTypeComboBox;
+    @FXML private ComboBox<PriorityType> priorityTypeComboBox;
 
-    @FXML
-    private SearchableComboBox<EmployeeModel> employeeComboBox;
+    @FXML private SearchableComboBox<EmployeeModel> employeeComboBox;
 
-    @FXML
-    private TextField titleField;
+    @FXML private TextField titleField;
 
-    @FXML
-    private TextArea commentField;
+    @FXML private TextArea commentField;
 
-    @FXML
-    private Button createButton;
+    @FXML private Button createButton;
 
-    @FXML
-    private CheckBox emailCheckBox;
+    @FXML private CheckBox emailCheckBox;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         setDataRelay();
         configureStatusComboBox();
         configurePriorityComboBox();
@@ -72,8 +63,7 @@ public class TicketCreatorController extends Controller {
         createButton.disableProperty().bind(titleField.textProperty().isEmpty());
     }
 
-    @SuppressWarnings("unchecked")
-    private void setDataRelay() {
+    @SuppressWarnings("unchecked") private void setDataRelay() {
         if (dataRelay == null) {
             return;
         }
@@ -88,8 +78,7 @@ public class TicketCreatorController extends Controller {
     private void configureStatusComboBox() {
         statusTypeComboBox.setItems(FXCollections.observableArrayList(StatusType.values()));
         statusTypeComboBox.setCellFactory(data -> new ListCell<>() {
-            @Override
-            protected void updateItem(StatusType statusType, boolean b) {
+            @Override protected void updateItem(StatusType statusType, boolean b) {
                 super.updateItem(statusType, b);
                 if (b || statusType == null) {
                     setText(null);
@@ -105,8 +94,7 @@ public class TicketCreatorController extends Controller {
     private void configurePriorityComboBox() {
         priorityTypeComboBox.setItems(FXCollections.observableArrayList(PriorityType.values()));
         priorityTypeComboBox.setCellFactory(data -> new ListCell<>() {
-            @Override
-            protected void updateItem(PriorityType priorityType, boolean b) {
+            @Override protected void updateItem(PriorityType priorityType, boolean b) {
                 super.updateItem(priorityType, b);
                 if (b || priorityType == null) {
                     setText(null);
@@ -122,8 +110,7 @@ public class TicketCreatorController extends Controller {
     private void configureEmployeeComboBox() {
         employeeComboBox.setItems(employee.getObservableList());
         employeeComboBox.setCellFactory(data -> new ListCell<>() {
-            @Override
-            protected void updateItem(EmployeeModel employeeModel, boolean b) {
+            @Override protected void updateItem(EmployeeModel employeeModel, boolean b) {
                 super.updateItem(employeeModel, b);
                 if (employeeModel == null || b) {
                     setText(null);
@@ -134,17 +121,10 @@ public class TicketCreatorController extends Controller {
         });
     }
 
-    @FXML
-    private void onCreate() {
+    @FXML private void onCreate() {
         final String title = titleField.getText();
         final EmployeeModel employeeModel = employeeComboBox.getSelectionModel().getSelectedItem();
-        final TicketModel newTicket = ticket.createModel(new Ticket()
-                .setTitle(title)
-                .setCreatedOn(DateUtil.now())
-                .setPriority(getPriority())
-                .setStatus(getStatus())
-                .setUserId(employeeModel == null ? 0 : employeeModel.getId())
-        );
+        final TicketModel newTicket = ticket.createModel(new Ticket().setTitle(title).setCreatedOn(DateUtil.now()).setPriority(getPriority()).setStatus(getStatus()).setUserId(employeeModel == null ? 0 : employeeModel.getId()));
 
         insertInitialComment(newTicket);
         sendInitialEmail(newTicket);
@@ -152,42 +132,28 @@ public class TicketCreatorController extends Controller {
     }
 
     private void sendInitialEmail(final TicketModel ticketModel) {
-        if (!emailCheckBox.isSelected())
-            return;
+        if (!emailCheckBox.isSelected()) return;
 
         final EmployeeModel model = employeeComboBox.getSelectionModel().getSelectedItem();
-        if (model == null)
-            return;
+        if (model == null) return;
 
         final String email = model.getEmail();
-        if (email.isEmpty())
-            return;
+        if (email.isEmpty()) return;
 
         final EmailSender emailSender = new EmailSender(EmailConfig.getInstance());
-        emailSender.sendEmail(
-                String.format("Ticket Created (Ticket ID: %d) | %s", ticketModel.getId(), ticketModel.getTitle()),
-                email,
-                TICKET_BODY.formatted(ticketModel.getTitle(), ticketModel.getCreation(), ticketModel.getId(),
-                        commentField.getText().isEmpty() ? "No initial information provided." : commentField.getText())
-        );
+        emailSender.sendEmail(String.format("Ticket Created (Ticket ID: %d) | %s", ticketModel.getId(), ticketModel.getTitle()), email, TICKET_BODY.formatted(ticketModel.getTitle(), ticketModel.getCreation(), ticketModel.getId(), commentField.getText().isEmpty() ? "No initial information provided." : commentField.getText()));
     }
 
 
     private void insertInitialComment(final TicketModel ticketModel) {
         final String initialComment = commentField.getText();
-        if (initialComment.isEmpty())
-            return;
+        if (initialComment.isEmpty()) return;
 
         final int ticketId = ticketModel.getId();
-        comment.createModel(new Comment()
-                .setTicketId(ticketId)
-                .setPost(initialComment)
-                .setPostedOn(DateUtil.nowWithTime())
-        );
+        comment.createModel(new Comment().setTicketId(ticketId).setPost(initialComment).setPostedOn(DateUtil.nowWithTime()));
     }
 
-    @FXML
-    private void onReset() {
+    @FXML private void onReset() {
         titleField.clear();
         commentField.clear();
         priorityTypeComboBox.getSelectionModel().clearSelection();

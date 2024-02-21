@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.core.database;
 
 import io.jacobking.quickticket.App;
+import io.jacobking.quickticket.gui.alert.Notify;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class SQLLoader {
 
             tokenize(convertedStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            Notify.showException("Failed to process path.", e.fillInStackTrace());
         }
     }
 
@@ -64,7 +65,7 @@ public class SQLLoader {
         try (final Statement statement = connection.createStatement()) {
             statement.execute(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Notify.showException("Failed to execute query.", e.fillInStackTrace());
         }
     }
 

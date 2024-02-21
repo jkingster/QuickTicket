@@ -1,5 +1,7 @@
 package io.jacobking.quickticket.core.utility;
 
+import io.jacobking.quickticket.gui.alert.Notify;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -35,7 +37,7 @@ public class FileIO {
         try {
             return file.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            Notify.showException("Failed to create file.", e.fillInStackTrace());
             return false;
         }
     }
