@@ -9,8 +9,9 @@ import static io.jacobking.quickticket.core.email.EmailConfig.EmailCommons.*;
 
 public class EmailConfig {
 
-    private static final String      DEFAULT_TIMEOUT = "10000";
-    private static final EmailConfig instance        = new EmailConfig();
+    private static final String      DEFAULT_CONNECTION_TIMEOUT = "15000";
+    private static final String      DEFAULT_TIMEOUT            = "60000";
+    private static final EmailConfig instance                   = new EmailConfig();
 
     private final Properties properties;
     private       Email      email;
@@ -64,7 +65,7 @@ public class EmailConfig {
             properties.setProperty(EmailCommons.AUTH, "true");
         }
 
-        properties.setProperty(SMTP_CONNECTION_TIMEOUT, DEFAULT_TIMEOUT);
+        properties.setProperty(SMTP_CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
         properties.setProperty(SMTP_TIMEOUT, DEFAULT_TIMEOUT);
     }
 
