@@ -36,6 +36,9 @@ Right now QuickTicket provides the current features:
 
 ## Changelog
 
+# 0.1.2-alpha
+- Fixed bug: When creating a new ticket and marking it to send e-mail notifications, it hangs and stops responding. See <a href="https://github.com/jkingster/QuickTicket/issues/3">here</a>.
+
 # 0.1.1-alpha 
 - Fixed bug: Updated SQL query to ignore trigger creation if existing. See <a href="https://github.com/jkingster/QuickTicket/commit/3b2e35735e532f108966770b56466f358a0c154a">here</a>.
 
