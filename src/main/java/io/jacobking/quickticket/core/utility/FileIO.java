@@ -5,11 +5,11 @@ import java.io.IOException;
 
 public class FileIO {
 
-    private static final String DIRECTORY_NAME = "QuickTicket";
-    private static final String APP_DATA = System.getenv("APPDATA");
-    private static final String FILE_SEPARATOR = File.separator;
-    public static final String TARGET_DIRECTORY = String.format("%s%s%s", APP_DATA, FILE_SEPARATOR, DIRECTORY_NAME);
-    public static final String TARGET_PROPERTIES = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "sysconfig.properties");
+    private static final String DIRECTORY_NAME    = "QuickTicket";
+    private static final String APP_DATA          = System.getenv("APPDATA");
+    private static final String FILE_SEPARATOR    = File.separator;
+    public static final  String TARGET_DIRECTORY  = String.format("%s%s%s", APP_DATA, FILE_SEPARATOR, DIRECTORY_NAME);
+    public static final  String TARGET_PROPERTIES = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "sysconfig.properties");
 
     public static final String TARGET_DATABASE = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "database.db");
 

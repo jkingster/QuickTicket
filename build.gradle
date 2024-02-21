@@ -45,6 +45,7 @@ sourceSets {
 
 dependencies {
   implementation('org.controlsfx:controlsfx:11.1.2')
+  implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
   implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
   implementation group: 'commons-io', name: 'commons-io', version: '2.15.0'
   jooqGenerator 'org.xerial:sqlite-jdbc:3.42.0.0'

@@ -28,8 +28,7 @@ public class CommentBridge extends Bridge<Comment, CommentModel> {
         });
     }
 
-    @Override
-    public CommentModel createModel(Comment entity) {
+    @Override public CommentModel createModel(Comment entity) {
         final CommentModel model = super.createModel(entity);
         pushComment(model.getTicketId(), model);
         return model;
@@ -51,8 +50,7 @@ public class CommentBridge extends Bridge<Comment, CommentModel> {
         return commentMap.getOrDefault(ticketId, FXCollections.observableArrayList());
     }
 
-    @Override
-    public CommentModel convertEntity(Comment entity) {
+    @Override public CommentModel convertEntity(Comment entity) {
         return new CommentModel(entity);
     }
 }

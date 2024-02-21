@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Display {
-    private static final Display instance = new Display();
-    private static final String SCREEN_PACKAGE = "io.jacobking.quickticket.gui.screen.impl.%sScreen";
-    private final Map<Route, Screen> screens = new HashMap<>();
+    private static final Display            instance       = new Display();
+    private static final String             SCREEN_PACKAGE = "io.jacobking.quickticket.gui.screen.impl.%sScreen";
+    private final        Map<Route, Screen> screens        = new HashMap<>();
 
     private Display() {
         loadScreens();

@@ -25,39 +25,26 @@ import java.util.ResourceBundle;
 
 public class TicketController extends Controller {
 
-    private final FilteredList<TicketModel> open = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.OPEN);
-    private final FilteredList<TicketModel> active = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.ACTIVE);
-    private final FilteredList<TicketModel> paused = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.PAUSED);
+    private final FilteredList<TicketModel> open     = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.OPEN);
+    private final FilteredList<TicketModel> active   = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.ACTIVE);
+    private final FilteredList<TicketModel> paused   = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.PAUSED);
     private final FilteredList<TicketModel> resolved = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.RESOLVED);
 
 
-    @FXML
-    private TableView<TicketModel> ticketTable;
-    @FXML
-    private TableColumn<TicketModel, PriorityType> indicatorColumn;
-    @FXML
-    private TableColumn<TicketModel, Void> actionsColumn;
-    @FXML
-    private TableColumn<TicketModel, String> titleColumn;
-    @FXML
-    private TableColumn<TicketModel, StatusType> statusColumn;
-    @FXML
-    private TableColumn<TicketModel, PriorityType> priorityColumn;
-    @FXML
-    private TableColumn<TicketModel, EmployeeModel> userColumn;
-    @FXML
-    private TableColumn<TicketModel, String> createdColumn;
-    @FXML
-    private Label openLabel;
-    @FXML
-    private Label activeLabel;
-    @FXML
-    private Label pausedLabel;
-    @FXML
-    private Label resolvedLabel;
+    @FXML private TableView<TicketModel>                  ticketTable;
+    @FXML private TableColumn<TicketModel, PriorityType>  indicatorColumn;
+    @FXML private TableColumn<TicketModel, Void>          actionsColumn;
+    @FXML private TableColumn<TicketModel, String>        titleColumn;
+    @FXML private TableColumn<TicketModel, StatusType>    statusColumn;
+    @FXML private TableColumn<TicketModel, PriorityType>  priorityColumn;
+    @FXML private TableColumn<TicketModel, EmployeeModel> userColumn;
+    @FXML private TableColumn<TicketModel, String>        createdColumn;
+    @FXML private Label                                   openLabel;
+    @FXML private Label                                   activeLabel;
+    @FXML private Label                                   pausedLabel;
+    @FXML private Label                                   resolvedLabel;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
         configureLabels();
     }
@@ -80,8 +67,7 @@ public class TicketController extends Controller {
             private final Glyph glyph = FALoader.create(FontAwesome.Glyph.CIRCLE, null);
             private final Label indicator = new Label();
 
-            @Override
-            protected void updateItem(PriorityType priorityType, boolean b) {
+            @Override protected void updateItem(PriorityType priorityType, boolean b) {
                 super.updateItem(priorityType, b);
                 if (b) {
                     setGraphic(null);
@@ -113,20 +99,18 @@ public class TicketController extends Controller {
 
     private void addListener(final Label label, final FilteredList<TicketModel> filteredList) {
         filteredList.addListener((ListChangeListener<? super TicketModel>) change -> {
-            while(change.next()) {
+            while (change.next()) {
                 final int size = filteredList.size();
                 label.setText(String.valueOf(size));
             }
         });
     }
 
-    @FXML
-    private void onCreate() {
+    @FXML private void onCreate() {
         Display.show(Route.TICKET_CREATOR, DataRelay.of(ticketTable));
     }
 
-    @FXML
-    private void onManageEmployees() {
+    @FXML private void onManageEmployees() {
         Display.show(Route.EMPLOYEE_MANAGER, null);
     }
 
@@ -166,8 +150,7 @@ public class TicketController extends Controller {
                 open.setOnAction(event -> onOpen(getTableRow().getItem()));
             }
 
-            @Override
-            protected void updateItem(Void unused, boolean empty) {
+            @Override protected void updateItem(Void unused, boolean empty) {
                 super.updateItem(unused, empty);
                 if (empty) {
                     setGraphic(null);

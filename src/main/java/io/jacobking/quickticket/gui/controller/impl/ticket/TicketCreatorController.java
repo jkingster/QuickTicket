@@ -1,12 +1,14 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
+import io.jacobking.quickticket.core.email.EmailConfig;
+import io.jacobking.quickticket.core.email.EmailSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Notify;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
+import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.tables.pojos.Comment;
@@ -20,6 +22,23 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TicketCreatorController extends Controller {
+
+    private static final String TICKET_BODY =
+            """
+                     Your support ticket has been created. A tech will reach out to you as soon as possible.
+                     <br/>
+                     <br/>
+                     <b>Subject:</b> %s
+                     <br/>
+                     <b>Date:</b> %s
+                     <br/>
+                     <b>Ticket ID:</b> %d
+                    <br/>
+                     <br/>
+                     <b>Initial Comment:</b>
+                     <br/>
+                     %s
+                     """;
 
     private TableView<TicketModel> ticketTable;
 
@@ -40,6 +59,9 @@ public class TicketCreatorController extends Controller {
 
     @FXML
     private Button createButton;
+
+    @FXML
+    private CheckBox emailCheckBox;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -111,6 +133,7 @@ public class TicketCreatorController extends Controller {
             }
         });
     }
+
     @FXML
     private void onCreate() {
         final String title = titleField.getText();
@@ -123,8 +146,32 @@ public class TicketCreatorController extends Controller {
         );
 
         insertInitialComment(newTicket);
+
+        sendInitialEmail(newTicket);
         Display.close(Route.TICKET_CREATOR);
     }
+
+    private void sendInitialEmail(final TicketModel ticketModel) {
+        if (!emailCheckBox.isSelected())
+            return;
+
+        final EmployeeModel model = employeeComboBox.getSelectionModel().getSelectedItem();
+        if (model == null)
+            return;
+
+        final String email = model.getEmail();
+        if (email.isEmpty())
+            return;
+
+        final EmailSender emailSender = new EmailSender(EmailConfig.getInstance());
+        emailSender.sendEmail(
+                String.format("Ticket Created (Ticket ID: %d) | %s", ticketModel.getId(), ticketModel.getTitle()),
+                email,
+                TICKET_BODY.formatted(ticketModel.getTitle(), ticketModel.getCreation(), ticketModel.getId(),
+                        commentField.getText().isEmpty() ? "No initial information provided." : commentField.getText())
+        );
+    }
+
 
     private void insertInitialComment(final TicketModel ticketModel) {
         final String initialComment = commentField.getText();

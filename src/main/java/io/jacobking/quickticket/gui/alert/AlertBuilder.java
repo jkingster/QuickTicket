@@ -42,6 +42,7 @@ public class AlertBuilder {
         this.alert.setHeaderText(header);
         return this;
     }
+
     public AlertBuilder withContent(final String content) {
         Checks.notEmpty(content, "Alert Content");
         this.alert.setContentText(content);

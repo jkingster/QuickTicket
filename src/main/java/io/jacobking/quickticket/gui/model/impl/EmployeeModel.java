@@ -1,17 +1,16 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.gui.model.EntityConverter;
 import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class EmployeeModel extends ViewModel<Employee>  {
+public class EmployeeModel extends ViewModel<Employee> {
 
-    private final StringProperty firstNameProperty = new SimpleStringProperty();
-    private final StringProperty lastNameProperty = new SimpleStringProperty();
-    private final StringProperty emailProperty = new SimpleStringProperty();
-    private final StringProperty titleProperty = new SimpleStringProperty();
+    private final StringProperty firstNameProperty  = new SimpleStringProperty();
+    private final StringProperty lastNameProperty   = new SimpleStringProperty();
+    private final StringProperty emailProperty      = new SimpleStringProperty();
+    private final StringProperty titleProperty      = new SimpleStringProperty();
     private final StringProperty departmentProperty = new SimpleStringProperty();
 
     public EmployeeModel(int id, String firstName, String lastName, String email, String title, String department) {
@@ -34,24 +33,6 @@ public class EmployeeModel extends ViewModel<Employee>  {
         );
     }
 
-
-    public void setFirstName(final String firstName) {
-        this.firstNameProperty.setValue(firstName);
-    }
-
-
-    public void setLastName(final String lastName) {
-        this.lastNameProperty.setValue(lastName);
-    }
-
-    public void setEmail(final String email) {
-        this.emailProperty.setValue(email);
-    }
-
-    public void setTitle(final String title) {
-        this.titleProperty.setValue(title);
-    }
-
     public void setDepartmentProperty(final String department) {
         this.departmentProperty.setValue(department);
     }
@@ -60,8 +41,16 @@ public class EmployeeModel extends ViewModel<Employee>  {
         return firstNameProperty.getValueSafe();
     }
 
+    public void setFirstName(final String firstName) {
+        this.firstNameProperty.setValue(firstName);
+    }
+
     public String getLastName() {
         return lastNameProperty.getValueSafe();
+    }
+
+    public void setLastName(final String lastName) {
+        this.lastNameProperty.setValue(lastName);
     }
 
     public String getFullName() {
@@ -72,8 +61,16 @@ public class EmployeeModel extends ViewModel<Employee>  {
         return emailProperty.getValueSafe();
     }
 
+    public void setEmail(final String email) {
+        this.emailProperty.setValue(email);
+    }
+
     public String getTitle() {
         return titleProperty.getValueSafe();
+    }
+
+    public void setTitle(final String title) {
+        this.titleProperty.setValue(title);
     }
 
     public String getDepartment() {

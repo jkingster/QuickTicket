@@ -5,13 +5,12 @@ import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.jooq.User;
 
 public class CommentModel extends ViewModel<Comment> {
 
 
-    private final int ticketId;
-    private final StringProperty postProperty = new SimpleStringProperty();
+    private final int            ticketId;
+    private final StringProperty postProperty     = new SimpleStringProperty();
     private final StringProperty postedOnProperty = new SimpleStringProperty();
 
     public CommentModel(final int id, final int ticketId, final String post, final String postedOn) {

@@ -13,7 +13,7 @@ import java.util.List;
 
 public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
     private final ObservableList<V> observableList;
-    private final RepoType repoType;
+    private final RepoType          repoType;
 
     public Bridge(final RepoType repoType) {
         this.observableList = FXCollections.observableArrayList();

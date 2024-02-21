@@ -8,20 +8,20 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Config {
-    private static final Config config = new Config().loadProperties();
-    private final Properties properties;
+    private static final Config     config = new Config().loadProperties();
+    private final        Properties properties;
 
     private Config() {
         this.properties = new Properties();
     }
 
+    public static Config getInstance() {
+        return config;
+    }
+
     private Config loadProperties() {
         loadData();
         return this;
-    }
-
-    public static Config getInstance() {
-        return config;
     }
 
     public String readProperty(final String key) {

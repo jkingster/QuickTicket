@@ -19,6 +19,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="System">
                   <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onSMTP" text="SMTP Configuration" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
                         <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />

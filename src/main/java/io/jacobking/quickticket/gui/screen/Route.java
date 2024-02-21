@@ -5,10 +5,11 @@ public enum Route {
     VIEWER("Viewer"),
     TICKET_CREATOR("TicketCreator"),
     EMPLOYEE_MANAGER("EmployeeManager"),
-    ABOUT("About");
-    private static final Route[] VALUES = values();
-    private static final String BASE_PATH = "fxml/%s";
-    private final String name;
+    ABOUT("About"),
+    SMTP("SMTP");
+    private static final Route[] VALUES    = values();
+    private static final String  BASE_PATH = "fxml/%s";
+    private final        String  name;
 
     Route(final String name) {
         this.name = name;

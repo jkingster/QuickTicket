@@ -7,6 +7,7 @@ module io.jacobking.quickticket {
     requires org.apache.commons.io;
     requires org.xerial.sqlitejdbc;
     requires java.desktop;
+    requires java.mail;
 
     opens io.jacobking.quickticket to javafx.fxml;
     exports io.jacobking.quickticket;

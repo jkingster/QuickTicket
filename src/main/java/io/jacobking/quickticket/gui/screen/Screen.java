@@ -12,13 +12,13 @@ import java.io.IOException;
 
 public class Screen {
 
-    private static final String TITLE = "QuickTicket";
-    private final Route route;
-    private final Modality modality;
-    private FXMLLoader loader;
-    private Stage stage;
-    private Scene scene;
-    private Controller controller;
+    private static final String     TITLE = "QuickTicket";
+    private final        Route      route;
+    private final        Modality   modality;
+    private              FXMLLoader loader;
+    private              Stage      stage;
+    private              Scene      scene;
+    private              Controller controller;
 
     public Screen(Route route, Modality modality, Controller controller) {
         this.route = route;

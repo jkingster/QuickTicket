@@ -34,67 +34,49 @@ import java.util.ResourceBundle;
 public class ViewerController extends Controller {
     private static final int COMMENT_OFFSET = 50;
 
-    private TicketModel ticketModel;
+    private TicketModel            ticketModel;
     private TableView<TicketModel> ticketTable;
-    private int ticketId;
+    private int                    ticketId;
 
     private ObservableList<CommentModel> comments;
 
-    @FXML
-    private TextField titleField;
-    @FXML
-    private TextField creationField;
-    @FXML
-    private TextField userField;
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private Label priorityLabel;
+    @FXML private TextField titleField;
+    @FXML private TextField creationField;
+    @FXML private TextField userField;
+    @FXML private Label     statusLabel;
+    @FXML private Label     priorityLabel;
 
-    @FXML
-    private Label totalCommentsLabel;
+    @FXML private Label totalCommentsLabel;
 
-    @FXML
-    private TextField commentField;
-    @FXML
-    private Button postButton;
+    @FXML private TextField commentField;
+    @FXML private Button    postButton;
 
-    @FXML
-    private Button updateUserButton;
+    @FXML private Button updateUserButton;
 
-    @FXML
-    private Button statusButton;
+    @FXML private Button statusButton;
 
-    @FXML
-    private Button priorityButton;
+    @FXML private Button priorityButton;
 
-    @FXML
-    private Button resolvedButton;
+    @FXML private Button resolvedButton;
 
-    @FXML
-    private ListView<CommentModel> commentList;
+    @FXML private ListView<CommentModel> commentList;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         handleDataRelay();
         configureComments();
         postButton.disableProperty().bind(commentField.textProperty().isEmpty());
     }
 
-    @FXML
-    private void onPost() {
-        comment.createModel(new Comment()
-                .setPost(commentField.getText())
-                .setPostedOn(DateUtil.nowWithTime())
-                .setTicketId(ticketId));
+    @FXML private void onPost() {
+        comment.createModel(new Comment().setPost(commentField.getText()).setPostedOn(DateUtil.nowWithTime()).setTicketId(ticketId));
 
         commentField.clear();
         commentList.refresh();
         scrollToLastComment();
     }
 
-    @FXML
-    private void onDeleteComment() {
+    @FXML private void onDeleteComment() {
         final CommentModel selected = commentList.getSelectionModel().getSelectedItem();
         if (selected == null) {
             Notify.showError("Delete failure.", "No deletion occurred.", "You must select a comment to delete.");
@@ -104,8 +86,7 @@ public class ViewerController extends Controller {
         commentList.refresh();
     }
 
-    @FXML
-    private void onUpdateUser() {
+    @FXML private void onUpdateUser() {
         final SearchableComboBox<EmployeeModel> employeeComboBox = new SearchableComboBox<>(employee.getObservableList());
         final Button update = new Button("Update");
         update.disableProperty().bind(employeeComboBox.getSelectionModel().selectedItemProperty().isNull());
@@ -132,8 +113,7 @@ public class ViewerController extends Controller {
         popOver.show(updateUserButton, 25);
     }
 
-    @FXML
-    private void onUpdateStatus() {
+    @FXML private void onUpdateStatus() {
         final SearchableComboBox<StatusType> statuComboBox = new SearchableComboBox<>(FXCollections.observableArrayList(StatusType.values()));
         final Button update = new Button("Update");
         update.disableProperty().bind(statuComboBox.getSelectionModel().selectedItemProperty().isNull());
@@ -160,8 +140,7 @@ public class ViewerController extends Controller {
         popOver.show(statusButton, 25);
     }
 
-    @FXML
-    private void onUpdatePriority() {
+    @FXML private void onUpdatePriority() {
         final SearchableComboBox<PriorityType> priorityComboBox = new SearchableComboBox<>(FXCollections.observableArrayList(PriorityType.values()));
         final Button update = new Button("Update");
         update.disableProperty().bind(priorityComboBox.getSelectionModel().selectedItemProperty().isNull());
@@ -234,8 +213,7 @@ public class ViewerController extends Controller {
         ticketTable.refresh();
     }
 
-    @FXML
-    private void onMarkResolved() {
+    @FXML private void onMarkResolved() {
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
         postSystemComment("This ticket has been marked resolved.");
         ticket.update(ticketModel);
@@ -243,10 +221,7 @@ public class ViewerController extends Controller {
     }
 
     private void postSystemComment(final String commentText) {
-        comment.createModel(new Comment()
-                .setTicketId(ticketId)
-                .setPostedOn(DateUtil.nowWithTime())
-                .setPost(String.format("[System] %s", commentText)));
+        comment.createModel(new Comment().setTicketId(ticketId).setPostedOn(DateUtil.nowWithTime()).setPost(String.format("[System] %s", commentText)));
         commentList.refresh();
 
         scrollToLastComment();
@@ -266,8 +241,7 @@ public class ViewerController extends Controller {
     private void configureComments() {
         commentList.setItems(comments);
         commentList.setCellFactory(data -> new ListCell<>() {
-            @Override
-            protected void updateItem(CommentModel commentModel, boolean b) {
+            @Override protected void updateItem(CommentModel commentModel, boolean b) {
                 super.updateItem(commentModel, b);
                 if (commentModel == null || b) {
                     setGraphic(null);
@@ -323,14 +297,12 @@ public class ViewerController extends Controller {
         });// TODO: error
     }
 
-    @FXML
-    private void onDelete() {
-        Notify.showConfirmation("Are you sure you want to delete this ticket?", "It cannot be recovered.")
-                .ifPresent(type -> {
-                    if (type == ButtonType.YES) {
-                        ticket.remove(ticketId);
-                        Display.close(Route.VIEWER);
-                    }
-                });
+    @FXML private void onDelete() {
+        Notify.showConfirmation("Are you sure you want to delete this ticket?", "It cannot be recovered.").ifPresent(type -> {
+            if (type == ButtonType.YES) {
+                ticket.remove(ticketId);
+                Display.close(Route.VIEWER);
+            }
+        });
     }
 }

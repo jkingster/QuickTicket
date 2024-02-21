@@ -1,13 +1,12 @@
 package io.jacobking.quickticket.core.type;
 
-public enum StatusType {
-    OPEN,
-    ACTIVE,
-    PAUSED,
-    RESOLVED;
+public enum TransportType {
 
-    public static StatusType of(final String target) {
-        for (final StatusType type : values()) {
+    SSL_OR_TSL,
+    STARTTLS;
+
+    public static TransportType of(final String target) {
+        for (final TransportType type : values()) {
             final String name = type.name().toLowerCase();
             if (name.equalsIgnoreCase(target))
                 return type;

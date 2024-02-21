@@ -14,6 +14,7 @@ public abstract class ViewModel<E> {
     public int getId() {
         return idProperty.getValue();
     }
+
     public IntegerProperty getIdProperty() {
         return idProperty;
     }

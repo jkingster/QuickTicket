@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -22,6 +23,7 @@
             <TextField fx:id="titleField" promptText="Ticket Title" styleClass="text-field" />
             <TextArea fx:id="commentField" prefHeight="200.0" prefWidth="200.0" promptText="Any initial information...." />
             <SearchableComboBox fx:id="employeeComboBox" promptText="Employee" styleClass="sear" stylesheets="@../css/core/combo-box.css" />
+            <CheckBox fx:id="emailCheckBox" mnemonicParsing="false" text="Send notification e-mail" textFill="WHITE" />
          </children>
       </VBox>
       <HBox alignment="CENTER_RIGHT" layoutX="18.0" layoutY="286.0" prefHeight="34.0" prefWidth="316.0" spacing="5.0">

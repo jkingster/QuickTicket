@@ -6,7 +6,7 @@ import io.jacobking.quickticket.gui.screen.Route;
 
 public class QuickTicket {
 
-    private final Config config;
+    private final Config   config;
     private final Database database;
 
     private QuickTicket() {

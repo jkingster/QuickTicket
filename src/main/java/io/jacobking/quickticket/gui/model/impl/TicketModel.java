@@ -11,11 +11,11 @@ import javafx.beans.property.StringProperty;
 
 public class TicketModel extends ViewModel<Ticket> {
 
-    private final StringProperty titleProperty = new SimpleStringProperty();
-    private final ObjectProperty<StatusType> statusProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<PriorityType> priorityProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<EmployeeModel> userProperty = new SimpleObjectProperty<>();
-    private final StringProperty createdProperty = new SimpleStringProperty();
+    private final StringProperty                titleProperty    = new SimpleStringProperty();
+    private final ObjectProperty<StatusType>    statusProperty   = new SimpleObjectProperty<>();
+    private final ObjectProperty<PriorityType>  priorityProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<EmployeeModel> userProperty     = new SimpleObjectProperty<>();
+    private final StringProperty                createdProperty  = new SimpleStringProperty();
 
     public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, EmployeeModel userModel, String created) {
         super(id);

@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 
 public class AboutController extends Controller {
 
-    private static final String GITHUB_URL = "https://github.com/jkingster/QuickTicket";
+    private static final String GITHUB_URL     = "https://github.com/jkingster/QuickTicket";
     private static final String SUGGESTION_URL = "https://github.com/jkingster/QuickTicket/issues/new?title=Suggestion:";
     private static final String BUG_REPORT_URL = "https://github.com/jkingster/QuickTicket/issues/new?title=Bug%20Report:";
 

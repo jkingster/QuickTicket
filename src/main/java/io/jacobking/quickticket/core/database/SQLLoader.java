@@ -13,8 +13,8 @@ import java.sql.Statement;
 
 public class SQLLoader {
 
-    private static final String DELIMITER = "\\n\\s*\\n";
-    private static final String[] PATHS = {"sql/tables.sql"};
+    private static final String   DELIMITER = "\\n\\s*\\n";
+    private static final String[] PATHS     = {"sql/tables.sql"};
 
     private final Connection connection;
 
