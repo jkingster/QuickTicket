@@ -29,14 +29,15 @@ Right now QuickTicket provides the current features:
 * Employee creation, along with tying the employee to specific tickets and giving general information: e-mail, title, department, name, etc.
 * E-mail notifications. You can setup your SMTP e-mail provider and send out e-mail notifications to the designated employee when a ticket is created.
 > [!CAUTION]
-> As of right now, QuickTicket utilizes SQLite and **NO** informaton is encrypted/hashed. This means the authentication information provided for SMTP configuration can be viewed by anyone with a technical background. It is advised you store the database file in a secure environment with the proper permissions and security enabled. I take no responsibility if this information is leaked or used maliciously. You can set the database path in your properties file found in your AppData directory.
+> As of right now, QuickTicket utilizes SQLite and **NO** information is encrypted/hashed. This means the authentication information provided for SMTP configuration can be viewed by anyone with a technical background. It is advised you store the database file in a secure environment with the proper permissions and security enabled. I take no responsibility if this information is leaked or used maliciously. You can set the database path in your properties file found in your AppData directory.
 
 ## Nerdy Information
 ![Static Badge](https://img.shields.io/badge/Language-Java-darkgreen) ![Static Badge](https://img.shields.io/badge/JDK-17-blue) ![Static Badge](https://img.shields.io/badge/JavaFX%20SDK-17.0.6-blue) ![Static Badge](https://img.shields.io/badge/jOOQ-3.18.6-darkred) ![Static Badge](https://img.shields.io/badge/Database%20(SQLite--JDBC)-3.42.0.0-red) ![Static Badge](https://img.shields.io/badge/Gradle-8.4-yellow)
 
 ## Changelog
 
-There is no information yet.
+# 0.1.1-alpha 
+- Fixed bug: 
 
 ## Roadmap
 To see the roadmap/future plans for QuickTicket, click <a href="https://github.com/jkingster/QuickTicket/blob/master/roadmap.md">here</a>.
