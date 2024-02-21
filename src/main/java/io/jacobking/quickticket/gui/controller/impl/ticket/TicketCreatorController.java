@@ -137,16 +137,16 @@ public class TicketCreatorController extends Controller {
     @FXML
     private void onCreate() {
         final String title = titleField.getText();
+        final EmployeeModel employeeModel = employeeComboBox.getSelectionModel().getSelectedItem();
         final TicketModel newTicket = ticket.createModel(new Ticket()
                 .setTitle(title)
                 .setCreatedOn(DateUtil.now())
                 .setPriority(getPriority())
                 .setStatus(getStatus())
-                .setUserId(0)
+                .setUserId(employeeModel == null ? 0 : employeeModel.getId())
         );
 
         insertInitialComment(newTicket);
-
         sendInitialEmail(newTicket);
         Display.close(Route.TICKET_CREATOR);
     }

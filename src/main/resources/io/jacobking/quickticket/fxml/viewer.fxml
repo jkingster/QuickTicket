@@ -31,7 +31,7 @@
             <Button minWidth="105.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="26.0" styleClass="button-warning" text="Delete" />
          </children>
       </HBox>
-      <TextField fx:id="userField" editable="false" layoutX="38.0" layoutY="47.0" prefHeight="26.0" prefWidth="217.0" promptText="Undefined" />
+      <TextField fx:id="employeeField" editable="false" layoutX="38.0" layoutY="47.0" prefHeight="26.0" prefWidth="217.0" promptText="Undefined" />
       <Pane layoutX="562.0" layoutY="14.0" prefHeight="26.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
             <Label fx:id="statusLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="127.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">

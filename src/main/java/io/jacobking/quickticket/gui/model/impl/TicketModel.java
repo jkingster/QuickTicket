@@ -1,28 +1,26 @@
 package io.jacobking.quickticket.gui.model.impl;
 
+import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.Ticket;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 public class TicketModel extends ViewModel<Ticket> {
 
     private final StringProperty                titleProperty    = new SimpleStringProperty();
     private final ObjectProperty<StatusType>    statusProperty   = new SimpleObjectProperty<>();
-    private final ObjectProperty<PriorityType>  priorityProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<EmployeeModel> userProperty     = new SimpleObjectProperty<>();
-    private final StringProperty                createdProperty  = new SimpleStringProperty();
+    private final ObjectProperty<PriorityType> priorityProperty = new SimpleObjectProperty<>();
+    private final IntegerProperty               employeeProperty = new SimpleIntegerProperty();
+    private final StringProperty               createdProperty  = new SimpleStringProperty();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, EmployeeModel userModel, String created) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, String created) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
         this.priorityProperty.setValue(priorityType);
-        this.userProperty.setValue(userModel);
+        this.employeeProperty.setValue(employeeId);
         this.createdProperty.setValue(created);
     }
 
@@ -32,7 +30,7 @@ public class TicketModel extends ViewModel<Ticket> {
                 ticket.getTitle(),
                 StatusType.of(ticket.getStatus()),
                 PriorityType.of(ticket.getPriority()),
-                null, // change later
+                ticket.getUserId(), // need to update from user -> employee eventually.
                 ticket.getCreatedOn()
         );
     }
@@ -57,8 +55,8 @@ public class TicketModel extends ViewModel<Ticket> {
         return priorityProperty;
     }
 
-    public ObjectProperty<EmployeeModel> userProperty() {
-        return userProperty;
+    public IntegerProperty employeeProperty() {
+        return employeeProperty;
     }
 
     public StringProperty createdProperty() {
@@ -74,8 +72,7 @@ public class TicketModel extends ViewModel<Ticket> {
     }
 
     public int getEmployeeId() {
-        final EmployeeModel model = userProperty.getValue();
-        return (model == null) ? 0 : model.getId();
+        return employeeProperty.getValue();
     }
 
     @Override
@@ -84,7 +81,7 @@ public class TicketModel extends ViewModel<Ticket> {
                 "titleProperty=" + titleProperty +
                 ", statusProperty=" + statusProperty +
                 ", priorityProperty=" + priorityProperty +
-                ", userProperty=" + userProperty +
+                ", userProperty=" + employeeProperty +
                 ", createdProperty=" + createdProperty +
                 '}';
     }

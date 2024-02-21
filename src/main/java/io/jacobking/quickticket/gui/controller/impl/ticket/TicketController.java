@@ -31,18 +31,18 @@ public class TicketController extends Controller {
     private final FilteredList<TicketModel> resolved = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.RESOLVED);
 
 
-    @FXML private TableView<TicketModel>                  ticketTable;
-    @FXML private TableColumn<TicketModel, PriorityType>  indicatorColumn;
-    @FXML private TableColumn<TicketModel, Void>          actionsColumn;
-    @FXML private TableColumn<TicketModel, String>        titleColumn;
-    @FXML private TableColumn<TicketModel, StatusType>    statusColumn;
-    @FXML private TableColumn<TicketModel, PriorityType>  priorityColumn;
-    @FXML private TableColumn<TicketModel, EmployeeModel> userColumn;
-    @FXML private TableColumn<TicketModel, String>        createdColumn;
-    @FXML private Label                                   openLabel;
-    @FXML private Label                                   activeLabel;
-    @FXML private Label                                   pausedLabel;
-    @FXML private Label                                   resolvedLabel;
+    @FXML private TableView<TicketModel>                 ticketTable;
+    @FXML private TableColumn<TicketModel, PriorityType> indicatorColumn;
+    @FXML private TableColumn<TicketModel, Void>         actionsColumn;
+    @FXML private TableColumn<TicketModel, String>       titleColumn;
+    @FXML private TableColumn<TicketModel, StatusType>   statusColumn;
+    @FXML private TableColumn<TicketModel, PriorityType> priorityColumn;
+    @FXML private TableColumn<TicketModel, Integer>      employeeColumn;
+    @FXML private TableColumn<TicketModel, String>       createdColumn;
+    @FXML private Label                                  openLabel;
+    @FXML private Label                                  activeLabel;
+    @FXML private Label                                  pausedLabel;
+    @FXML private Label                                  resolvedLabel;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
@@ -55,7 +55,23 @@ public class TicketController extends Controller {
         titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
         statusColumn.setCellValueFactory(data -> data.getValue().statusProperty());
         priorityColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
-        userColumn.setCellValueFactory(data -> data.getValue().userProperty());
+        employeeColumn.setCellValueFactory(data -> data.getValue().employeeProperty().asObject());
+        employeeColumn.setCellFactory(data -> new TableCell<>() {
+            @Override protected void updateItem(Integer integer, boolean b) {
+                super.updateItem(integer, b);
+                if (integer == null || b) {
+                    setText(null);
+                    return;
+                }
+                final EmployeeModel model = employee.getModel(integer);
+                if (model == null) {
+                    setText(null);
+                    return;
+                }
+                setText(model.getFullName());
+            }
+        });
+
         createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
         ticketTable.setItems(ticket.getObservableList());
     }
@@ -75,9 +91,11 @@ public class TicketController extends Controller {
                 }
 
                 if (priorityType == PriorityType.HIGH) {
-                    indicator.setGraphic(glyph.color(Color.valueOf("#FFA07A")));
-                } else {
-                    indicator.setGraphic(glyph.color(Color.GREEN));
+                    indicator.setGraphic(glyph.color(Color.valueOf("#C1292E")));
+                } else if (priorityType == PriorityType.MEDIUM) {
+                    indicator.setGraphic(glyph.color(Color.valueOf("#FFF200")));
+                } else if (priorityType == PriorityType.LOW) {
+                    indicator.setGraphic(glyph.color(Color.valueOf("#248232")));
                 }
 
                 setGraphic(indicator);
@@ -119,7 +137,12 @@ public class TicketController extends Controller {
             Notify.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
-        ticket.remove(ticketModel.getId());
+
+        Notify.showConfirmation("Are you sure you want to delete this ticket?", "This action cannot be undone.").ifPresent(type -> {
+            if (type == ButtonType.YES) {
+                ticket.remove(ticketModel.getId());
+            }
+        });
     }
 
     private void onOpen(final TicketModel ticketModel) {

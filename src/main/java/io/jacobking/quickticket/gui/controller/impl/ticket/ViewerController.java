@@ -40,25 +40,18 @@ public class ViewerController extends Controller {
 
     private ObservableList<CommentModel> comments;
 
-    @FXML private TextField titleField;
-    @FXML private TextField creationField;
-    @FXML private TextField userField;
-    @FXML private Label     statusLabel;
-    @FXML private Label     priorityLabel;
-
-    @FXML private Label totalCommentsLabel;
-
-    @FXML private TextField commentField;
-    @FXML private Button    postButton;
-
-    @FXML private Button updateUserButton;
-
-    @FXML private Button statusButton;
-
-    @FXML private Button priorityButton;
-
-    @FXML private Button resolvedButton;
-
+    @FXML private TextField              titleField;
+    @FXML private TextField              creationField;
+    @FXML private TextField              employeeField;
+    @FXML private Label                  statusLabel;
+    @FXML private Label                  priorityLabel;
+    @FXML private Label                  totalCommentsLabel;
+    @FXML private TextField              commentField;
+    @FXML private Button                 postButton;
+    @FXML private Button                 updateUserButton;
+    @FXML private Button                 statusButton;
+    @FXML private Button                 priorityButton;
+    @FXML private Button                 resolvedButton;
     @FXML private ListView<CommentModel> commentList;
 
 
@@ -174,7 +167,7 @@ public class ViewerController extends Controller {
             return;
         }
 
-        ticketModel.userProperty().setValue(model);
+        ticketModel.employeeProperty().setValue(model.getId());
         postSystemComment("Ticket employee changed to: " + model.getFullName());
 
         ticket.update(ticketModel);
@@ -232,10 +225,14 @@ public class ViewerController extends Controller {
         this.ticketId = ticketModel.getId();
         this.comments = comment.getComments(ticketId);
         titleField.setText(ticketModel.getTitle());
-        userField.textProperty().bind(ticketModel.userProperty().asString());
         creationField.setText(String.format("Date: %s", ticketModel.getCreation()));
         priorityLabel.textProperty().bind(ticketModel.priorityProperty().asString());
         statusLabel.textProperty().bind(ticketModel.statusProperty().asString());
+
+        final EmployeeModel employeeModel = employee.getModel(ticketModel.getEmployeeId());
+        if (employeeModel != null) {
+            employeeField.setText(employeeModel.getFullName());
+        }
     }
 
     private void configureComments() {

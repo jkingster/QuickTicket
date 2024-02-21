@@ -71,7 +71,7 @@
                 <TableColumn fx:id="titleColumn" maxWidth="500.0" minWidth="500.0" prefWidth="500.0" resizable="false" text="Title" />
                   <TableColumn fx:id="statusColumn" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" text="Status" />
                   <TableColumn fx:id="priorityColumn" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" text="Priority" />
-                  <TableColumn fx:id="userColumn" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" resizable="false" text="User" />
+                  <TableColumn fx:id="employeeColumn" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" resizable="false" text="Employee" />
                   <TableColumn fx:id="createdColumn" maxWidth="200.0" minWidth="172.0" prefWidth="181.0" resizable="false" text="Created" />
               </columns>
                <columnResizePolicy>

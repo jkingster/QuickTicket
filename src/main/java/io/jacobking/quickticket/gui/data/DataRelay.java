@@ -24,7 +24,6 @@ public class DataRelay {
         final T mapped = getMappedObject(objects[0], clazz);
         return mapped == null ? Optional.empty() : Optional.of(mapped);
     }
-
     public <T> Optional<T> mapIndex(final int index, final Class<T> clazz) {
         final int length = objects.length;
         if (index > length - 1 || index < 0)
