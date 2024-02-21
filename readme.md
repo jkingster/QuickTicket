@@ -36,13 +36,13 @@ Right now QuickTicket provides the current features:
 
 ## Changelog
 
-# 0.1.3-alpha
+**0.1.3-alpha**
 - Fixed bug: Introduced a bug in 0.1.2-alpha (not really a bug, I'm just dumb) where if any screen is exited the entire application shuts down. See <a href="https://github.com/jkingster/QuickTicket/issues/4">here</a>.
 
-# 0.1.2-alpha
+**0.1.2-alpha**
 - Fixed bug: When creating a new ticket and marking it to send e-mail notifications, it hangs and stops responding. See <a href="https://github.com/jkingster/QuickTicket/issues/3">here</a>.
 
-# 0.1.1-alpha 
+**0.1.1-alpha **
 - Fixed bug: Updated SQL query to ignore trigger creation if existing. See <a href="https://github.com/jkingster/QuickTicket/commit/3b2e35735e532f108966770b56466f358a0c154a">here</a>.
 
 ## Roadmap
