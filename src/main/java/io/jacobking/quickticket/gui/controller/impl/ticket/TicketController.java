@@ -17,6 +17,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -43,6 +44,7 @@ public class TicketController extends Controller {
     @FXML private Label                                  activeLabel;
     @FXML private Label                                  pausedLabel;
     @FXML private Label                                  resolvedLabel;
+    @FXML private Button                                 filterButton;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
@@ -130,6 +132,10 @@ public class TicketController extends Controller {
 
     @FXML private void onManageEmployees() {
         Display.show(Route.EMPLOYEE_MANAGER);
+    }
+
+    @FXML private void onFilter() {
+        Notify.showInfo("Not implemented.", "Not implemented.", "This feature has not been implement yet.");
     }
 
     private void onDelete(final TicketModel ticketModel) {

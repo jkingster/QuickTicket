@@ -24,8 +24,8 @@ import java.util.ResourceBundle;
 public class TicketCreatorController extends Controller {
 
     private static final String TICKET_BODY = """
-             Your support ticket has been created. A tech will reach out to you as soon as possible.
-             <br/>
+             <h4>Your support ticket has been created. <span style="color: red; font-weight: bold;">Do not reply to this e-mail. This inbox is not managed.</span></h4>
+             <p>A help desk technician will reach out to you as soon as possible.</p>
              <br/>
              <b>Subject:</b> %s
              <br/>
@@ -33,10 +33,11 @@ public class TicketCreatorController extends Controller {
              <br/>
              <b>Ticket ID:</b> %d
             <br/>
-             <br/>
              <b>Initial Comment:</b>
              <br/>
              %s
+             <br/>
+             <br/>
              """;
 
     private TableView<TicketModel> ticketTable;
