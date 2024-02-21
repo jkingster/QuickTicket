@@ -11,13 +11,15 @@
 
 Your free-to-use ticket management solution. Streamlined and lightweight, effortlessly prioritize tasks, manage employees, and assign tickets with precision. Simplify your workflow whether you're a technician or a time-management enthusiast. Plus, it's free and open-source.
 
+Originally made to help me manage IT support requests, I've decided to actually put effort into making it something productive. This will allow IT technicians without any popular ticket service at their disposal to utilize this free software.
+
 ## Installation
 
 > [!IMPORTANT]
-> As of right now, the installation has only been tested on a Windows environment. No cross-platform tests have been ran. If anyone is willing to work on this implementation, feel free to reach out.
+> As of right now, the installation has only been tested on a Windows environment. No cross-platform tests have been run. If anyone is willing to work on this implementation, feel free to reach out.
 
 
-Head over to the latest releases, or click <a href="https://www.github.com/QuickTicket/tags">here</a>. Find the latest relasee denoted at the top, or feel free to download older versions. Support will be offered if it can be. Right now we are standing at current version **0.1.1-alpha**. We are not in a production environment, yet.
+Head over to the latest releases, or click <a href="https://www.github.com/QuickTicket/tags">here</a>. Find the latest release denoted at the top, or feel free to download older versions. Support will be offered if it can be. Right now we are standing at current version **0.1.1-alpha**. We are not in a production environment, yet.
 
 Download the .msi installer, run it, select the directory you want the installation files to be stored. From there a shortcut and start-menu icon will be created. Run the QuickTicket.exe, and all the necessary components and files will be generated in your AppData directory. 
 
