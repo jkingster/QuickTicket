@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ListView fx:id="commentList" layoutX="38.0" layoutY="83.0" prefHeight="311.0" prefWidth="724.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
+      <HBox layoutX="38.0" layoutY="405.0" prefHeight="26.0" prefWidth="724.0" spacing="5.0">
+         <children>
+            <TextField fx:id="commentField" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="562.0" />
+            <Button fx:id="postButton" mnemonicParsing="false" onAction="#onPost" prefHeight="26.0" styleClass="button-primary" text="Post" />
+            <Button mnemonicParsing="false" onAction="#onDeleteComment" styleClass="button-primary" text="Delete Comment" />
+         </children>
+      </HBox>
+      <TextField fx:id="titleField" editable="false" layoutX="38.0" layoutY="14.0" prefHeight="26.0" prefWidth="503.0" promptText="Undefined" />
+      <TextField fx:id="creationField" editable="false" layoutX="265.0" layoutY="47.0" prefHeight="26.0" prefWidth="158.0" promptText="Undefined" />
+      <HBox alignment="CENTER" layoutX="126.0" layoutY="447.0" prefHeight="37.0" prefWidth="442.0" spacing="5.0">
+         <children>
+            <Button fx:id="priorityButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdatePriority" prefHeight="26.0" styleClass="button-primary" text="Update Priority" />
+            <Button fx:id="statusButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateStatus" prefHeight="26.0" styleClass="button-primary" text="Update Status" />
+            <Button fx:id="updateUserButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateUser" prefHeight="26.0" styleClass="button-primary" text="Update User" />
+            <Button fx:id="resolvedButton" minWidth="105.0" mnemonicParsing="false" onAction="#onMarkResolved" prefHeight="26.0" styleClass="button-primary" text="Mark Resolved" />
+            <Button minWidth="105.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="26.0" styleClass="button-warning" text="Delete" />
+         </children>
+      </HBox>
+      <TextField fx:id="employeeField" editable="false" layoutX="38.0" layoutY="47.0" prefHeight="26.0" prefWidth="217.0" promptText="Undefined" />
+      <Pane layoutX="562.0" layoutY="14.0" prefHeight="26.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
+         <children>
+            <Label fx:id="statusLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="127.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="statusLabel1" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Priority:">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children></Pane>
+      <Pane layoutX="562.0" layoutY="47.0" prefHeight="26.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
+         <children>
+            <Label fx:id="priorityLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="127.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="statusLabel11" contentDisplay="CENTER" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Status:" textAlignment="RIGHT">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children></Pane>
+      <Pane layoutX="428.0" layoutY="47.0" prefHeight="26.0" prefWidth="112.0" styleClass="card" stylesheets="@../css/core/card.css">
+         <children>
+            <Label fx:id="statusLabel111" contentDisplay="CENTER" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="99.0" styleClass="card-text" text="Comments:" textAlignment="RIGHT">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="totalCommentsLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="77.0" layoutY="5.0" prefHeight="17.0" prefWidth="24.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children></Pane>
+   </children>
+   <stylesheets>
+      <URL value="@../css/core/base.css" />
+      <URL value="@../css/screen/viewer.css" />
+   </stylesheets>
+</AnchorPane>

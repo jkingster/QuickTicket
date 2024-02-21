@@ -1,0 +1,8 @@
+@import url("../core/base.css");
+@import url("../core/button.css");
+
+.text-field {
+    -fx-background-color: derive(-fx-primary, 25%);
+    -fx-text-fill: -fx-typography;
+}
+

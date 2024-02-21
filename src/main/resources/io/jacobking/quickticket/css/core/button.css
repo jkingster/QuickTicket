@@ -1,0 +1,37 @@
+@import url("base.css");
+
+.button {
+    -fx-background-color: -fx-offset-blue;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+}
+
+.button:hover {
+    -fx-cursor: hand;
+    -fx-background-color: derive(-fx-offset-blue, 40%);
+}
+
+.button-warning {
+    -fx-background-color: -fx-error;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+}
+
+.button-warning:hover {
+    -fx-background-color: derive(-fx-error, 40%);
+    -fx-cursor: hand;
+}
+
+.button-success {
+    -fx-background-color: -fx-success;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-font-weight: bolder;
+}
+
+.button-success:hover {
+    -fx-background-color: derive(-fx-success, 40%);
+    -fx-cursor: hand;
+}

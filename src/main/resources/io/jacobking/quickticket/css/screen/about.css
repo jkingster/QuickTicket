@@ -1,0 +1,18 @@
+@import url("../core/base.css");
+@import url("../core/button.css");
+
+.body {
+    -fx-background-color: derive(-fx-primary, 25%);
+}
+
+.title {
+    -fx-font-weight: bolder;
+    -fx-font-size: 5em;
+    -fx-text-fill: -fx-offset-blue;
+}
+
+.version {
+    -fx-font-weight: bold;
+    -fx-font-size: 2.0em;
+    -fx-text-fill: white;
+}

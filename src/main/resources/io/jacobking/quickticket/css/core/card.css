@@ -1,0 +1,17 @@
+@import url("base.css");
+
+.card {
+    -fx-background-color: derive(-fx-primary, 25%);
+    -fx-background-radius: 6px;
+}
+
+.card-header {
+    -fx-font-weight: bolder;
+    -fx-font-size: 1.5em;
+    -fx-text-fill: -fx-typography;
+}
+
+.card-text {
+    -fx-font-size: 1em;
+    -fx-text-fill: -fx-typography;
+}

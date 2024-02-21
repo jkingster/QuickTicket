@@ -1,0 +1,14 @@
+* {
+    -fx-primary: #282B36;
+    -fx-secondary: #1A212B;
+    -fx-foreground: #ABB2BF;
+    -fx-accent: #FFA07A;
+    -fx-typography: #FBFEEb;
+    -fx-success: #248232;
+    -fx-error: #C1292E;
+    -fx-offset-blue: #5DADD5;
+}
+
+.body {
+    -fx-background-color: -fx-primary;
+}
