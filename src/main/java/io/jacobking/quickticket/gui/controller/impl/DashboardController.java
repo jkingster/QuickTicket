@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.Version;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.gui.alert.Notify;
@@ -38,8 +39,7 @@ public class DashboardController extends Controller {
     private void onExit() {
         Notify.showConfirmation("Are you sure you want to exit?", "All data is saved.").ifPresent(type -> {
             if (type == ButtonType.YES) {
-                Database.getInstance().close();
-                Platform.exit();
+                QuickTicket.shutdown();
             }
         });
     }

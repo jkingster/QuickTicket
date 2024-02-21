@@ -3,6 +3,7 @@ package io.jacobking.quickticket.core;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
+import javafx.application.Platform;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,7 +29,9 @@ public class QuickTicket {
         new QuickTicket();
     }
 
-    public static void closeExecutorService() {
+    public static void shutdown() {
+        Database.getInstance().close();
         EXECUTOR_SERVICE.shutdown();
+        Platform.exit();
     }
 }

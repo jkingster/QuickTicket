@@ -2,10 +2,8 @@ package io.jacobking.quickticket.gui.screen;
 
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -91,11 +89,9 @@ public class Screen {
         stage.setResizable(false);
         stage.setScene(scene);
 
-        stage.setOnCloseRequest(event -> {
-            Database.getInstance().close();
-            QuickTicket.closeExecutorService();
-            Platform.exit();
-        });
+        if (route == Route.DASHBOARD) {
+            stage.setOnCloseRequest(event -> QuickTicket.shutdown());
+        }
     }
 
     private FXMLLoader setAndGetLoader() {
