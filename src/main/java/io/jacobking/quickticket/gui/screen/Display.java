@@ -25,6 +25,10 @@ public class Display {
         getInstance().showRoute(route, dataRelay);
     }
 
+    public static void show(final Route route) {
+        show(route, DataRelay.empty());
+    }
+
     public static void close(final Route route) {
         getInstance().closeRoute(route);
     }

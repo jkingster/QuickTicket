@@ -18,7 +18,7 @@ public class QuickTicket {
     private QuickTicket() {
         this.config = Config.getInstance();
         this.database = Database.getInstance();
-        Display.show(Route.DASHBOARD, null);
+        Display.show(Route.DASHBOARD);
     }
 
     public static void execute(final Runnable runnable) {

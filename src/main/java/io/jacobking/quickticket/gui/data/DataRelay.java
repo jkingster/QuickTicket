@@ -18,12 +18,17 @@ public class DataRelay {
         return new DataRelay(objects);
     }
 
+    public static DataRelay empty() {
+        return new DataRelay();
+    }
+
     public <T> Optional<T> mapFirst(final Class<T> clazz) {
         if (objects.length == 0)
             return Optional.empty();
         final T mapped = getMappedObject(objects[0], clazz);
         return mapped == null ? Optional.empty() : Optional.of(mapped);
     }
+
     public <T> Optional<T> mapIndex(final int index, final Class<T> clazz) {
         final int length = objects.length;
         if (index > length - 1 || index < 0)
@@ -40,6 +45,7 @@ public class DataRelay {
         final TableView<T> mappedObject = getMappedObject(objects[index], TableView.class);
         return Optional.ofNullable(mappedObject);
     }
+
 
     private <T> T getMappedObject(final Object object, final Class<T> clazz) {
         if (clazz.isInstance(object))

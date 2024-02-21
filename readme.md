@@ -29,7 +29,7 @@ QuickTicket utilizes the lightweight SQLite database for easy local storage to h
 Right now QuickTicket provides the current features:
 * Ticket creation along with setting priority and status of the ticket.
 * Employee creation, along with tying the employee to specific tickets and giving general information: e-mail, title, department, name, etc.
-* E-mail notifications. You can setup your SMTP e-mail provider and send out e-mail notifications to the designated employee when a ticket is created.
+* E-mail notifications. You can set up your SMTP e-mail provider and send out e-mail notifications to the designated employee when a ticket is created.
 > [!CAUTION]
 > As of right now, QuickTicket utilizes SQLite and **NO** information is encrypted/hashed. This means the authentication information provided for SMTP configuration can be viewed by anyone with a technical background. It is advised you store the database file in a secure environment with the proper permissions and security enabled. I take no responsibility if this information is leaked or used maliciously. You can set the database path in your properties file found in your AppData directory.
 

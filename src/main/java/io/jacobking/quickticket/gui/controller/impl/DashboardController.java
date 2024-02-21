@@ -27,12 +27,12 @@ public class DashboardController extends Controller {
 
     @FXML
     private void onSMTP() {
-        Display.show(Route.SMTP, null);
+        Display.show(Route.SMTP);
     }
 
     @FXML
     private void onAbout() {
-        Display.show(Route.ABOUT, null);
+        Display.show(Route.ABOUT);
     }
 
     @FXML

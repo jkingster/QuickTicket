@@ -129,7 +129,7 @@ public class TicketController extends Controller {
     }
 
     @FXML private void onManageEmployees() {
-        Display.show(Route.EMPLOYEE_MANAGER, null);
+        Display.show(Route.EMPLOYEE_MANAGER);
     }
 
     private void onDelete(final TicketModel ticketModel) {
