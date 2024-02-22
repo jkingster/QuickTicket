@@ -14,13 +14,18 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import org.controlsfx.control.PopOver;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -138,6 +143,28 @@ public class TicketController extends Controller {
         Notify.showInfo("Not implemented.", "Not implemented.", "This feature has not been implement yet.");
     }
 
+    @FXML private void onResolve() {
+        final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
+        if (ticketModel == null) {
+            Notify.showError("Failed to resolve ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
+            return;
+        }
+        ticketModel.statusProperty().setValue(StatusType.RESOLVED);
+        ticket.update(ticketModel);
+        ticketTable.refresh();
+    }
+
+    @FXML private void onReopen() {
+        final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
+        if (ticketModel == null) {
+            Notify.showError("Failed to re-open ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
+            return;
+        }
+        ticketModel.statusProperty().setValue(StatusType.OPEN);
+        ticket.update(ticketModel);
+        ticketTable.refresh();
+    }
+
     private void onDelete(final TicketModel ticketModel) {
         if (ticketModel == null) {
             Notify.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
@@ -160,10 +187,51 @@ public class TicketController extends Controller {
         Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable));
     }
 
+    private void onEmail(final TicketModel ticketModel) {
+        if (ticketModel == null) {
+            Notify.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
+            return;
+        }
+
+        final Desktop desktop = Desktop.getDesktop();
+        if (!Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
+            Notify.showError("Failed to open mail.", "Failed to open mail app.", "Mailing is not supported.");
+            return;
+        }
+
+        final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
+        if (model == null) {
+            Notify.showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
+            return;
+        }
+
+        final String employeeEmail = model.getEmail();
+        if (employeeEmail.isEmpty()) {
+            Notify.showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
+            return;
+        }
+
+        attemptToOpenEmailApp(desktop, employeeEmail, ticketModel);
+    }
+
+    private void attemptToOpenEmailApp(final Desktop desktop, final String email, final TicketModel ticketModel) {
+        try {
+            final String subject = String.format("Ticket ID: %d | %s", ticketModel.getId(), ticketModel.getTitle());
+            final String uriEncoded = "mailto:" + email + "?subject=" + subject.replaceAll(" ", "%20")
+                    .replaceAll("\\|", "%7C");
+
+            final URI uri = new URI(uriEncoded);
+            desktop.mail(uri);
+        } catch (URISyntaxException | IOException e) {
+            Notify.showException("Failed to open mail app.", e.fillInStackTrace());
+        }
+    }
+
     private void handleActionsColumn() {
         actionsColumn.setCellFactory(ticketModelVoidTableColumn -> new TableCell<>() {
             private final Button open = new Button();
             private final Button delete = new Button();
+            private final Button email = new Button();
 
             private final HBox box = new HBox();
 
@@ -173,10 +241,12 @@ public class TicketController extends Controller {
 
                 open.setGraphic(FALoader.createDefault(FontAwesome.Glyph.FOLDER_OPEN_ALT));
                 delete.setGraphic(FALoader.createDefault(FontAwesome.Glyph.CLOSE));
-                box.getChildren().addAll(open, delete);
+                email.setGraphic(FALoader.createDefault(FontAwesome.Glyph.SEND));
+                box.getChildren().addAll(open, delete, email);
 
                 delete.setOnAction(event -> onDelete(getTableRow().getItem()));
                 open.setOnAction(event -> onOpen(getTableRow().getItem()));
+                email.setOnAction(event -> onEmail(getTableRow().getItem()));
             }
 
             @Override protected void updateItem(Void unused, boolean empty) {
