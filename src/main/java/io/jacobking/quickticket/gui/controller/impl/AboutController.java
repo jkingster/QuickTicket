@@ -3,6 +3,8 @@ package io.jacobking.quickticket.gui.controller.impl;
 import io.jacobking.quickticket.core.Version;
 import io.jacobking.quickticket.gui.alert.Notify;
 import io.jacobking.quickticket.gui.controller.Controller;
+import io.jacobking.quickticket.gui.screen.Display;
+import io.jacobking.quickticket.gui.screen.Route;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -39,6 +41,11 @@ public class AboutController extends Controller {
     @FXML
     private void onBugReport() {
         openWebpage(BUG_REPORT_URL);
+    }
+
+    @FXML
+    private void onChangelog() {
+        Display.show(Route.CHANGELOG);
     }
 
     private void openWebpage(final String url) {

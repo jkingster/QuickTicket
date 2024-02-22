@@ -1,6 +1,7 @@
 package io.jacobking.quickticket;
 
 import io.jacobking.quickticket.core.QuickTicket;
+import io.jacobking.quickticket.core.utility.ChangelogReader;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -12,6 +13,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        QuickTicket.launch();
+       QuickTicket.launch();
     }
 }

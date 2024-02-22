@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="572.0" styleClass="body" stylesheets="@../css/core/base.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ListView fx:id="changeList" layoutX="24.0" layoutY="69.0" prefHeight="318.0" prefWidth="524.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
+      <Label layoutX="167.0" text="Changelog" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="47.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

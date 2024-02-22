@@ -1,5 +1,8 @@
 package io.jacobking.quickticket.core;
 
+import org.jooq.JSON;
+import org.jooq.tools.json.JSONObject;
+
 public class Version {
 
     private static final Version CURRENT = new Version(0, 2, 1, "alpha");
