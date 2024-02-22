@@ -10,13 +10,15 @@ import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -35,7 +37,6 @@ public class TicketController extends Controller {
     private final FilteredList<TicketModel> active   = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.ACTIVE);
     private final FilteredList<TicketModel> paused   = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.PAUSED);
     private final FilteredList<TicketModel> resolved = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.RESOLVED);
-
 
     @FXML private TableView<TicketModel>                 ticketTable;
     @FXML private TableColumn<TicketModel, PriorityType> indicatorColumn;
@@ -151,7 +152,6 @@ public class TicketController extends Controller {
         }
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
         ticket.update(ticketModel);
-        ticketTable.refresh();
     }
 
     @FXML private void onReopen() {
@@ -162,7 +162,6 @@ public class TicketController extends Controller {
         }
         ticketModel.statusProperty().setValue(StatusType.OPEN);
         ticket.update(ticketModel);
-        ticketTable.refresh();
     }
 
     private void onDelete(final TicketModel ticketModel) {
