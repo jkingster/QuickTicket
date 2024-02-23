@@ -54,9 +54,6 @@ public class ChangelogReader {
             return changes;
         }
 
-        public void setChanges(List<String> changes) {
-            this.changes = changes;
-        }
     }
 
 }

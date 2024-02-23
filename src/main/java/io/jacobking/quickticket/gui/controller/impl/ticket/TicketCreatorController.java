@@ -24,21 +24,29 @@ import java.util.ResourceBundle;
 public class TicketCreatorController extends Controller {
 
     private static final String TICKET_BODY = """
-             <h4>Your support ticket has been created. <span style="color: red; font-weight: bold;">Do not reply to this e-mail. This inbox is not managed.</span></h4>
-             <p>A help desk technician will reach out to you as soon as possible.</p>
-             <br/>
-             <b>Subject:</b> %s
-             <br/>
-             <b>Date:</b> %s
-             <br/>
-             <b>Ticket ID:</b> %d
+            <style>
+            body {
+                font-family: Aptos, Arial, sans-serif;
+                font-size: 12px;
+            }
+            </style>
+            Dear %s, your support ticket has been created. IT will reach out to your shortly to help resolve your issue.
             <br/>
-             <b>Initial Comment:</b>
-             <br/>
-             %s
-             <br/>
-             <br/>
-             """;
+            <br/>
+            Ticket Information:
+            <br/>
+            - <b>Ticket ID:</b> %d
+            <br/>
+            - <b>Ticket Subject:</b> %s
+            <br/>
+            - <b>Ticket Creation Date:</b> %s
+            <br/>
+            - <b>Ticket Initial Comments:</b> %s
+            <br/>
+            <br/>
+            <br/>
+            <span style="font-weight: bolder; color: red;">Please do not reply to this ticket. This is an unmanaged inbox.</span>
+            """;
 
     private TableView<TicketModel> ticketTable;
 
@@ -142,7 +150,9 @@ public class TicketCreatorController extends Controller {
         if (email.isEmpty()) return;
 
         final EmailSender emailSender = new EmailSender(EmailConfig.getInstance());
-        emailSender.sendEmail(String.format("Ticket Created (Ticket ID: %d) | %s", ticketModel.getId(), ticketModel.getTitle()), email, TICKET_BODY.formatted(ticketModel.getTitle(), ticketModel.getCreation(), ticketModel.getId(), commentField.getText().isEmpty() ? "No initial information provided." : commentField.getText()));
+        final String initialComment = commentField.getText().isEmpty() ? "Nothing was provided." : commentField.getText();
+        final String ticketBody = TICKET_BODY.formatted(model.getFullName(), ticketModel.getId(), ticketModel.getCreation(), ticketModel.getTitle(), initialComment);
+        emailSender.sendEmail(String.format("Ticket Created (Ticket ID: %d) | %s", ticketModel.getId(), ticketModel.getTitle()), email, ticketBody);
     }
 
 
