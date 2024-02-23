@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.gui.screen.impl;
 
-import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.controller.impl.ChangelogController;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.screen.Screen;

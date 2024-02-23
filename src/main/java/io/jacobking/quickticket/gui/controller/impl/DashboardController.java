@@ -2,12 +2,10 @@ package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.Version;
-import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.gui.alert.Notify;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;

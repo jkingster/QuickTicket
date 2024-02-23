@@ -1,7 +1,6 @@
 package io.jacobking.quickticket;
 
 import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.utility.ChangelogReader;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

@@ -6,7 +6,6 @@ import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.gui.alert.Notify;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChangelogReader {

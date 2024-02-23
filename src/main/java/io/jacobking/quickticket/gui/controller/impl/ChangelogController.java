@@ -2,7 +2,6 @@ package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.utility.ChangelogReader;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.utility.StyleCommons;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -12,7 +11,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 import java.net.URL;
 import java.util.ResourceBundle;
