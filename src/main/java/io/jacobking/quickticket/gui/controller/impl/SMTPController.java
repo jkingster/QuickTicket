@@ -17,35 +17,25 @@ import java.util.ResourceBundle;
 
 public class SMTPController extends Controller {
 
-    @FXML
-    private TextField               hostField;
-    @FXML
-    private TextField               portField;
-    @FXML
-    private TextField               fromAddressField;
-    @FXML
-    private ComboBox<TransportType> transportComboBox;
-    @FXML
-    private CheckBox                authenticationCheckBox;
-    @FXML
-    private TextField               usernameField;
-    @FXML
-    private TextField               passwordField;
-    @FXML
-    private Button                  saveButton;
+    @FXML private TextField               hostField;
+    @FXML private TextField               portField;
+    @FXML private TextField               fromAddressField;
+    @FXML private TextField               bccField;
+    @FXML private ComboBox<TransportType> transportComboBox;
+    @FXML private CheckBox                authenticationCheckBox;
+    @FXML private TextField               usernameField;
+    @FXML private TextField               passwordField;
+    @FXML private Button                  saveButton;
 
-    @FXML
-    private TextField testAddressField;
+    @FXML private TextField testAddressField;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         preloadValues();
         configureComboBox();
         usernameField.disableProperty().bind(authenticationCheckBox.selectedProperty().not());
         passwordField.disableProperty().bind(usernameField.disableProperty());
 
-        saveButton.disableProperty().bind(hostField.textProperty().isEmpty()
-                .or(fromAddressField.textProperty().isEmpty()));
+        saveButton.disableProperty().bind(hostField.textProperty().isEmpty().or(fromAddressField.textProperty().isEmpty()));
     }
 
     private void preloadValues() {
@@ -53,6 +43,7 @@ public class SMTPController extends Controller {
         hostField.setText(email.getHost());
         portField.setText(email.getPort());
         fromAddressField.setText(email.getFromAddress());
+        bccField.setText(email.getBccAddress());
 
         if (email.getStarttls()) {
             transportComboBox.getSelectionModel().select(TransportType.STARTTLS);
@@ -65,51 +56,41 @@ public class SMTPController extends Controller {
         passwordField.setText(email.getPassword());
     }
 
-    @FXML
-    private void onTest() {
+    @FXML private void onTest() {
         final String testEmail = testAddressField.getText();
-        if (testEmail.isEmpty())
-            return;
+        if (testEmail.isEmpty()) return;
 
-        EmailConfig.getInstance()
-                .setEmail(getEmail())
-                .applySettings();
+        EmailConfig.getInstance().setEmail(getEmail()).applySettings();
 
         final EmailSender sender = new EmailSender(EmailConfig.getInstance());
         sender.sendEmail("QuickTicket SMTP Test", testEmail, "This email can be ignored.");
     }
 
-    @FXML
-    private void onSave() {
-        email.update(new EmailModel(getEmail()));
+    @FXML private void onSave() {
+        final Email savedEmail = getEmail();
+        System.out.println(savedEmail.getBccAddress());
+        email.update(new EmailModel(savedEmail));
         Display.close(Route.SMTP);
     }
 
     private Email getEmail() {
-        return new Email()
-                .setId(0)
+        return new Email().setId(0)
                 .setHost(hostField.getText())
                 .setPort(portField.getText().isEmpty() ? "25" : portField.getText())
                 .setAuthentication(authenticationCheckBox.isSelected())
-                .setOverSslOrTls(
-                        transportComboBox.getSelectionModel().getSelectedItem()
-                                == TransportType.SSL_OR_TSL
-                )
-                .setStarttls(
-                        transportComboBox.getSelectionModel().getSelectedItem()
-                                == TransportType.STARTTLS
-                )
+                .setOverSslOrTls(transportComboBox.getSelectionModel().getSelectedItem() == TransportType.SSL_OR_TSL)
+                .setStarttls(transportComboBox.getSelectionModel().getSelectedItem() == TransportType.STARTTLS)
                 .setUsername(usernameField.getText())
                 .setPassword(passwordField.getText())
                 .setFromAddress(fromAddressField.getText())
+                .setBccAddress(bccField.getText())
                 .setPort(passwordField.getText());
     }
 
     private void configureComboBox() {
         transportComboBox.setItems(FXCollections.observableArrayList(TransportType.values()));
         transportComboBox.setCellFactory(data -> new ListCell<>() {
-            @Override
-            protected void updateItem(TransportType transportType, boolean b) {
+            @Override protected void updateItem(TransportType transportType, boolean b) {
                 super.updateItem(transportType, b);
                 if (transportType == null || b) {
                     setText(null);

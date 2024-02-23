@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.alert;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -49,9 +50,9 @@ public class Notify {
     }
 
     public static void showException(final String content, final Throwable throwable) {
-        new AlertBuilder(Alert.AlertType.ERROR)
+        Platform.runLater(() -> new AlertBuilder(Alert.AlertType.ERROR)
                 .withException(content, throwable)
-                .show();
+                .show());
     }
 
 }

@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="334.0" prefWidth="427.0" styleClass="body" stylesheets="@../css/core/base.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="427.0" styleClass="body" stylesheets="@../css/core/base.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="104.0" layoutY="14.0" text="SMTP Settings" textFill="WHITE">
          <font>
@@ -27,6 +26,7 @@
                </children>
             </HBox>
             <TextField fx:id="fromAddressField" prefHeight="25.0" prefWidth="223.0" promptText="From Address (quickticket@domain.com)" stylesheets="@../css/core/text-field.css" />
+            <TextField fx:id="bccField" prefHeight="25.0" prefWidth="223.0" promptText="BCC Address (quickticket@domain.com)" stylesheets="@../css/core/text-field.css" />
             <ComboBox fx:id="transportComboBox" prefHeight="25.0" prefWidth="189.0" promptText="SSL/TLS" stylesheets="@../css/core/combo-box.css" />
             <CheckBox fx:id="authenticationCheckBox" mnemonicParsing="false" text="Authentication" textFill="WHITE" />
             <VBox alignment="TOP_RIGHT" prefHeight="50.0" prefWidth="282.0" spacing="5.0" stylesheets="@../css/core/text-field.css">
@@ -38,7 +38,7 @@
             <TextField fx:id="testAddressField" prefHeight="25.0" prefWidth="223.0" promptText="To Address (For testing) (test@domain.com)" stylesheets="@../css/core/text-field.css" />
          </children>
       </VBox>
-      <HBox alignment="CENTER" layoutX="68.0" layoutY="286.0" prefHeight="34.0" prefWidth="313.0" spacing="5.0" stylesheets="@../css/core/button.css">
+      <HBox alignment="CENTER" layoutX="68.0" layoutY="321.0" prefHeight="34.0" prefWidth="313.0" spacing="5.0" stylesheets="@../css/core/button.css">
          <children>
             <Button mnemonicParsing="false" onAction="#onTest" styleClass="button-success" text="Test" />
             <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSave" text="Save Configuration" />

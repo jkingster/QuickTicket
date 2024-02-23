@@ -19,9 +19,10 @@ public class EmailModel extends ViewModel<Email> {
     private final StringProperty  usernameProperty       = new SimpleStringProperty();
     private final StringProperty  passwordProperty       = new SimpleStringProperty();
     private final StringProperty  fromAddressProperty    = new SimpleStringProperty();
+    private final StringProperty bccAddressProperty = new SimpleStringProperty();
 
     public EmailModel(final int id, String host, String port, boolean startTLS, boolean overSSL, boolean authentication, String username, String password,
-                      String fromAddress) {
+                      String fromAddress, String bccAddress) {
         super(id);
         this.hostProperty.setValue(host);
         this.portProperty.setValue(port);
@@ -31,6 +32,7 @@ public class EmailModel extends ViewModel<Email> {
         this.usernameProperty.setValue(username);
         this.passwordProperty.setValue(password);
         this.fromAddressProperty.setValue(fromAddress);
+        this.bccAddressProperty.setValue(bccAddress);
 
         startTLSProperty.addListener(((observableValue, aBoolean, t1) -> {
             if (t1) {
@@ -55,7 +57,8 @@ public class EmailModel extends ViewModel<Email> {
                 email.getAuthentication(),
                 email.getUsername(),
                 email.getPassword(),
-                email.getFromAddress()
+                email.getFromAddress(),
+                email.getBccAddress()
         );
     }
 
@@ -151,6 +154,19 @@ public class EmailModel extends ViewModel<Email> {
         return fromAddressProperty;
     }
 
+
+    public String getBccAddress() {
+        return bccAddressProperty.get();
+    }
+
+    public StringProperty bccAddressProperty() {
+        return bccAddressProperty;
+    }
+
+    public void setBccAddressProperty(String bccAddressProperty) {
+        this.bccAddressProperty.set(bccAddressProperty);
+    }
+
     @Override
     public Email toEntity() {
         return new Email()
@@ -162,6 +178,7 @@ public class EmailModel extends ViewModel<Email> {
                 .setAuthentication(isAuthentication())
                 .setUsername(getUsernameProperty())
                 .setPassword(getPasswordProperty())
-                .setFromAddress(getFromAddressProperty());
+                .setFromAddress(getFromAddressProperty())
+                .setBccAddress(getBccAddress());
     }
 }

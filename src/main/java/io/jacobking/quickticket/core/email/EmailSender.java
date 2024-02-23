@@ -9,17 +9,15 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static io.jacobking.quickticket.core.QuickTicket.execute;
 
 public class EmailSender {
 
-    private final Session session;
-    private final String  fromEmail;
+    private final EmailConfig emailConfig;
+    private final Session     session;
+    private final String      fromEmail;
 
     public EmailSender(EmailConfig emailConfig) {
+        this.emailConfig = emailConfig;
         this.session = Session.getDefaultInstance(emailConfig.getProperties());
         this.fromEmail = emailConfig.getEmail().getFromAddress();
     }
@@ -34,6 +32,12 @@ public class EmailSender {
                 mimeMessage.setSubject(subject, "UTF-8");
                 mimeMessage.setSentDate(new Date());
                 mimeMessage.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(recipient));
+                final String bcc = emailConfig.getEmail().getBccAddress();
+                if (bcc != null && !bcc.isEmpty()) {
+                    System.out.println("?");
+                    mimeMessage.setRecipient(MimeMessage.RecipientType.BCC, new InternetAddress(bcc));
+                }
+
                 mimeMessage.setContent(body, "text/html; charset=utf-8");
                 Transport.send(mimeMessage);
             } catch (MessagingException e) {
