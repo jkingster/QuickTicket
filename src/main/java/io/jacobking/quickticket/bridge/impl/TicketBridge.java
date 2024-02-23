@@ -30,6 +30,10 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
                 if (change.wasAdded()) {
                     baseUnfilteredList.addAll(change.getAddedSubList());
                 }
+
+                if (change.wasRemoved()) {
+                    baseUnfilteredList.removeAll(change.getRemoved());
+                }
             }
         });
     }
