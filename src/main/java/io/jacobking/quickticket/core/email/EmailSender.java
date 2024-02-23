@@ -34,7 +34,6 @@ public class EmailSender {
                 mimeMessage.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(recipient));
                 final String bcc = emailConfig.getEmail().getBccAddress();
                 if (bcc != null && !bcc.isEmpty()) {
-                    System.out.println("?");
                     mimeMessage.setRecipient(MimeMessage.RecipientType.BCC, new InternetAddress(bcc));
                 }
 

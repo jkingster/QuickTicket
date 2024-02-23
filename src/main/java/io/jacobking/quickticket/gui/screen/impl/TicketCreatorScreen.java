@@ -14,7 +14,6 @@ public class TicketCreatorScreen extends Screen {
     @Override
     public void display(DataRelay dataRelay) {
         if (dataRelay == null) {
-            System.out.println("?");
             return;
         }
 

@@ -68,7 +68,6 @@ public class SMTPController extends Controller {
 
     @FXML private void onSave() {
         final Email savedEmail = getEmail();
-        System.out.println(savedEmail.getBccAddress());
         email.update(new EmailModel(savedEmail));
         Display.close(Route.SMTP);
     }
