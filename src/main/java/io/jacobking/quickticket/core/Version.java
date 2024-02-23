@@ -5,7 +5,7 @@ import org.jooq.tools.json.JSONObject;
 
 public class Version {
 
-    private static final Version CURRENT = new Version(0, 2, 1, "alpha");
+    private static final Version CURRENT = new Version(0, 2, 2, "alpha");
 
     private final int    major;
     private final int    minor;
