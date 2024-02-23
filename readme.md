@@ -39,6 +39,7 @@ Right now QuickTicket provides the current features:
 ## Changelog
 **0.3.0-alpha**
 - New feature: Implemented the option to BCC an address for SMTP settings.
+- Internals: Optimized imports.
 
 **0.2.2-alpha**
 - Fixed bug: Deleting tickets was not updating the corresponding ticket count correctly. Previous bug from 0.2.1-alpha.

@@ -2,7 +2,8 @@
   {
     "version": "0.3.0-alpha",
     "changes": [
-      "New feature: Implemented the option to BCC an address for SMTP settings."
+      "New feature: Implemented the option to BCC an address for SMTP settings.",
+      "Internals: Optimized imports."
     ]
   },
   {
