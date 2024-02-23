@@ -1,5 +1,11 @@
 [
   {
+    "version": "1.0.0-beta",
+    "changes": [
+      "Breaking change: Introduced database migration tool to allow for updating tables/etc. when versions change. This introduces it's own db version separate of the software version."
+    ]
+  },
+  {
     "version": "0.3.0-alpha",
     "changes": [
       "New feature: Implemented the option to BCC an address for SMTP settings.",
