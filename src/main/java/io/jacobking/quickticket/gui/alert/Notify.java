@@ -50,9 +50,9 @@ public class Notify {
     }
 
     public static void showException(final String content, final Throwable throwable) {
-        Platform.runLater(() -> new AlertBuilder(Alert.AlertType.ERROR)
+        new AlertBuilder(Alert.AlertType.ERROR)
                 .withException(content, throwable)
-                .show());
+                .show();
     }
 
 }
