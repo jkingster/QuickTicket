@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -89,7 +90,7 @@ public class Screen {
         stage.setResizable(false);
         stage.setScene(scene);
 
-        if (route == Route.DASHBOARD) {
+        if (this.route == Route.DASHBOARD) {
             stage.setOnCloseRequest(event -> QuickTicket.shutdown());
         }
     }

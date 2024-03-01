@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.core;
 
 import io.jacobking.quickticket.core.database.Database;
+import io.jacobking.quickticket.core.lock.InstanceLock;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import javafx.application.Platform;
@@ -30,6 +31,7 @@ public class QuickTicket {
     }
 
     public static void shutdown() {
+        InstanceLock.getInstance().deleteLock();
         Database.getInstance().close();
         EXECUTOR_SERVICE.shutdown();
         Platform.exit();

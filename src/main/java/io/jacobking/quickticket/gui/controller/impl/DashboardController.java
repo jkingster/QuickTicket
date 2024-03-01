@@ -6,9 +6,15 @@ import io.jacobking.quickticket.gui.alert.Notify;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
+import io.jacobking.quickticket.gui.utility.FALoader;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import org.controlsfx.glyphfont.FontAwesome;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,6 +23,8 @@ public class DashboardController extends Controller {
 
     @FXML
     private Label versionLabel;
+
+    @FXML
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -41,6 +49,4 @@ public class DashboardController extends Controller {
             }
         });
     }
-
-
 }
