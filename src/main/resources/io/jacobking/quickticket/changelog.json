@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.1.0-beta",
+    "changes": [
+      "New feature: Implements file locking to only allow single-instance of QuickTicket. Prevent connection issues with the SQLite database.",
+      "New feature: Implemented sending e-mails when the ticket is resolved.",
+      "UI update: When a ticket is marked resolved, it changes the color of the circular icon."
+    ]
+  },
+  {
     "version": "1.0.0-beta",
     "changes": [
       "Breaking change: Introduced database migration tool to allow for updating tables/etc. when versions change. This introduces it's own db version separate of the software version."

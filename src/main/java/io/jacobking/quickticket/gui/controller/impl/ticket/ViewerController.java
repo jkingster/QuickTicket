@@ -1,5 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
+import io.jacobking.quickticket.core.email.EmailConfig;
+import io.jacobking.quickticket.core.email.EmailSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -211,6 +213,42 @@ public class ViewerController extends Controller {
         postSystemComment("This ticket has been marked resolved.");
         ticket.update(ticketModel);
         ticketTable.refresh();
+
+        Notify.showConfirmation("Do you want to notify the employee?", "Click yes to send an e-mail.")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        final EmployeeModel employeeModel = employee.getModel(ticketModel.getEmployeeId());
+                        if (employeeModel == null) {
+                            Notify.showError("Could not notify employee.", "No employee attached to ticket.", "Please set an employee.");
+                            return;
+                        }
+
+                        final String targetEmail = employeeModel.getEmail();
+                        if (targetEmail == null || targetEmail.isEmpty()) {
+                            Notify.showError("Could not notify employee.", "The attached employee does not have an e-mail set.", "Please set one and try again.");
+                            return;
+                        }
+
+                        final EmailSender emailSender = new EmailSender(EmailConfig.getInstance());
+                        final String subject = String.format("Ticket Resolved (Ticket ID: %s) | %s", ticketModel.getId(), ticketModel.getTitle());
+                        final String body = getTicketBody();
+
+                        emailSender.sendEmail(subject, targetEmail, body);
+                    }
+                });
+    }
+
+    private String getTicketBody() {
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<b>").append("Your support ticket has been resolved.").append("</b>");
+        stringBuilder.append("<br/><span style=\"color:red; font-weight:bolder;\">").append("Do not reply to this e-mail. This inbox is not managed.").append("</span>");
+        stringBuilder.append("<br/><br/>");
+        stringBuilder.append("<b>Ticket Comments:</b>");
+        commentList.getItems().forEach(model -> stringBuilder.append("<br/><span style=\"font-size: 15px;\">")
+                .append(model.getPostedOn())
+                .append("</span>: ")
+                .append(model.getPost()));
+        return stringBuilder.toString();
     }
 
     private void postSystemComment(final String commentText) {

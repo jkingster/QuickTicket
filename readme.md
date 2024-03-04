@@ -19,7 +19,7 @@ Originally made to help me manage IT support requests, I've decided to actually 
 > As of right now, the installation has only been tested on a Windows environment. No cross-platform tests have been run. If anyone is willing to work on this implementation, feel free to reach out.
 
 
-Head over to the latest releases, or click <a href="https://www.github.com/QuickTicket/tags">here</a>. Find the latest release denoted at the top, or feel free to download older versions. Support will be offered if it can be. Right now we are standing at current version **1.0.0-beta**. We are not in a production environment, yet.
+Head over to the latest releases, or click <a href="https://www.github.com/QuickTicket/tags">here</a>. Find the latest release denoted at the top, or feel free to download older versions. Support will be offered if it can be. Right now we are standing at current version **1.1.0-beta**. We are not in a production environment, yet.
 
 Download the .msi installer, run it, select the directory you want the installation files to be stored. From there a shortcut and start-menu icon will be created. Run the QuickTicket.exe, and all the necessary components and files will be generated in your AppData directory. 
 
@@ -37,6 +37,11 @@ Right now QuickTicket provides the current features:
 ![Static Badge](https://img.shields.io/badge/Language-Java-darkgreen) ![Static Badge](https://img.shields.io/badge/JDK-17-blue) ![Static Badge](https://img.shields.io/badge/JavaFX%20SDK-17.0.6-blue) ![Static Badge](https://img.shields.io/badge/jOOQ-3.18.6-darkred) ![Static Badge](https://img.shields.io/badge/Database%20(SQLite--JDBC)-3.42.0.0-red) ![Static Badge](https://img.shields.io/badge/Gradle-8.4-yellow)
 
 ## Changelog
+**1.1.0-beta**
+- New feature: Implements file locking to only allow single-instance of QuickTicket. Prevent connection issues with the SQLite database.
+- New feature: Implemented sending e-mails when the ticket is resolved.
+- UI update: When a ticket is marked resolved, it changes the color of the circular icon.
+
 **1.0.0-beta**
 - Breaking change: Introduced database migration tool to allow for updating tables/etc. when versions change. This introduces it's own db version separate of the software version.
 

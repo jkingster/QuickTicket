@@ -96,6 +96,18 @@ public class TicketController extends Controller {
                     return;
                 }
 
+                final TicketModel ticketModel = getTableRow().getItem();
+                if (ticketModel == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                if (StatusType.of(ticketModel.getStatus()) == StatusType.RESOLVED) {
+                    indicator.setGraphic(glyph.color(Color.valueOf("#282B36")));
+                    setGraphic(indicator);
+                    return;
+                }
+
                 if (priorityType == PriorityType.HIGH) {
                     indicator.setGraphic(glyph.color(Color.valueOf("#C1292E")));
                 } else if (priorityType == PriorityType.MEDIUM) {
