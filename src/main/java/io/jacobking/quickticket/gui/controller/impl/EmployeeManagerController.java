@@ -44,7 +44,6 @@ public class EmployeeManagerController extends Controller {
         employee.createModel(new Employee()
                 .setFirstName(firstNameField.getText())
                 .setLastName(lastNameField.getText())
-                .setCompanyId(0) // not implemented yet.
                 .setEmail(emailField.getText())
                 .setDepartment(departmentField.getText())
                 .setTitle(titleField.getText()));

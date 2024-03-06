@@ -13,12 +13,9 @@ public class QuickTicket {
 
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(5);
 
-    private final Config   config;
-    private final Database database;
 
     private QuickTicket() {
-        this.config = Config.getInstance();
-        this.database = Database.getInstance();
+        Database.getInstance();
         Display.show(Route.DASHBOARD);
     }
 
