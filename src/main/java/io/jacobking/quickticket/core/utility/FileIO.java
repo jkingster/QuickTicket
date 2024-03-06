@@ -12,8 +12,8 @@ public class FileIO {
     private static final String FILE_SEPARATOR    = File.separator;
     public static final  String TARGET_DIRECTORY  = String.format("%s%s%s", APP_DATA, FILE_SEPARATOR, DIRECTORY_NAME);
     public static final  String TARGET_PROPERTIES = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "sysconfig.properties");
-
-    public static final String TARGET_DATABASE = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "database.db");
+    public static final  String TARGET_LOCK       = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, ".lock");
+    public static final  String TARGET_DATABASE   = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "database.db");
 
     private FileIO() {
 
@@ -45,6 +45,11 @@ public class FileIO {
     public static boolean createDirectory(final String path) {
         Checks.notEmpty(path, "Directory Path");
         return new File(path).mkdir();
+    }
+
+    public static boolean deleteFile(final String path) {
+        Checks.notEmpty(path, "File Path");
+        return new File(path).delete();
     }
 
 }

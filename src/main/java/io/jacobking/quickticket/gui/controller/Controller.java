@@ -29,7 +29,7 @@ public abstract class Controller implements Initializable {
         this.emailConfig = EmailConfig.getInstance()
                 .setEmail(email.getEmail())
                 .applySettings();
-        this.dataRelay = null; // DataRelay.ofEmpty();?
+        this.dataRelay = DataRelay.empty();
     }
 
     public Controller setData(final DataRelay dataRelay) {

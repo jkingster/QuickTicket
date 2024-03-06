@@ -8,9 +8,14 @@ module io.jacobking.quickticket {
     requires org.xerial.sqlitejdbc;
     requires java.desktop;
     requires java.mail;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.databind;
 
     opens io.jacobking.quickticket to javafx.fxml;
     exports io.jacobking.quickticket;
+
+    opens io.jacobking.quickticket.core.utility to com.fasterxml.jackson.databind, com.fasterxml.jackson.core;
+    exports io.jacobking.quickticket.core.utility;
 
     opens io.jacobking.quickticket.tables.records to org.jooq;
     exports io.jacobking.quickticket.tables.records;

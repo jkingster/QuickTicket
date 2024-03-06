@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.gui.model.ViewModel;

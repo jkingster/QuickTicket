@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="264.0" prefWidth="600.0" styleClass="body" stylesheets="@../css/screen/about.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="134.0" layoutY="8.0" styleClass="title" text="QuickTicket" />
@@ -17,6 +16,7 @@
             <Button mnemonicParsing="false" onAction="#onGitHub" text="GitHub" />
             <Button mnemonicParsing="false" onAction="#onSuggestion" text="Suggestion" />
             <Button mnemonicParsing="false" onAction="#onBugReport" text="Bug Report" />
+            <Button mnemonicParsing="false" onAction="#onChangelog" text="Changelog" />
          </children>
       </HBox>
    </children>

@@ -27,6 +27,15 @@ public class Notify {
                 .show();
     }
 
+    public static void showError(final String title, final String header, final String content, final ButtonType... buttonTypes) {
+        new AlertBuilder(Alert.AlertType.ERROR)
+                .withTitle(title)
+                .withHeader(header)
+                .withContent(content)
+                .withButtons(buttonTypes)
+                .showAndWait();
+    }
+
     public static void showWarning(final String title, final String header, final String content) {
         new AlertBuilder(Alert.AlertType.WARNING)
                 .withTitle(title)

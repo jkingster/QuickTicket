@@ -22,7 +22,7 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
         removalListener();
     }
 
-    private void loadEntities() {
+    protected void loadEntities() {
         final List<E> entities = Database.call().getAll(repoType);
         if (entities.isEmpty())
             return;

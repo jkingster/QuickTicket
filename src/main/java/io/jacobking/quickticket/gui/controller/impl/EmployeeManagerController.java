@@ -14,37 +14,26 @@ import java.util.ResourceBundle;
 
 public class EmployeeManagerController extends Controller {
 
-    @FXML
-    private ListView<EmployeeModel> employeeList;
+    @FXML private ListView<EmployeeModel> employeeList;
 
-    @FXML
-    private TextField firstNameField;
-    @FXML
-    private TextField lastNameField;
-    @FXML
-    private TextField titleField;
-    @FXML
-    private TextField departmentField;
-    @FXML
-    private TextField emailField;
+    @FXML private TextField firstNameField;
+    @FXML private TextField lastNameField;
+    @FXML private TextField titleField;
+    @FXML private TextField departmentField;
+    @FXML private TextField emailField;
 
-    @FXML
-    private Button createButton;
+    @FXML private Button createButton;
 
-    @FXML
-    private Button deleteButton;
+    @FXML private Button deleteButton;
 
-    @FXML
-    private Button updateButton;
+    @FXML private Button updateButton;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureEmployeeList();
         configureButtons();
     }
 
-    @FXML
-    private void onCreate() {
+    @FXML private void onCreate() {
         final EmployeeModel selected = employeeList.getSelectionModel().getSelectedItem();
         if (selected != null) {
             Notify.showError("Failed to create employee.", "An employee is currently selected.", "You must deselect the employee first.");
@@ -57,14 +46,11 @@ public class EmployeeManagerController extends Controller {
                 .setLastName(lastNameField.getText())
                 .setEmail(emailField.getText())
                 .setDepartment(departmentField.getText())
-                .setTitle(titleField.getText())
-        );
-
+                .setTitle(titleField.getText()));
         clearFields();
     }
 
-    @FXML
-    private void onDelete() {
+    @FXML private void onDelete() {
         final EmployeeModel selected = employeeList.getSelectionModel().getSelectedItem();
         if (selected == null) {
             Notify.showError("Failed to delete.", "No employee was deleted.", "You must select an employee first.");
@@ -74,8 +60,7 @@ public class EmployeeManagerController extends Controller {
         clearFields();
     }
 
-    @FXML
-    private void onUpdate() {
+    @FXML private void onUpdate() {
         final EmployeeModel model = employeeList.getSelectionModel().getSelectedItem();
 
         model.setFirstName(firstNameField.getText());
@@ -88,16 +73,12 @@ public class EmployeeManagerController extends Controller {
         employeeList.refresh();
     }
 
-    @FXML
-    private void onClear() {
+    @FXML private void onClear() {
         clearFields();
     }
 
     private void configureButtons() {
-        createButton.disableProperty().bind(firstNameField.textProperty().isEmpty()
-                .or(lastNameField.textProperty().isEmpty())
-                .or(employeeList.getSelectionModel().selectedItemProperty().isNotNull())
-        );
+        createButton.disableProperty().bind(firstNameField.textProperty().isEmpty().or(lastNameField.textProperty().isEmpty()).or(employeeList.getSelectionModel().selectedItemProperty().isNotNull()));
 
         deleteButton.disableProperty().bind(employeeList.getSelectionModel().selectedItemProperty().isNull());
         updateButton.disableProperty().bind(employeeList.getSelectionModel().selectedItemProperty().isNull());
@@ -107,8 +88,7 @@ public class EmployeeManagerController extends Controller {
         employeeList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         employeeList.setItems(employee.getObservableList());
         employeeList.setCellFactory(data -> new ListCell<>() {
-            @Override
-            protected void updateItem(EmployeeModel employeeModel, boolean b) {
+            @Override protected void updateItem(EmployeeModel employeeModel, boolean b) {
                 super.updateItem(employeeModel, b);
                 if (employeeModel == null || b) {
                     setGraphic(null);
@@ -122,14 +102,13 @@ public class EmployeeManagerController extends Controller {
             }
         });
 
-        employeeList.getSelectionModel().selectedItemProperty()
-                .addListener(((observableValue, employeeModel, t1) -> {
-                    if (t1 == null) {
-                        clearFields();
-                        return;
-                    }
-                    populateFields(t1);
-                }));
+        employeeList.getSelectionModel().selectedItemProperty().addListener(((observableValue, employeeModel, t1) -> {
+            if (t1 == null) {
+                clearFields();
+                return;
+            }
+            populateFields(t1);
+        }));
     }
 
     private void populateFields(final EmployeeModel model) {
