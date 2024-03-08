@@ -33,6 +33,10 @@ public class EmailConfig {
         return this;
     }
 
+    public boolean isConfigured() {
+        return !email.getHost().isEmpty();
+    }
+
     public Properties getProperties() {
         return properties;
     }

@@ -1,5 +1,24 @@
 [
   {
+    "version": "Future: 2.0.0-beta",
+    "changes": [
+      "New feature: Implemented journal entry where you can log daily activities that didn't necessarily require a ticket.",
+      "New database table: Journal, database version migrates to 1.1",
+      "New feature: You can tag a ticket with journal entries. They are separated from comments which are sent to the targeted employee."
+    ]
+  },
+  {
+    "version": "1.2.0-beta",
+    "changes": [
+      "New feature: Implemented a new setting > database. This shows current database configurations and other misc. info.",
+      "UI update: SMTP Configuration was changed to just SMTP.",
+      "Feature update: Changed how the notification e-mails look.",
+      "New feature: You can now add a resolving comment when notifying the employee the ticket is resolved.",
+      "UI update: Text areas now have CSS styling similar to text fields.",
+      "Internal update: Before sending an e-mail, we now check if SMTP is configured."
+    ]
+  },
+  {
     "version": "1.1.0-beta",
     "changes": [
       "New feature: Implements file locking to only allow single-instance of QuickTicket. Prevent connection issues with the SQLite database.",

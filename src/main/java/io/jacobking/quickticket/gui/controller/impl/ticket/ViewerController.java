@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.core.email.EmailConfig;
-import io.jacobking.quickticket.core.email.EmailSender;
+import io.jacobking.quickticket.core.email.EmailResolvedSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -170,7 +169,7 @@ public class ViewerController extends Controller {
         }
 
         ticketModel.employeeProperty().setValue(model.getId());
-        postSystemComment("Ticket employee changed to: " + model.getFullName());
+        postSystemComment("Ticket employee changed to: " + model.getFullName(), "[System]");
 
         ticket.update(ticketModel);
         reloadPostUpdate(employeeComboBox, popOver);
@@ -184,7 +183,7 @@ public class ViewerController extends Controller {
         }
 
         ticketModel.statusProperty().setValue(type);
-        postSystemComment("Ticket status changed to: " + type.name());
+        postSystemComment("System", "Ticket status changed to: " + type.name());
         ticket.update(ticketModel);
         reloadPostUpdate(statusComboBox, popOver);
     }
@@ -197,7 +196,7 @@ public class ViewerController extends Controller {
         }
 
         ticketModel.priorityProperty().setValue(type);
-        postSystemComment("Ticket priority changed to: " + type.name());
+        postSystemComment("System", "Ticket priority changed to: " + type.name());
         ticket.update(ticketModel);
         reloadPostUpdate(priorityComboBox, popOver);
     }
@@ -210,51 +209,43 @@ public class ViewerController extends Controller {
 
     @FXML private void onMarkResolved() {
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
-        postSystemComment("This ticket has been marked resolved.");
+        postSystemComment("System", "This ticket has been marked resolved.");
         ticket.update(ticketModel);
         ticketTable.refresh();
 
-        Notify.showConfirmation("Do you want to notify the employee?", "Click yes to send an e-mail.")
-                .ifPresent(type -> {
-                    if (type == ButtonType.YES) {
-                        final EmployeeModel employeeModel = employee.getModel(ticketModel.getEmployeeId());
-                        if (employeeModel == null) {
-                            Notify.showError("Could not notify employee.", "No employee attached to ticket.", "Please set an employee.");
-                            return;
-                        }
+        Notify.showInput(
+                "Notify Employee",
+                "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
+                "No resolving comment was added."
+        ).ifPresent(comment -> {
+            final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
+            if (model == null) {
+                Notify.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
+                return;
+            }
 
-                        final String targetEmail = employeeModel.getEmail();
-                        if (targetEmail == null || targetEmail.isEmpty()) {
-                            Notify.showError("Could not notify employee.", "The attached employee does not have an e-mail set.", "Please set one and try again.");
-                            return;
-                        }
+            final String email = model.getEmail();
+            if (email.isEmpty()) {
+                Notify.showError(
+                        "Error notifying employee.",
+                        "Could not send notification e-mail.",
+                        "There is no e-mail attached for this employee."
+                );
+                return;
+            }
 
-                        final EmailSender emailSender = new EmailSender(EmailConfig.getInstance());
-                        final String subject = String.format("Ticket Resolved (Ticket ID: %s) | %s", ticketModel.getId(), ticketModel.getTitle());
-                        final String body = getTicketBody();
+            final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
+            emailResolvedSender.sendEmail();
 
-                        emailSender.sendEmail(subject, targetEmail, body);
-                    }
-                });
+            postSystemComment("Ticket Resolved", comment);
+        });
+
+
     }
 
-    private String getTicketBody() {
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<b>").append("Your support ticket has been resolved.").append("</b>");
-        stringBuilder.append("<br/><span style=\"color:red; font-weight:bolder;\">").append("Do not reply to this e-mail. This inbox is not managed.").append("</span>");
-        stringBuilder.append("<br/><br/>");
-        stringBuilder.append("<b>Ticket Comments:</b>");
-        commentList.getItems().forEach(model -> stringBuilder.append("<br/><span style=\"font-size: 15px;\">")
-                .append(model.getPostedOn())
-                .append("</span>: ")
-                .append(model.getPost()));
-        return stringBuilder.toString();
-    }
-
-    private void postSystemComment(final String commentText) {
-        comment.createModel(new Comment().setTicketId(ticketId).setPostedOn(DateUtil.nowWithTime()).setPost(String.format("[System] %s", commentText)));
+    private void postSystemComment(final String prefix, final String commentText) {
+        comment.createModel(new Comment().setTicketId(ticketId).setPostedOn(DateUtil.nowWithTime()).setPost(String.format("[%s]: %s", prefix, commentText)));
         commentList.refresh();
-
         scrollToLastComment();
     }
 
@@ -294,6 +285,8 @@ public class ViewerController extends Controller {
 
                 if (commentModel.getPost().contains("[System]")) {
                     comment.setFill(Color.valueOf("#FF474C"));
+                } else if (commentModel.getPost().contains("[Resolved]")) {
+                    comment.setFill(Color.valueOf("#248232").brighter());
                 } else {
                     comment.setFill(Color.WHITE);
                 }

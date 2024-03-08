@@ -13,7 +13,6 @@ public class QuickTicket {
 
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(5);
 
-
     private QuickTicket() {
         Database.getInstance();
         Display.show(Route.DASHBOARD);

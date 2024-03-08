@@ -1,4 +1,5 @@
 @import url("base.css");
+@import url("text-area.css");
 .dialog-pane {
     -fx-background-color: -fx-primary;
 }
@@ -27,3 +28,4 @@
     -fx-cursor: hand;
     -fx-background-color: derive(-fx-offset-blue, 40%);
 }
+

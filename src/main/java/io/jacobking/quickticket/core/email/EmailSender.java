@@ -23,6 +23,11 @@ public class EmailSender {
     }
 
     public void sendEmail(final String subject, final String recipient, final String body) {
+        if (!emailConfig.isConfigured()) {
+            Notify.showError("Could not send e-mail.", "Your SMTP information is not configured.", "Please check settings.");
+            return;
+        }
+
         QuickTicket.execute(() -> {
             try {
                 final MimeMessage mimeMessage = new MimeMessage(session);
@@ -40,7 +45,7 @@ public class EmailSender {
                 mimeMessage.setContent(body, "text/html; charset=utf-8");
                 Transport.send(mimeMessage);
             } catch (MessagingException e) {
-                Notify.showException("Failed to send e-mail.", e.fillInStackTrace());
+                e.printStackTrace();
             }
         });
     }

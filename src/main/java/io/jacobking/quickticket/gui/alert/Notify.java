@@ -2,6 +2,7 @@ package io.jacobking.quickticket.gui.alert;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 
 import java.util.Optional;
 
@@ -62,5 +63,12 @@ public class Notify {
                 .withException(content, throwable)
                 .show();
     }
+
+    public static Optional<String> showInput(final String title,  final String content, final String defaultValue) {
+        return new InputDialogBuilder(defaultValue)
+                .buildDialog(title, content)
+                .result();
+    }
+
 
 }
