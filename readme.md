@@ -4,7 +4,7 @@
 -------------------------
 
 
-![Static Badge](https://img.shields.io/badge/Version-1.0.0--beta-blue) 
+![Static Badge](https://img.shields.io/badge/Version-1.2.0--beta-blue) 
 ![Static Badge](https://img.shields.io/badge/Pull%20Requests-Welcome-red)
 
 ## Description
@@ -37,6 +37,14 @@ Right now QuickTicket provides the current features:
 ![Static Badge](https://img.shields.io/badge/Language-Java-darkgreen) ![Static Badge](https://img.shields.io/badge/JDK-17-blue) ![Static Badge](https://img.shields.io/badge/JavaFX%20SDK-17.0.6-blue) ![Static Badge](https://img.shields.io/badge/jOOQ-3.18.6-darkred) ![Static Badge](https://img.shields.io/badge/Database%20(SQLite--JDBC)-3.42.0.0-red) ![Static Badge](https://img.shields.io/badge/Gradle-8.4-yellow)
 
 ## Changelog
+**1.2.0-beta**
+- New feature: Implemented a new setting > database. This shows current database configurations and other misc. info.
+- UI update: SMTP Configuration was changed to just SMTP.
+- Feature update: Changed how the notification e-mails look.
+- New feature: You can now add a resolving comment when notifying the employee the ticket is resolved.
+- UI update: Text areas now have CSS styling similar to text fields.
+- Internal update: Before sending an e-mail, we now check if SMTP is configured.
+
 **1.1.0-beta**
 - New feature: Implements file locking to only allow single-instance of QuickTicket. Prevent connection issues with the SQLite database.
 - New feature: Implemented sending e-mails when the ticket is resolved.
