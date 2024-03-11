@@ -1,10 +1,14 @@
 [
   {
-    "version": "Future: 2.0.0-beta",
+    "version": "2.0.0-beta",
     "changes": [
       "New feature: Implemented journal entry where you can log daily activities that didn't necessarily require a ticket.",
+      "New feature: You can tag a ticket with journal entries. They are separated from comments which are sent to the targeted employee.",
+      "New feature: You can now view tickets tied to an employee by entering the user portal.",
+      "New feature: You can now view the last ticket you opened on the dashboard.",
       "New database table: Journal, database version migrates to 1.1",
-      "New feature: You can tag a ticket with journal entries. They are separated from comments which are sent to the targeted employee."
+      "New database column on ticket table: last_opened_timestamp",
+      "Database version uplift: v1.1"
     ]
   },
   {

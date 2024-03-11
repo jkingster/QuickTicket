@@ -13,6 +13,7 @@ import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.StyleCommons;
 import io.jacobking.quickticket.tables.pojos.Comment;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -29,6 +30,7 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -60,6 +62,8 @@ public class ViewerController extends Controller {
         handleDataRelay();
         configureComments();
         postButton.disableProperty().bind(commentField.textProperty().isEmpty());
+
+        updateLastViewed();
     }
 
     @FXML private void onPost() {
@@ -323,6 +327,13 @@ public class ViewerController extends Controller {
         }, () -> {
             Notify.showError("Data Relay Failure", "TicketTable<TicketModel> was not passed via data relay.", "Please report this.");
         });// TODO: error
+
+        final Optional<ObjectProperty<TicketModel>> lastViewedOptional = dataRelay.mapObjectProperty(2);
+        lastViewedOptional.ifPresentOrElse(last -> {
+            last.setValue(ticketModel);
+        }, () -> {
+            // TODO: SILENT LOG
+        });
     }
 
     @FXML private void onDelete() {
@@ -332,5 +343,10 @@ public class ViewerController extends Controller {
                 Display.close(Route.VIEWER);
             }
         });
+    }
+
+    private void updateLastViewed() {
+        ticketModel.lastViewedProperty().setValue(LocalDateTime.now());
+        ticket.update(ticketModel);
     }
 }

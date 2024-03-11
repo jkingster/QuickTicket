@@ -21,6 +21,10 @@ public class RepoCrud {
         loadRepositories();
     }
 
+    public DSLContext getContext() {
+        return context;
+    }
+
     public <T extends Entity> T getById(final RepoType type, final int id) {
         return (T) getRepository(type).getById(context, id);
     }
@@ -59,5 +63,4 @@ public class RepoCrud {
             });
         }
     }
-
 }

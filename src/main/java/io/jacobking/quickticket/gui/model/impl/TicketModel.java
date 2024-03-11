@@ -6,21 +6,25 @@ import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.Ticket;
 import javafx.beans.property.*;
 
+import java.time.LocalDateTime;
+
 public class TicketModel extends ViewModel<Ticket> {
 
-    private final StringProperty                titleProperty    = new SimpleStringProperty();
-    private final ObjectProperty<StatusType>    statusProperty   = new SimpleObjectProperty<>();
-    private final ObjectProperty<PriorityType> priorityProperty = new SimpleObjectProperty<>();
-    private final IntegerProperty               employeeProperty = new SimpleIntegerProperty();
-    private final StringProperty               createdProperty  = new SimpleStringProperty();
+    private final StringProperty                titleProperty       = new SimpleStringProperty();
+    private final ObjectProperty<StatusType>    statusProperty      = new SimpleObjectProperty<>();
+    private final ObjectProperty<PriorityType>  priorityProperty    = new SimpleObjectProperty<>();
+    private final IntegerProperty               employeeProperty    = new SimpleIntegerProperty();
+    private final StringProperty                createdProperty     = new SimpleStringProperty();
+    private final ObjectProperty<LocalDateTime> lastViewedTimestamp = new SimpleObjectProperty<>();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, String created) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, String created, LocalDateTime lastViewedTimestamp) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
         this.priorityProperty.setValue(priorityType);
         this.employeeProperty.setValue(employeeId);
         this.createdProperty.setValue(created);
+        this.lastViewedTimestamp.setValue(lastViewedTimestamp);
     }
 
     public TicketModel(final Ticket ticket) {
@@ -30,7 +34,8 @@ public class TicketModel extends ViewModel<Ticket> {
                 StatusType.of(ticket.getStatus()),
                 PriorityType.of(ticket.getPriority()),
                 ticket.getUserId(), // need to update from user -> employee eventually.
-                ticket.getCreatedOn()
+                ticket.getCreatedOn(),
+                ticket.getLastOpenedTimestamp()
         );
     }
 
@@ -74,6 +79,14 @@ public class TicketModel extends ViewModel<Ticket> {
         return employeeProperty.getValue();
     }
 
+    public ObjectProperty<LocalDateTime> lastViewedProperty() {
+        return lastViewedTimestamp;
+    }
+
+    public LocalDateTime getLastViewedTimestamp() {
+        return lastViewedTimestamp.getValue();
+    }
+
     @Override
     public String toString() {
         return "TicketModel{" +
@@ -94,7 +107,8 @@ public class TicketModel extends ViewModel<Ticket> {
                 getStatus(),
                 getPriority(),
                 getCreation(),
-                getEmployeeId()
+                getEmployeeId(),
+                getLastViewedTimestamp()
         );
     }
 }

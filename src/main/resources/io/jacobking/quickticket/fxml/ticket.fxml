@@ -24,7 +24,7 @@
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Last Viewed" textAlignment="CENTER" />
-                  <Button disable="true" layoutX="38.0" layoutY="50.0" mnemonicParsing="false" prefWidth="85.0" styleClass="b" text="Open" />
+                  <Button fx:id="lastViewButton" disable="true" layoutX="38.0" layoutY="50.0" mnemonicParsing="false" onAction="#onOpenLastViewed" prefWidth="85.0" styleClass="b" text="Open" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
