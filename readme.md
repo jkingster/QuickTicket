@@ -4,7 +4,7 @@
 -------------------------
 
 
-![Static Badge](https://img.shields.io/badge/Version-1.2.0--beta-blue) 
+![Static Badge](https://img.shields.io/badge/Version-2.0.0--beta-blue) 
 ![Static Badge](https://img.shields.io/badge/Pull%20Requests-Welcome-red)
 
 ## Description
@@ -19,7 +19,7 @@ Originally made to help me manage IT support requests, I've decided to actually 
 > As of right now, the installation has only been tested on a Windows environment. No cross-platform tests have been run. If anyone is willing to work on this implementation, feel free to reach out.
 
 
-Head over to the latest releases, or click <a href="https://www.github.com/QuickTicket/tags">here</a>. Find the latest release denoted at the top, or feel free to download older versions. Support will be offered if it can be. Right now we are standing at current version **1.1.0-beta**. We are not in a production environment, yet.
+Head over to the latest releases, or click <a href="https://www.github.com/QuickTicket/tags">here</a>. Find the latest release denoted at the top, or feel free to download older versions. Support will be offered if it can be. Right now we are standing at current version **2.0.0-beta**. We are not in a production environment, yet.
 
 Download the .msi installer, run it, select the directory you want the installation files to be stored. From there a shortcut and start-menu icon will be created. Run the QuickTicket.exe, and all the necessary components and files will be generated in your AppData directory. 
 
@@ -37,6 +37,15 @@ Right now QuickTicket provides the current features:
 ![Static Badge](https://img.shields.io/badge/Language-Java-darkgreen) ![Static Badge](https://img.shields.io/badge/JDK-17-blue) ![Static Badge](https://img.shields.io/badge/JavaFX%20SDK-17.0.6-blue) ![Static Badge](https://img.shields.io/badge/jOOQ-3.18.6-darkred) ![Static Badge](https://img.shields.io/badge/Database%20(SQLite--JDBC)-3.42.0.0-red) ![Static Badge](https://img.shields.io/badge/Gradle-8.4-yellow)
 
 ## Changelog
+**2.0.0-beta**
+- New feature: Implemented journal entry where you can log daily activities that didn't necessarily require a ticket.
+- New feature: You can tag a ticket with journal entries. They are separated from comments which are sent to the targeted employee.
+- New feature: You can now view tickets tied to an employee by entering the user portal.
+- New feature: You can now view the last ticket you opened on the dashboard.
+- New database table: Journal, database version migrates to 1.1
+- New database column on ticket table: last_opened_timestamp
+- Database version uplift: v1.1
+
 **1.2.0-beta**
 - New feature: Implemented a new setting > database. This shows current database configurations and other misc. info.
 - UI update: SMTP Configuration was changed to just SMTP.
