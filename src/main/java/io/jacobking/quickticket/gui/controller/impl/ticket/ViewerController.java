@@ -345,6 +345,10 @@ public class ViewerController extends Controller {
         });
     }
 
+    @FXML private void onJournal() {
+
+    }
+
     private void updateLastViewed() {
         ticketModel.lastViewedProperty().setValue(LocalDateTime.now());
         ticket.update(ticketModel);

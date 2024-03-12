@@ -17,23 +17,33 @@
          <children>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Button layoutX="38.0" layoutY="49.0" mnemonicParsing="false" onAction="#onCreate" prefHeight="25.0" prefWidth="85.0" text="Create" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Ticket" textAlignment="CENTER" />
+                  <Button layoutX="28.0" layoutY="41.0" mnemonicParsing="false" onAction="#onCreate" prefHeight="25.0" prefWidth="85.0" text="Create" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Ticket" textAlignment="CENTER" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Last Viewed" textAlignment="CENTER" />
-                  <Button fx:id="lastViewButton" disable="true" layoutX="38.0" layoutY="50.0" mnemonicParsing="false" onAction="#onOpenLastViewed" prefWidth="85.0" styleClass="b" text="Open" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Last Viewed" textAlignment="CENTER" />
+                  <Button fx:id="lastViewButton" disable="true" layoutX="28.0" layoutY="41.0" mnemonicParsing="false" onAction="#onOpenLastViewed" prefWidth="85.0" styleClass="b" text="Open" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="-3.0" prefHeight="53.0" prefWidth="141.0" styleClass="card-header" text="Employee Portal" textAlignment="CENTER" wrapText="true">
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="35.0" prefWidth="140.0" styleClass="card-header" text="Emp. Portal" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font size="10.0" />
                      </font></Label>
-                  <Button layoutX="38.0" layoutY="50.0" mnemonicParsing="false" onAction="#onManageEmployees" prefWidth="85.0" styleClass="b" text="Manage" />
+                  <Button layoutX="28.0" layoutY="41.0" mnemonicParsing="false" onAction="#onManageEmployees" prefWidth="85.0" styleClass="b" text="Manage" />
+               </children>
+            </Pane>
+            <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Journal" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="28.0" layoutY="41.0" mnemonicParsing="false" onAction="#onJournal" prefWidth="85.0" styleClass="b" text="View" />
                </children>
             </Pane>
             <Separator orientation="VERTICAL" prefHeight="200.0" />

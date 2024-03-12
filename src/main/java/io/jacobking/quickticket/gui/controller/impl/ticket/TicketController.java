@@ -190,6 +190,11 @@ public class TicketController extends Controller {
         Display.show(Route.VIEWER, DataRelay.of(this.lastViewed.getValue(), ticketTable, this.lastViewed));
     }
 
+    @FXML
+    private void onJournal() {
+        Display.show(Route.JOURNAL, DataRelay.empty());
+    }
+
     private void onDelete(final TicketModel ticketModel) {
         if (ticketModel == null) {
             Notify.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");

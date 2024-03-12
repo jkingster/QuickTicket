@@ -1,9 +1,6 @@
 package io.jacobking.quickticket.bridge;
 
-import io.jacobking.quickticket.bridge.impl.CommentBridge;
-import io.jacobking.quickticket.bridge.impl.EmailBridge;
-import io.jacobking.quickticket.bridge.impl.EmployeeBridge;
-import io.jacobking.quickticket.bridge.impl.TicketBridge;
+import io.jacobking.quickticket.bridge.impl.*;
 
 public class BridgeContext {
 
@@ -15,11 +12,14 @@ public class BridgeContext {
     private final EmployeeBridge employeeBridge;
     private final EmailBridge    emailBridge;
 
+    private final JournalBridge journalBridge;
+
     private BridgeContext() {
         this.ticketBridge = new TicketBridge();
         this.commentBridge = new CommentBridge();
         this.employeeBridge = new EmployeeBridge();
         this.emailBridge = new EmailBridge();
+        this.journalBridge = new JournalBridge();
     }
 
     public static BridgeContext getInstance() {
@@ -40,5 +40,9 @@ public class BridgeContext {
 
     public static EmailBridge email() {
         return getInstance().emailBridge;
+    }
+
+    public static JournalBridge journal() {
+        return getInstance().journalBridge;
     }
 }

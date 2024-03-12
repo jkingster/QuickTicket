@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
@@ -22,15 +23,24 @@
       </HBox>
       <TextField fx:id="titleField" editable="false" layoutX="38.0" layoutY="14.0" prefHeight="26.0" prefWidth="503.0" promptText="Undefined" />
       <TextField fx:id="creationField" editable="false" layoutX="265.0" layoutY="47.0" prefHeight="26.0" prefWidth="158.0" promptText="Undefined" />
-      <HBox alignment="CENTER" layoutX="126.0" layoutY="447.0" prefHeight="37.0" prefWidth="442.0" spacing="5.0">
+      <VBox layoutX="38.0" layoutY="437.0" prefHeight="53.0" prefWidth="545.0" spacing="5.0">
          <children>
-            <Button fx:id="priorityButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdatePriority" prefHeight="26.0" styleClass="button-primary" text="Update Priority" />
-            <Button fx:id="statusButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateStatus" prefHeight="26.0" styleClass="button-primary" text="Update Status" />
-            <Button fx:id="updateUserButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateUser" prefHeight="26.0" styleClass="button-primary" text="Update User" />
-            <Button fx:id="resolvedButton" minWidth="105.0" mnemonicParsing="false" onAction="#onMarkResolved" prefHeight="26.0" styleClass="button-primary" text="Mark Resolved" />
-            <Button minWidth="105.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="26.0" styleClass="button-warning" text="Delete" />
+            <HBox prefHeight="36.0" prefWidth="545.0" spacing="5.0">
+               <children>
+                  <Button fx:id="priorityButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdatePriority" prefHeight="26.0" styleClass="button-primary" text="Update Priority" />
+                  <Button fx:id="statusButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateStatus" prefHeight="26.0" styleClass="button-primary" text="Update Status" />
+                  <Button fx:id="updateUserButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateUser" prefHeight="26.0" styleClass="button-primary" text="Update User" />
+                  <Button fx:id="resolvedButton" minWidth="105.0" mnemonicParsing="false" onAction="#onMarkResolved" prefHeight="26.0" styleClass="button-primary" text="Mark Resolved" />
+                  <Button minWidth="105.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="26.0" styleClass="button-warning" text="Delete" />
+               </children>
+            </HBox>
+            <HBox prefHeight="36.0" prefWidth="545.0" spacing="5.0">
+               <children>
+                  <Button minWidth="105.0" mnemonicParsing="false" onAction="#onJournal" prefHeight="26.0" styleClass="button-primary" text="Attach Journal" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
       <TextField fx:id="employeeField" editable="false" layoutX="38.0" layoutY="47.0" prefHeight="26.0" prefWidth="217.0" promptText="Undefined" />
       <Pane layoutX="562.0" layoutY="14.0" prefHeight="26.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
