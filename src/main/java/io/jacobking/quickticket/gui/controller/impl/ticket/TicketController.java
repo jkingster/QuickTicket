@@ -10,6 +10,8 @@ import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -36,6 +38,8 @@ public class TicketController extends Controller {
     private final FilteredList<TicketModel> paused   = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.PAUSED);
     private final FilteredList<TicketModel> resolved = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.RESOLVED);
 
+    private final ObjectProperty<TicketModel> lastViewed = new SimpleObjectProperty<>();
+
     @FXML private TableView<TicketModel>                 ticketTable;
     @FXML private TableColumn<TicketModel, PriorityType> indicatorColumn;
     @FXML private TableColumn<TicketModel, Void>         actionsColumn;
@@ -48,7 +52,7 @@ public class TicketController extends Controller {
     @FXML private Label                                  activeLabel;
     @FXML private Label                                  pausedLabel;
     @FXML private Label                                  resolvedLabel;
-    @FXML private Button                                 filterButton;
+    @FXML private Button                                 lastViewButton;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
@@ -80,6 +84,13 @@ public class TicketController extends Controller {
 
         createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
         ticketTable.setItems(ticket.getObservableList());
+
+        final TicketModel lastViewed = ticket.getLastViewed();
+        if (lastViewed != null) {
+            this.lastViewed.setValue(lastViewed);
+        }
+
+        lastViewButton.disableProperty().bind(this.lastViewed.isNull());
     }
 
     private void handleIndicatorColumn() {
@@ -150,9 +161,6 @@ public class TicketController extends Controller {
         Display.show(Route.EMPLOYEE_MANAGER);
     }
 
-    @FXML private void onFilter() {
-        Notify.showInfo("Not implemented.", "Not implemented.", "This feature has not been implement yet.");
-    }
 
     @FXML private void onResolve() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
@@ -174,6 +182,19 @@ public class TicketController extends Controller {
         ticket.update(ticketModel);
     }
 
+    @FXML private void onRefresh() {
+        ticketTable.refresh();
+    }
+
+    @FXML private void onOpenLastViewed() {
+        Display.show(Route.VIEWER, DataRelay.of(this.lastViewed.getValue(), ticketTable, this.lastViewed));
+    }
+
+    @FXML
+    private void onJournal() {
+        Display.show(Route.JOURNAL, DataRelay.empty());
+    }
+
     private void onDelete(final TicketModel ticketModel) {
         if (ticketModel == null) {
             Notify.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
@@ -193,7 +214,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable));
+        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable, this.lastViewed));
     }
 
     private void onEmail(final TicketModel ticketModel) {

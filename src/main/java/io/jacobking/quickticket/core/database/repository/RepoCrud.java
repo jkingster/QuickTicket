@@ -1,9 +1,6 @@
 package io.jacobking.quickticket.core.database.repository;
 
-import io.jacobking.quickticket.core.database.repository.impl.CommentRepository;
-import io.jacobking.quickticket.core.database.repository.impl.EmailRepository;
-import io.jacobking.quickticket.core.database.repository.impl.EmployeeRepository;
-import io.jacobking.quickticket.core.database.repository.impl.TicketRepository;
+import io.jacobking.quickticket.core.database.repository.impl.*;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 
@@ -19,6 +16,10 @@ public class RepoCrud {
     public RepoCrud(final DSLContext context) {
         this.context = context;
         loadRepositories();
+    }
+
+    public DSLContext getContext() {
+        return context;
     }
 
     public <T extends Entity> T getById(final RepoType type, final int id) {
@@ -56,8 +57,8 @@ public class RepoCrud {
                 case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
                 case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
                 case EMAIL -> (Repository<? extends Entity>) new EmailRepository();
+                case JOURNAL -> (Repository<? extends Entity>) new JournalRepository();
             });
         }
     }
-
 }

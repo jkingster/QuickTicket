@@ -17,7 +17,7 @@ public class DatabaseMigrator {
     private static final String MIGRATION_PATH = "sql/migration/v%d.%d.SQL";
     private static final String SCHEMA_FETCH   = "SELECT MAJOR, MINOR FROM SCHEMA_VERSION WHERE ID = 0;";
 
-    private static final DatabaseVersion targetDatabaseVersion = new DatabaseVersion(1, 0);
+    private static final DatabaseVersion targetDatabaseVersion = new DatabaseVersion(1, 1);
 
     private final DatabaseVersion currentDatabaseVersion = new DatabaseVersion();
     private final Connection      connection;
@@ -36,8 +36,6 @@ public class DatabaseMigrator {
             );
             return;
         }
-
-        System.out.println(currentDatabaseVersion);
 
         final int migration = checkMigration();
         if (migration < 0) {

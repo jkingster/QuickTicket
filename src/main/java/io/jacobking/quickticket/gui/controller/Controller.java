@@ -1,10 +1,7 @@
 package io.jacobking.quickticket.gui.controller;
 
 import io.jacobking.quickticket.bridge.BridgeContext;
-import io.jacobking.quickticket.bridge.impl.CommentBridge;
-import io.jacobking.quickticket.bridge.impl.EmailBridge;
-import io.jacobking.quickticket.bridge.impl.EmployeeBridge;
-import io.jacobking.quickticket.bridge.impl.TicketBridge;
+import io.jacobking.quickticket.bridge.impl.*;
 import io.jacobking.quickticket.core.email.EmailConfig;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import javafx.fxml.Initializable;
@@ -18,6 +15,7 @@ public abstract class Controller implements Initializable {
     protected final EmailBridge    email;
 
     protected final EmailConfig emailConfig;
+    protected final JournalBridge journal;
 
     protected DataRelay dataRelay;
 
@@ -26,6 +24,7 @@ public abstract class Controller implements Initializable {
         this.comment = BridgeContext.comment();
         this.employee = BridgeContext.employee();
         this.email = BridgeContext.email();
+        this.journal = BridgeContext.journal();
         this.emailConfig = EmailConfig.getInstance()
                 .setEmail(email.getEmail())
                 .applySettings();

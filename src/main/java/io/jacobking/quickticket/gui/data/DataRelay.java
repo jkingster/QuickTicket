@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.data;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.TableView;
 
 import java.util.Arrays;
@@ -35,6 +36,15 @@ public class DataRelay {
             return Optional.empty();
 
         final T mapped = getMappedObject(objects[index], clazz);
+        return mapped == null ? Optional.empty() : Optional.of(mapped);
+    }
+
+    public <T> Optional<ObjectProperty<T>> mapObjectProperty(final int index) {
+        final int length = objects.length;
+        if (index > length - 1 || index < 0)
+            return Optional.empty();
+
+        final ObjectProperty<T> mapped = getMappedObject(objects[index], ObjectProperty.class);
         return mapped == null ? Optional.empty() : Optional.of(mapped);
     }
 
