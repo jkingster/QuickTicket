@@ -11,21 +11,18 @@ public class JournalModel extends ViewModel<Journal> {
 
     private final StringProperty  noteProperty           = new SimpleStringProperty();
     private final StringProperty  createdOnProperty      = new SimpleStringProperty();
-    private final IntegerProperty attachedTicketProperty = new SimpleIntegerProperty();
 
-    public JournalModel(int id, String note, String createdOn, int attachedTicket) {
+    public JournalModel(int id, String note, String createdOn) {
         super(id);
         this.noteProperty.setValue(note);
         this.createdOnProperty.setValue(createdOn);
-        this.attachedTicketProperty.setValue(attachedTicket);
     }
 
     public JournalModel(final Journal journal) {
         this(
                 journal.getId(),
                 journal.getNote(),
-                journal.getCreatedOn(),
-                journal.getAttachedTicket()
+                journal.getCreatedOn()
         );
     }
 
@@ -53,24 +50,11 @@ public class JournalModel extends ViewModel<Journal> {
         this.createdOnProperty.set(createdOnProperty);
     }
 
-    public int getAttachedTicketProperty() {
-        return attachedTicketProperty.getValue();
-    }
-
-    public IntegerProperty attachedTicketProperty() {
-        return attachedTicketProperty;
-    }
-
-    public void setAttachedTicketProperty(int attachedTicketProperty) {
-        this.attachedTicketProperty.set(attachedTicketProperty);
-    }
 
     @Override public Journal toEntity() {
-        return new Journal(
-                getId(),
-                getNoteProperty(),
-                getCreatedOnProperty(),
-                getAttachedTicketProperty()
-        );
+        return new Journal()
+                .setId(getId())
+                .setNote(getNoteProperty())
+                .setCreatedOn(getCreatedOnProperty());
     }
 }

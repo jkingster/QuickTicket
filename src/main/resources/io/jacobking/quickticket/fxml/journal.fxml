@@ -11,7 +11,7 @@
       <ListView fx:id="journalList" layoutX="16.0" layoutY="14.0" prefHeight="341.0" prefWidth="430.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
       <HBox alignment="CENTER_LEFT" layoutX="16.0" layoutY="363.0" prefHeight="36.0" prefWidth="430.0" spacing="5.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#onAdd" prefHeight="25.0" prefWidth="70.0" stylesheets="@../css/core/button.css" text="Add" />
+            <Button fx:id="addButton" mnemonicParsing="false" onAction="#onAdd" prefHeight="25.0" prefWidth="70.0" stylesheets="@../css/core/button.css" text="Add" />
             <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDelete" prefHeight="25.0" prefWidth="70.0" stylesheets="@../css/core/button.css" text="Delete" />
             <Button fx:id="editButton" mnemonicParsing="false" onAction="#onEdit" prefHeight="25.0" prefWidth="70.0" stylesheets="@../css/core/button.css" text="Edit" />
          </children>

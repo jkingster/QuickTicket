@@ -16,8 +16,9 @@ public class TicketModel extends ViewModel<Ticket> {
     private final IntegerProperty               employeeProperty    = new SimpleIntegerProperty();
     private final StringProperty                createdProperty     = new SimpleStringProperty();
     private final ObjectProperty<LocalDateTime> lastViewedTimestamp = new SimpleObjectProperty<>();
+    private final IntegerProperty attachedJournalId = new SimpleIntegerProperty();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, String created, LocalDateTime lastViewedTimestamp) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, String created, LocalDateTime lastViewedTimestamp, int attachedJournalId) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
@@ -25,6 +26,7 @@ public class TicketModel extends ViewModel<Ticket> {
         this.employeeProperty.setValue(employeeId);
         this.createdProperty.setValue(created);
         this.lastViewedTimestamp.setValue(lastViewedTimestamp);
+        this.attachedJournalId.setValue(attachedJournalId);
     }
 
     public TicketModel(final Ticket ticket) {
@@ -35,7 +37,8 @@ public class TicketModel extends ViewModel<Ticket> {
                 PriorityType.of(ticket.getPriority()),
                 ticket.getUserId(), // need to update from user -> employee eventually.
                 ticket.getCreatedOn(),
-                ticket.getLastOpenedTimestamp()
+                ticket.getLastOpenedTimestamp(),
+                ticket.getAttachedJournalId()
         );
     }
 
@@ -87,6 +90,18 @@ public class TicketModel extends ViewModel<Ticket> {
         return lastViewedTimestamp.getValue();
     }
 
+    public int getAttachedJournalId() {
+        return attachedJournalId.getValue();
+    }
+
+    public void setAttachedJournalId(final int id) {
+        this.attachedJournalId.setValue(id);
+    }
+
+    public IntegerProperty getAttachedJournalProperty() {
+        return attachedJournalId;
+    }
+
     @Override
     public String toString() {
         return "TicketModel{" +
@@ -108,7 +123,8 @@ public class TicketModel extends ViewModel<Ticket> {
                 getPriority(),
                 getCreation(),
                 getEmployeeId(),
-                getLastViewedTimestamp()
+                getLastViewedTimestamp(),
+                getAttachedJournalId()
         );
     }
 }

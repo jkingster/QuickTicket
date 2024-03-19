@@ -162,9 +162,6 @@ public class TicketController extends Controller {
         Display.show(Route.EMPLOYEE_MANAGER);
     }
 
-    @FXML private void onFilter() {
-        Notify.showInfo("Not implemented.", "Not implemented.", "This feature has not been implement yet.");
-    }
 
     @FXML private void onResolve() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
@@ -184,6 +181,10 @@ public class TicketController extends Controller {
         }
         ticketModel.statusProperty().setValue(StatusType.OPEN);
         ticket.update(ticketModel);
+    }
+
+    @FXML private void onRefresh() {
+        ticketTable.refresh();
     }
 
     @FXML private void onOpenLastViewed() {

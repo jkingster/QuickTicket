@@ -34,9 +34,10 @@
                   <Button minWidth="105.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="26.0" styleClass="button-warning" text="Delete" />
                </children>
             </HBox>
-            <HBox prefHeight="36.0" prefWidth="545.0" spacing="5.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="545.0" spacing="5.0">
                <children>
-                  <Button minWidth="105.0" mnemonicParsing="false" onAction="#onJournal" prefHeight="26.0" styleClass="button-primary" text="Attach Journal" />
+                  <Button fx:id="attachJournalButton" minWidth="105.0" mnemonicParsing="false" onAction="#onJournal" prefHeight="26.0" styleClass="button-primary" text="Attach Journal" />
+                  <Button fx:id="viewJournalButton" minWidth="105.0" mnemonicParsing="false" onAction="#onViewJournal" prefHeight="26.0" styleClass="button-primary" text="View Journal" />
                </children>
             </HBox>
          </children>

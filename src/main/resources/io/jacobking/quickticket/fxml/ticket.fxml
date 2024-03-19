@@ -91,13 +91,11 @@
             </TableView>
          </children>
       </AnchorPane>
-      <VBox alignment="CENTER" layoutX="1126.0" layoutY="133.0" prefHeight="212.0" prefWidth="124.0" spacing="5.0" style="-fx-padding: 10 0 0 0;" styleClass="card" stylesheets="@../css/core/card.css">
+      <VBox alignment="CENTER" layoutX="1127.0" layoutY="138.0" prefHeight="117.0" prefWidth="124.0" spacing="5.0" style="-fx-padding: 10 0 0 0;" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
-            <Button fx:id="filterButton" disable="true" mnemonicParsing="false" onAction="#onFilter" prefHeight="25.0" prefWidth="68.0" text="Filter" />
-            <Button disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Export" />
-            <Button disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Search" />
             <Button mnemonicParsing="false" onAction="#onResolve" prefHeight="25.0" prefWidth="68.0" text="Resolve" />
             <Button mnemonicParsing="false" onAction="#onReopen" prefHeight="25.0" prefWidth="68.0" text="Re-open" />
+            <Button mnemonicParsing="false" onAction="#onRefresh" prefHeight="25.0" prefWidth="68.0" text="Refresh" />
          </children>
       </VBox>
    </children>
