@@ -52,7 +52,6 @@ public class TicketController extends Controller {
     @FXML private Label                                  activeLabel;
     @FXML private Label                                  pausedLabel;
     @FXML private Label                                  resolvedLabel;
-    @FXML private Button                                 filterButton;
     @FXML private Button                                 lastViewButton;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
