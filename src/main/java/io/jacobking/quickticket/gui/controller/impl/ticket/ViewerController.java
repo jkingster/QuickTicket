@@ -180,7 +180,7 @@ public class ViewerController extends Controller {
         }
 
         ticketModel.employeeProperty().setValue(model.getId());
-        postSystemComment("Ticket employee changed to: " + model.getFullName(), "[System]");
+        postSystemComment("System", "Ticket employee changed to: " + model.getFullName());
 
         ticket.update(ticketModel);
         reloadPostUpdate(employeeComboBox, popOver);
