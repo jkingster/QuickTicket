@@ -17,13 +17,20 @@ public class DatabaseMigrator {
     private static final String MIGRATION_PATH = "sql/migration/v%d.%d.SQL";
     private static final String SCHEMA_FETCH   = "SELECT MAJOR, MINOR FROM SCHEMA_VERSION WHERE ID = 0;";
 
-    private static final DatabaseVersion targetDatabaseVersion = new DatabaseVersion(1, 1);
+    private static final DatabaseVersion TARGET_DATABASE_VERSION  = new DatabaseVersion(1, 1);
+    private static       DatabaseVersion CURRENT_DATABASE_VERSION = null;
 
     private final DatabaseVersion currentDatabaseVersion = new DatabaseVersion();
     private final Connection      connection;
 
     public DatabaseMigrator(final Connection connection) {
         this.connection = connection;
+    }
+
+    public static String getCurrentDatabaseVersion() {
+        if (CURRENT_DATABASE_VERSION == null)
+            return "undefined";
+        return CURRENT_DATABASE_VERSION.toString();
     }
 
     public void migrate() {
@@ -48,21 +55,21 @@ public class DatabaseMigrator {
         if (currentMajor == -1)
             return -1;
 
-        final int expectedMajor = targetDatabaseVersion.getMajor();
+        final int expectedMajor = TARGET_DATABASE_VERSION.getMajor();
         if (currentMajor != expectedMajor) {
             return Integer.compare(currentMajor, expectedMajor);
         }
 
         final int currentMinor = currentDatabaseVersion.getMinor();
-        final int expectedMinor = targetDatabaseVersion.getMinor();
+        final int expectedMinor = TARGET_DATABASE_VERSION.getMinor();
         return Integer.compare(currentMinor, expectedMinor);
     }
 
     private void startMigration() {
         final int currentMajor = currentDatabaseVersion.getMajor();
         final int currentMinor = currentDatabaseVersion.getMinor();
-        final int expectedMajor = targetDatabaseVersion.getMajor();
-        final int expectedMinor = targetDatabaseVersion.getMinor();
+        final int expectedMajor = TARGET_DATABASE_VERSION.getMajor();
+        final int expectedMinor = TARGET_DATABASE_VERSION.getMinor();
 
         for (int majorVersion = currentMajor; majorVersion <= expectedMajor; majorVersion++) {
             int startMinor = currentMinor;
@@ -131,6 +138,7 @@ public class DatabaseMigrator {
             while (resultSet.next()) {
                 this.currentDatabaseVersion.setMajor(resultSet.getInt(1));
                 this.currentDatabaseVersion.setMinor(resultSet.getInt(2));
+                DatabaseMigrator.CURRENT_DATABASE_VERSION = currentDatabaseVersion;
             }
         } catch (SQLException e) {
             Notify.showException("Failed to load targeted schema version.", e.fillInStackTrace());
@@ -172,10 +180,7 @@ public class DatabaseMigrator {
         }
 
         @Override public String toString() {
-            return "DatabaseVersion{" +
-                    "major=" + major +
-                    ", minor=" + minor +
-                    '}';
+            return String.format("v%d.%d", major, minor);
         }
     }
 }
