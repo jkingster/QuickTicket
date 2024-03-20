@@ -30,7 +30,7 @@ public class TicketCreatorController extends Controller {
                 font-size: 12px;
             }
             </style>
-            Dear %s, your support ticket has been created. IT will reach out to your shortly to help resolve your issue.
+            %s, your support ticket has been created. IT will reach out to your shortly to help resolve your issue.
             <br/>
             <br/>
             Ticket Information:
@@ -151,7 +151,7 @@ public class TicketCreatorController extends Controller {
 
         final EmailSender emailSender = new EmailSender(EmailConfig.getInstance());
         final String initialComment = commentField.getText().isEmpty() ? "Nothing was provided." : commentField.getText();
-        final String ticketBody = TICKET_BODY.formatted(model.getFullName(), ticketModel.getId(), ticketModel.getCreation(), ticketModel.getTitle(), initialComment);
+        final String ticketBody = TICKET_BODY.formatted(model.getFullName(), ticketModel.getId(), ticketModel.getTitle(), ticketModel.getCreation(), initialComment);
         emailSender.sendEmail(String.format("Ticket Created (Ticket ID: %d) | %s", ticketModel.getId(), ticketModel.getTitle()), email, ticketBody);
     }
 
