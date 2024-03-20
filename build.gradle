@@ -63,7 +63,7 @@ jlink {
   jpackage {
     installerOptions = [
             '--description', 'Free-to-use ticket management solution aimed to streamline ticket support services.',
-            '--copyright', 'Copyright 2024-2025 jkingster'
+            '--copyright', 'Copyright 2024-2025 jkingster',
     ]
     installerType = project.findProperty('installerType')
     installerOptions += [
