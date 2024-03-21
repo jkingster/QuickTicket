@@ -21,7 +21,7 @@
       <VBox layoutX="18.0" layoutY="47.0" prefHeight="235.0" prefWidth="316.0" spacing="10.0">
          <children>
             <TextField fx:id="titleField" promptText="Ticket Title" styleClass="text-field" />
-            <TextArea fx:id="commentField" prefHeight="200.0" prefWidth="200.0" promptText="Any initial information...." />
+            <TextArea fx:id="commentField" prefHeight="200.0" prefWidth="200.0" promptText="Any initial information...." wrapText="true" />
             <SearchableComboBox fx:id="employeeComboBox" promptText="Employee" styleClass="sear" stylesheets="@../css/core/combo-box.css" />
             <CheckBox fx:id="emailCheckBox" mnemonicParsing="false" text="Send notification e-mail" textFill="WHITE" />
          </children>
