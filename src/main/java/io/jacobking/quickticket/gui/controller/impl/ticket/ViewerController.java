@@ -224,11 +224,12 @@ public class ViewerController extends Controller {
         postSystemComment("System", "This ticket has been marked resolved.");
         ticket.update(ticketModel);
         refreshTable();
+
         Notify.showInput(
                 "Notify Employee",
                 "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
                 "No resolving comment was added."
-        ).ifPresent(comment -> {
+        ).ifPresentOrElse(comment -> {
             final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
             if (model == null) {
                 Notify.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
@@ -247,9 +248,8 @@ public class ViewerController extends Controller {
 
             final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
             emailResolvedSender.sendEmail();
-
             postSystemComment("Ticket Resolved", comment);
-        });
+        }, () -> postSystemComment("Ticket Resolved", "No resolving comment."));
     }
 
     private void refreshTable() {
