@@ -28,9 +28,12 @@ public class EmployeeManagerController extends Controller {
     @FXML private TextField               titleField;
     @FXML private TextField               departmentField;
     @FXML private TextField               emailField;
+    @FXML private TextField               searchField;
     @FXML private Button                  createButton;
     @FXML private Button                  deleteButton;
     @FXML private Button                  updateButton;
+    @FXML private Button                  searchButton;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureEmployeeList();
@@ -61,8 +64,15 @@ public class EmployeeManagerController extends Controller {
             Notify.showError("Failed to delete.", "No employee was deleted.", "You must select an employee first.");
             return;
         }
-        employee.remove(selected.getId());
-        clearFields();
+
+        Notify.showConfirmation("Are you sure you want to delete this employee?", "This action cannot be undone.")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        employee.remove(selected.getId());
+                        clearFields();
+                    }
+                });
+
     }
 
     @FXML private void onUpdate() {
@@ -82,11 +92,57 @@ public class EmployeeManagerController extends Controller {
         clearFields();
     }
 
+    @FXML private void onSearch() {
+        final String text = searchField.getText();
+        for (final EmployeeModel model : employeeList.getItems()) {
+            final String name = model.getFullName();
+            if (containsIgnoreCase(name, text)) {
+                selectEmployee(model);
+                break;
+            }
+
+            final String email = model.getEmail();
+            if (containsIgnoreCase(email, text)) {
+                selectEmployee(model);
+                break;
+            }
+
+            final String title = model.getTitle();
+            if (containsIgnoreCase(title, text)) {
+                selectEmployee(model);
+                break;
+            }
+        }
+    }
+
+    private void selectEmployee(final EmployeeModel employee) {
+        employeeList.getSelectionModel().select(employee);
+        populateFields(employee);
+    }
+
+    // https://stackoverflow.com/questions/14018478/string-contains-ignore-case
+    private boolean containsIgnoreCase(String str, String searchStr) {
+        if (str == null || searchStr == null) return false;
+
+        final int length = searchStr.length();
+        if (length == 0)
+            return true;
+
+        for (int i = str.length() - length; i >= 0; i--) {
+            if (str.regionMatches(true, i, searchStr, 0, length))
+                return true;
+        }
+        return false;
+    }
+
     private void configureButtons() {
         createButton.disableProperty().bind(firstNameField.textProperty().isEmpty().or(lastNameField.textProperty().isEmpty()).or(employeeList.getSelectionModel().selectedItemProperty().isNotNull()));
 
         deleteButton.disableProperty().bind(employeeList.getSelectionModel().selectedItemProperty().isNull());
         updateButton.disableProperty().bind(employeeList.getSelectionModel().selectedItemProperty().isNull());
+
+        searchButton.disableProperty().bind(searchField.textProperty().isEmpty());
+        searchButton.setGraphic(FALoader.createDefault(FontAwesome.Glyph.SEARCH));
     }
 
     private void configureEmployeeList() {
