@@ -85,12 +85,12 @@ public class TicketController extends Controller {
         createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
         ticketTable.setItems(ticket.getObservableList());
 
-        final TicketModel lastViewed = ticket.getLastViewed();
-        if (lastViewed != null) {
-            this.lastViewed.setValue(lastViewed);
+        final TicketModel lastViewedModel = ticket.getLastViewed();
+        if (lastViewedModel != null) {
+            lastViewed.setValue(lastViewedModel);
         }
 
-        lastViewButton.disableProperty().bind(this.lastViewed.isNull());
+        lastViewButton.disableProperty().bind(lastViewed.isNull());
     }
 
     private void handleIndicatorColumn() {
@@ -187,7 +187,7 @@ public class TicketController extends Controller {
     }
 
     @FXML private void onOpenLastViewed() {
-        Display.show(Route.VIEWER, DataRelay.of(this.lastViewed.getValue(), ticketTable, this.lastViewed));
+        Display.show(Route.VIEWER, DataRelay.of(lastViewed.getValue(), ticketTable, lastViewed));
     }
 
     @FXML
@@ -204,6 +204,14 @@ public class TicketController extends Controller {
         Notify.showConfirmation("Are you sure you want to delete this ticket?", "This action cannot be undone.").ifPresent(type -> {
             if (type == ButtonType.YES) {
                 ticket.remove(ticketModel.getId());
+
+                final TicketModel lastViewedModel = lastViewed.getValue();
+                if (lastViewedModel != null) {
+                    final int ticketId = ticketModel.getId();
+                    if (ticketId == lastViewedModel.getId()) {
+                        lastViewed.setValue(null);
+                    }
+                }
             }
         });
     }
@@ -214,7 +222,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable, this.lastViewed));
+        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable, lastViewed));
     }
 
     private void onEmail(final TicketModel ticketModel) {
