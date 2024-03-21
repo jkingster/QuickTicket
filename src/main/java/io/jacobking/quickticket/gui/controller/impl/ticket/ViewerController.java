@@ -42,9 +42,10 @@ import java.util.ResourceBundle;
 public class ViewerController extends Controller {
     private static final int COMMENT_OFFSET = 50;
 
-    private TicketModel            ticketModel;
-    private TableView<TicketModel> ticketTable;
-    private int                    ticketId;
+    private TicketModel                 ticketModel;
+    private TableView<TicketModel>      ticketTable;
+    private int                         ticketId;
+    private ObjectProperty<TicketModel> lastViewed;
 
     private ObservableList<CommentModel> comments;
 
@@ -342,7 +343,8 @@ public class ViewerController extends Controller {
 
         final Optional<ObjectProperty<TicketModel>> lastViewedOptional = dataRelay.mapObjectProperty(2);
         lastViewedOptional.ifPresentOrElse(last -> {
-            last.setValue(ticketModel);
+            this.lastViewed = last;
+            lastViewed.setValue(ticketModel);
         }, () -> {
             // TODO: SILENT LOG
         });
@@ -352,6 +354,7 @@ public class ViewerController extends Controller {
         Notify.showConfirmation("Are you sure you want to delete this ticket?", "It cannot be recovered.").ifPresent(type -> {
             if (type == ButtonType.YES) {
                 ticket.remove(ticketId);
+                lastViewed.setValue(null);
                 Display.close(Route.VIEWER);
             }
         });
