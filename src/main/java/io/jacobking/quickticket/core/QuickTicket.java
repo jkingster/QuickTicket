@@ -26,10 +26,18 @@ public class QuickTicket {
         new QuickTicket();
     }
 
+    public static void gracefulClose() {
+        InstanceLock.getInstance().deleteLock();
+        Database.getInstance().close();
+        EXECUTOR_SERVICE.shutdown();
+    }
+
     public static void shutdown() {
         InstanceLock.getInstance().deleteLock();
         Database.getInstance().close();
         EXECUTOR_SERVICE.shutdown();
         Platform.exit();
     }
+
+
 }

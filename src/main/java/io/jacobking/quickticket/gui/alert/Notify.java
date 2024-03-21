@@ -2,7 +2,6 @@ package io.jacobking.quickticket.gui.alert;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
 
 import java.util.Optional;
 
@@ -54,8 +53,21 @@ public class Notify {
                 .showAndWait();
     }
 
+    public static Optional<ButtonType> showWarningConfirmation(final String title, final String header, final String content, final ButtonType... buttonTypes) {
+        return new AlertBuilder(Alert.AlertType.WARNING)
+                .withTitle(title)
+                .withHeader(header)
+                .withContent(content)
+                .withButtons(buttonTypes)
+                .showAndWait();
+    }
+
     public static Optional<ButtonType> showConfirmation(final String header, final String content) {
         return showConfirmation("Are you sure?", header, content, ButtonType.YES, ButtonType.NO);
+    }
+
+    public static Optional<ButtonType> showWarningConfirmation(final String header, final String content) {
+        return showWarningConfirmation("WARNING!", header, content, ButtonType.YES, ButtonType.NO);
     }
 
     public static void showException(final String content, final Throwable throwable) {
@@ -64,7 +76,7 @@ public class Notify {
                 .show();
     }
 
-    public static Optional<String> showInput(final String title,  final String content, final String defaultValue) {
+    public static Optional<String> showInput(final String title, final String content, final String defaultValue) {
         return new InputDialogBuilder(defaultValue)
                 .buildDialog(title, content)
                 .result();

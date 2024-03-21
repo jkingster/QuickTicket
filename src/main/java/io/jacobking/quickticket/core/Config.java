@@ -28,6 +28,11 @@ public class Config {
         return properties.getProperty(key, "");
     }
 
+    public void setProperty(final String key, final String value) {
+        properties.setProperty(key, value);
+        storeProperties();
+    }
+
     private void loadData() {
         final String targetProperties = FileIO.TARGET_PROPERTIES;
         if (FileIO.fileExists(targetProperties)) {
