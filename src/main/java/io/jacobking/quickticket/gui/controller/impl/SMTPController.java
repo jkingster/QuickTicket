@@ -39,21 +39,21 @@ public class SMTPController extends Controller {
     }
 
     private void preloadValues() {
-        final Email email = EmailConfig.getInstance().getEmail();
-        hostField.setText(email.getHost());
-        portField.setText(email.getPort());
-        fromAddressField.setText(email.getFromAddress());
-        bccField.setText(email.getBccAddress());
+        final EmailModel model = new EmailModel(EmailConfig.getInstance().getEmail());
+        hostField.setText(model.getHostProperty());
+        portField.setText(model.getPortProperty());
+        fromAddressField.setText(model.getFromAddressProperty());
+        bccField.setText(model.getBccAddress());
 
-        if (email.getStarttls()) {
+        if (model.startTLSProperty().getValue()) {
             transportComboBox.getSelectionModel().select(TransportType.STARTTLS);
         } else {
             transportComboBox.getSelectionModel().select(TransportType.SSL_OR_TSL);
         }
 
-        authenticationCheckBox.setSelected(email.getAuthentication());
-        usernameField.setText(email.getUsername());
-        passwordField.setText(email.getPassword());
+        authenticationCheckBox.setSelected(model.isAuthentication());
+        usernameField.setText(model.getUsernameProperty());
+        passwordField.setText(model.getPasswordProperty());
     }
 
     @FXML private void onTest() {
@@ -69,6 +69,7 @@ public class SMTPController extends Controller {
     @FXML private void onSave() {
         final Email savedEmail = getEmail();
         email.update(new EmailModel(savedEmail));
+        EmailConfig.getInstance().setEmail(savedEmail);
         Display.close(Route.SMTP);
     }
 
