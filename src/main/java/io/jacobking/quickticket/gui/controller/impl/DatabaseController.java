@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.Config;
+import io.jacobking.quickticket.core.database.DatabaseMigrator;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.utility.FALoader;
@@ -34,6 +35,7 @@ public class DatabaseController extends Controller {
         configFileUrl.setText(FileIO.TARGET_PROPERTIES);
         copyDatabaseUrl.setGraphic(FALoader.createDefault(FontAwesome.Glyph.COPY));
         copyConfigUrl.setGraphic(FALoader.createDefault(FontAwesome.Glyph.COPY));
+        databaseVersionLabel.setText(String.format("Database Version: %s", DatabaseMigrator.getCurrentDatabaseVersion()));
     }
 
     @FXML private void onUpdate() {
