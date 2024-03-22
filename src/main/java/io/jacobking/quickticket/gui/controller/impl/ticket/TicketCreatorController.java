@@ -133,11 +133,19 @@ public class TicketCreatorController extends Controller {
     @FXML private void onCreate() {
         final String title = titleField.getText();
         final EmployeeModel employeeModel = employeeComboBox.getSelectionModel().getSelectedItem();
-        final TicketModel newTicket = ticket.createModel(new Ticket().setTitle(title).setCreatedOn(DateUtil.now()).setPriority(getPriority()).setStatus(getStatus()).setUserId(employeeModel == null ? 0 : employeeModel.getId()));
+        final TicketModel newTicket = ticket.createModel(new Ticket()
+                .setTitle(title)
+                .setCreatedOn(DateUtil.nowWithTime())
+                .setPriority(getPriority())
+                .setStatus(getStatus())
+                .setAttachedJournalId(-1)
+                .setEmployeeId(employeeModel == null ? 0 : employeeModel.getId()));
 
         insertInitialComment(newTicket);
         sendInitialEmail(newTicket);
         Display.close(Route.TICKET_CREATOR);
+
+        ticketTable.scrollTo(0);
     }
 
     private void sendInitialEmail(final TicketModel ticketModel) {
@@ -161,7 +169,9 @@ public class TicketCreatorController extends Controller {
         if (initialComment.isEmpty()) return;
 
         final int ticketId = ticketModel.getId();
-        comment.createModel(new Comment().setTicketId(ticketId).setPost(initialComment).setPostedOn(DateUtil.nowWithTime()));
+        comment.createModel(new Comment().setTicketId(ticketId)
+                .setPost(initialComment)
+                .setPostedOn(DateUtil.nowWithTime().toString()));
     }
 
     @FXML private void onReset() {

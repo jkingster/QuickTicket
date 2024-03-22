@@ -2,6 +2,7 @@ package io.jacobking.quickticket.gui.controller.impl.ticket;
 
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
+import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Notify;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
@@ -21,7 +22,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -30,8 +30,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.util.Comparator;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class TicketController extends Controller {
@@ -43,19 +42,19 @@ public class TicketController extends Controller {
 
     private final ObjectProperty<TicketModel> lastViewed = new SimpleObjectProperty<>();
 
-    @FXML private TableView<TicketModel>                 ticketTable;
-    @FXML private TableColumn<TicketModel, PriorityType> indicatorColumn;
-    @FXML private TableColumn<TicketModel, Void>         actionsColumn;
-    @FXML private TableColumn<TicketModel, String>       titleColumn;
-    @FXML private TableColumn<TicketModel, StatusType>   statusColumn;
-    @FXML private TableColumn<TicketModel, PriorityType> priorityColumn;
-    @FXML private TableColumn<TicketModel, Integer>   employeeColumn;
-    @FXML private TableColumn<TicketModel, LocalDate> createdColumn;
-    @FXML private Label                               openLabel;
-    @FXML private Label                                  activeLabel;
-    @FXML private Label                                  pausedLabel;
-    @FXML private Label                                  resolvedLabel;
-    @FXML private Button                                 lastViewButton;
+    @FXML private TableView<TicketModel>                  ticketTable;
+    @FXML private TableColumn<TicketModel, PriorityType>  indicatorColumn;
+    @FXML private TableColumn<TicketModel, Void>          actionsColumn;
+    @FXML private TableColumn<TicketModel, String>        titleColumn;
+    @FXML private TableColumn<TicketModel, StatusType>    statusColumn;
+    @FXML private TableColumn<TicketModel, PriorityType>  priorityColumn;
+    @FXML private TableColumn<TicketModel, Integer>       employeeColumn;
+    @FXML private TableColumn<TicketModel, LocalDateTime> createdColumn;
+    @FXML private Label                                   openLabel;
+    @FXML private Label                                   activeLabel;
+    @FXML private Label                                   pausedLabel;
+    @FXML private Label                                   resolvedLabel;
+    @FXML private Button                                  lastViewButton;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
@@ -88,11 +87,27 @@ public class TicketController extends Controller {
             }
         });
         employeeColumn.setSortable(false);
+        createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
+        createdColumn.setCellFactory(data -> new TableCell<>() {
+            @Override protected void updateItem(LocalDateTime localDateTime, boolean b) {
+                super.updateItem(localDateTime, b);
+                if (b || localDateTime == null) {
+                    setText(null);
+                    return;
+                }
 
+                setText(DateUtil.parseAsString(localDateTime));
+            }
+        });
+
+
+        ticketTable.setItems(ticket.getObservableList());
+
+        createdColumn.setComparator(LocalDateTime::compareTo);
+        createdColumn.setSortType(TableColumn.SortType.DESCENDING);
         ticketTable.getSortOrder().clear();
         ticketTable.getSortOrder().add(createdColumn);
-        createdColumn.setSortType(TableColumn.SortType.DESCENDING);
-        ticketTable.setItems(ticket.getObservableList());
+        ticketTable.sort();
 
         final TicketModel lastViewedModel = ticket.getLastViewed();
         if (lastViewedModel != null) {

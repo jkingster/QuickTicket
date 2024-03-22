@@ -51,10 +51,11 @@ public class DatabaseMigrator {
         }
 
         final int migration = checkMigration();
-        if (migration > 0)
+        System.out.println(migration);
+        if (migration >= 0)
             return;
 
-        if (backupCurrent()) {
+        if (!backupCurrent()) {
             final Optional<ButtonType> warning = Notify.showWarningConfirmation(
                     "Backing up your current database failed.",
                     "We recommend making a copy manually before proceeding. Do you still want to run the migrate process?"
