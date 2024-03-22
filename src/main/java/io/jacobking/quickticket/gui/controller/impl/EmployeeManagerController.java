@@ -93,30 +93,37 @@ public class EmployeeManagerController extends Controller {
     }
 
     @FXML private void onSearch() {
-        final String text = searchField.getText();
+        final EmployeeModel employee = findEmployee(searchField.getText());
+        if (employee == null) {
+            Notify.showError(
+                    "Error",
+                    "Could not find an employee record.",
+                    "Please try another search query."
+            );
+            return;
+        }
+        selectEmployee(employee);
+    }
+
+    private EmployeeModel findEmployee(final String searchQuery) {
         for (final EmployeeModel model : employeeList.getItems()) {
-            final String name = model.getFullName();
-            if (containsIgnoreCase(name, text)) {
-                selectEmployee(model);
-                break;
-            }
-
             final String email = model.getEmail();
-            if (containsIgnoreCase(email, text)) {
-                selectEmployee(model);
-                break;
-            }
-
+            final String fullName = model.getFullName();
             final String title = model.getTitle();
-            if (containsIgnoreCase(title, text)) {
-                selectEmployee(model);
-                break;
+
+            if (containsIgnoreCase(email, searchQuery)
+                    || containsIgnoreCase(fullName, searchQuery)
+                    || containsIgnoreCase(title, searchQuery)
+            ) {
+                return model;
             }
         }
+        return null;
     }
 
     private void selectEmployee(final EmployeeModel employee) {
         employeeList.getSelectionModel().select(employee);
+        employeeList.scrollTo(employee);
         populateFields(employee);
     }
 
