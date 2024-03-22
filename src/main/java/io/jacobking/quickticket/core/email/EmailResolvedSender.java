@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.core.email;
 
 import io.jacobking.quickticket.App;
+import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Notify;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
@@ -24,7 +25,7 @@ public class EmailResolvedSender {
     public EmailResolvedSender(final TicketModel ticketModel, final EmployeeModel employeeModel, final String comment) {
         this.ticketId = String.valueOf(ticketModel.getId());
         this.ticketSubject = ticketModel.getTitle();
-        this.ticketCreation = ticketModel.getCreation();
+        this.ticketCreation = ticketModel.getCreation().format(DateUtil.DATE_TIME_FORMATTER);
         this.ticketEmployeeName = employeeModel.getFullName();
         this.ticketEmployeeEmail = employeeModel.getEmail();
         this.resolvedComment = comment;

@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 public class DatabaseMigrator {
 
@@ -50,18 +51,25 @@ public class DatabaseMigrator {
         }
 
         final int migration = checkMigration();
-        if (migration < 0) {
-            if (!backupCurrent()) {
-                Notify.showWarningConfirmation(
-                        "Are you sure you want to continue with the database migration?",
-                        "The application failed to backup your current data."
-                ).ifPresent(type -> {
-                    if (type == ButtonType.YES) {
-                        startMigration();
-                    }
-                });
-            }
+        System.out.println(migration);
+        if (migration >= 0)
+            return;
+
+        if (!backupCurrent()) {
+            final Optional<ButtonType> warning = Notify.showWarningConfirmation(
+                    "Backing up your current database failed.",
+                    "We recommend making a copy manually before proceeding. Do you still want to run the migrate process?"
+            );
+
+            warning.ifPresent(type -> {
+                if (type == ButtonType.YES) {
+                    startMigration();
+                }
+            });
+            return;
         }
+
+        startMigration();
     }
 
     private boolean backupCurrent() {

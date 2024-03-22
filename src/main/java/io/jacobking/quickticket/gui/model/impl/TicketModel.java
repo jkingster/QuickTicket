@@ -14,11 +14,11 @@ public class TicketModel extends ViewModel<Ticket> {
     private final ObjectProperty<StatusType>    statusProperty      = new SimpleObjectProperty<>();
     private final ObjectProperty<PriorityType>  priorityProperty    = new SimpleObjectProperty<>();
     private final IntegerProperty               employeeProperty    = new SimpleIntegerProperty();
-    private final StringProperty                createdProperty     = new SimpleStringProperty();
+    private final ObjectProperty<LocalDateTime> createdProperty     = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDateTime> lastViewedTimestamp = new SimpleObjectProperty<>();
-    private final IntegerProperty attachedJournalId = new SimpleIntegerProperty();
+    private final IntegerProperty               attachedJournalId   = new SimpleIntegerProperty();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, String created, LocalDateTime lastViewedTimestamp, int attachedJournalId) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, int attachedJournalId) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
@@ -35,7 +35,7 @@ public class TicketModel extends ViewModel<Ticket> {
                 ticket.getTitle(),
                 StatusType.of(ticket.getStatus()),
                 PriorityType.of(ticket.getPriority()),
-                ticket.getUserId(), // need to update from user -> employee eventually.
+                ticket.getEmployeeId(), // need to update from user -> employee eventually.
                 ticket.getCreatedOn(),
                 ticket.getLastOpenedTimestamp(),
                 ticket.getAttachedJournalId()
@@ -46,8 +46,8 @@ public class TicketModel extends ViewModel<Ticket> {
         return titleProperty.getValueSafe();
     }
 
-    public String getCreation() {
-        return createdProperty.getValueSafe();
+    public LocalDateTime getCreation() {
+        return createdProperty.getValue();
     }
 
     public StringProperty titleProperty() {
@@ -66,7 +66,7 @@ public class TicketModel extends ViewModel<Ticket> {
         return employeeProperty;
     }
 
-    public StringProperty createdProperty() {
+    public ObjectProperty<LocalDateTime> createdProperty() {
         return createdProperty;
     }
 
