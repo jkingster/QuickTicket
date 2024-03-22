@@ -1,9 +1,14 @@
 package io.jacobking.quickticket.core.database;
 
 import io.jacobking.quickticket.App;
+import io.jacobking.quickticket.core.Config;
+import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.alert.Notify;
+import javafx.scene.control.ButtonType;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +22,7 @@ public class DatabaseMigrator {
     private static final String MIGRATION_PATH = "sql/migration/v%d.%d.SQL";
     private static final String SCHEMA_FETCH   = "SELECT MAJOR, MINOR FROM SCHEMA_VERSION WHERE ID = 0;";
 
-    private static final DatabaseVersion TARGET_DATABASE_VERSION  = new DatabaseVersion(1, 1);
+    private static final DatabaseVersion TARGET_DATABASE_VERSION  = new DatabaseVersion(1, 2);
     private static       DatabaseVersion CURRENT_DATABASE_VERSION = null;
 
     private final DatabaseVersion currentDatabaseVersion = new DatabaseVersion();
@@ -46,7 +51,34 @@ public class DatabaseMigrator {
 
         final int migration = checkMigration();
         if (migration < 0) {
-            startMigration();
+            if (!backupCurrent()) {
+                Notify.showWarningConfirmation(
+                        "Are you sure you want to continue with the database migration?",
+                        "The application failed to backup your current data."
+                ).ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        startMigration();
+                    }
+                });
+            }
+        }
+    }
+
+    private boolean backupCurrent() {
+        final File current = new File(Config.getInstance().readProperty("db_url"));
+        if (!current.exists() || !current.isFile())
+            return false;
+
+        final String dbName = current.getName();
+        final String timestamp = String.valueOf(System.currentTimeMillis());
+        final String newName = String.format("backup-%s-%s.db", dbName.replace(".db", ""), timestamp);
+        final String targetPath = String.format("%s%s", FileIO.TARGET_COPY_PATH, newName);
+
+        try {
+            FileUtils.copyFile(current, new File(targetPath));
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 

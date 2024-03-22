@@ -59,9 +59,7 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
     }
 
     public void addModel(final V model) {
-        Platform.runLater(() -> {
-            observableList.add(model);
-        });
+        Platform.runLater(() -> observableList.add(0, model));
     }
 
     public V createModel(final E entity) {

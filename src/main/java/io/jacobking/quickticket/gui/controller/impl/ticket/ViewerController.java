@@ -448,4 +448,5 @@ public class ViewerController extends Controller {
         ticketModel.lastViewedProperty().setValue(LocalDateTime.now());
         ticket.update(ticketModel);
     }
+
 }

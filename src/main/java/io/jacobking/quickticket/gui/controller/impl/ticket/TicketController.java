@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -29,6 +30,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 public class TicketController extends Controller {
@@ -46,9 +49,9 @@ public class TicketController extends Controller {
     @FXML private TableColumn<TicketModel, String>       titleColumn;
     @FXML private TableColumn<TicketModel, StatusType>   statusColumn;
     @FXML private TableColumn<TicketModel, PriorityType> priorityColumn;
-    @FXML private TableColumn<TicketModel, Integer>      employeeColumn;
-    @FXML private TableColumn<TicketModel, String>       createdColumn;
-    @FXML private Label                                  openLabel;
+    @FXML private TableColumn<TicketModel, Integer>   employeeColumn;
+    @FXML private TableColumn<TicketModel, LocalDate> createdColumn;
+    @FXML private Label                               openLabel;
     @FXML private Label                                  activeLabel;
     @FXML private Label                                  pausedLabel;
     @FXML private Label                                  resolvedLabel;
@@ -63,8 +66,11 @@ public class TicketController extends Controller {
         handleIndicatorColumn();
         handleActionsColumn();
         titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
+        titleColumn.setSortable(false);
         statusColumn.setCellValueFactory(data -> data.getValue().statusProperty());
+        statusColumn.setSortable(false);
         priorityColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
+        priorityColumn.setSortable(false);
         employeeColumn.setCellValueFactory(data -> data.getValue().employeeProperty().asObject());
         employeeColumn.setCellFactory(data -> new TableCell<>() {
             @Override protected void updateItem(Integer integer, boolean b) {
@@ -81,8 +87,11 @@ public class TicketController extends Controller {
                 setText(model.getFullName());
             }
         });
+        employeeColumn.setSortable(false);
 
-        createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
+        ticketTable.getSortOrder().clear();
+        ticketTable.getSortOrder().add(createdColumn);
+        createdColumn.setSortType(TableColumn.SortType.DESCENDING);
         ticketTable.setItems(ticket.getObservableList());
 
         final TicketModel lastViewedModel = ticket.getLastViewed();
@@ -95,6 +104,8 @@ public class TicketController extends Controller {
 
     private void handleIndicatorColumn() {
         indicatorColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
+        indicatorColumn.setSortable(false);
+        indicatorColumn.setReorderable(false);
         indicatorColumn.setCellFactory(data -> new TableCell<>() {
 
             private final Glyph glyph = FALoader.create(FontAwesome.Glyph.CIRCLE, null);
@@ -266,6 +277,8 @@ public class TicketController extends Controller {
     }
 
     private void handleActionsColumn() {
+        actionsColumn.setReorderable(false);
+        actionsColumn.setSortable(false);
         actionsColumn.setCellFactory(ticketModelVoidTableColumn -> new TableCell<>() {
             private final Button open = new Button();
             private final Button delete = new Button();
@@ -298,5 +311,8 @@ public class TicketController extends Controller {
         });
     }
 
+    @FXML private void onOrderBy() {
+
+    }
 
 }

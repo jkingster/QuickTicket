@@ -54,6 +54,19 @@ public class Notify {
                 .showAndWait();
     }
 
+    public static Optional<ButtonType> showWarningConfirmation(final String title, final String header, final String content, final ButtonType... buttonTypes) {
+        return new AlertBuilder(Alert.AlertType.WARNING)
+                .withTitle(title)
+                .withHeader(header)
+                .withContent(content)
+                .withButtons(buttonTypes)
+                .showAndWait();
+    }
+
+    public static Optional<ButtonType> showWarningConfirmation(final String header, final String content) {
+        return showConfirmation("WARNING!", header, content, ButtonType.YES, ButtonType.NO);
+    }
+
     public static Optional<ButtonType> showConfirmation(final String header, final String content) {
         return showConfirmation("Are you sure?", header, content, ButtonType.YES, ButtonType.NO);
     }

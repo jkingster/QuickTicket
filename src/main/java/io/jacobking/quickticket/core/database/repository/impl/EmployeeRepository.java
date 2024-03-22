@@ -51,6 +51,7 @@ public class EmployeeRepository implements Repository<Employee> {
         record.changed(EMPLOYEE.ID, false);
         return context.update(EMPLOYEE)
                 .set(record)
+                .where(EMPLOYEE.ID.eq(employee.getId()))
                 .execute() >= SUCCESS;
     }
 }
