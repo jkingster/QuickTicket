@@ -9,6 +9,12 @@
     ]
   },
   {
+    "version": "2.0.8-beta",
+    "changes": [
+      "Fixed bug: Updating a user updates EVERY user in the database. If a database isn't backed up, no data is recoverable."
+    ]
+  },
+  {
     "version": "2.0.7-beta",
     "changes": [
       "Fixed bug: Undefined database version. (v2.0.1-beta)",

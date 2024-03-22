@@ -4,7 +4,7 @@
 -------------------------
 
 
-![Static Badge](https://img.shields.io/badge/Version-2.0.7--beta-blue) 
+![Static Badge](https://img.shields.io/badge/Version-2.0.8--beta-blue) 
 ![Static Badge](https://img.shields.io/badge/Pull%20Requests-Welcome-red)
 
 ## Description
@@ -19,7 +19,7 @@ Originally made to help me manage IT support requests, I've decided to actually 
 > As of right now, the installation has only been tested on a Windows environment. No cross-platform tests have been run. If anyone is willing to work on this implementation, feel free to reach out.
 
 
-Head over to the latest releases, or click <a href="https://www.github.com/QuickTicket/tags">here</a>. Find the latest release denoted at the top, or feel free to download older versions. Support will be offered if it can be. Right now we are standing at current version **2.0.7-beta**. We are not in a production environment, yet.
+Head over to the latest releases, or click <a href="https://www.github.com/QuickTicket/tags">here</a>. Find the latest release denoted at the top, or feel free to download older versions. Support will be offered if it can be. Right now we are standing at current version **2.0.8-beta**. We are not in a production environment, yet.
 
 Download the .msi installer, run it, select the directory you want the installation files to be stored. From there a shortcut and start-menu icon will be created. Run the QuickTicket.exe, and all the necessary components and files will be generated in your AppData directory. 
 
