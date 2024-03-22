@@ -5,7 +5,10 @@
       "Fixed bug: malformed changelog.json",
       "UI update: Increased width of ticket box for employees.",
       "New feature: Added confirmation box when deleting employees.",
-      "New feature: You can now search for employees by name, email or title."
+      "New feature: You can now search for employees by name, email or title.",
+      "Database Migration: Upgraded to v1.2",
+      "UI update: Sorts tickets by most recent date.",
+      "New feature: Quick resolving/opening now sends a system message and asks for a resolving comment."
     ]
   },
   {
