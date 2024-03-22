@@ -196,7 +196,7 @@ public class EmployeeManagerController extends Controller {
 
                 final HBox hBox = new HBox();
                 hBox.setAlignment(Pos.CENTER_LEFT);
-                hBox.setSpacing(25.0);
+                hBox.setSpacing(15.0);
 
                 final Button view = new Button();
                 view.setOnAction(event -> openTicket(ticketModel));
