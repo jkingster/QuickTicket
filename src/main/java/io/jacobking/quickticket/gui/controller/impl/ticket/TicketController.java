@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
+import io.jacobking.quickticket.core.email.EmailResolvedSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -11,6 +12,7 @@ import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
+import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
@@ -196,6 +198,39 @@ public class TicketController extends Controller {
         }
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
         ticket.update(ticketModel);
+        ticketTable.refresh();
+
+        Notify.showInput(
+                "Notify Employee",
+                "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
+                "No resolving comment was added."
+        ).ifPresentOrElse(comment -> {
+            final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
+            if (model == null) {
+                Notify.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
+                return;
+            }
+
+            final String email = model.getEmail();
+            if (email.isEmpty()) {
+                Notify.showError(
+                        "Error notifying employee.",
+                        "Could not send notification e-mail.",
+                        "There is no e-mail attached for this employee."
+                );
+                return;
+            }
+
+            final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
+            emailResolvedSender.sendEmail();
+            postCommentOnTicket(ticketModel, comment);
+        }, () -> postCommentOnTicket(ticketModel, "No resolving comment."));
+    }
+
+    private void postCommentOnTicket(final TicketModel ticketModel, final String systemComment) {
+        comment.createModel(new Comment().setTicketId(ticketModel.getId())
+                .setPostedOn(DateUtil.nowWithTime().format(DateUtil.DATE_TIME_FORMATTER))
+                .setPost(String.format("[%s]: %s", "System", systemComment)));
     }
 
     @FXML private void onReopen() {
@@ -204,8 +239,10 @@ public class TicketController extends Controller {
             Notify.showError("Failed to re-open ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
             return;
         }
+
         ticketModel.statusProperty().setValue(StatusType.OPEN);
         ticket.update(ticketModel);
+        ticketTable.refresh();
     }
 
     @FXML private void onRefresh() {
