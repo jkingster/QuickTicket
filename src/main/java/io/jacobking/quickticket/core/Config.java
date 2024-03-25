@@ -44,6 +44,10 @@ public class Config {
             FileIO.createDirectory(FileIO.TARGET_DIRECTORY);
             createProperties(targetProperties);
         }
+
+        if (!FileIO.directoryExists(FileIO.TARGET_BACKUP_FOLDER)) {
+            FileIO.createDirectory(FileIO.TARGET_BACKUP_FOLDER);
+        }
     }
 
     private void processProperties() {

@@ -1,5 +1,43 @@
 [
   {
+    "version": "2.2.0-beta",
+    "changes": [
+      "New feature: Notifications",
+      "New feature: Settings screen. Disable/enable alert and notification modules.",
+      "Database Migration: Upgraded to v1.3"
+    ]
+  },
+  {
+    "version": "2.1.0-beta",
+    "changes": [
+      "Fixed bug: malformed changelog.json",
+      "UI update: Increased width of ticket box for employees.",
+      "New feature: Added confirmation box when deleting employees.",
+      "New feature: You can now search for employees by name, email or title.",
+      "Database Migration: Upgraded to v1.2",
+      "UI update: Sorts tickets by most recent date.",
+      "New feature: Quick resolving/opening now sends a system message and asks for a resolving comment."
+    ]
+  },
+  {
+    "version": "2.0.8-beta",
+    "changes": [
+      "Fixed bug: Updating a user updates EVERY user in the database. If a database isn't backed up, no data is recoverable."
+    ]
+  },
+  {
+    "version": "2.0.7-beta",
+    "changes": [
+      "Fixed bug: Undefined database version. (v2.0.1-beta)",
+      "Fixed bug: Fixed last viewed button functionality. (v2.0.2-beta)",
+      "Fixed bug: No longer notify employee on ticket resolve if \"NO\" button is pressed. (v2.0.3-beta)",
+      "Fixed bug: No longer receiving an error pop-up about multiple instances. (v2.0.4-beta)",
+      "Fixed bug: Updating a ticket user adds a improperly placed comment. (v2.0.5-beta)",
+      "Fixed bug: Updating the SMTP settings reflects in the UI now. (v2.0.6-beta)",
+      "Fixed bug: When creating a ticket, the text area would horizontally scroll. Now it auto-wraps. (v2.0.7-beta)"
+    ]
+  },
+  {
     "version": "2.0.0-beta",
     "changes": [
       "New feature: Implemented journal entry where you can log daily activities that didn't necessarily require a ticket.",

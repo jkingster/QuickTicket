@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.Version;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
@@ -52,7 +52,7 @@ public class AboutController extends Controller {
         try {
             Desktop.getDesktop().browse(new URI(url));
         } catch (URISyntaxException | IOException e) {
-            Notify.showException("Failed to open web browser.", e.fillInStackTrace());
+            Alerts.showException("Failed to open web browser.", e.fillInStackTrace());
         }
     }
 

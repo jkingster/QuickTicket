@@ -1,19 +1,21 @@
 package io.jacobking.quickticket.core.utility;
 
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 
 import java.io.File;
 import java.io.IOException;
 
 public class FileIO {
 
-    private static final String DIRECTORY_NAME    = "QuickTicket";
-    private static final String APP_DATA          = System.getenv("APPDATA");
-    private static final String FILE_SEPARATOR    = File.separator;
-    public static final  String TARGET_DIRECTORY  = String.format("%s%s%s", APP_DATA, FILE_SEPARATOR, DIRECTORY_NAME);
-    public static final  String TARGET_PROPERTIES = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "sysconfig.properties");
-    public static final  String TARGET_LOCK       = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, ".lock");
-    public static final  String TARGET_DATABASE   = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "database.db");
+    private static final String DIRECTORY_NAME       = "QuickTicket";
+    private static final String APP_DATA             = System.getenv("APPDATA");
+    private static final String FILE_SEPARATOR       = File.separator;
+    public static final  String TARGET_DIRECTORY     = String.format("%s%s%s", APP_DATA, FILE_SEPARATOR, DIRECTORY_NAME);
+    public static final  String TARGET_PROPERTIES    = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "sysconfig.properties");
+    public static final  String TARGET_LOCK          = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, ".lock");
+    public static final  String TARGET_DATABASE      = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "database.db");
+    public static final  String TARGET_BACKUP_FOLDER = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "backup");
+    public static final  String TARGET_COPY_PATH     = String.format("%s%s", TARGET_BACKUP_FOLDER, FILE_SEPARATOR);
 
     private FileIO() {
 
@@ -37,7 +39,7 @@ public class FileIO {
         try {
             return file.createNewFile();
         } catch (IOException e) {
-            Notify.showException("Failed to create file.", e.fillInStackTrace());
+            Alerts.showException("Failed to create file.", e.fillInStackTrace());
             return false;
         }
     }

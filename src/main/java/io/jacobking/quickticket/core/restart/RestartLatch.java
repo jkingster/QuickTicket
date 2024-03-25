@@ -10,9 +10,7 @@ public class RestartLatch {
 
     private static final PlatformControl platformControl = new PlatformControl();
 
-    private static final Runnable DEFAULT_PRE_POLICY = () -> {
-        System.out.println("INVOKED");
-    };
+    private static final Runnable DEFAULT_PRE_POLICY = () -> {};
 
     private static final Runnable DEFAULT_TERMINATION_POLICY = Platform::exit;
 
