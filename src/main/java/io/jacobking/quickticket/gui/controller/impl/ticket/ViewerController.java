@@ -6,6 +6,7 @@ import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.CommentModel;
@@ -183,11 +184,13 @@ public class ViewerController extends Controller {
             return;
         }
 
-        ticketModel.employeeProperty().setValue(model.getId());
         postSystemComment("System", "Ticket employee changed to: " + model.getFullName());
 
-        ticket.update(ticketModel);
-        reloadPostUpdate(employeeComboBox, popOver);
+        if (ticket.update(ticketModel)) {
+            ticketModel.employeeProperty().setValue(model.getId());
+            Notifications.showInfo("Update", "Ticket employee updated successfully!");
+            reloadPostUpdate(employeeComboBox, popOver);
+        }
     }
 
     private void updateTicketStatus(final SearchableComboBox<StatusType> statusComboBox, final PopOver popOver) {
@@ -198,9 +201,12 @@ public class ViewerController extends Controller {
         }
 
         ticketModel.statusProperty().setValue(type);
-        postSystemComment("System", "Ticket status changed to: " + type.name());
-        ticket.update(ticketModel);
-        reloadPostUpdate(statusComboBox, popOver);
+
+        if (ticket.update(ticketModel)) {
+            postSystemComment("System", "Ticket status changed to: " + type.name());
+            reloadPostUpdate(statusComboBox, popOver);
+            Notifications.showInfo("Update", "Ticket status updated successfully!");
+        }
     }
 
     private void updateTicketPriority(final SearchableComboBox<PriorityType> priorityComboBox, final PopOver popOver) {
@@ -211,9 +217,11 @@ public class ViewerController extends Controller {
         }
 
         ticketModel.priorityProperty().setValue(type);
-        postSystemComment("System", "Ticket priority changed to: " + type.name());
-        ticket.update(ticketModel);
-        reloadPostUpdate(priorityComboBox, popOver);
+        if (ticket.update(ticketModel)) {
+            postSystemComment("System", "Ticket priority changed to: " + type.name());
+            reloadPostUpdate(priorityComboBox, popOver);
+            Notifications.showInfo("Update", "Ticket priority updated successfully!");
+        }
     }
 
     private <T> void reloadPostUpdate(final SearchableComboBox<T> box, final PopOver popOver) {
@@ -226,34 +234,36 @@ public class ViewerController extends Controller {
     @FXML private void onMarkResolved() {
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
         postSystemComment("System", "This ticket has been marked resolved.");
-        ticket.update(ticketModel);
-        refreshTable();
 
-        Alerts.showInput(
-                "Notify Employee",
-                "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
-                "No resolving comment was added."
-        ).ifPresentOrElse(comment -> {
-            final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
-            if (model == null) {
-                Alerts.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
-                return;
-            }
+        if (ticket.update(ticketModel)) {
+            refreshTable();
 
-            final String email = model.getEmail();
-            if (email.isEmpty()) {
-                Alerts.showError(
-                        "Error notifying employee.",
-                        "Could not send notification e-mail.",
-                        "There is no e-mail attached for this employee."
-                );
-                return;
-            }
+            Alerts.showInput(
+                    "Notify Employee",
+                    "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
+                    "No resolving comment was added."
+            ).ifPresentOrElse(comment -> {
+                final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
+                if (model == null) {
+                    Alerts.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
+                    return;
+                }
 
-            final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
-            emailResolvedSender.sendEmail();
-            postSystemComment("Ticket Resolved", comment);
-        }, () -> postSystemComment("Ticket Resolved", "No resolving comment."));
+                final String email = model.getEmail();
+                if (email.isEmpty()) {
+                    Alerts.showError(
+                            "Error notifying employee.",
+                            "Could not send notification e-mail.",
+                            "There is no e-mail attached for this employee."
+                    );
+                    return;
+                }
+
+                final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
+                emailResolvedSender.sendEmail();
+                postSystemComment("Ticket Resolved", comment);
+            }, () -> postSystemComment("Ticket Resolved", "No resolving comment."));
+        }
     }
 
     private void refreshTable() {
@@ -430,8 +440,10 @@ public class ViewerController extends Controller {
         }
 
         ticketModel.setAttachedJournalId(selected.getId());
-        ticket.update(ticketModel);
-        popOver.hide();
+        if (ticket.update(ticketModel)) {
+            Notifications.showInfo("Update", "Journal attached to ticket successfully!");
+            popOver.hide();
+        }
     }
 
     @FXML private void onViewJournal() {

@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
@@ -84,7 +85,9 @@ public class EmployeeManagerController extends Controller {
         model.setDepartmentProperty(departmentField.getText());
         model.setTitle(titleField.getText());
 
-        employee.update(model);
+        if (employee.update(model)) {
+            Notifications.showInfo("Update", "Employee updated successfully!");
+        }
         employeeList.refresh();
     }
 
