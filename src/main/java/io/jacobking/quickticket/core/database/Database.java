@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class Database {
 
-    private static final Database instance = new Database();
+    private static Database instance = null;
 
     private final SQLiteConnector sqLiteConnector;
     private final RepoCrud        repoCrud;
@@ -22,7 +22,14 @@ public class Database {
     }
 
     public static Database getInstance() {
+        if (instance == null)
+            instance = new Database();
         return instance;
+    }
+
+    public static void rebuildInstance() {
+        instance = null;
+        getInstance();
     }
 
     public static RepoCrud call() {

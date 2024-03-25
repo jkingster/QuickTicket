@@ -28,9 +28,10 @@ public class Config {
         return properties.getProperty(key, "");
     }
 
-    public void setProperty(final String key, final String value) {
-        properties.setProperty(key, value);
+    public Object setProperty(final String key, final String value) {
+        final Object object = properties.setProperty(key, value);
         storeProperties();
+        return object;
     }
 
     private void loadData() {

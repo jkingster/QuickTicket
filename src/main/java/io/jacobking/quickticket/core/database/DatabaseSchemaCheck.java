@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class DatabaseSchemaCheck {
 
-    private static final String[] REQUIRED_TABLE_NAMES = {"COMMENT", "EMAIL", "EMPLOYEE", "JOURNAL", "SCHEMA_VERSION", "TICKET"};
+    private static final String[] REQUIRED_TABLE_NAMES = {"COMMENT", "EMAIL", "EMPLOYEE", "JOURNAL", "SCHEMA_VERSION", "TICKET", "ALERT_SETTINGS"};
 
     private final File       file;
     private       Connection connection;

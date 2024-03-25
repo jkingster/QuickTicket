@@ -33,6 +33,10 @@ public class Display {
         getInstance().closeRoute(route);
     }
 
+    public static void closeAll() {
+        getInstance().closeAllRoutes();
+    }
+
     public void showRoute(final Route route, final DataRelay dataRelay) {
         final Screen screen = screens.get(route);
         if (screen == null) {
@@ -48,6 +52,10 @@ public class Display {
         if (screen == null)
             return;
         screen.close();
+    }
+
+    public void closeAllRoutes() {
+        screens.values().forEach(Screen::close);
     }
 
     private void loadScreens() {

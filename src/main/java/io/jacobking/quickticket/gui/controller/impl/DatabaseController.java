@@ -1,17 +1,19 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
+import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.Config;
 import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.DatabaseMigrator;
 import io.jacobking.quickticket.core.database.DatabaseSchemaCheck;
-import io.jacobking.quickticket.core.lock.InstanceLock;
-import io.jacobking.quickticket.core.restart.RestartLatch;
+import io.jacobking.quickticket.core.reload.ReloadMechanism;
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
+import io.jacobking.quickticket.gui.screen.Display;
+import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -60,7 +62,7 @@ public class DatabaseController extends Controller {
 
         final File file = fileChooser.showOpenDialog(copyConfigUrl.getScene().getWindow());
         if (file == null || !file.exists()) {
-            Notify.showError(
+            Alerts.showError(
                     "Failed to import database.",
                     "No valid database was selected.",
                     "Try again."
@@ -70,7 +72,7 @@ public class DatabaseController extends Controller {
 
         final DatabaseSchemaCheck databaseSchemaCheck = new DatabaseSchemaCheck(file);
         if (!databaseSchemaCheck.isValidDatabase()) {
-            Notify.showError(
+            Alerts.showError(
                     "Invalid Database",
                     "The selected database did not match the required criteria.",
                     "Please select a valid one."
@@ -78,9 +80,10 @@ public class DatabaseController extends Controller {
             return;
         }
 
-        Notify.showWarningConfirmation("Are you sure you want to import this database?", "This can have negative consequences.")
+        Alerts.showWarningConfirmation("Are you sure you want to import this database?", "This can have negative consequences.")
                 .ifPresent(type -> {
                     if (type == ButtonType.YES) {
+                        Notifications.showWarning("Importing Database", "Please do not exit QuickTicket...");
                         updateDatabaseLocation(file);
                     }
                 });
@@ -88,8 +91,11 @@ public class DatabaseController extends Controller {
 
     private void updateDatabaseLocation(final File file) {
         final String path = file.getAbsolutePath();
-        Config.getInstance().setProperty("db_url", path);
-        RestartLatch.restartApp(QuickTicket::gracefulClose, null);
+        final Object object = Config.getInstance().setProperty("db_url", path);
+        if (object != null) {
+            Notifications.showWarning("Config Updated", "The database url was successfully updated.. reloading data.");
+            ReloadMechanism.reload();
+        }
     }
 
 

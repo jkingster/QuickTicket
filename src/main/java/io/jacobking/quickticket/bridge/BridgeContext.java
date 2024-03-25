@@ -4,7 +4,7 @@ import io.jacobking.quickticket.bridge.impl.*;
 
 public class BridgeContext {
 
-    private static final BridgeContext instance = new BridgeContext();
+    private static BridgeContext instance = null;
 
     private final TicketBridge  ticketBridge;
     private final CommentBridge commentBridge;
@@ -25,7 +25,14 @@ public class BridgeContext {
     }
 
     public static BridgeContext getInstance() {
+        if (instance == null)
+            instance = new BridgeContext();
         return instance;
+    }
+
+    public static void rebuildInstance() {
+        instance = null;
+        getInstance();
     }
 
     public static TicketBridge ticket() {
