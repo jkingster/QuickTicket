@@ -1,6 +1,6 @@
 package io.jacobking.quickticket.core.email;
 
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.tables.pojos.Email;
 
 import java.util.Properties;
@@ -26,7 +26,7 @@ public class EmailConfig {
 
     public EmailConfig applySettings() {
         if (this.email == null) {
-            Notify.showError("Failed to apply settings.", "Could not apply e-mail settings.", "Passed e-mail is null in config.. ");
+            Alerts.showError("Failed to apply settings.", "Could not apply e-mail settings.", "Passed e-mail is null in config.. ");
             return this;
         }
         apply();

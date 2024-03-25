@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl.journal;
 
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
@@ -82,7 +82,7 @@ public class JournalController extends Controller {
     private void viewTickets(final Button search, final int journalId) {
         final ObservableList<TicketModel> tickets = ticket.getFilteredList(ticketModel -> ticketModel.getAttachedJournalId() == journalId);
         if (tickets.isEmpty()) {
-            Notify.showError(
+            Alerts.showError(
                     "No tickets to display.",
                     "There are no tickets associated with this journal.",
                     "Please attach one and try again."
@@ -197,7 +197,7 @@ public class JournalController extends Controller {
 
     @FXML private void onDelete() {
         final JournalModel journalModel = journalList.getSelectionModel().getSelectedItem();
-        Notify.showConfirmation("Are you sure?", "This action cannot be undone.").ifPresent(type -> {
+        Alerts.showConfirmation(() -> journal.remove(journalModel.getId()), "Are you sure?", "This action cannot be undone.").ifPresent(type -> {
             if (type == ButtonType.YES) {
                 journal.remove(journalModel.getId());
                 journalList.refresh();

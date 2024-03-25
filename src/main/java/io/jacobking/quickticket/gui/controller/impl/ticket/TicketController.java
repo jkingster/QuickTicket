@@ -4,7 +4,8 @@ import io.jacobking.quickticket.core.email.EmailResolvedSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
@@ -193,38 +194,39 @@ public class TicketController extends Controller {
     @FXML private void onResolve() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
         if (ticketModel == null) {
-            Notify.showError("Failed to resolve ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
+            Alerts.showError("Failed to resolve ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
             return;
         }
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
-        ticket.update(ticketModel);
-        ticketTable.refresh();
 
-        Notify.showInput(
-                "Notify Employee",
-                "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
-                "No resolving comment was added."
-        ).ifPresentOrElse(comment -> {
-            final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
-            if (model == null) {
-                Notify.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
-                return;
-            }
+        if (ticket.update(ticketModel)) {
+            Alerts.showInput(
+                    "Notify Employee",
+                    "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
+                    "No resolving comment was added."
+            ).ifPresentOrElse(comment -> {
+                final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
+                if (model == null) {
+                    Alerts.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
+                    return;
+                }
 
-            final String email = model.getEmail();
-            if (email.isEmpty()) {
-                Notify.showError(
-                        "Error notifying employee.",
-                        "Could not send notification e-mail.",
-                        "There is no e-mail attached for this employee."
-                );
-                return;
-            }
+                final String email = model.getEmail();
+                if (email.isEmpty()) {
+                    Alerts.showError(
+                            "Error notifying employee.",
+                            "Could not send notification e-mail.",
+                            "There is no e-mail attached for this employee."
+                    );
+                    return;
+                }
 
-            final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
-            emailResolvedSender.sendEmail();
-            postCommentOnTicket(ticketModel, comment);
-        }, () -> postCommentOnTicket(ticketModel, "No resolving comment."));
+                final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
+                emailResolvedSender.sendEmail();
+                postCommentOnTicket(ticketModel, comment);
+            }, () -> postCommentOnTicket(ticketModel, "No resolving comment."));
+            ticketTable.refresh();
+        }
     }
 
     private void postCommentOnTicket(final TicketModel ticketModel, final String systemComment) {
@@ -236,13 +238,15 @@ public class TicketController extends Controller {
     @FXML private void onReopen() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
         if (ticketModel == null) {
-            Notify.showError("Failed to re-open ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
+            Alerts.showError("Failed to re-open ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
             return;
         }
 
         ticketModel.statusProperty().setValue(StatusType.OPEN);
-        ticket.update(ticketModel);
-        ticketTable.refresh();
+        if (ticket.update(ticketModel)) {
+            Notifications.showInfo("Success", "Ticket re-opened successfully.");
+            ticketTable.refresh();
+        }
     }
 
     @FXML private void onRefresh() {
@@ -260,28 +264,32 @@ public class TicketController extends Controller {
 
     private void onDelete(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Notify.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
+            Alerts.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
-        Notify.showConfirmation("Are you sure you want to delete this ticket?", "This action cannot be undone.").ifPresent(type -> {
-            if (type == ButtonType.YES) {
-                ticket.remove(ticketModel.getId());
-
-                final TicketModel lastViewedModel = lastViewed.getValue();
-                if (lastViewedModel != null) {
-                    final int ticketId = ticketModel.getId();
-                    if (ticketId == lastViewedModel.getId()) {
-                        lastViewed.setValue(null);
+        Alerts.showConfirmation(() -> removeTicket(ticketModel), "Are you sure you want to delete this ticket?", "This action cannot be undone.")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        removeTicket(ticketModel);
                     }
-                }
+                });
+    }
+
+    private void removeTicket(final TicketModel ticketModel) {
+        ticket.remove(ticketModel.getId());
+        final TicketModel lastViewedModel = lastViewed.getValue();
+        if (lastViewedModel != null) {
+            final int ticketId = ticketModel.getId();
+            if (ticketId == lastViewedModel.getId()) {
+                lastViewed.setValue(null);
             }
-        });
+        }
     }
 
     private void onOpen(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Notify.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
+            Alerts.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
@@ -290,25 +298,25 @@ public class TicketController extends Controller {
 
     private void onEmail(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Notify.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
+            Alerts.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
         final Desktop desktop = Desktop.getDesktop();
         if (!Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
-            Notify.showError("Failed to open mail.", "Failed to open mail app.", "Mailing is not supported.");
+            Alerts.showError("Failed to open mail.", "Failed to open mail app.", "Mailing is not supported.");
             return;
         }
 
         final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
         if (model == null) {
-            Notify.showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
+            Alerts.showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
             return;
         }
 
         final String employeeEmail = model.getEmail();
         if (employeeEmail.isEmpty()) {
-            Notify.showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
+            Alerts.showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
             return;
         }
 
@@ -324,7 +332,7 @@ public class TicketController extends Controller {
             final URI uri = new URI(uriEncoded);
             desktop.mail(uri);
         } catch (URISyntaxException | IOException e) {
-            Notify.showException("Failed to open mail app.", e.fillInStackTrace());
+            Alerts.showException("Failed to open mail app.", e.fillInStackTrace());
         }
     }
 

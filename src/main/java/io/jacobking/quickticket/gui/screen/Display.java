@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.screen;
 
 
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.data.DataRelay;
 
 import java.lang.reflect.Constructor;
@@ -37,7 +37,7 @@ public class Display {
         final Screen screen = screens.get(route);
         if (screen == null) {
             final RuntimeException exception = new RuntimeException("Failed to load screen: " + route.getName());
-            Notify.showException("Failed to load screen.", exception.fillInStackTrace());
+            Alerts.showException("Failed to load screen.", exception.fillInStackTrace());
             return;
         }
         screen.display(dataRelay);

@@ -5,7 +5,8 @@ import io.jacobking.quickticket.core.email.EmailResolvedSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.CommentModel;
@@ -88,7 +89,7 @@ public class ViewerController extends Controller {
     @FXML private void onDeleteComment() {
         final CommentModel selected = commentList.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            Notify.showError("Delete failure.", "No deletion occurred.", "You must select a comment to delete.");
+            Alerts.showError("Delete failure.", "No deletion occurred.", "You must select a comment to delete.");
             return;
         }
         commentList.getItems().removeIf(model -> model.getId() == selected.getId());
@@ -179,41 +180,48 @@ public class ViewerController extends Controller {
     private void updateTicketEmployee(final SearchableComboBox<EmployeeModel> employeeComboBox, final PopOver popOver) {
         final EmployeeModel model = employeeComboBox.getSelectionModel().getSelectedItem();
         if (model == null) {
-            Notify.showError("Update failure.", "No update occurred.", "You must select an employee.");
+            Alerts.showError("Update failure.", "No update occurred.", "You must select an employee.");
             return;
         }
 
-        ticketModel.employeeProperty().setValue(model.getId());
         postSystemComment("System", "Ticket employee changed to: " + model.getFullName());
 
-        ticket.update(ticketModel);
-        reloadPostUpdate(employeeComboBox, popOver);
+        if (ticket.update(ticketModel)) {
+            ticketModel.employeeProperty().setValue(model.getId());
+            Notifications.showInfo("Update", "Ticket employee updated successfully!");
+            reloadPostUpdate(employeeComboBox, popOver);
+        }
     }
 
     private void updateTicketStatus(final SearchableComboBox<StatusType> statusComboBox, final PopOver popOver) {
         final StatusType type = statusComboBox.getSelectionModel().getSelectedItem();
         if (type == null) {
-            Notify.showError("Update failure.", "No update occurred.", "You must select a status.");
+            Alerts.showError("Update failure.", "No update occurred.", "You must select a status.");
             return;
         }
 
         ticketModel.statusProperty().setValue(type);
-        postSystemComment("System", "Ticket status changed to: " + type.name());
-        ticket.update(ticketModel);
-        reloadPostUpdate(statusComboBox, popOver);
+
+        if (ticket.update(ticketModel)) {
+            postSystemComment("System", "Ticket status changed to: " + type.name());
+            reloadPostUpdate(statusComboBox, popOver);
+            Notifications.showInfo("Update", "Ticket status updated successfully!");
+        }
     }
 
     private void updateTicketPriority(final SearchableComboBox<PriorityType> priorityComboBox, final PopOver popOver) {
         final PriorityType type = priorityComboBox.getSelectionModel().getSelectedItem();
         if (type == null) {
-            Notify.showError("Update failure.", "No update occurred.", "You must select a priority.");
+            Alerts.showError("Update failure.", "No update occurred.", "You must select a priority.");
             return;
         }
 
         ticketModel.priorityProperty().setValue(type);
-        postSystemComment("System", "Ticket priority changed to: " + type.name());
-        ticket.update(ticketModel);
-        reloadPostUpdate(priorityComboBox, popOver);
+        if (ticket.update(ticketModel)) {
+            postSystemComment("System", "Ticket priority changed to: " + type.name());
+            reloadPostUpdate(priorityComboBox, popOver);
+            Notifications.showInfo("Update", "Ticket priority updated successfully!");
+        }
     }
 
     private <T> void reloadPostUpdate(final SearchableComboBox<T> box, final PopOver popOver) {
@@ -226,34 +234,36 @@ public class ViewerController extends Controller {
     @FXML private void onMarkResolved() {
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
         postSystemComment("System", "This ticket has been marked resolved.");
-        ticket.update(ticketModel);
-        refreshTable();
 
-        Notify.showInput(
-                "Notify Employee",
-                "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
-                "No resolving comment was added."
-        ).ifPresentOrElse(comment -> {
-            final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
-            if (model == null) {
-                Notify.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
-                return;
-            }
+        if (ticket.update(ticketModel)) {
+            refreshTable();
 
-            final String email = model.getEmail();
-            if (email.isEmpty()) {
-                Notify.showError(
-                        "Error notifying employee.",
-                        "Could not send notification e-mail.",
-                        "There is no e-mail attached for this employee."
-                );
-                return;
-            }
+            Alerts.showInput(
+                    "Notify Employee",
+                    "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
+                    "No resolving comment was added."
+            ).ifPresentOrElse(comment -> {
+                final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
+                if (model == null) {
+                    Alerts.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
+                    return;
+                }
 
-            final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
-            emailResolvedSender.sendEmail();
-            postSystemComment("Ticket Resolved", comment);
-        }, () -> postSystemComment("Ticket Resolved", "No resolving comment."));
+                final String email = model.getEmail();
+                if (email.isEmpty()) {
+                    Alerts.showError(
+                            "Error notifying employee.",
+                            "Could not send notification e-mail.",
+                            "There is no e-mail attached for this employee."
+                    );
+                    return;
+                }
+
+                final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
+                emailResolvedSender.sendEmail();
+                postSystemComment("Ticket Resolved", comment);
+            }, () -> postSystemComment("Ticket Resolved", "No resolving comment."));
+        }
     }
 
     private void refreshTable() {
@@ -356,19 +366,23 @@ public class ViewerController extends Controller {
     }
 
     @FXML private void onDelete() {
-        Notify.showConfirmation("Are you sure you want to delete this ticket?", "It cannot be recovered.").ifPresent(type -> {
+        Alerts.showConfirmation(this::deleteTicket, "Are you sure you want to delete this ticket?", "It cannot be recovered.").ifPresent(type -> {
             if (type == ButtonType.YES) {
-                ticket.remove(ticketId);
-                lastViewed.setValue(null);
-                Display.close(Route.VIEWER);
+                deleteTicket();
             }
         });
+    }
+
+    private void deleteTicket() {
+        ticket.remove(ticketId);
+        lastViewed.setValue(null);
+        Display.close(Route.VIEWER);
     }
 
     @FXML private void onJournal() {
         final ObservableList<JournalModel> journalList = journal.getObservableList();
         if (journalList.isEmpty()) {
-            Notify.showError("Failed to open journal list.", "There are no journals to select from.", "Create one and try again!");
+            Alerts.showError("Failed to open journal list.", "There are no journals to select from.", "Create one and try again!");
             return;
         }
 
@@ -417,7 +431,7 @@ public class ViewerController extends Controller {
     private void selectJournalForTicket(final PopOver popOver, final ListView<JournalModel> journalModelListView) {
         final JournalModel selected = journalModelListView.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            Notify.showError(
+            Alerts.showError(
                     "Invalid Journal Model",
                     "You must select a journal to attach!",
                     "Please try again."
@@ -426,8 +440,10 @@ public class ViewerController extends Controller {
         }
 
         ticketModel.setAttachedJournalId(selected.getId());
-        ticket.update(ticketModel);
-        popOver.hide();
+        if (ticket.update(ticketModel)) {
+            Notifications.showInfo("Update", "Journal attached to ticket successfully!");
+            popOver.hide();
+        }
     }
 
     @FXML private void onViewJournal() {

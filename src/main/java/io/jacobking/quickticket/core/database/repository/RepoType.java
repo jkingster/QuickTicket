@@ -9,7 +9,9 @@ public enum RepoType {
     COMMENT(new CommentRepository()),
     EMPLOYEE(new EmployeeRepository()),
     EMAIL(new EmailRepository()),
-    JOURNAL(new JournalRepository());
+    JOURNAL(new JournalRepository()),
+    ALERT(new AlertSettingsRepository());
+
 
     private final Repository<? extends Entity> repository;
 

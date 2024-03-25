@@ -1,0 +1,17 @@
+@import url("base.css");
+
+.notification-bar > .pane {
+    -fx-background-color: -fx-primary !important;
+}
+
+.notification-bar > .pane .title {
+    -fx-font-size: 1.5em;
+    -fx-text-fill: #FBFEEb;
+    -fx-font-weight: bolder;
+}
+
+.notification-bar > .pane .label {
+    -fx-font-size: 1.25em;
+    -fx-text-fill: #FBFEEb;
+    -fx-alignment: top-left;
+}

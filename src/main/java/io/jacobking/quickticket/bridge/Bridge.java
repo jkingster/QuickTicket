@@ -73,8 +73,8 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
         return model;
     }
 
-    public void update(final V model) {
-        Database.call().update(repoType, model.toEntity());
+    public boolean update(final V model) {
+        return Database.call().update(repoType, model.toEntity());
     }
 
     public void remove(final int id) {

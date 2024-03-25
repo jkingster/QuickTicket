@@ -5,7 +5,7 @@ import io.jacobking.quickticket.core.email.EmailSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
@@ -80,7 +80,7 @@ public class TicketCreatorController extends Controller {
         dataRelay.mapFirst(TableView.class).ifPresentOrElse(tableView -> {
             this.ticketTable = (TableView<TicketModel>) tableView;
         }, () -> {
-            Notify.showError("Data Relay Failure", "TicketTable<TicketModel> was not passed via data relay.", "Please report this.");
+            Alerts.showError("Data Relay Failure", "TicketTable<TicketModel> was not passed via data relay.", "Please report this.");
         });
     }
 

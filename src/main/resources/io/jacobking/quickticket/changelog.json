@@ -1,5 +1,13 @@
 [
   {
+    "version": "2.2.0-beta",
+    "changes": [
+      "New feature: Notifications",
+      "New feature: Settings screen. Disable/enable alert and notification modules.",
+      "Database Migration: Upgraded to v1.3"
+    ]
+  },
+  {
     "version": "2.1.0-beta",
     "changes": [
       "Fixed bug: malformed changelog.json",

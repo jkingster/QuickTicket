@@ -3,10 +3,13 @@ package io.jacobking.quickticket.core.database;
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.Config;
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import javafx.scene.control.ButtonType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +26,7 @@ public class DatabaseMigrator {
     private static final String MIGRATION_PATH = "sql/migration/v%d.%d.SQL";
     private static final String SCHEMA_FETCH   = "SELECT MAJOR, MINOR FROM SCHEMA_VERSION WHERE ID = 0;";
 
-    private static final DatabaseVersion TARGET_DATABASE_VERSION  = new DatabaseVersion(1, 2);
+    private static final DatabaseVersion TARGET_DATABASE_VERSION  = new DatabaseVersion(1, 3);
     private static       DatabaseVersion CURRENT_DATABASE_VERSION = null;
 
     private final DatabaseVersion currentDatabaseVersion = new DatabaseVersion();
@@ -42,7 +45,7 @@ public class DatabaseMigrator {
     public void migrate() {
         loadSchemaVersion();
         if (currentDatabaseVersion.isNegative()) {
-            Notify.showError(
+            Alerts.showError(
                     "Database Fetch Failed",
                     "Failed to parse current schema version.",
                     "Please reload QuickTicket, or submit a bug report."
@@ -51,12 +54,11 @@ public class DatabaseMigrator {
         }
 
         final int migration = checkMigration();
-        System.out.println(migration);
         if (migration >= 0)
             return;
 
         if (!backupCurrent()) {
-            final Optional<ButtonType> warning = Notify.showWarningConfirmation(
+            final Optional<ButtonType> warning = Alerts.showWarningConfirmation(
                     "Backing up your current database failed.",
                     "We recommend making a copy manually before proceeding. Do you still want to run the migrate process?"
             );
@@ -127,17 +129,17 @@ public class DatabaseMigrator {
         final String convertedMigrationPath = MIGRATION_PATH.formatted(majorVersion, minorVersion);
         final InputStream sqlStream = getSQLStream(convertedMigrationPath);
         if (sqlStream == null) {
-            Notify.showError("Failed to migrate database.", "Failed to retrieve InputStream of the migration path.", "Please submit bug report.");
+            Alerts.showError("Failed to migrate database.", "Failed to retrieve InputStream of the migration path.", "Please submit bug report.");
             return;
         }
 
-        final String query = getConvertedSQLStream(sqlStream);
-        if (query.isEmpty()) {
-            Notify.showError("Failed to migrate database.", "Failed to retrieve InputStream as query string.", "Please submit bug report.");
+        final String queryString = getConvertedSQLStream(sqlStream);
+        if (queryString.isEmpty()) {
+            Alerts.showError("Failed to migrate database.", "Failed to retrieve InputStream as query string.", "Please submit bug report.");
             return;
         }
 
-        final String[] tokenizeQueries = tokenizeQuery(query);
+        final String[] tokenizeQueries = tokenizeQuery(queryString);
         processTokenizedQueries(tokenizeQueries);
     }
 
@@ -149,13 +151,13 @@ public class DatabaseMigrator {
         try {
             return IOUtils.toString(stream, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            Notify.showException("Failed to convert SQL stream.", e.fillInStackTrace());
+            Alerts.showException("Failed to convert SQL stream.", e.fillInStackTrace());
         }
         return "";
     }
 
     private String[] tokenizeQuery(final String baseQuery) {
-        return baseQuery.split(";");
+        return baseQuery.split(SQLLoader.DELIMITER);
     }
 
     private void processTokenizedQueries(final String[] queries) {
@@ -168,7 +170,10 @@ public class DatabaseMigrator {
         try (final Statement statement = connection.createStatement()) {
             statement.execute(query);
         } catch (SQLException e) {
-            Notify.showException("Failed to execute query for migration.", e.fillInStackTrace());
+            Alerts.showException(
+                    String.format("Failed to execute query for target migration: %s", TARGET_DATABASE_VERSION),
+                    e.fillInStackTrace()
+            );
         }
     }
 
@@ -181,7 +186,10 @@ public class DatabaseMigrator {
                 DatabaseMigrator.CURRENT_DATABASE_VERSION = currentDatabaseVersion;
             }
         } catch (SQLException e) {
-            Notify.showException("Failed to load targeted schema version.", e.fillInStackTrace());
+            Alerts.showException(
+                    String.format("Failed to load schema version: Target migration: %s", TARGET_DATABASE_VERSION),
+                    e.fillInStackTrace()
+            );
         }
     }
 

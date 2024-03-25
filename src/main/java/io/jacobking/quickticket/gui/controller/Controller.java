@@ -16,6 +16,7 @@ public abstract class Controller implements Initializable {
 
     protected final EmailConfig emailConfig;
     protected final JournalBridge journal;
+    protected final AlertSettingsBridge alertSettings;
 
     protected DataRelay dataRelay;
 
@@ -25,6 +26,7 @@ public abstract class Controller implements Initializable {
         this.employee = BridgeContext.employee();
         this.email = BridgeContext.email();
         this.journal = BridgeContext.journal();
+        this.alertSettings = BridgeContext.alertSettings();
         this.emailConfig = EmailConfig.getInstance()
                 .setEmail(email.getEmail())
                 .applySettings();
