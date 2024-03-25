@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.AlertSettingsModel;
 import javafx.beans.property.BooleanProperty;
@@ -72,7 +73,9 @@ public class SettingsController extends Controller {
     }
 
     @FXML private void onUpdate() {
-        alertSettings.update(alertSettingsModel);
+        if (alertSettings.update(alertSettingsModel)) {
+            Notifications.showInfo("Update", "Alerts/Notification settings was updated successfully.");
+        }
     }
 
 

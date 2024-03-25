@@ -17,6 +17,5 @@ public class App extends Application {
         Config.getInstance();
         InstanceLock.getInstance();
 
-        Notifications.showInfo("test", "test");
     }
 }
