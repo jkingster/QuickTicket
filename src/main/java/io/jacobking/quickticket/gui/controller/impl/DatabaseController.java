@@ -1,18 +1,14 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.Config;
-import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.DatabaseMigrator;
 import io.jacobking.quickticket.core.database.DatabaseSchemaCheck;
 import io.jacobking.quickticket.core.reload.ReloadMechanism;
+import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.screen.Display;
-import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -26,6 +22,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.io.FileWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -46,8 +43,29 @@ public class DatabaseController extends Controller {
         databaseVersionLabel.setText(String.format("Database Version: %s", DatabaseMigrator.getCurrentDatabaseVersion()));
     }
 
-    @FXML private void onUpdate() {
+    @FXML private void onBackup() {
+        final File source = new File(Config.getInstance().readProperty("db_url"));
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(FileIO.TARGET_BACKUP_FOLDER));
 
+        final String initialName = String.format("%s-backup_%s.db",
+                source.getName().replace(".db", ""),
+                DateUtil.nowWithTime().format(DateUtil.DATE_TIME_FORMATTER_TWO));
+
+        fileChooser.setInitialFileName(initialName);
+        fileChooser.setTitle("Save a backup of current database!");
+        final File file = fileChooser.showSaveDialog(copyConfigUrl.getScene().getWindow());
+        if (file != null && FileIO.copyFile(source, file)) {
+            Notifications.showInfo("Backup Created Successfully", "Location: " + file.getPath());
+        }
+    }
+
+    private void openFile(final File file) {
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().browseFileDirectory(file);
+        } else {
+            Notifications.showError("Failed to open backup.", "Desktop is not supported. Report this!");
+        }
     }
 
     @FXML private void onImport() {

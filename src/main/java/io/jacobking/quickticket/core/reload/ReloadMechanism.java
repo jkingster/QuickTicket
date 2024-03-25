@@ -17,7 +17,6 @@ public class ReloadMechanism {
         Database.rebuildInstance();
         BridgeContext.rebuildInstance();
         Display.show(Route.DASHBOARD);
-        Notifications.showInfo("Reload Successful", "Please ensure data integrity.");
     }
 
     public static void reload() {

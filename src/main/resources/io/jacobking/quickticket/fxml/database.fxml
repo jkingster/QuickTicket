@@ -29,7 +29,7 @@
             <HBox alignment="CENTER" prefHeight="27.0" prefWidth="430.0" spacing="10.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#onImport" stylesheets="@../css/core/button.css" text="Import Database" />
-                  <Button disable="true" mnemonicParsing="false" onAction="#onUpdate" styleClass="button-warning" stylesheets="@../css/core/button.css" text="Update Configurations" />
+                  <Button mnemonicParsing="false" onAction="#onBackup" stylesheets="@../css/core/button.css" text="Backup Database" />
                </children>
             </HBox>
          </children>

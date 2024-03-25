@@ -1,8 +1,10 @@
 package io.jacobking.quickticket.core.utility;
 
 import io.jacobking.quickticket.gui.alert.Alerts;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileIO {
@@ -40,6 +42,26 @@ public class FileIO {
             return file.createNewFile();
         } catch (IOException e) {
             Alerts.showException("Failed to create file.", e.fillInStackTrace());
+            return false;
+        }
+    }
+
+    public static boolean createFile(final File file) {
+        Checks.notNull(file, "File");
+        try (final FileWriter ignored = new FileWriter(file)) {
+            return true;
+        } catch (IOException e) {
+            Alerts.showException("Failed to create file.", e.fillInStackTrace());
+            return false;
+        }
+    }
+
+    public static boolean copyFile(final File source, final File destination) {
+        try {
+            FileUtils.copyFile(source, destination);
+            return true;
+        } catch (IOException e) {
+            Alerts.showException("Failed to copy file.", e.fillInStackTrace());
             return false;
         }
     }

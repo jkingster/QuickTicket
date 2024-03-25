@@ -8,6 +8,7 @@ public class DateUtil {
 
     private static final DateTimeFormatter DATE_FORMAT         = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     public static final  DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm a");
+    public static final DateTimeFormatter DATE_TIME_FORMATTER_TWO = DateTimeFormatter.ofPattern("MMddyyyy-HHmm-a");
 
     private DateUtil() {
     }
