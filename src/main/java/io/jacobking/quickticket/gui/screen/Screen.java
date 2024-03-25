@@ -2,7 +2,7 @@ package io.jacobking.quickticket.gui.screen;
 
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.gui.alert.NotificationBuilder;
+import io.jacobking.quickticket.gui.alert.builder.NotificationBuilder;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import javafx.fxml.FXMLLoader;

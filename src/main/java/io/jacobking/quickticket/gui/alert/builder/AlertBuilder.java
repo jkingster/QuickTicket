@@ -1,4 +1,4 @@
-package io.jacobking.quickticket.gui.alert;
+package io.jacobking.quickticket.gui.alert.builder;
 
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.utility.Checks;

@@ -1,5 +1,7 @@
 package io.jacobking.quickticket.gui.alert;
 
+import io.jacobking.quickticket.gui.alert.builder.NotificationBuilder;
+
 public class Notifications {
 
     private Notifications() {
