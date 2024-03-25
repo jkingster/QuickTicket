@@ -58,6 +58,7 @@ public class RepoCrud {
                 case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
                 case EMAIL -> (Repository<? extends Entity>) new EmailRepository();
                 case JOURNAL -> (Repository<? extends Entity>) new JournalRepository();
+                case ALERT -> (Repository<? extends Entity>) new AlertSettingsRepository();
             });
         }
     }

@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.core.email;
 
 import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -24,7 +24,7 @@ public class EmailSender {
 
     public void sendEmail(final String subject, final String recipient, final String body) {
         if (!emailConfig.isConfigured()) {
-            Notify.showError("Could not send e-mail.", "Your SMTP information is not configured.", "Please check settings.");
+            Alerts.showError("Could not send e-mail.", "Your SMTP information is not configured.", "Please check settings.");
             return;
         }
 

@@ -2,13 +2,13 @@ package io.jacobking.quickticket.gui.screen;
 
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.QuickTicket;
+import io.jacobking.quickticket.gui.alert.NotificationBuilder;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -89,7 +89,7 @@ public class Screen {
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.setScene(scene);
-
+        stage.getScene().getStylesheets().add(0, NotificationBuilder.getStylesheet());
         if (this.route == Route.DASHBOARD) {
             stage.setOnCloseRequest(event -> QuickTicket.shutdown());
         }

@@ -2,13 +2,12 @@ package io.jacobking.quickticket.gui.alert;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
 
 import java.util.Optional;
 
-public class Notify {
+public class Alerts {
 
-    private Notify() {
+    private Alerts() {
 
     }
 

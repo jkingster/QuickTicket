@@ -1,6 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
@@ -44,7 +44,7 @@ public class EmployeeManagerController extends Controller {
     @FXML private void onCreate() {
         final EmployeeModel selected = employeeList.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            Notify.showError("Failed to create employee.", "An employee is currently selected.", "You must deselect the employee first.");
+            Alerts.showError("Failed to create employee.", "An employee is currently selected.", "You must deselect the employee first.");
             clearFields();
             return;
         }
@@ -61,11 +61,11 @@ public class EmployeeManagerController extends Controller {
     @FXML private void onDelete() {
         final EmployeeModel selected = employeeList.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            Notify.showError("Failed to delete.", "No employee was deleted.", "You must select an employee first.");
+            Alerts.showError("Failed to delete.", "No employee was deleted.", "You must select an employee first.");
             return;
         }
 
-        Notify.showConfirmation("Are you sure you want to delete this employee?", "This action cannot be undone.")
+        Alerts.showConfirmation("Are you sure you want to delete this employee?", "This action cannot be undone.")
                 .ifPresent(type -> {
                     if (type == ButtonType.YES) {
                         employee.remove(selected.getId());
@@ -95,7 +95,7 @@ public class EmployeeManagerController extends Controller {
     @FXML private void onSearch() {
         final EmployeeModel employee = findEmployee(searchField.getText());
         if (employee == null) {
-            Notify.showError(
+            Alerts.showError(
                     "Error",
                     "Could not find an employee record.",
                     "Please try another search query."

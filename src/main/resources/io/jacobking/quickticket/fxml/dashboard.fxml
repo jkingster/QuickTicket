@@ -21,6 +21,7 @@
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#onDatabase" text="Database" />
                         <MenuItem mnemonicParsing="false" onAction="#onSMTP" text="SMTP" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSettings" text="Settings" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
                         <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
@@ -43,6 +44,11 @@
          <tabs>
             <Tab text="Ticket">
                <fx:include source="ticket.fxml" />
+            </Tab>
+            <Tab text="Portal">
+               <content>
+                  <fx:include source="ticket.fxml" />
+               </content>
             </Tab>
          </tabs>
       </TabPane>
