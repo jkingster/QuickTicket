@@ -37,7 +37,7 @@ public class InstanceLock {
 
     private void checkLock() {
         if (FileIO.fileExists(FileIO.TARGET_LOCK)) {
-            Alerts.showConfirmation(
+            Alerts.showWarningConfirmation(
                     "Failed to launch quick ticket.",
                     "Another instance is already running!",
                     "Please close it out and try again. To force-delete the file, click the apply button." +

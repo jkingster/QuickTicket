@@ -51,7 +51,12 @@ public class Alerts {
     }
 
     // HANDLE THIS EXTERNALLY WHERE WE NEED CONFIRMATION. NOT INSIDE THE BASE METHOD.
-    public static Optional<ButtonType> showConfirmation(final String title, final String header, final String content, final ButtonType... buttonTypes) {
+    public static Optional<ButtonType> showConfirmation(final Runnable preProcessing, final String title, final String header, final String content, final ButtonType... buttonTypes) {
+        if (settings.isDisableConfirmationAlertsProperty()) {
+            preProcessing.run();
+            return Optional.empty();
+        }
+
         return new AlertBuilder(Alert.AlertType.CONFIRMATION)
                 .withTitle(title)
                 .withHeader(header)
@@ -71,11 +76,11 @@ public class Alerts {
     }
 
     public static Optional<ButtonType> showWarningConfirmation(final String header, final String content) {
-        return showConfirmation("WARNING!", header, content, ButtonType.YES, ButtonType.NO);
+        return showWarningConfirmation("WARNING!", header, content, ButtonType.YES, ButtonType.NO);
     }
 
-    public static Optional<ButtonType> showConfirmation(final String header, final String content) {
-        return showConfirmation("Are you sure?", header, content, ButtonType.YES, ButtonType.NO);
+    public static Optional<ButtonType> showConfirmation(final Runnable runnable, final String header, final String content) {
+        return showConfirmation(runnable, "Are you sure?", header, content, ButtonType.YES, ButtonType.NO);
     }
 
     public static void showException(final String content, final Throwable throwable) {
@@ -84,7 +89,7 @@ public class Alerts {
                 .show();
     }
 
-    public static Optional<String> showInput(final String title,  final String content, final String defaultValue) {
+    public static Optional<String> showInput(final String title, final String content, final String defaultValue) {
         return new InputDialogBuilder(defaultValue)
                 .buildDialog(title, content)
                 .result();

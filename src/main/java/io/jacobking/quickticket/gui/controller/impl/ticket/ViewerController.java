@@ -356,13 +356,17 @@ public class ViewerController extends Controller {
     }
 
     @FXML private void onDelete() {
-        Alerts.showConfirmation("Are you sure you want to delete this ticket?", "It cannot be recovered.").ifPresent(type -> {
+        Alerts.showConfirmation(this::deleteTicket, "Are you sure you want to delete this ticket?", "It cannot be recovered.").ifPresent(type -> {
             if (type == ButtonType.YES) {
-                ticket.remove(ticketId);
-                lastViewed.setValue(null);
-                Display.close(Route.VIEWER);
+                deleteTicket();
             }
         });
+    }
+
+    private void deleteTicket() {
+        ticket.remove(ticketId);
+        lastViewed.setValue(null);
+        Display.close(Route.VIEWER);
     }
 
     @FXML private void onJournal() {

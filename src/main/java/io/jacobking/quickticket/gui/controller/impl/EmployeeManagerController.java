@@ -65,7 +65,7 @@ public class EmployeeManagerController extends Controller {
             return;
         }
 
-        Alerts.showConfirmation("Are you sure you want to delete this employee?", "This action cannot be undone.")
+        Alerts.showConfirmation(() -> employee.remove(selected.getId()), "Are you sure you want to delete this employee?", "This action cannot be undone.")
                 .ifPresent(type -> {
                     if (type == ButtonType.YES) {
                         employee.remove(selected.getId());

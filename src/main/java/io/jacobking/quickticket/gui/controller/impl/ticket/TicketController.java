@@ -264,19 +264,23 @@ public class TicketController extends Controller {
             return;
         }
 
-        Alerts.showConfirmation("Are you sure you want to delete this ticket?", "This action cannot be undone.").ifPresent(type -> {
-            if (type == ButtonType.YES) {
-                ticket.remove(ticketModel.getId());
-
-                final TicketModel lastViewedModel = lastViewed.getValue();
-                if (lastViewedModel != null) {
-                    final int ticketId = ticketModel.getId();
-                    if (ticketId == lastViewedModel.getId()) {
-                        lastViewed.setValue(null);
+        Alerts.showConfirmation(() -> removeTicket(ticketModel), "Are you sure you want to delete this ticket?", "This action cannot be undone.")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        removeTicket(ticketModel);
                     }
-                }
+                });
+    }
+
+    private void removeTicket(final TicketModel ticketModel) {
+        ticket.remove(ticketModel.getId());
+        final TicketModel lastViewedModel = lastViewed.getValue();
+        if (lastViewedModel != null) {
+            final int ticketId = ticketModel.getId();
+            if (ticketId == lastViewedModel.getId()) {
+                lastViewed.setValue(null);
             }
-        });
+        }
     }
 
     private void onOpen(final TicketModel ticketModel) {

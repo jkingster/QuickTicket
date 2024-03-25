@@ -197,7 +197,7 @@ public class JournalController extends Controller {
 
     @FXML private void onDelete() {
         final JournalModel journalModel = journalList.getSelectionModel().getSelectedItem();
-        Alerts.showConfirmation("Are you sure?", "This action cannot be undone.").ifPresent(type -> {
+        Alerts.showConfirmation(() -> journal.remove(journalModel.getId()), "Are you sure?", "This action cannot be undone.").ifPresent(type -> {
             if (type == ButtonType.YES) {
                 journal.remove(journalModel.getId());
                 journalList.refresh();

@@ -47,7 +47,7 @@ public class DashboardController extends Controller {
 
     @FXML
     private void onExit() {
-        Alerts.showConfirmation("Are you sure you want to exit?", "All data is saved.").ifPresent(type -> {
+        Alerts.showConfirmation(QuickTicket::shutdown, "Are you sure you want to exit?", "All data is saved.").ifPresent(type -> {
             if (type == ButtonType.YES) {
                 QuickTicket.shutdown();
             }
