@@ -26,7 +26,7 @@ public class DatabaseMigrator {
     private static final String MIGRATION_PATH = "sql/migration/v%d.%d.SQL";
     private static final String SCHEMA_FETCH   = "SELECT MAJOR, MINOR FROM SCHEMA_VERSION WHERE ID = 0;";
 
-    private static final DatabaseVersion TARGET_DATABASE_VERSION  = new DatabaseVersion(1, 3);
+    private static final DatabaseVersion TARGET_DATABASE_VERSION  = new DatabaseVersion(1, 4);
     private static       DatabaseVersion CURRENT_DATABASE_VERSION = null;
 
     private final DatabaseVersion currentDatabaseVersion = new DatabaseVersion();
