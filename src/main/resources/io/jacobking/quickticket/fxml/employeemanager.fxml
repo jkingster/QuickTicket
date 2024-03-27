@@ -55,7 +55,7 @@
       </VBox>
    </children>
    <stylesheets>
-      <URL value="@../css/screen/employee.css" />
+      <URL value="@../css/screen/employeemanager.css" />
       <URL value="@../css/core/text-field.css" />
    </stylesheets>
 </AnchorPane>
