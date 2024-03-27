@@ -45,7 +45,7 @@
             <Tab text="Ticket">
                <fx:include source="ticket.fxml" />
             </Tab>
-            <Tab text="Portal">
+            <Tab disable="true" text="Employee">
                <content>
                   <fx:include source="ticket.fxml" />
                </content>
