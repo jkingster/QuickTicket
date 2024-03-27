@@ -22,6 +22,7 @@ public class SQLiteConnector {
     private void establishConnection() {
         try {
             Class.forName(DRIVER_NAME);
+            System.out.println(config.readProperty(DB_URL));
             final String databaseUrl = FORMATTED_DB_URL.formatted(config.readProperty(DB_URL));
             this.connection = DriverManager.getConnection(databaseUrl);
         } catch (SQLException | ClassNotFoundException e) {

@@ -12,6 +12,9 @@ version '1.0-SNAPSHOT'
 
 repositories {
   mavenCentral()
+  maven {
+    url "https://jitpack.io"
+  }
 }
 
 ext {
@@ -48,6 +51,8 @@ dependencies {
   implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
   implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
+  implementation 'com.github.oshi:oshi-core:6.5.0'
+  implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.12'
   implementation group: 'commons-io', name: 'commons-io', version: '2.15.0'
   jooqGenerator 'org.xerial:sqlite-jdbc:3.42.0.0'
 }

@@ -10,6 +10,8 @@ module io.jacobking.quickticket {
     requires java.mail;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
+    requires com.github.oshi;
+    requires org.slf4j;
 
     opens io.jacobking.quickticket to javafx.fxml;
     exports io.jacobking.quickticket;
