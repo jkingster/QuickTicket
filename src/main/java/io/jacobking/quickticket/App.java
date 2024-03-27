@@ -16,6 +16,5 @@ public class App extends Application {
     public void start(Stage stage) {
         Config.getInstance();
         InstanceLock.getInstance();
-
     }
 }

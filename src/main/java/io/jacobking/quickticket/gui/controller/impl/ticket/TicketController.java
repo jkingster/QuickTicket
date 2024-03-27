@@ -186,11 +186,6 @@ public class TicketController extends Controller {
         Display.show(Route.TICKET_CREATOR, DataRelay.of(ticketTable));
     }
 
-    @FXML private void onManageEmployees() {
-        Display.show(Route.EMPLOYEE_MANAGER);
-    }
-
-
     @FXML private void onResolve() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
         if (ticketModel == null) {
