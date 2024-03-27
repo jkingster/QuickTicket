@@ -2,7 +2,7 @@ package io.jacobking.quickticket.core;
 
 public class Version {
 
-    private static final Version CURRENT = new Version(2, 2, 0, "beta");
+    private static final Version CURRENT = new Version(3,0,0, "rc");
 
     private final int    major;
     private final int    minor;

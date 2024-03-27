@@ -1,6 +1,6 @@
 [
   {
-    "version": "1.0.0",
+    "version": "3.0.0-rc",
     "changes": [
       "New feature: Employee tab. Instead of having a specific user portal, managing employees has become easier.",
       "New feature: Companies. You can now create a company an employee to a company.",
