@@ -2,24 +2,30 @@ package io.jacobking.quickticket.gui.model.impl;
 
 import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.Employee;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class EmployeeModel extends ViewModel<Employee> {
 
-    private final StringProperty firstNameProperty  = new SimpleStringProperty();
-    private final StringProperty lastNameProperty   = new SimpleStringProperty();
-    private final StringProperty emailProperty      = new SimpleStringProperty();
-    private final StringProperty titleProperty      = new SimpleStringProperty();
-    private final StringProperty departmentProperty = new SimpleStringProperty();
+    private final StringProperty  firstNameProperty    = new SimpleStringProperty();
+    private final StringProperty  lastNameProperty     = new SimpleStringProperty();
+    private final StringProperty  emailProperty        = new SimpleStringProperty();
+    private final StringProperty  titleProperty        = new SimpleStringProperty();
+    private final IntegerProperty companyIdProperty    = new SimpleIntegerProperty();
+    private final IntegerProperty departmentIdProperty = new SimpleIntegerProperty();
+    private final IntegerProperty profilePictureId     = new SimpleIntegerProperty();
 
-    public EmployeeModel(int id, String firstName, String lastName, String email, String title, String department) {
+    public EmployeeModel(int id, String firstName, String lastName, String email, String title, int companyId, int departmentId, int profilePictureId) {
         super(id);
         this.firstNameProperty.setValue(firstName);
         this.lastNameProperty.setValue(lastName);
         this.emailProperty.setValue(email);
         this.titleProperty.setValue(title);
-        this.departmentProperty.setValue(department);
+        this.companyIdProperty.setValue(companyId);
+        this.departmentIdProperty.setValue(departmentId);
+        this.profilePictureId.setValue(profilePictureId);
     }
 
     public EmployeeModel(Employee employee) {
@@ -29,13 +35,12 @@ public class EmployeeModel extends ViewModel<Employee> {
                 employee.getLastName(),
                 employee.getEmail(),
                 employee.getTitle(),
-                employee.getDepartment()
+                employee.getCompanyId(),
+                employee.getDepartmentId(),
+                employee.getProfilePicture()
         );
     }
 
-    public void setDepartmentProperty(final String department) {
-        this.departmentProperty.setValue(department);
-    }
 
     public String getFirstName() {
         return firstNameProperty.getValueSafe();
@@ -73,10 +78,41 @@ public class EmployeeModel extends ViewModel<Employee> {
         this.titleProperty.setValue(title);
     }
 
-    public String getDepartment() {
-        return departmentProperty.getValueSafe();
+    public int getCompanyIdProperty() {
+        return companyIdProperty.get();
     }
 
+    public IntegerProperty companyIdPropertyProperty() {
+        return companyIdProperty;
+    }
+
+    public void setCompanyIdProperty(int companyIdProperty) {
+        this.companyIdProperty.set(companyIdProperty);
+    }
+
+    public int getDepartmentIdProperty() {
+        return departmentIdProperty.get();
+    }
+
+    public IntegerProperty departmentIdPropertyProperty() {
+        return departmentIdProperty;
+    }
+
+    public void setDepartmentIdProperty(int departmentIdProperty) {
+        this.departmentIdProperty.set(departmentIdProperty);
+    }
+
+    public int getProfilePictureId() {
+        return profilePictureId.get();
+    }
+
+    public IntegerProperty profilePictureIdProperty() {
+        return profilePictureId;
+    }
+
+    public void setProfilePictureId(int profilePictureId) {
+        this.profilePictureId.set(profilePictureId);
+    }
 
     @Override
     public String toString() {
@@ -86,11 +122,13 @@ public class EmployeeModel extends ViewModel<Employee> {
     @Override
     public Employee toEntity() {
         return new Employee()
-                .setId(this.getId())
-                .setFirstName(this.getFirstName())
-                .setLastName(this.getLastName())
-                .setEmail(this.getEmail())
-                .setDepartment(this.getDepartment())
-                .setTitle(this.getDepartment());
+                .setId(getId())
+                .setFirstName(getFirstName())
+                .setLastName(getLastName())
+                .setEmail(getEmail())
+                .setTitle(getTitle())
+                .setCompanyId(getCompanyIdProperty())
+                .setDepartmentId(getDepartmentIdProperty())
+                .setProfilePicture(getProfilePictureId());
     }
 }

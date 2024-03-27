@@ -113,6 +113,7 @@ public class DatabaseMigrator {
         final int expectedMajor = TARGET_DATABASE_VERSION.getMajor();
         final int expectedMinor = TARGET_DATABASE_VERSION.getMinor();
 
+
         for (int majorVersion = currentMajor; majorVersion <= expectedMajor; majorVersion++) {
             int startMinor = currentMinor;
             if (majorVersion == currentMajor) {
@@ -126,6 +127,7 @@ public class DatabaseMigrator {
     }
 
     private void processVersion(final int majorVersion, final int minorVersion) {
+        System.out.println("PROCESSING " + majorVersion + " " + " " + minorVersion);
         final String convertedMigrationPath = MIGRATION_PATH.formatted(majorVersion, minorVersion);
         final InputStream sqlStream = getSQLStream(convertedMigrationPath);
         if (sqlStream == null) {

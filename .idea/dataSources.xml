@@ -12,7 +12,7 @@
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="development" uuid="143ea1ec-69cc-46c9-8b7a-1c0b6fdc3125">
-      <driver-ref>sqlite.xerial</driver-ref>
+      <driver-ref>aaafe0b1-ec77-4c5c-9dcc-6a3b63e66fec</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Users\jking\IdeaProjects\QuickTicket\development.db</jdbc-url>

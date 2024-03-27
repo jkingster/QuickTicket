@@ -1,54 +1,42 @@
 package io.jacobking.quickticket.core.image;
 
 import io.jacobking.quickticket.gui.alert.Alerts;
+import javafx.scene.image.Image;
+import org.apache.commons.io.FileUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
 public class ImageBlob {
 
-    private BufferedImage image;
+    private byte[] blob;
 
-    private ImageBlob() {
-
+    public ImageBlob(final File file) {
+        this.blob = convertFileToBlob(file);
     }
 
-    public static Optional<BufferedImage> readImage(final byte[] blob) {
-        final ImageBlob imageBlob = new ImageBlob();
-        imageBlob.readBlob(blob);
-        return imageBlob.getImage();
+    public ImageBlob(final byte[] blob) {
+        this.blob = blob;
     }
 
-    public static byte[] bufferedImageToBlob(final BufferedImage bufferedImage) {
+    public Optional<Image> readBlobAsImage() {
+        if (blob.length == 0)
+            return Optional.empty();
+        return Optional.of(new Image(new ByteArrayInputStream(blob)));
+    }
+
+    private byte[] convertFileToBlob(final File file) {
         try {
-            final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
-            return byteArrayOutputStream.toByteArray();
+            return FileUtils.readFileToByteArray(file);
         } catch (IOException e) {
-            Alerts.showException("Failed to convert image back to blob.", e.fillInStackTrace());
+            Alerts.showException("Failed to convert file to blob.", e.fillInStackTrace());
             return new byte[0];
         }
     }
 
-    public void readBlob(final byte[] byteBlob) {
-        if (byteBlob.length == 0)
-            return;
-
-        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteBlob);
-        try {
-            this.image = ImageIO.read(byteArrayInputStream);
-        } catch (IOException e) {
-            Alerts.showException("Failed to read image blob.", e.fillInStackTrace());
-        }
+    public byte[] getBlob() {
+        return blob;
     }
-
-    public Optional<BufferedImage> getImage() {
-        return (image == null) ? Optional.empty() : Optional.of(image);
-    }
-
-
 }

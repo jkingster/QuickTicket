@@ -20,7 +20,7 @@
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label layoutX="20.0" layoutY="14.0" styleClass="card-header" text="Lookup Employee" />
-                  <SearchableComboBox layoutX="13.0" layoutY="61.0" stylesheets="@../css/core/combo-box.css" />
+                  <SearchableComboBox fx:id="employeeComboBox" layoutX="13.0" layoutY="61.0" stylesheets="@../css/core/combo-box.css" />
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
@@ -44,7 +44,7 @@
                   <VBox alignment="CENTER" layoutX="15.0" layoutY="3.0" prefHeight="211.0" prefWidth="200.0" spacing="10.0">
                      <children>
                         <ImageView fx:id="profilePictureImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button mnemonicParsing="false" onAction="#onChangeProfilePicture" text="Change Photo" />
+                        <Button fx:id="changePhotoButton" mnemonicParsing="false" onAction="#onChangeProfilePicture" text="Change Photo" />
                      </children>
                   </VBox>
                </children>

@@ -5,28 +5,26 @@ import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.ProfilePicture;
 import javafx.beans.property.*;
 
-import java.awt.image.BufferedImage;
-
 
 public class ProfilePictureModel extends ViewModel<ProfilePicture> {
 
-    private final StringProperty                imageName             = new SimpleStringProperty();
-    private final ObjectProperty<BufferedImage> bufferedImageProperty = new SimpleObjectProperty<>();
-    private final IntegerProperty               employeeIdProperty    = new SimpleIntegerProperty();
+    private final StringProperty            imageName          = new SimpleStringProperty();
+    private final ObjectProperty<ImageBlob> imageProperty      = new SimpleObjectProperty<>();
+    private final IntegerProperty           employeeIdProperty = new SimpleIntegerProperty();
 
 
-    public ProfilePictureModel(int id, String imageName, byte[] blob, int employeeId) {
+    public ProfilePictureModel(int id, String imageName, ImageBlob imageBlob, int employeeId) {
         super(id);
         this.imageName.setValue(imageName);
+        this.imageProperty.setValue(imageBlob);
         this.employeeIdProperty.setValue(employeeId);
-        ImageBlob.readImage(blob).ifPresent(bufferedImageProperty::setValue);
     }
 
     public ProfilePictureModel(final ProfilePicture profilePicture) {
         this(
                 profilePicture.getId(),
                 profilePicture.getImageName(),
-                profilePicture.getImage(),
+                new ImageBlob(profilePicture.getImage()),
                 profilePicture.getEmployeeId()
         );
     }
@@ -43,16 +41,12 @@ public class ProfilePictureModel extends ViewModel<ProfilePicture> {
         this.imageName.set(imageName);
     }
 
-    public BufferedImage getBufferedImageProperty() {
-        return bufferedImageProperty.get();
+    public ImageBlob getImageProperty() {
+        return imageProperty.get();
     }
 
-    public ObjectProperty<BufferedImage> bufferedImageProperty() {
-        return bufferedImageProperty;
-    }
-
-    public void setBufferedImageProperty(BufferedImage bufferedImageProperty) {
-        this.bufferedImageProperty.set(bufferedImageProperty);
+    public ObjectProperty<ImageBlob> imageProperty() {
+        return imageProperty;
     }
 
     public int getEmployeeIdProperty() {
@@ -71,7 +65,7 @@ public class ProfilePictureModel extends ViewModel<ProfilePicture> {
         return new ProfilePicture(
                 getId(),
                 getImageName(),
-                ImageBlob.bufferedImageToBlob(getBufferedImageProperty()),
+                getImageProperty().getBlob(),
                 getEmployeeIdProperty()
         );
     }
