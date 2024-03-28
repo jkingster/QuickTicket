@@ -12,6 +12,7 @@ module io.jacobking.quickticket {
     requires com.google.gson;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
+    requires flyway.core;
 
     opens io.jacobking.quickticket to javafx.fxml;
     exports io.jacobking.quickticket;
