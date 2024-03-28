@@ -112,8 +112,8 @@
             </Pane>
          </children>
       </HBox>
-      <ListView fx:id="ticketList" layoutX="14.0" layoutY="403.0" prefHeight="323.0" prefWidth="1159.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
-      <Pane layoutX="14.0" layoutY="360.0" prefHeight="35.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
+      <ListView fx:id="ticketList" layoutX="14.0" layoutY="403.0" prefHeight="323.0" prefWidth="513.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
+      <Pane layoutX="14.0" layoutY="360.0" prefHeight="35.0" prefWidth="513.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
             <Label layoutX="10.0" layoutY="4.0" styleClass="card-header" text="Tickets" />
          </children>
