@@ -1,6 +1,6 @@
 package io.jacobking.quickticket.core.database;
 
-import io.jacobking.quickticket.core.Config;
+import io.jacobking.quickticket.core.config.impl.SystemConfig;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
 
 import java.sql.SQLException;
@@ -13,9 +13,9 @@ public class Database {
     private final RepoCrud        repoCrud;
 
     private Database() {
-        this.sqLiteConnector = new SQLiteConnector(Config.getInstance());
+        this.sqLiteConnector = new SQLiteConnector(SystemConfig.getInstance());
         SQLLoader.process(sqLiteConnector.getConnection());
-        new DatabaseMigrator(sqLiteConnector.getConnection()).migrate();
+        FlywayMigrator.migrate();
 
         final JOOQConnector jooqConnector = new JOOQConnector(sqLiteConnector);
         this.repoCrud = new RepoCrud(jooqConnector.getContext());

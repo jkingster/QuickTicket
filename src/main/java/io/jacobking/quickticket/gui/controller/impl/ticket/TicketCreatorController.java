@@ -138,7 +138,6 @@ public class TicketCreatorController extends Controller {
                 .setCreatedOn(DateUtil.nowWithTime())
                 .setPriority(getPriority())
                 .setStatus(getStatus())
-                .setAttachedJournalId(-1)
                 .setEmployeeId(employeeModel == null ? 0 : employeeModel.getId()));
 
         insertInitialComment(newTicket);

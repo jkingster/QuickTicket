@@ -11,7 +11,6 @@ import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.CommentModel;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
-import io.jacobking.quickticket.gui.model.impl.JournalModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
@@ -294,8 +293,6 @@ public class ViewerController extends Controller {
             employeeField.setText(employeeModel.getFullName());
         }
 
-        final JournalModel journalModel = journal.getModel(ticketModel.getAttachedJournalId());
-        viewJournalButton.disableProperty().bind(Bindings.createBooleanBinding(() -> journalModel == null));
     }
 
     private void configureComments() {
@@ -379,91 +376,7 @@ public class ViewerController extends Controller {
         Display.close(Route.VIEWER);
     }
 
-    @FXML private void onJournal() {
-        final ObservableList<JournalModel> journalList = journal.getObservableList();
-        if (journalList.isEmpty()) {
-            Alerts.showError("Failed to open journal list.", "There are no journals to select from.", "Create one and try again!");
-            return;
-        }
 
-        final VBox vBox = new VBox();
-        vBox.setSpacing(5.0);
-        vBox.setAlignment(Pos.CENTER_LEFT);
-        vBox.setPadding(new Insets(10, 10, 10, 10));
-
-        final ListView<JournalModel> journalListView = new ListView<>(journalList);
-        journalListView.setPrefHeight(100.0);
-        journalListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        configureJournalListView(journalListView);
-
-        final Button select = new Button("Select");
-        select.disableProperty().bind(journalListView.selectionModelProperty().isNull());
-
-        vBox.getChildren().addAll(journalListView, select);
-
-        final PopOverBuilder popOverBuilder = PopOverBuilder.build()
-                .useDefault()
-                .setOwner(attachJournalButton)
-                .withTitle("Select a journal")
-                .withContent(vBox);
-
-        select.setOnAction(event -> selectJournalForTicket(popOverBuilder.getPopOver(), journalListView));
-        popOverBuilder.showWithoutOffset();
-    }
-
-    private void configureJournalListView(final ListView<JournalModel> journalModelListView) {
-        journalModelListView.getStylesheets().add(App.class.getResource("css/core/list.css").toExternalForm());
-        journalModelListView.getStyleClass().add("ticket-list-view");
-        journalModelListView.setCellFactory(data -> new ListCell<>() {
-            @Override protected void updateItem(JournalModel journalModel, boolean b) {
-                super.updateItem(journalModel, b);
-                if (b || journalModel == null) {
-                    setText(null);
-                    return;
-                }
-
-                setText(String.format("Journal ID: %s | %s", journalModel.getId(), journalModel.getNoteProperty()));
-                setStyle("-fx-text-fill: white");
-            }
-        });
-    }
-
-    private void selectJournalForTicket(final PopOver popOver, final ListView<JournalModel> journalModelListView) {
-        final JournalModel selected = journalModelListView.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            Alerts.showError(
-                    "Invalid Journal Model",
-                    "You must select a journal to attach!",
-                    "Please try again."
-            );
-            return;
-        }
-
-        ticketModel.setAttachedJournalId(selected.getId());
-        if (ticket.update(ticketModel)) {
-            Notifications.showInfo("Update", "Journal attached to ticket successfully!");
-            popOver.hide();
-        }
-    }
-
-    @FXML private void onViewJournal() {
-        final JournalModel journalModel = journal.getModel(ticketModel.getAttachedJournalId());
-        if (journalModel != null) {
-            openJournal(journalModel);
-        }
-    }
-
-    private void openJournal(final JournalModel journalModel) {
-        final BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(new Text(journalModel.getNoteProperty()));
-
-        final PopOverBuilder popOver = PopOverBuilder.build()
-                .withTitle("Journal Date: " + journalModel.getCreatedOnProperty())
-                .withContent(borderPane)
-                .setOwner(viewJournalButton);
-
-        popOver.show();
-    }
 
     private void updateLastViewed() {
         ticketModel.lastViewedProperty().setValue(LocalDateTime.now());

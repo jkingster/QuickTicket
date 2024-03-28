@@ -57,7 +57,6 @@ public class RepoCrud {
                 case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
                 case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
                 case EMAIL -> (Repository<? extends Entity>) new EmailRepository();
-                case JOURNAL -> (Repository<? extends Entity>) new JournalRepository();
                 case ALERT -> (Repository<? extends Entity>) new AlertSettingsRepository();
                 case PROFILE -> (Repository<? extends Entity>) new ProfilePictureRepository();
             });

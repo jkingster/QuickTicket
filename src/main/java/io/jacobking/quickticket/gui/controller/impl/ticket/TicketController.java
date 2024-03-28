@@ -252,10 +252,6 @@ public class TicketController extends Controller {
         Display.show(Route.VIEWER, DataRelay.of(lastViewed.getValue(), ticketTable, lastViewed));
     }
 
-    @FXML
-    private void onJournal() {
-        Display.show(Route.JOURNAL, DataRelay.empty());
-    }
 
     private void onDelete(final TicketModel ticketModel) {
         if (ticketModel == null) {
