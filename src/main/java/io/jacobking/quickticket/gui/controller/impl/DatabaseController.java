@@ -38,7 +38,7 @@ public class DatabaseController extends Controller {
         configFileUrl.setText(FileIO.TARGET_PROPERTIES);
         copyDatabaseUrl.setGraphic(FALoader.createDefault(FontAwesome.Glyph.COPY));
         copyConfigUrl.setGraphic(FALoader.createDefault(FontAwesome.Glyph.COPY));
-        databaseVersionLabel.setText(String.format("Database Version: %s", DatabaseMigrator.getCurrentDatabaseVersion()));
+        databaseVersionLabel.setText(String.format("Undefined")); // TODO: DO IT.
     }
 
     @FXML private void onBackup() {
