@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.core.Config;
-import io.jacobking.quickticket.core.database.DatabaseMigrator;
+import io.jacobking.quickticket.core.config.impl.SystemConfig;
 import io.jacobking.quickticket.core.database.DatabaseSchemaCheck;
 import io.jacobking.quickticket.core.reload.ReloadMechanism;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -22,7 +21,6 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
-import java.io.FileWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -36,7 +34,7 @@ public class DatabaseController extends Controller {
     @FXML private Button    copyConfigUrl;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
-        databaseUrl.setText(Config.getInstance().readProperty("db_url"));
+        databaseUrl.setText(SystemConfig.getInstance().getProperty("db_url"));
         configFileUrl.setText(FileIO.TARGET_PROPERTIES);
         copyDatabaseUrl.setGraphic(FALoader.createDefault(FontAwesome.Glyph.COPY));
         copyConfigUrl.setGraphic(FALoader.createDefault(FontAwesome.Glyph.COPY));
@@ -44,7 +42,7 @@ public class DatabaseController extends Controller {
     }
 
     @FXML private void onBackup() {
-        final File source = new File(Config.getInstance().readProperty("db_url"));
+        final File source = new File(SystemConfig.getInstance().getProperty("db_url"));
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(FileIO.TARGET_BACKUP_FOLDER));
 
@@ -109,7 +107,7 @@ public class DatabaseController extends Controller {
 
     private void updateDatabaseLocation(final File file) {
         final String path = file.getAbsolutePath();
-        final Object object = Config.getInstance().setProperty("db_url", path);
+        final Object object = SystemConfig.getInstance().putProperty("db_url", path);
         if (object != null) {
             Notifications.showWarning("Config Updated", "The database url was successfully updated.. reloading data.");
             ReloadMechanism.reload();
