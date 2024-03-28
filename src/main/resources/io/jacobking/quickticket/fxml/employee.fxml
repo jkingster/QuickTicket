@@ -15,12 +15,28 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.EmployeeController">
    <children>
-      <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="12.0" prefHeight="100.0" prefWidth="628.0" spacing="10.0">
+      <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="12.0" prefHeight="100.0" prefWidth="854.0" spacing="10.0">
          <children>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane prefHeight="100.0" prefWidth="329.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label layoutX="20.0" layoutY="14.0" styleClass="card-header" text="Lookup Employee" />
                   <SearchableComboBox fx:id="employeeComboBox" layoutX="13.0" layoutY="61.0" stylesheets="@../css/core/combo-box.css" />
+                  <VBox alignment="CENTER" layoutX="197.0" layoutY="9.0" prefHeight="82.0" prefWidth="125.0">
+                     <children>
+                        <HBox prefHeight="30.0" prefWidth="125.0" spacing="5.0">
+                           <children>
+                              <Button fx:id="createButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCreate" prefWidth="58.0" styleClass="button-success" text="Create" />
+                              <Button maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onReset" prefWidth="58.0" text="Reset" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="28.0" prefWidth="125.0" spacing="5.0">
+                           <children>
+                              <Button fx:id="updateButton" mnemonicParsing="false" onAction="#onUpdate" styleClass="button-success" text="Update" />
+                              <Button fx:id="deleteButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onDelete" prefWidth="58.0" styleClass="button-warning" text="Delete" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
@@ -29,7 +45,7 @@
                   <Button layoutX="52.0" layoutY="61.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="96.0" text="Open" />
                </children>
             </Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane prefHeight="100.0" prefWidth="204.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label layoutX="9.0" layoutY="14.0" styleClass="card-header" text="Department Manager" />
                   <Button layoutX="52.0" layoutY="61.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="96.0" text="Open" />
@@ -39,16 +55,6 @@
       </HBox>
       <HBox layoutX="14.0" layoutY="120.0" prefHeight="223.0" prefWidth="1159.0" spacing="10.0">
          <children>
-            <Pane prefHeight="217.0" prefWidth="229.0" styleClass="card" stylesheets="@../css/core/card.css">
-               <children>
-                  <VBox alignment="CENTER" layoutX="15.0" layoutY="3.0" prefHeight="211.0" prefWidth="200.0" spacing="10.0">
-                     <children>
-                        <ImageView fx:id="profilePictureImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button fx:id="changePhotoButton" mnemonicParsing="false" onAction="#onChangeProfilePicture" text="Change Photo" />
-                     </children>
-                  </VBox>
-               </children>
-            </Pane>
             <Pane prefHeight="217.0" prefWidth="513.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <VBox layoutX="13.0" layoutY="9.0" prefHeight="210.0" prefWidth="487.0">
@@ -56,8 +62,8 @@
                         <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="539.0" spacing="10.0">
                            <children>
                               <Label prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Employee Name:" />
-                              <TextField promptText="First Name" styleClass="text-field" />
-                              <TextField promptText="Last Name" />
+                              <TextField fx:id="firstNameField" promptText="First Name" styleClass="text-field" />
+                              <TextField fx:id="lastNameField" promptText="Last Name" />
                            </children>
                         </HBox>
                         <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="484.0" spacing="10.0">
@@ -70,27 +76,27 @@
                         <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="484.0" spacing="10.0">
                            <children>
                               <Label prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Title:" />
-                              <TextField prefHeight="25.0" prefWidth="330.0" styleClass="text-field" />
+                              <TextField fx:id="titleField" prefHeight="25.0" prefWidth="330.0" styleClass="text-field" />
                            </children>
                         </HBox>
                         <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="506.0" spacing="10.0">
                            <children>
                               <Label prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="E-mail:" />
-                              <TextField prefHeight="25.0" prefWidth="284.0" promptText="john@doe.com" styleClass="text-field" />
-                              <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="36.0" />
+                              <TextField fx:id="emailField" prefHeight="25.0" prefWidth="284.0" promptText="john@doe.com" styleClass="text-field" />
+                              <Button fx:id="emailButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="36.0" />
                            </children>
                         </HBox>
                         <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="506.0" spacing="10.0">
                            <children>
                               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Work Phone:" />
-                              <TextField prefHeight="25.0" prefWidth="421.0" promptText="(123)-456-3222" styleClass="text-field" />
-                              <TextField prefHeight="25.0" prefWidth="251.0" promptText="x3205" styleClass="text-field" />
+                              <TextField fx:id="workPhoneField" prefHeight="25.0" prefWidth="421.0" promptText="(123)-456-3222" styleClass="text-field" />
+                              <TextField fx:id="workPhoneExtensionField" prefHeight="25.0" prefWidth="251.0" promptText="x3205" styleClass="text-field" />
                            </children>
                         </HBox>
                         <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="506.0" spacing="10.0">
                            <children>
                               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Mobile Phone:" />
-                              <TextField prefHeight="25.0" prefWidth="421.0" promptText="(123)-456-3222" styleClass="text-field" />
+                              <TextField fx:id="mobilePhoneField" prefHeight="25.0" prefWidth="421.0" promptText="(123)-456-3222" styleClass="text-field" />
                            </children>
                         </HBox>
                      </children>
@@ -100,28 +106,26 @@
             <Pane prefHeight="223.0" prefWidth="393.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label layoutX="14.0" layoutY="8.0" styleClass="card-header" text="Misc. Info" />
-                  <TextArea layoutX="10.0" layoutY="35.0" prefHeight="181.0" prefWidth="374.0" promptText="Miscellaneous informaton about employee." stylesheets="@../css/core/text-area.css" wrapText="true" />
-                  <Button layoutX="326.0" layoutY="5.0" mnemonicParsing="false" text="Update" />
+                  <TextArea fx:id="infoTextArea" layoutX="10.0" layoutY="35.0" prefHeight="181.0" prefWidth="374.0" promptText="Miscellaneous informaton about employee." stylesheets="@../css/core/text-area.css" wrapText="true" />
+                  <Button fx:id="updateInfoButton" layoutX="326.0" layoutY="5.0" mnemonicParsing="false" onAction="#onUpdateInfo" text="Update" />
                </children>
             </Pane>
          </children>
       </HBox>
-      <ListView layoutX="14.0" layoutY="403.0" prefHeight="323.0" prefWidth="1159.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
+      <ListView fx:id="ticketList" layoutX="14.0" layoutY="403.0" prefHeight="323.0" prefWidth="1159.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
       <Pane layoutX="14.0" layoutY="360.0" prefHeight="35.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
             <Label layoutX="10.0" layoutY="4.0" styleClass="card-header" text="Tickets" />
          </children>
       </Pane>
-      <Pane layoutX="685.0" layoutY="14.0" prefHeight="48.0" prefWidth="393.0" styleClass="card" stylesheets="@../css/core/card.css">
+      <Pane prefHeight="217.0" prefWidth="229.0" styleClass="card" stylesheets="@../css/core/card.css" visible="false">
          <children>
-            <Label layoutX="39.0" layoutY="11.0" styleClass="card-header" text="Controls" />
-            <HBox alignment="CENTER" layoutX="173.0" prefHeight="48.0" prefWidth="200.0" spacing="5.0">
+            <VBox alignment="CENTER" layoutX="15.0" layoutY="3.0" prefHeight="211.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" styleClass="button-success" text="Update" />
-                  <Button mnemonicParsing="false" styleClass="button-warning" text="Delete" />
-                  <Button mnemonicParsing="false" text="Reset" />
+                  <ImageView fx:id="profilePictureImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <Button fx:id="changePhotoButton" mnemonicParsing="false" text="Change Photo" />
                </children>
-            </HBox>
+            </VBox>
          </children>
       </Pane>
    </children>

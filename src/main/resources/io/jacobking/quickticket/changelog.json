@@ -5,8 +5,8 @@
       "New feature: Employee tab. Instead of having a specific user portal, managing employees has become easier.",
       "New feature: Companies. You can now create a company an employee to a company.",
       "New feature: Departments. Companies can now have departments and employees can be tethered to them.",
-      "New feature: Upload employee pictures. They're stored as BLOBs in the database and inserted into a cache.",
-      "New internal system: Implemented a caching feature to keep profile pictures in memory rather than querying the database/reading the BLOB.",
+      "New internal system: Implemented flyway to handle db migrations instead of our custom handler.",
+      "UI update: Revamped the employee portal, it is now it's own separate dashboard.",
       "Database migration: v1.4"
     ]
   },

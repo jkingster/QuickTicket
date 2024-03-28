@@ -9,15 +9,20 @@ import javafx.beans.property.StringProperty;
 
 public class EmployeeModel extends ViewModel<Employee> {
 
-    private final StringProperty  firstNameProperty    = new SimpleStringProperty();
-    private final StringProperty  lastNameProperty     = new SimpleStringProperty();
-    private final StringProperty  emailProperty        = new SimpleStringProperty();
-    private final StringProperty  titleProperty        = new SimpleStringProperty();
-    private final IntegerProperty companyIdProperty    = new SimpleIntegerProperty();
-    private final IntegerProperty departmentIdProperty = new SimpleIntegerProperty();
-    private final IntegerProperty profilePictureId     = new SimpleIntegerProperty();
+    private final StringProperty  firstNameProperty     = new SimpleStringProperty();
+    private final StringProperty  lastNameProperty      = new SimpleStringProperty();
+    private final StringProperty  emailProperty         = new SimpleStringProperty();
+    private final StringProperty  titleProperty         = new SimpleStringProperty();
+    private final IntegerProperty companyIdProperty     = new SimpleIntegerProperty();
+    private final IntegerProperty departmentIdProperty  = new SimpleIntegerProperty();
+    private final IntegerProperty profilePictureId      = new SimpleIntegerProperty();
+    private final StringProperty  workPhoneProperty     = new SimpleStringProperty();
+    private final IntegerProperty workExtensionProperty = new SimpleIntegerProperty();
+    private final StringProperty  mobilePhoneProperty   = new SimpleStringProperty();
+    private final StringProperty  miscInfoProperty = new SimpleStringProperty();
 
-    public EmployeeModel(int id, String firstName, String lastName, String email, String title, int companyId, int departmentId, int profilePictureId) {
+    public EmployeeModel(int id, String firstName, String lastName, String email, String title, int companyId, int departmentId, int profilePictureId,
+                         String workPhone, int workExtension, String mobilePhone, String miscInfo) {
         super(id);
         this.firstNameProperty.setValue(firstName);
         this.lastNameProperty.setValue(lastName);
@@ -26,6 +31,10 @@ public class EmployeeModel extends ViewModel<Employee> {
         this.companyIdProperty.setValue(companyId);
         this.departmentIdProperty.setValue(departmentId);
         this.profilePictureId.setValue(profilePictureId);
+        this.workPhoneProperty.setValue(workPhone);
+        this.workExtensionProperty.setValue(workExtension);
+        this.mobilePhoneProperty.setValue(mobilePhone);
+        this.miscInfoProperty.setValue(miscInfo);
     }
 
     public EmployeeModel(Employee employee) {
@@ -37,7 +46,11 @@ public class EmployeeModel extends ViewModel<Employee> {
                 employee.getTitle(),
                 employee.getCompanyId(),
                 employee.getDepartmentId(),
-                employee.getProfilePicture()
+                employee.getProfilePicture(),
+                employee.getWorkPhone(),
+                employee.getWorkExtension(),
+                employee.getMobilePhone(),
+                employee.getComments()
         );
     }
 
@@ -114,6 +127,54 @@ public class EmployeeModel extends ViewModel<Employee> {
         this.profilePictureId.set(profilePictureId);
     }
 
+    public String getWorkPhoneProperty() {
+        return workPhoneProperty.get();
+    }
+
+    public StringProperty workPhoneProperty() {
+        return workPhoneProperty;
+    }
+
+    public void setWorkPhoneProperty(String workPhoneProperty) {
+        this.workPhoneProperty.set(workPhoneProperty);
+    }
+
+    public int getWorkExtensionProperty() {
+        return workExtensionProperty.get();
+    }
+
+    public IntegerProperty workExtensionProperty() {
+        return workExtensionProperty;
+    }
+
+    public void setWorkExtensionProperty(int workExtensionProperty) {
+        this.workExtensionProperty.set(workExtensionProperty);
+    }
+
+    public String getMobilePhoneProperty() {
+        return mobilePhoneProperty.get();
+    }
+
+    public StringProperty mobilePhoneProperty() {
+        return mobilePhoneProperty;
+    }
+
+    public void setMobilePhoneProperty(String mobilePhoneProperty) {
+        this.mobilePhoneProperty.set(mobilePhoneProperty);
+    }
+
+    public String getMiscInfoProperty() {
+        return miscInfoProperty.get();
+    }
+
+    public StringProperty miscInfoProperty() {
+        return miscInfoProperty;
+    }
+
+    public void setMiscInfoProperty(String miscInfoProperty) {
+        this.miscInfoProperty.set(miscInfoProperty);
+    }
+
     @Override
     public String toString() {
         return getFullName();
@@ -129,6 +190,10 @@ public class EmployeeModel extends ViewModel<Employee> {
                 .setTitle(getTitle())
                 .setCompanyId(getCompanyIdProperty())
                 .setDepartmentId(getDepartmentIdProperty())
-                .setProfilePicture(getProfilePictureId());
+                .setProfilePicture(getProfilePictureId())
+                .setWorkPhone(getWorkPhoneProperty())
+                .setMobilePhone(getMobilePhoneProperty())
+                .setComments(getMiscInfoProperty())
+                .setWorkExtension(getWorkExtensionProperty());
     }
 }
