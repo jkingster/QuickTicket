@@ -1,8 +1,8 @@
 package io.jacobking.quickticket;
 
-import io.jacobking.quickticket.core.Config;
+import io.jacobking.quickticket.core.config.impl.FlywayConfig;
+import io.jacobking.quickticket.core.config.impl.SystemConfig;
 import io.jacobking.quickticket.core.lock.InstanceLock;
-import io.jacobking.quickticket.gui.alert.Notifications;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -14,7 +14,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        Config.getInstance();
+        SystemConfig.getInstance();
+        FlywayConfig.getInstance();
         InstanceLock.getInstance();
 
     }
