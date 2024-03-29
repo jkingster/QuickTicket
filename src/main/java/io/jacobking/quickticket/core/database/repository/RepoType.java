@@ -10,7 +10,9 @@ public enum RepoType {
     EMPLOYEE(new EmployeeRepository()),
     EMAIL(new EmailRepository()),
     ALERT(new AlertSettingsRepository()),
-    PROFILE(new ProfilePictureRepository());
+    PROFILE(new ProfilePictureRepository()),
+    COMPANY(new CompanyRepository()),
+    DEPARTMENT(new DepartmentRepository());
 
     private final Repository<? extends Entity> repository;
 

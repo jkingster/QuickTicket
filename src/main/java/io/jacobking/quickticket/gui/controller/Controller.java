@@ -8,17 +8,16 @@ import javafx.fxml.Initializable;
 
 public abstract class Controller implements Initializable {
 
-    protected final TicketBridge  ticket;
-    protected final CommentBridge comment;
-
-    protected final EmployeeBridge employee;
-    protected final EmailBridge    email;
-
-    protected final EmailConfig emailConfig;
-    protected final AlertSettingsBridge alertSettings;
+    protected final TicketBridge         ticket;
+    protected final CommentBridge        comment;
+    protected final EmployeeBridge       employee;
+    protected final EmailBridge          email;
+    protected final EmailConfig          emailConfig;
+    protected final AlertSettingsBridge  alertSettings;
     protected final ProfilePictureBridge profilePicture;
-
-    protected DataRelay dataRelay;
+    protected final CompanyBridge        company;
+    protected final DepartmentBridge     department;
+    protected       DataRelay            dataRelay;
 
     public Controller() {
         this.ticket = BridgeContext.ticket();
@@ -27,6 +26,8 @@ public abstract class Controller implements Initializable {
         this.email = BridgeContext.email();
         this.alertSettings = BridgeContext.alertSettings();
         this.profilePicture = BridgeContext.profilePicture();
+        this.company = BridgeContext.company();
+        this.department = BridgeContext.department();
         this.emailConfig = EmailConfig.getInstance()
                 .setEmail(email.getEmail())
                 .applySettings();

@@ -14,6 +14,8 @@ public class BridgeContext {
 
     private final AlertSettingsBridge  alertSettingsBridge;
     private final ProfilePictureBridge profilePictureBridge;
+    private final CompanyBridge        companyBridge;
+    private final DepartmentBridge     departmentBridge;
 
     private BridgeContext() {
         this.ticketBridge = new TicketBridge();
@@ -22,6 +24,8 @@ public class BridgeContext {
         this.emailBridge = new EmailBridge();
         this.alertSettingsBridge = new AlertSettingsBridge();
         this.profilePictureBridge = new ProfilePictureBridge();
+        this.companyBridge = new CompanyBridge();
+        this.departmentBridge = new DepartmentBridge();
     }
 
     public static BridgeContext getInstance() {
@@ -57,5 +61,13 @@ public class BridgeContext {
 
     public static ProfilePictureBridge profilePicture() {
         return getInstance().profilePictureBridge;
+    }
+
+    public static CompanyBridge company() {
+        return getInstance().companyBridge;
+    }
+
+    public static DepartmentBridge department() {
+        return getInstance().departmentBridge;
     }
 }
