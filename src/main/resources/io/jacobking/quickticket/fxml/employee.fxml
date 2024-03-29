@@ -16,13 +16,19 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.EmployeeController">
    <children>
-      <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="12.0" prefHeight="100.0" prefWidth="854.0" spacing="10.0">
+      <HBox alignment="CENTER_LEFT" layoutX="12.0" layoutY="14.0" prefHeight="106.0" prefWidth="1256.0" spacing="10.0">
          <children>
-            <Pane prefHeight="100.0" prefWidth="329.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane prefHeight="106.0" prefWidth="825.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label layoutX="20.0" layoutY="14.0" styleClass="card-header" text="Lookup Employee" />
-                  <SearchableComboBox fx:id="employeeComboBox" layoutX="13.0" layoutY="61.0" stylesheets="@../css/core/combo-box.css" />
-                  <VBox alignment="CENTER" layoutX="197.0" layoutY="9.0" prefHeight="82.0" prefWidth="125.0">
+                  <Label layoutX="14.0" layoutY="7.0" styleClass="card-header" text="Lookup Employee" />
+                  <VBox alignment="CENTER" layoutX="192.0" layoutY="12.0" prefHeight="82.0" prefWidth="151.0" spacing="5.0">
+                     <children>
+                        <SearchableComboBox fx:id="employeeComboBox1" prefHeight="25.0" prefWidth="167.0" promptText="Company" stylesheets="@../css/core/combo-box.css" />
+                        <SearchableComboBox fx:id="employeeComboBox11" prefHeight="25.0" prefWidth="167.0" promptText="Department" stylesheets="@../css/core/combo-box.css" />
+                        <SearchableComboBox fx:id="employeeComboBox" prefHeight="25.0" prefWidth="167.0" promptText="Employee" stylesheets="@../css/core/combo-box.css" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" layoutX="25.0" layoutY="28.0" prefHeight="82.0" prefWidth="129.0">
                      <children>
                         <HBox prefHeight="30.0" prefWidth="125.0" spacing="5.0">
                            <children>
@@ -54,7 +60,7 @@
             </Pane>
          </children>
       </HBox>
-      <HBox layoutX="14.0" layoutY="120.0" prefHeight="223.0" prefWidth="1159.0" spacing="10.0">
+      <HBox layoutX="12.0" layoutY="126.0" prefHeight="223.0" prefWidth="1256.0" spacing="10.0">
          <children>
             <Pane prefHeight="217.0" prefWidth="513.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
@@ -104,24 +110,24 @@
                   </VBox>
                </children>
             </Pane>
-            <Pane prefHeight="223.0" prefWidth="393.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane prefHeight="223.0" prefWidth="730.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label layoutX="14.0" layoutY="8.0" styleClass="card-header" text="Misc. Info" />
-                  <TextArea fx:id="infoTextArea" layoutX="10.0" layoutY="35.0" prefHeight="181.0" prefWidth="374.0" promptText="Miscellaneous informaton about employee." stylesheets="@../css/core/text-area.css" wrapText="true" />
-                  <Button fx:id="updateInfoButton" layoutX="326.0" layoutY="5.0" mnemonicParsing="false" onAction="#onUpdateInfo" text="Update" />
+                  <TextArea fx:id="infoTextArea" layoutX="10.0" layoutY="35.0" prefHeight="181.0" prefWidth="709.0" promptText="Miscellaneous informaton about employee." stylesheets="@../css/core/text-area.css" wrapText="true" />
+                  <Button fx:id="updateInfoButton" layoutX="661.0" layoutY="2.0" mnemonicParsing="false" onAction="#onUpdateInfo" text="Update" />
                </children>
             </Pane>
          </children>
       </HBox>
-      <TableView fx:id="ticketTable" layoutX="14.0" layoutY="399.0" prefHeight="344.0" prefWidth="649.0" stylesheets="@../css/core/table.css">
+      <TableView fx:id="ticketTable" layoutX="14.0" layoutY="408.0" prefHeight="338.0" prefWidth="1256.0" stylesheets="@../css/core/table.css">
         <columns>
-          <TableColumn fx:id="actionsColumn" prefWidth="79.0" text="Actions" />
+          <TableColumn fx:id="actionsColumn" prefWidth="283.0" text="Actions" />
           <TableColumn fx:id="ticketIdColumn" prefWidth="68.0" text="Ticket ID" />
-            <TableColumn fx:id="titleColumn" prefWidth="380.0" text="Title" />
-            <TableColumn fx:id="createdOnColumn" minWidth="0.0" prefWidth="121.0" text="Created On" />
+            <TableColumn fx:id="titleColumn" prefWidth="700.0" text="Title" />
+            <TableColumn fx:id="createdOnColumn" minWidth="0.0" prefWidth="204.0" text="Created On" />
         </columns>
       </TableView>
-      <Pane layoutX="14.0" layoutY="360.0" prefHeight="35.0" prefWidth="649.0" styleClass="card" stylesheets="@../css/core/card.css">
+      <Pane layoutX="14.0" layoutY="361.0" prefHeight="35.0" prefWidth="1256.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
             <Label layoutX="10.0" layoutY="4.0" styleClass="card-header" text="Tickets" />
          </children>
