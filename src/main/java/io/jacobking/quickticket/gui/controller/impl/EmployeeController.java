@@ -277,4 +277,8 @@ public class EmployeeController extends Controller {
     private void openTicket(final TicketModel ticketModel) {
         Display.show(Route.VIEWER, DataRelay.of(ticketModel));
     }
+
+    @FXML private void onCompanyManager() {
+        Display.show(Route.COMPANY);
+    }
 }
