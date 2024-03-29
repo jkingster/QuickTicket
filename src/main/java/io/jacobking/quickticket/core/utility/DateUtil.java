@@ -6,9 +6,9 @@ import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
 
-    private static final DateTimeFormatter DATE_FORMAT         = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private static final DateTimeFormatter DATE_FORMAT         = DateTimeFormatter.ofPattern("MM-dd-yyyy");
     public static final  DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm a");
-    public static final DateTimeFormatter DATE_TIME_FORMATTER_TWO = DateTimeFormatter.ofPattern("MMddyyyy-HHmm-a");
+    public static final DateTimeFormatter DATE_TIME_FORMATTER_TWO = DateTimeFormatter.ofPattern("MMddyyyy");
 
     private DateUtil() {
     }
@@ -20,6 +20,11 @@ public class DateUtil {
     public static LocalDateTime nowWithTime() {
         final String localDateTime = LocalDateTime.now().format(DATE_TIME_FORMATTER);
         return LocalDateTime.parse(localDateTime, DATE_TIME_FORMATTER);
+    }
+
+    public static LocalDateTime nowWithTimeTwo() {
+        final String localDateTime = LocalDateTime.now().format(DATE_TIME_FORMATTER_TWO);
+        return LocalDateTime.parse(localDateTime, DATE_TIME_FORMATTER_TWO);
     }
 
     public static String parseAsString(final LocalDateTime localDateTime) {

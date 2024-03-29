@@ -167,6 +167,7 @@ public class EmployeeController extends Controller {
         mobilePhoneField.clear();
         infoTextArea.clear();
         employeeComboBox.getSelectionModel().clearSelection();
+        ticketList.setItems(null);
     }
 
     private void configureWorkExtensionField() {

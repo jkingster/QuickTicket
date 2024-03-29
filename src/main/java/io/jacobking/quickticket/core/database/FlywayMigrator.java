@@ -1,14 +1,16 @@
 package io.jacobking.quickticket.core.database;
 
-import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.config.impl.FlywayConfig;
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.MigrationInfo;
 
 public class FlywayMigrator {
 
     private static final String DB_URL = FlywayConfig.getInstance().getProperty("flyway.url");
 
     private final Flyway flyway;
+
+    private boolean hasPendingMigrations = false;
 
     private FlywayMigrator() {
         this.flyway = Flyway.configure()
@@ -18,9 +20,24 @@ public class FlywayMigrator {
                 .baselineOnMigrate(true)
                 .baselineVersion("1.1")
                 .load();
+
+        checkForPendingMigrations();
     }
 
-    public static void migrate() {
-        new FlywayMigrator().flyway.migrate();
+    private void checkForPendingMigrations() {
+        final MigrationInfo[] pendingMigrations = flyway.info().pending();
+        this.hasPendingMigrations = pendingMigrations.length > 0;
+    }
+
+    public boolean isPendingMigration() {
+        return hasPendingMigrations;
+    }
+
+    public static FlywayMigrator init() {
+        return new FlywayMigrator();
+    }
+
+    public void migrate() {
+        flyway.migrate();
     }
 }
