@@ -128,5 +128,6 @@ public class DatabaseController extends Controller {
         final StringSelection stringSelection = new StringSelection(stringToCopy);
         final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
+        Notifications.showInfo("Success!", "Path copied to clipboard.");
     }
 }
