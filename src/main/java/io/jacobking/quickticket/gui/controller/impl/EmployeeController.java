@@ -11,6 +11,7 @@ import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import io.jacobking.quickticket.tables.pojos.Employee;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -42,12 +43,16 @@ public class EmployeeController extends Controller {
 
     @FXML private TextArea infoTextArea;
 
-    @FXML private ListView<TicketModel> ticketList;
+    @FXML private TableView<TicketModel>           ticketTable;
+    @FXML private TableColumn<TicketModel, Void>   actionsColumn;
+    @FXML private TableColumn<TicketModel, String> ticketIdColumn;
+    @FXML private TableColumn<TicketModel, String> titleColumn;
+    @FXML private TableColumn<TicketModel, String> createdOnColumn;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureEmployeeComboBox();
         configureWorkExtensionField();
-        configureTicketList();
+        configureTicketTable();
         configureButtons();
     }
 
@@ -167,7 +172,7 @@ public class EmployeeController extends Controller {
         mobilePhoneField.clear();
         infoTextArea.clear();
         employeeComboBox.getSelectionModel().clearSelection();
-        ticketList.setItems(null);
+        ticketTable.setItems(null);
     }
 
     private void configureWorkExtensionField() {
@@ -185,37 +190,54 @@ public class EmployeeController extends Controller {
 
     private void loadTickets(final EmployeeModel employeeModel) {
         final int employeeId = employeeModel.getId();
-        ticketList.setItems(ticket.getFilteredList(ticketModel
+        loadTicketsById(employeeId);
+    }
+
+    private void loadTicketsById(final int employeeId) {
+        ticketTable.setItems(ticket.getFilteredList(ticketModel
                 -> ticketModel.getEmployeeId() == employeeId));
     }
 
-    private void configureTicketList() {
-        ticketList.setCellFactory(data -> new ListCell<>() {
-            @Override protected void updateItem(TicketModel ticketModel, boolean b) {
-                super.updateItem(ticketModel, b);
-                if (b || ticketModel == null) {
+    private void configureTicketTable() {
+        actionsColumn.setCellFactory(data -> new TableCell<>() {
+            @Override protected void updateItem(Void unused, boolean b) {
+                super.updateItem(unused, b);
+                if (b) {
                     setGraphic(null);
                     return;
                 }
 
                 final HBox hBox = new HBox();
-                hBox.setAlignment(Pos.CENTER_LEFT);
+                hBox.setAlignment(Pos.CENTER);
                 hBox.setSpacing(5.0);
 
-                final Button ticket = new Button();
-                ticket.setGraphic(FALoader.createDefault(FontAwesome.Glyph.TICKET));
-                ticket.setOnAction(event -> openTicket(ticketModel));
+                final Button open = new Button();
+                open.setGraphic(FALoader.createDefault(FontAwesome.Glyph.TICKET));
+                open.setOnAction(event -> openTicket(getTableRow().getItem()));
 
-                final Label ticketId = new Label(String.format("Ticket ID: %s", ticketModel.getId()));
-                final Separator separator = new Separator();
-                final Label ticketSubject = new Label(ticketModel.getTitle());
-                final Separator separatorTwo = new Separator();
-                final Label createdOn = new Label(ticketModel.getCreation().format(DateUtil.DATE_TIME_FORMATTER));
+                final Button unAssign = new Button();
+                unAssign.setGraphic(FALoader.createDefault(FontAwesome.Glyph.UNLINK));
+                unAssign.setOnAction(event -> unAssignTicket(getTableRow().getItem()));
 
-                hBox.getChildren().addAll(ticket, ticketId, separator, ticketSubject, separatorTwo, createdOn);
+                hBox.getChildren().addAll(open, unAssign);
                 setGraphic(hBox);
             }
         });
+
+        ticketIdColumn.setCellValueFactory(data -> data.getValue().getIdProperty().asString());
+        titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
+        createdOnColumn.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().getCreation().format(DateUtil.DATE_TIME_FORMATTER)
+        ));
+    }
+
+    private void unAssignTicket(final TicketModel ticketModel) {
+        final int employeeId = ticketModel.getEmployeeId();
+        ticketModel.employeeProperty().setValue(0);
+        if (ticket.update(ticketModel)) {
+            Notifications.showInfo("Update Successful", "Employee was unassigned from ticket.");
+            loadTicketsById(employeeId);
+        }
     }
 
     @FXML private void onUpdateInfo() {

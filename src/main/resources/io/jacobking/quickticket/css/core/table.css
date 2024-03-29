@@ -62,3 +62,7 @@
     -fx-pref-height: 0;
     -fx-max-height: 0;
 }
+
+.table-row-cell:delete-row .text {
+    -fx-strikethrough: true;
+}
