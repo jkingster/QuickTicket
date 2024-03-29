@@ -53,12 +53,14 @@ public class RepoCrud {
     private <T extends Entity> void loadRepositories() {
         for (RepoType value : RepoType.values()) {
             repositoryMap.computeIfAbsent(value, type -> switch (type) {
-                case TICKET -> (Repository<? extends Entity>) new TicketRepository();
-                case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
-                case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
-                case EMAIL -> (Repository<? extends Entity>) new EmailRepository();
-                case ALERT -> (Repository<? extends Entity>) new AlertSettingsRepository();
-                case PROFILE -> (Repository<? extends Entity>) new ProfilePictureRepository();
+                case TICKET     -> (Repository<? extends Entity>) new TicketRepository();
+                case COMMENT    -> (Repository<? extends Entity>) new CommentRepository();
+                case EMPLOYEE   -> (Repository<? extends Entity>) new EmployeeRepository();
+                case EMAIL      -> (Repository<? extends Entity>) new EmailRepository();
+                case ALERT      -> (Repository<? extends Entity>) new AlertSettingsRepository();
+                case PROFILE    -> (Repository<? extends Entity>) new ProfilePictureRepository();
+                case COMPANY    -> (Repository<? extends Entity>) new CompanyRepository();
+                case DEPARTMENT -> (Repository<? extends Entity>) new DepartmentRepository();
             });
         }
     }
