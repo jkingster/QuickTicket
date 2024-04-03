@@ -114,7 +114,7 @@
                <children>
                   <Label layoutX="14.0" layoutY="8.0" styleClass="card-header" text="Misc. Info" />
                   <TextArea fx:id="infoTextArea" layoutX="10.0" layoutY="35.0" prefHeight="181.0" prefWidth="709.0" promptText="Miscellaneous informaton about employee." stylesheets="@../css/core/text-area.css" wrapText="true" />
-                  <Button fx:id="updateInfoButton" layoutX="661.0" layoutY="2.0" mnemonicParsing="false" onAction="#onUpdateInfo" text="Update" />
+                  <Button fx:id="updateInfoButton" layoutX="661.0" layoutY="4.0" mnemonicParsing="false" onAction="#onUpdateInfo" text="Update" />
                </children>
             </Pane>
          </children>
