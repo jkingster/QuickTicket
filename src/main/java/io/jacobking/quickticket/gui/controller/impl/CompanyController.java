@@ -62,6 +62,10 @@ public class CompanyController extends Controller {
         companyModel.setState(stateField.getText());
         companyModel.setCountry(countryField.getText());
         companyModel.setZipCode(getZipCode());
+
+        if (company.update(companyModel)) {
+            Notifications.showInfo("Update Successful", "Company model was updated.");
+        }
     }
 
     @FXML private void onDelete() {

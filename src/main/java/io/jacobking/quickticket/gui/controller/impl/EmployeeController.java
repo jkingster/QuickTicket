@@ -79,7 +79,7 @@ public class EmployeeController extends Controller {
 
         if (model != null) {
             Notifications.showInfo("Employee Created Successfully", "Employee list updated.");
-            employeeComboBox.getSelectionModel().select(model);
+            onReset();
         }
     }
 
