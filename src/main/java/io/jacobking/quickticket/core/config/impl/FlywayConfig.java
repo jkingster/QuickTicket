@@ -38,7 +38,6 @@ public class FlywayConfig extends Config {
         try {
             final URL resource = App.class.getResource("sql/migration");
             if (resource == null) {
-                System.out.println("NULL");
                 return;
             }
 

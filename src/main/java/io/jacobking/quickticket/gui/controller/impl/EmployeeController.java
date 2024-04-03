@@ -217,7 +217,7 @@ public class EmployeeController extends Controller {
 
                 final Button unAssign = new Button();
                 unAssign.setGraphic(FALoader.createDefault(FontAwesome.Glyph.UNLINK));
-                unAssign.setOnAction(event -> unAssignTicket(getTableRow().getItem()));
+                unAssign.setOnAction(event -> onUnAssignTicket(getTableRow().getItem()));
 
                 hBox.getChildren().addAll(open, unAssign);
                 setGraphic(hBox);
@@ -229,6 +229,15 @@ public class EmployeeController extends Controller {
         createdOnColumn.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getCreation().format(DateUtil.DATE_TIME_FORMATTER)
         ));
+    }
+
+    private void onUnAssignTicket(final TicketModel ticketModel) {
+        Alerts.showConfirmation(() -> unAssignTicket(ticketModel), "Are you sure you want to un-assign this ticket?", "This ticket will be removed from the employee?")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        unAssignTicket(ticketModel);
+                    }
+                });
     }
 
     private void unAssignTicket(final TicketModel ticketModel) {
