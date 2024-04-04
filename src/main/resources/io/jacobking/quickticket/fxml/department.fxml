@@ -8,47 +8,42 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<AnchorPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="306.0" styleClass="body" stylesheets="@../css/core/base.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="377.0" prefWidth="306.0" styleClass="body" stylesheets="@../css/core/base.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <SearchableComboBox fx:id="departmentComboBox" layoutX="10.0" layoutY="48.0" prefHeight="25.0" prefWidth="286.0" promptText="Lookup Department..." stylesheets="@../css/core/combo-box.css" />
-      <SearchableComboBox fx:id="companyComboBox" layoutX="146.0" layoutY="13.0" prefHeight="25.0" prefWidth="150.0" promptText="Lookup Company..." stylesheets="@../css/core/combo-box.css" />
-      <VBox fx:id="parent" alignment="TOP_CENTER" layoutX="10.0" layoutY="80.0" prefHeight="325.0" prefWidth="286.0" spacing="5.0">
+      <SearchableComboBox fx:id="companySearchBox" layoutX="28.0" layoutY="14.0" prefHeight="25.0" prefWidth="251.0" promptText="Select Company" stylesheets="@../css/core/combo-box.css" translateY="30.0" />
+      <SearchableComboBox fx:id="departmentSearchBox" layoutX="28.0" layoutY="46.0" prefHeight="25.0" prefWidth="251.0" promptText="Select Department" stylesheets="@../css/core/combo-box.css" translateY="30.0" />
+      <VBox alignment="TOP_CENTER" layoutX="28.0" layoutY="80.0" prefHeight="260.0" prefWidth="251.0" spacing="5.0" translateY="30.0">
          <children>
-            <HBox alignment="TOP_CENTER" prefHeight="22.0" prefWidth="286.0">
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="251.0">
                <children>
-                  <Label contentDisplay="CENTER" prefHeight="25.0" prefWidth="140.0" text="Department Name:" textAlignment="CENTER" textFill="WHITE" />
-                  <TextField fx:id="nameField" prefHeight="25.0" prefWidth="201.0" stylesheets="@../css/core/text-field.css" />
+                  <Label prefHeight="17.0" prefWidth="122.0" text="Department Name:" textFill="WHITE" />
+                  <TextField fx:id="nameField" stylesheets="@../css/core/text-field.css" />
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="16.0" prefWidth="286.0">
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="251.0">
                <children>
-                  <Label contentDisplay="CENTER" prefHeight="25.0" prefWidth="140.0" text="Department Email:" textAlignment="CENTER" textFill="WHITE" />
-                  <TextField fx:id="emailField" prefHeight="25.0" prefWidth="201.0" stylesheets="@../css/core/text-field.css" />
+                  <Label prefHeight="17.0" prefWidth="122.0" text="Department Email:" textFill="WHITE" />
+                  <TextField fx:id="emailField" stylesheets="@../css/core/text-field.css" />
                </children>
             </HBox>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label contentDisplay="CENTER" prefHeight="29.0" prefWidth="126.0" text="Description:" textAlignment="CENTER" textFill="WHITE" />
+                  <Label prefHeight="17.0" prefWidth="138.0" text="Department Description:" textFill="WHITE" />
                   <TextArea fx:id="descriptionArea" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/core/text-area.css" />
                </children>
             </VBox>
-            <HBox alignment="CENTER" prefHeight="49.0" prefWidth="286.0" spacing="5.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                <children>
-                  <Button fx:id="createButton" mnemonicParsing="false" onAction="#onCreate" stylesheets="@../css/core/button.css" text="Create" />
-                  <Button fx:id="updateButton" mnemonicParsing="false" onAction="#onUpdate" styleClass="button-success" stylesheets="@../css/core/button.css" text="Update" />
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDelete" styleClass="button-warning" stylesheets="@../css/core/button.css" text="Delete" />
-                  <Button mnemonicParsing="false" onAction="#onReset" stylesheets="@../css/core/button.css" text="Reset" />
+                  <Button fx:id="createButton" minWidth="60.0" mnemonicParsing="false" onAction="#onCreate" stylesheets="@../css/core/button.css" text="Create" />
+                  <Button fx:id="updateButton" minWidth="60.0" mnemonicParsing="false" onAction="#onUpdate" prefWidth="55.0" styleClass="button-success" stylesheets="@../css/core/button.css" text="Update" />
+                  <Button fx:id="deleteButton" minWidth="60.0" mnemonicParsing="false" onAction="#onDelete" prefWidth="55.0" styleClass="button-warning" stylesheets="@../css/core/button.css" text="Delete" />
+                  <Button minWidth="60.0" mnemonicParsing="false" onAction="#onReset" prefWidth="55.0" stylesheets="@../css/core/button.css" text="Reset" />
                </children>
             </HBox>
          </children>
       </VBox>
-      <CheckBox fx:id="noCompanyCheckBox" layoutX="14.0" layoutY="15.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="126.0" text="No Company" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </CheckBox>
+      <CheckBox fx:id="newDepartmentCheckBox" layoutX="28.0" layoutY="14.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="251.0" text="Create New Department" textFill="WHITE" />
    </children>
 </AnchorPane>
