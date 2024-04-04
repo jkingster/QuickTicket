@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="800.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ListView fx:id="commentList" layoutX="38.0" layoutY="83.0" prefHeight="311.0" prefWidth="724.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
       <HBox layoutX="38.0" layoutY="405.0" prefHeight="26.0" prefWidth="724.0" spacing="5.0">
