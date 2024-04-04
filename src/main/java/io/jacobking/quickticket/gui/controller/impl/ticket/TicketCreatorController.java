@@ -30,7 +30,7 @@ public class TicketCreatorController extends Controller {
                 font-size: 12px;
             }
             </style>
-            %s, your support ticket has been created. IT will reach out to your shortly to help resolve your issue.
+            %s, your support ticket has been created. IT will reach out to you shortly to help resolve your issue.
             <br/>
             <br/>
             Ticket Information:
