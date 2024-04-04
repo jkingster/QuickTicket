@@ -281,7 +281,10 @@ public class ViewerController extends Controller {
         this.ticketId = ticketModel.getId();
         this.comments = comment.getCommentsByTicketId(ticketId);
         titleField.setText(ticketModel.getTitle());
-        creationField.setText(String.format("Date: %s", ticketModel.getCreation()));
+        creationField.setText(String.format("Date: %s", DateUtil.formatDateTime(
+                DateUtil.DateFormat.DATE_TIME_ONE,
+                ticketModel.getCreation())
+        ));
         priorityLabel.textProperty().bind(ticketModel.priorityProperty().asString());
         statusLabel.textProperty().bind(ticketModel.statusProperty().asString());
 
