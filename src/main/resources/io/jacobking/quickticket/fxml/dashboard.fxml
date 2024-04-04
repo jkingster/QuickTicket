@@ -27,12 +27,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
                   </items>
                 </Menu>
-                  <Menu disable="true" mnemonicParsing="false" text="Settings">
-                     <items>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Ticket Settings" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="App Settings" />
-                     </items>
-                  </Menu>
               </menus>
                <opaqueInsets>
                   <Insets top="10.0" />

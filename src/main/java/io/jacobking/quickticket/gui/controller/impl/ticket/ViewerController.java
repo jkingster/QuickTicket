@@ -74,7 +74,7 @@ public class ViewerController extends Controller {
     @FXML private void onPost() {
         comment.createModel(new Comment()
                 .setPost(commentField.getText())
-                .setPostedOn(DateUtil.nowWithTime().format(DateUtil.DATE_TIME_FORMATTER))
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setTicketId(ticketId));
 
         commentField.clear();
@@ -270,7 +270,7 @@ public class ViewerController extends Controller {
 
     private void postSystemComment(final String prefix, final String commentText) {
         comment.createModel(new Comment().setTicketId(ticketId)
-                .setPostedOn(DateUtil.nowWithTime().format(DateUtil.DATE_TIME_FORMATTER))
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setPost(String.format("[%s]: %s", prefix, commentText)));
         commentList.refresh();
         scrollToLastComment();
@@ -305,7 +305,11 @@ public class ViewerController extends Controller {
                 final VBox vBox = new VBox();
                 VBox.setVgrow(vBox, Priority.ALWAYS);
 
-                final Label date = new Label(commentModel.getPostedOn());
+                final Label date = new Label(DateUtil.formatDateTime(
+                        DateUtil.DateFormat.DATE_TIME_ONE,
+                        commentModel.getPostedOn()
+                ));
+
                 date.setStyle(StyleCommons.COMMON_LABEL_STYLE);
 
                 final Text comment = new Text(commentModel.getPost());

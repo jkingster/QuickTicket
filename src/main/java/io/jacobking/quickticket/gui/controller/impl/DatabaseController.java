@@ -48,7 +48,8 @@ public class DatabaseController extends Controller {
 
         final String initialName = String.format("%s-backup_%s.db",
                 source.getName().replace(".db", ""),
-                DateUtil.nowWithTime().format(DateUtil.DATE_TIME_FORMATTER_TWO));
+                DateUtil.nowAsString(DateUtil.DateFormat.DATE_TIME_ONE)
+        );
 
         fileChooser.setInitialFileName(initialName);
         fileChooser.setTitle("Save a backup of current database!");

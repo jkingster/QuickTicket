@@ -44,7 +44,10 @@ public class DatabaseBackup {
 
     private File getDestinationFile(final String sourceName) {
         final String newName = BACKUP_NAME_FORMAT.formatted(
-                BACKUP_PATH, sourceName, DateUtil.now());
+                BACKUP_PATH,
+                sourceName,
+                DateUtil.nowAsString(DateUtil.DateFormat.DATE)
+        );
         return new File(newName);
     }
 

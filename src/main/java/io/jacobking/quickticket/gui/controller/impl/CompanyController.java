@@ -90,6 +90,10 @@ public class CompanyController extends Controller {
             return;
 
         final int companyId = companyModel.getId();
+        if (companyId == 0) {
+            Notifications.showError("Could not delete company.", "This company is locked by internals!");
+            return;
+        }
         company.remove(companyId);
     }
 
@@ -105,7 +109,7 @@ public class CompanyController extends Controller {
     }
 
     private void configureCompanyComboBox() {
-        companyComboBox.setItems(company.getObservableList());
+        companyComboBox.setItems(company.getObservableListByFilter(cm -> cm.getId() != 0));
         companyComboBox.setConverter(new StringConverter<>() {
             @Override public String toString(CompanyModel companyModel) {
                 if (companyModel == null)
@@ -121,11 +125,11 @@ public class CompanyController extends Controller {
         companyComboBox.setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(CompanyModel companyModel, boolean b) {
                 super.updateItem(companyModel, b);
-                if (b || companyModel == null) {
+                if (b || companyModel == null || companyModel.getId() == 0) {
                     setText(null);
                     return;
                 }
-                setText(companyModel.getName());
+                setText(String.format("ID: %s | %s", companyModel.getId(), companyModel.getName()));
             }
         });
 

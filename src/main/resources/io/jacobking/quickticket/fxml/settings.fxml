@@ -12,10 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TabPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/core/tab-pane.css" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/core/tab-pane.css" tabClosingPolicy="UNAVAILABLE" tabMaxWidth="2.0" tabMinWidth="2.0">
         <tabs>
           <Tab styleClass="t" text="Alerts">
             <content>
@@ -59,6 +58,11 @@
                   </AnchorPane>
             </content>
           </Tab>
+            <Tab styleClass="t" text="Manage">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@../css/core/tab-pane.css" />
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>

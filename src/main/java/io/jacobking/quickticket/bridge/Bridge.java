@@ -10,6 +10,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
     private final ObservableList<V> observableList;
@@ -97,6 +98,10 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
 
     public ObservableList<V> getObservableList() {
         return observableList;
+    }
+
+    public ObservableList<V> getObservableListByFilter(final Predicate<V> filter) {
+        return getObservableList().filtered(filter);
     }
 
     private void removalListener() {

@@ -21,6 +21,7 @@ import org.controlsfx.control.SearchableComboBox;
 import org.controlsfx.glyphfont.FontAwesome;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class EmployeeController extends Controller {
@@ -46,8 +47,8 @@ public class EmployeeController extends Controller {
     @FXML private TableView<TicketModel>           ticketTable;
     @FXML private TableColumn<TicketModel, Void>   actionsColumn;
     @FXML private TableColumn<TicketModel, String> ticketIdColumn;
-    @FXML private TableColumn<TicketModel, String> titleColumn;
-    @FXML private TableColumn<TicketModel, String> createdOnColumn;
+    @FXML private TableColumn<TicketModel, String>        titleColumn;
+    @FXML private TableColumn<TicketModel, LocalDateTime> createdOnColumn;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureEmployeeComboBox();
@@ -226,9 +227,7 @@ public class EmployeeController extends Controller {
 
         ticketIdColumn.setCellValueFactory(data -> data.getValue().getIdProperty().asString());
         titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
-        createdOnColumn.setCellValueFactory(data -> new SimpleStringProperty(
-                data.getValue().getCreation().format(DateUtil.DATE_TIME_FORMATTER)
-        ));
+        createdOnColumn.setCellValueFactory(data -> data.getValue().createdProperty());
     }
 
     private void onUnAssignTicket(final TicketModel ticketModel) {
@@ -289,5 +288,9 @@ public class EmployeeController extends Controller {
 
     @FXML private void onCompanyManager() {
         Display.show(Route.COMPANY);
+    }
+
+    @FXML private void onDepartmentManager() {
+        Display.show(Route.DEPARTMENT);
     }
 }

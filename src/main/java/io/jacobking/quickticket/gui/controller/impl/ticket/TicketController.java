@@ -99,7 +99,7 @@ public class TicketController extends Controller {
                     return;
                 }
 
-                setText(DateUtil.parseAsString(localDateTime));
+                setText(DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, localDateTime));
             }
         });
 
@@ -226,7 +226,7 @@ public class TicketController extends Controller {
 
     private void postCommentOnTicket(final TicketModel ticketModel, final String systemComment) {
         comment.createModel(new Comment().setTicketId(ticketModel.getId())
-                .setPostedOn(DateUtil.nowWithTime().format(DateUtil.DATE_TIME_FORMATTER))
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setPost(String.format("[%s]: %s", "System", systemComment)));
     }
 

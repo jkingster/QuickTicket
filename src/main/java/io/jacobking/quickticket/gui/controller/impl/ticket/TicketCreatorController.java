@@ -135,7 +135,7 @@ public class TicketCreatorController extends Controller {
         final EmployeeModel employeeModel = employeeComboBox.getSelectionModel().getSelectedItem();
         final TicketModel newTicket = ticket.createModel(new Ticket()
                 .setTitle(title)
-                .setCreatedOn(DateUtil.nowWithTime())
+                .setCreatedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setPriority(getPriority())
                 .setStatus(getStatus())
                 .setEmployeeId(employeeModel == null ? 0 : employeeModel.getId()));
@@ -171,7 +171,7 @@ public class TicketCreatorController extends Controller {
         comment.createModel(new Comment()
                 .setTicketId(ticketId)
                 .setPost(initialComment)
-                .setPostedOn(DateUtil.nowWithTime().toString()));
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE)));
     }
 
     @FXML private void onReset() {

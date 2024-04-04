@@ -1,33 +1,45 @@
 package io.jacobking.quickticket.core.utility;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
 
-    private static final DateTimeFormatter DATE_FORMAT         = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-    public static final  DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm a");
-    public static final DateTimeFormatter DATE_TIME_FORMATTER_TWO = DateTimeFormatter.ofPattern("MMddyyyy");
+    public enum DateFormat {
+        DATE("MM-dd-yyyy"),
+        DATE_TWO("MMddyyyy"),
+        DATE_TIME_ONE("MM/dd/yyyy HH:mm:ss a");
+
+        private       DateTimeFormatter formatter;
+        private final String            pattern;
+
+        DateFormat(String pattern) {
+            this.pattern = pattern;
+            this.formatter = DateTimeFormatter.ofPattern(pattern);
+        }
+
+        public String nowAsString() {
+            return LocalDateTime.now().format(DateTimeFormatter.ofPattern(pattern));
+        }
+
+        public LocalDateTime nowAsLocalDateTime() {
+            final String stringFormat = nowAsString();
+            return LocalDateTime.parse(stringFormat, formatter);
+        }
+    }
 
     private DateUtil() {
     }
 
-    public static String now() {
-        return LocalDate.now().format(DATE_FORMAT);
+    public static String nowAsString(final DateFormat dateFormat) {
+        return dateFormat.nowAsString();
     }
 
-    public static LocalDateTime nowWithTime() {
-        final String localDateTime = LocalDateTime.now().format(DATE_TIME_FORMATTER);
-        return LocalDateTime.parse(localDateTime, DATE_TIME_FORMATTER);
+    public static LocalDateTime nowAsLocalDateTime(final DateFormat dateFormat) {
+        return dateFormat.nowAsLocalDateTime();
     }
 
-    public static LocalDateTime nowWithTimeTwo() {
-        final String localDateTime = LocalDateTime.now().format(DATE_TIME_FORMATTER_TWO);
-        return LocalDateTime.parse(localDateTime, DATE_TIME_FORMATTER_TWO);
-    }
-
-    public static String parseAsString(final LocalDateTime localDateTime) {
-        return localDateTime.format(DATE_TIME_FORMATTER);
+    public static String formatDateTime(final DateFormat dateFormat, final LocalDateTime localDateTime) {
+        return localDateTime.format(dateFormat.formatter);
     }
 }

@@ -9,6 +9,7 @@ public enum Route {
     CHANGELOG("Changelog"),
     DATABASE("Database"),
     SETTINGS("Settings"),
+    DEPARTMENT("Department"),
     COMPANY("Company");
 
     private static final Route[] VALUES    = values();

@@ -25,7 +25,7 @@ public class EmailResolvedSender {
     public EmailResolvedSender(final TicketModel ticketModel, final EmployeeModel employeeModel, final String comment) {
         this.ticketId = String.valueOf(ticketModel.getId());
         this.ticketSubject = ticketModel.getTitle();
-        this.ticketCreation = ticketModel.getCreation().format(DateUtil.DATE_TIME_FORMATTER);
+        this.ticketCreation = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation());
         this.ticketEmployeeName = employeeModel.getFullName();
         this.ticketEmployeeEmail = employeeModel.getEmail();
         this.resolvedComment = comment;

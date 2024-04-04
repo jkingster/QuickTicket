@@ -15,8 +15,7 @@ public class CommentBridge extends Bridge<Comment, CommentModel> {
     }
 
     public ObservableList<CommentModel> getCommentsByTicketId(final int ticketId) {
-        return getObservableList()
-                .filtered(cm -> cm.getTicketId() == ticketId);
+        return getObservableList().filtered(cm -> cm.getTicketId() == ticketId);
     }
 
     @Override public CommentModel convertEntity(Comment entity) {
