@@ -41,6 +41,10 @@ public class DepartmentRepository implements Repository<Department> {
                 .execute() == SUCCESS;
     }
 
+    @Override public boolean deleteWhere(DSLContext context, Condition condition) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override public boolean update(DSLContext context, Department department) {
         final DepartmentRecord record = new DepartmentRecord(department);
         record.changed(DEPARTMENT.ID, false);

@@ -30,6 +30,10 @@ public class ProfilePictureRepository implements Repository<ProfilePicture> {
                 .fetchInto(ProfilePicture.class);
     }
 
+    @Override public boolean deleteWhere(DSLContext context, Condition condition) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override public List<ProfilePicture> getAll(DSLContext context, Condition condition) {
         throw new UnsupportedOperationException();
     }

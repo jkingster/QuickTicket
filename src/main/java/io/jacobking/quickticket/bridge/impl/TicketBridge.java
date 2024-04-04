@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.bridge.impl;
 
 import io.jacobking.quickticket.bridge.Bridge;
+import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
@@ -45,6 +46,11 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
     @Override
     public TicketModel convertEntity(Ticket entity) {
         return new TicketModel(entity);
+    }
+
+    @Override public void remove(int id) {
+        super.remove(id);
+        BridgeContext.comment().removeByTicketId(id);
     }
 
     public FilteredList<TicketModel> getFilteredList(final Predicate<TicketModel> predicate) {

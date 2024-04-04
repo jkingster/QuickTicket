@@ -27,6 +27,10 @@ public class EmployeeRepository implements Repository<Employee> {
                 .fetchOneInto(Employee.class);
     }
 
+    @Override public boolean deleteWhere(DSLContext context, Condition condition) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override
     public List<Employee> getAll(DSLContext context) {
         return context.selectFrom(EMPLOYEE)

@@ -34,6 +34,10 @@ public class CompanyRepository implements Repository<Company> {
         throw new UnsupportedOperationException();
     }
 
+    @Override public boolean deleteWhere(DSLContext context, Condition condition) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override public boolean delete(DSLContext context, int id) {
         return context.deleteFrom(COMPANY)
                 .where(COMPANY.ID.eq(id))

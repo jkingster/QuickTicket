@@ -33,6 +33,10 @@ public class AlertSettingsRepository implements Repository<AlertSettings> {
         throw new UnsupportedOperationException();
     }
 
+    @Override public boolean deleteWhere(DSLContext context, Condition condition) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override public boolean update(DSLContext context, AlertSettings alertSettings) {
         final AlertSettingsRecord record = new AlertSettingsRecord(alertSettings);
         record.changed(ALERT_SETTINGS.ID, false);
