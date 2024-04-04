@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.email.EmailResolvedSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
@@ -8,7 +7,6 @@ import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.CommentModel;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
@@ -16,7 +14,6 @@ import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.StyleCommons;
 import io.jacobking.quickticket.tables.pojos.Comment;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -25,7 +22,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -36,6 +32,7 @@ import org.controlsfx.control.SearchableComboBox;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -282,7 +279,7 @@ public class ViewerController extends Controller {
     private void populateData(final TicketModel ticketModel) {
         this.ticketModel = ticketModel;
         this.ticketId = ticketModel.getId();
-        this.comments = comment.getComments(ticketId);
+        this.comments = comment.getCommentsByTicketId(ticketId);
         titleField.setText(ticketModel.getTitle());
         creationField.setText(String.format("Date: %s", ticketModel.getCreation()));
         priorityLabel.textProperty().bind(ticketModel.priorityProperty().asString());
@@ -296,7 +293,7 @@ public class ViewerController extends Controller {
     }
 
     private void configureComments() {
-        commentList.setItems(comments);
+        commentList.setItems(comments.sorted(Comparator.comparing(CommentModel::getPostedOn)));
         commentList.setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(CommentModel commentModel, boolean b) {
                 super.updateItem(commentModel, b);
@@ -375,7 +372,6 @@ public class ViewerController extends Controller {
         lastViewed.setValue(null);
         Display.close(Route.VIEWER);
     }
-
 
 
     private void updateLastViewed() {

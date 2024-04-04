@@ -168,7 +168,8 @@ public class TicketCreatorController extends Controller {
         if (initialComment.isEmpty()) return;
 
         final int ticketId = ticketModel.getId();
-        comment.createModel(new Comment().setTicketId(ticketId)
+        comment.createModel(new Comment()
+                .setTicketId(ticketId)
                 .setPost(initialComment)
                 .setPostedOn(DateUtil.nowWithTime().toString()));
     }
