@@ -110,7 +110,7 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
                 if (change.wasRemoved()) {
                     change.getRemoved().forEach(removed -> {
                         final int id = removed.getId();
-                        if (!Database.call().delete(repoType, id)) {
+                        if (!Database.call().deleteWhere(repoType, id)) {
                             // TODO: Alert?
                         }
                     });

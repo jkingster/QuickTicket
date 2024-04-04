@@ -3,11 +3,14 @@ package io.jacobking.quickticket.bridge.impl;
 import io.jacobking.quickticket.bridge.Bridge;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.model.impl.CommentModel;
 import io.jacobking.quickticket.tables.pojos.Comment;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import org.jooq.impl.DSL;
 
-import java.util.Comparator;
+import static io.jacobking.quickticket.Tables.COMMENT;
 
 public class CommentBridge extends Bridge<Comment, CommentModel> {
 
@@ -21,6 +24,16 @@ public class CommentBridge extends Bridge<Comment, CommentModel> {
 
     @Override public CommentModel convertEntity(Comment entity) {
         return new CommentModel(entity);
+    }
+
+    public void removeCommentsByTicketId(final int ticketId) {
+        Platform.runLater(() -> getObservableList().removeIf(cm -> cm.getTicketId() == ticketId));
+        if (!Database.call().deleteWhere(RepoType.COMMENT, DSL.condition(COMMENT.TICKET_ID.eq(ticketId)))) {
+            Notifications.showError(
+                    "Failed to delete comments.",
+                    "Could not delete all comments associated with deleted ticket."
+            );
+        }
     }
 
 }

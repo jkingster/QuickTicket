@@ -50,7 +50,7 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
 
     @Override public void remove(int id) {
         super.remove(id);
-        BridgeContext.comment().removeByTicketId(id);
+        BridgeContext.comment().removeCommentsByTicketId(id);
     }
 
     public FilteredList<TicketModel> getFilteredList(final Predicate<TicketModel> predicate) {

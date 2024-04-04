@@ -30,11 +30,11 @@ public class RepoCrud {
         return (T) getRepository(type).save(context, value);
     }
 
-    public boolean delete(final RepoType type, final int id) {
+    public boolean deleteWhere(final RepoType type, final int id) {
         return getRepository(type).delete(context, id);
     }
 
-    public boolean delete(final RepoType type, final Condition condition) {
+    public boolean deleteWhere(final RepoType type, final Condition condition) {
         return getRepository(type).deleteWhere(context, condition);
     }
 
