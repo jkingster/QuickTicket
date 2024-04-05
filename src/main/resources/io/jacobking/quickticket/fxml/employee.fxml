@@ -24,8 +24,8 @@
                   <Label layoutX="14.0" layoutY="7.0" styleClass="card-header" text="Lookup Employee" />
                   <VBox alignment="CENTER" layoutX="192.0" layoutY="12.0" prefHeight="82.0" prefWidth="151.0" spacing="5.0">
                      <children>
-                        <SearchableComboBox fx:id="employeeComboBox1" prefHeight="25.0" prefWidth="167.0" promptText="Company" stylesheets="@../css/core/combo-box.css" />
-                        <SearchableComboBox fx:id="employeeComboBox11" prefHeight="25.0" prefWidth="167.0" promptText="Department" stylesheets="@../css/core/combo-box.css" />
+                        <SearchableComboBox fx:id="companyComboBox" prefHeight="25.0" prefWidth="167.0" promptText="Company" stylesheets="@../css/core/combo-box.css" />
+                        <SearchableComboBox fx:id="departmentComboBox" prefHeight="25.0" prefWidth="167.0" promptText="Department" stylesheets="@../css/core/combo-box.css" />
                         <SearchableComboBox fx:id="employeeComboBox" prefHeight="25.0" prefWidth="167.0" promptText="Employee" stylesheets="@../css/core/combo-box.css" />
                      </children>
                   </VBox>
@@ -80,8 +80,8 @@
                         <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="484.0" spacing="10.0">
                            <children>
                               <Label prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Organization:" />
-                              <SearchableComboBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="159.0" promptText="Company" stylesheets="@../css/core/combo-box.css" />
-                              <SearchableComboBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="159.0" promptText="Department" stylesheets="@../css/core/combo-box.css" />
+                              <SearchableComboBox fx:id="orgCompanyCheckBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="159.0" promptText="Company" stylesheets="@../css/core/combo-box.css" />
+                              <SearchableComboBox fx:id="orgDepartmentCheckBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="159.0" promptText="Department" stylesheets="@../css/core/combo-box.css" />
                            </children>
                         </HBox>
                         <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="484.0" spacing="10.0">

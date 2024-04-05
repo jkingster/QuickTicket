@@ -1,17 +1,18 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
+import io.jacobking.quickticket.gui.model.impl.CompanyModel;
+import io.jacobking.quickticket.gui.model.impl.DepartmentModel;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import io.jacobking.quickticket.tables.pojos.Employee;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -26,7 +27,11 @@ import java.util.ResourceBundle;
 
 public class EmployeeController extends Controller {
 
-    @FXML private SearchableComboBox<EmployeeModel> employeeComboBox;
+    @FXML private SearchableComboBox<CompanyModel>    companyComboBox;
+    @FXML private SearchableComboBox<DepartmentModel> departmentComboBox;
+    @FXML private SearchableComboBox<EmployeeModel>   employeeComboBox;
+    @FXML private SearchableComboBox<CompanyModel>    orgCompanyCheckBox;
+    @FXML private SearchableComboBox<DepartmentModel> orgDepartmentCheckBox;
 
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
@@ -44,14 +49,18 @@ public class EmployeeController extends Controller {
 
     @FXML private TextArea infoTextArea;
 
-    @FXML private TableView<TicketModel>           ticketTable;
-    @FXML private TableColumn<TicketModel, Void>   actionsColumn;
-    @FXML private TableColumn<TicketModel, String> ticketIdColumn;
+    @FXML private TableView<TicketModel>                  ticketTable;
+    @FXML private TableColumn<TicketModel, Void>          actionsColumn;
+    @FXML private TableColumn<TicketModel, String>        ticketIdColumn;
     @FXML private TableColumn<TicketModel, String>        titleColumn;
     @FXML private TableColumn<TicketModel, LocalDateTime> createdOnColumn;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
+        configureCompanyComboBox();
+        configureDepartmentComboBox();
         configureEmployeeComboBox();
+        configureOrgCompanyComboBox();
+        configureOrgDepartmentComboBox();
         configureWorkExtensionField();
         configureTicketTable();
         configureButtons();
@@ -104,7 +113,6 @@ public class EmployeeController extends Controller {
     }
 
     private void configureEmployeeComboBox() {
-        employeeComboBox.setItems(employee.getObservableList());
         employeeComboBox.setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(EmployeeModel employeeModel, boolean b) {
                 super.updateItem(employeeModel, b);
@@ -157,6 +165,8 @@ public class EmployeeController extends Controller {
         workPhoneField.setText(employeeModel.getWorkPhoneProperty());
         workPhoneExtensionField.setText(String.valueOf(employeeModel.getWorkExtensionProperty()));
         mobilePhoneField.setText(employeeModel.getMobilePhoneProperty());
+        orgCompanyCheckBox.getSelectionModel().select(company.getModel(employeeModel.getCompanyIdProperty()));
+        orgDepartmentCheckBox.getSelectionModel().select(department.getModel(employeeModel.getDepartmentIdProperty()));
     }
 
     @FXML private void onReset() {
@@ -174,6 +184,8 @@ public class EmployeeController extends Controller {
         infoTextArea.clear();
         employeeComboBox.getSelectionModel().clearSelection();
         ticketTable.setItems(null);
+        orgCompanyCheckBox.getSelectionModel().clearSelection();
+        orgDepartmentCheckBox.getSelectionModel().clearSelection();
     }
 
     private void configureWorkExtensionField() {
@@ -276,6 +288,8 @@ public class EmployeeController extends Controller {
         model.setWorkPhoneProperty(workPhoneExtensionField.getText());
         model.setMobilePhoneProperty(mobilePhoneField.getText());
         model.setMiscInfoProperty(infoTextArea.getText());
+        model.setCompanyIdProperty(getCompanyId());
+        model.setDepartmentIdProperty(getDepartmentId());
 
         if (employee.update(model)) {
             Notifications.showInfo("Update Successful", "All employee fields updated.");
@@ -292,5 +306,179 @@ public class EmployeeController extends Controller {
 
     @FXML private void onDepartmentManager() {
         Display.show(Route.DEPARTMENT);
+    }
+
+    private void configureCompanyComboBox() {
+        companyComboBox.setCellFactory(data -> new ListCell<>() {
+            @Override protected void updateItem(CompanyModel companyModel, boolean b) {
+                super.updateItem(companyModel, b);
+                if (b || companyModel == null) {
+                    setText(null);
+                    return;
+                }
+
+                setText(String.format("ID: %s | %s", companyModel.getId(), companyModel.getName()));
+            }
+        });
+
+        companyComboBox.setConverter(new StringConverter<CompanyModel>() {
+            @Override public String toString(CompanyModel companyModel) {
+                return companyModel != null ? companyModel.getName() : "";
+            }
+
+            @Override public CompanyModel fromString(String s) {
+                return null;
+            }
+        });
+
+        companyComboBox.getSelectionModel().selectedItemProperty()
+                .addListener(((observableValue, companyModel, t1) -> {
+                    if (t1 == null)
+                        return;
+
+                    final int companyId = t1.getId();
+                    if (companyId == 0) {
+                        departmentComboBox.setItems(department.getObservableList());
+                        return;
+                    }
+
+                    final ObservableList<DepartmentModel> departments = department.getObservableListByFilter(
+                            dm -> dm.getCompanyId() == companyId
+                    );
+
+                    departmentComboBox.setItems(departments);
+                    employeeComboBox.setItems(employee.getObservableListByFilter(
+                            em -> em.getCompanyIdProperty() == companyId
+                    ));
+                }));
+
+        companyComboBox.setItems(company.getObservableList());
+        companyComboBox.getSelectionModel().selectFirst();
+    }
+
+    private void configureDepartmentComboBox() {
+        departmentComboBox.setCellFactory(data -> new ListCell<>() {
+            @Override protected void updateItem(DepartmentModel departmentModel, boolean b) {
+                super.updateItem(departmentModel, b);
+                if (b || departmentModel == null) {
+                    setText(null);
+                    return;
+                }
+
+                setText(String.format("ID: %s | %s", departmentModel.getId(), departmentModel.getName()));
+            }
+        });
+
+        departmentComboBox.setConverter(new StringConverter<DepartmentModel>() {
+            @Override public String toString(DepartmentModel departmentModel) {
+                return departmentModel != null ? departmentModel.getName() : "";
+            }
+
+            @Override public DepartmentModel fromString(String s) {
+                return null;
+            }
+        });
+
+        departmentComboBox.getSelectionModel().selectedItemProperty()
+                .addListener(((observableValue, departmentModel, t1) -> {
+                    if (t1 == null)
+                        return;
+
+
+                    final int departmentId = t1.getId();
+                    final int companyId = companyComboBox.getSelectionModel().getSelectedItem().getId();
+                    if (companyId == 0 && departmentId == 0) {
+                        employeeComboBox.setItems(employee.getObservableList());
+                        return;
+                    }
+
+                    final ObservableList<EmployeeModel> employees = employee.getObservableListByFilter(
+                            em -> em.getCompanyIdProperty() == companyId && em.getDepartmentIdProperty() == departmentId
+                    );
+
+                    employeeComboBox.setItems(employees);
+                }));
+
+        departmentComboBox.getSelectionModel().selectFirst();
+    }
+
+    private void configureOrgCompanyComboBox() {
+        orgCompanyCheckBox.setCellFactory(data -> new ListCell<>() {
+            @Override protected void updateItem(CompanyModel companyModel, boolean b) {
+                super.updateItem(companyModel, b);
+                if (b || companyModel == null) {
+                    setText(null);
+                    return;
+                }
+
+                setText(String.format("ID: %s | %s", companyModel.getId(), companyModel.getName()));
+            }
+        });
+
+        orgCompanyCheckBox.setConverter(new StringConverter<CompanyModel>() {
+            @Override public String toString(CompanyModel companyModel) {
+                return companyModel != null ? companyModel.getName() : "";
+            }
+
+            @Override public CompanyModel fromString(String s) {
+                return null;
+            }
+        });
+
+        orgCompanyCheckBox.getSelectionModel().selectedItemProperty()
+                .addListener(((observableValue, companyModel, t1) -> {
+                    if (t1 == null)
+                        return;
+
+                    final int companyId = t1.getId();
+                    if (companyId == 0) {
+                        orgDepartmentCheckBox.setItems(department.getObservableList());
+                    } else if (companyId > 0) {
+                        orgDepartmentCheckBox.setItems(department.getObservableListByFilter(
+                                dm -> dm.getCompanyId() == companyId
+                        ));
+                    }
+                }));
+
+        orgCompanyCheckBox.setItems(company.getObservableList());
+    }
+
+
+    private void configureOrgDepartmentComboBox() {
+        orgDepartmentCheckBox.setCellFactory(data -> new ListCell<>() {
+            @Override protected void updateItem(DepartmentModel departmentModel, boolean b) {
+                super.updateItem(departmentModel, b);
+                if (b || departmentModel == null) {
+                    setText(null);
+                    return;
+                }
+
+                setText(String.format("ID: %s | %s", departmentModel.getId(), departmentModel.getName()));
+            }
+        });
+
+        orgDepartmentCheckBox.setConverter(new StringConverter<DepartmentModel>() {
+            @Override public String toString(DepartmentModel departmentModel) {
+                return departmentModel != null ? departmentModel.getName() : "";
+            }
+
+            @Override public DepartmentModel fromString(String s) {
+                return null;
+            }
+        });
+
+
+    }
+
+    private int getCompanyId() {
+        return orgCompanyCheckBox.getSelectionModel()
+                .getSelectedItem()
+                .getId();
+    }
+
+    private int getDepartmentId() {
+        return orgDepartmentCheckBox.getSelectionModel()
+                .getSelectedItem()
+                .getId();
     }
 }
