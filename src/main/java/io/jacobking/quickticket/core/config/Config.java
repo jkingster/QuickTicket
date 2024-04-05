@@ -28,11 +28,11 @@ public abstract class Config implements ConfigDefaulter {
         return getProperty(key, StringUtils.EMPTY);
     }
 
-    public <T> T getProperty(final String key, final Class<T> clazz, final T defaultValue) {
-        final Object object = properties.getProperty(key, null);
-        if (object == null)
+    public boolean parseBoolean(final String key, final boolean defaultValue) {
+        final String target = getProperty(key);
+        if (target.isEmpty())
             return defaultValue;
-        return clazz.cast(object);
+        return Boolean.parseBoolean(target);
     }
 
     public Object putProperty(final String key, final String value) {

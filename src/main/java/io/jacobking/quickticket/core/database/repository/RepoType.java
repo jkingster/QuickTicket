@@ -12,7 +12,8 @@ public enum RepoType {
     ALERT(new AlertSettingsRepository()),
     PROFILE(new ProfilePictureRepository()),
     COMPANY(new CompanyRepository()),
-    DEPARTMENT(new DepartmentRepository());
+    DEPARTMENT(new DepartmentRepository()),
+    FLYWAY(new FlywayRepository());
 
     private final Repository<? extends Entity> repository;
 

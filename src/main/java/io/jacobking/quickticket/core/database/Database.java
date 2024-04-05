@@ -49,10 +49,11 @@ public class Database {
 
     private void runMigrationHandler() {
         final boolean hasAutoMigrate = SystemConfig.getInstance()
-                .getProperty("auto_migrate", boolean.class, false);
+                .parseBoolean("auto_migrate", false);
 
-        if (!hasAutoMigrate)
+        if (!hasAutoMigrate) {
             return;
+        }
 
         final FlywayMigrator flywayMigrator = FlywayMigrator.init();
         if (!flywayMigrator.isPendingMigration())

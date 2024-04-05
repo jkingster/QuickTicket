@@ -2,7 +2,6 @@ package io.jacobking.quickticket.core.reload;
 
 import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.database.Database;
-import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 

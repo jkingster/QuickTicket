@@ -58,11 +58,6 @@
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab styleClass="t" text="Manage">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@../css/core/tab-pane.css" />
-               </content>
-            </Tab>
         </tabs>
       </TabPane>
    </children>

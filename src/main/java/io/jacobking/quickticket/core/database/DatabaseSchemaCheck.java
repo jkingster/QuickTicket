@@ -5,7 +5,13 @@ import java.sql.*;
 
 public class DatabaseSchemaCheck {
 
-    private static final String[] REQUIRED_TABLE_NAMES = {"COMMENT", "EMAIL", "EMPLOYEE", "JOURNAL", "SCHEMA_VERSION", "TICKET", "ALERT_SETTINGS"};
+    private static final String[] REQUIRED_TABLE_NAMES =
+            {
+                    "COMMENT", "EMAIL", "EMPLOYEE", "JOURNAL",
+                    "SCHEMA_VERSION", "TICKET", "ALERT_SETTINGS",
+                    "COMPANY", "FLYWAY_SCHEMA_HISTORY", "DEPARTMENT",
+                    "PROFILE_PICTURE"
+            };
 
     private final File       file;
     private       Connection connection;
@@ -35,11 +41,11 @@ public class DatabaseSchemaCheck {
             final ResultSet set = meta.getTables(null, null, null, new String[]{"TABLE"});
 
             while (set.next()) {
-               final String tableName = set.getString("TABLE_NAME");
-               if (!containsTable(tableName)) {
-                   this.isValidDatabase = false;
-                   break;
-               }
+                final String tableName = set.getString("TABLE_NAME");
+                if (!containsTable(tableName)) {
+                    this.isValidDatabase = false;
+                    break;
+                }
             }
         } catch (SQLException e) {
             this.isValidDatabase = false;

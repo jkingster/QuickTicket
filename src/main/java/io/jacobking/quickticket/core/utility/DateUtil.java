@@ -8,7 +8,9 @@ public class DateUtil {
     public enum DateFormat {
         DATE("MM-dd-yyyy"),
         DATE_TWO("MMddyyyy"),
-        DATE_TIME_ONE("MM/dd/yyyy HH:mm:ss a");
+        DATE_TIME_ONE("MM/dd/yyyy HH:mm:ss a"),
+        DATE_TIME_TWO("MM-dd-yyyy_HH-mm-ss"),
+        DATE_TIME_EXTENDED("MM-dd-yyyy HH:mm:ss.SSS");
 
         private       DateTimeFormatter formatter;
         private final String            pattern;
@@ -41,5 +43,9 @@ public class DateUtil {
 
     public static String formatDateTime(final DateFormat dateFormat, final LocalDateTime localDateTime) {
         return localDateTime.format(dateFormat.formatter);
+    }
+
+    public static String formatDateTime(final DateFormat dateFormat, final String string) {
+        return LocalDateTime.parse(string, dateFormat.formatter).toString();
     }
 }

@@ -65,6 +65,7 @@ public class RepoCrud {
                 case PROFILE    -> (Repository<? extends Entity>) new ProfilePictureRepository();
                 case COMPANY    -> (Repository<? extends Entity>) new CompanyRepository();
                 case DEPARTMENT -> (Repository<? extends Entity>) new DepartmentRepository();
+                case FLYWAY     -> (Repository<? extends Entity>) new FlywayRepository();
             });
         }
     }
