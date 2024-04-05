@@ -28,6 +28,13 @@ public abstract class Config implements ConfigDefaulter {
         return getProperty(key, StringUtils.EMPTY);
     }
 
+    public <T> T getProperty(final String key, final Class<T> clazz, final T defaultValue) {
+        final Object object = properties.getProperty(key, null);
+        if (object == null)
+            return defaultValue;
+        return clazz.cast(object);
+    }
+
     public Object putProperty(final String key, final String value) {
         final Object insert = properties.setProperty(key, value);
         if (insert != null) {

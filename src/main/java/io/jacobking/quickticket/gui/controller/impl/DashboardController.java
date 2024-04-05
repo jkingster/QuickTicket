@@ -32,7 +32,7 @@ public class DashboardController extends Controller {
 
     @FXML
     private void onDatabase() {
-        Display.show(Route.DATABASE);
+        Display.show(Route.CONFIGURATION);
     }
 
     @FXML

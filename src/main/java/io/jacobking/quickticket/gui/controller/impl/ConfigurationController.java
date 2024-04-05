@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class DatabaseController extends Controller {
+public class ConfigurationController extends Controller {
 
     @FXML private Label     databaseVersionLabel;
     @FXML private TextField databaseUrl;

@@ -7,7 +7,7 @@ public enum Route {
     ABOUT("About"),
     SMTP("SMTP"),
     CHANGELOG("Changelog"),
-    DATABASE("Database"),
+    CONFIGURATION("Configuration"),
     SETTINGS("Settings"),
     DEPARTMENT("Department"),
     COMPANY("Company");

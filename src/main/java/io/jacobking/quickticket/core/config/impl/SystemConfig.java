@@ -17,6 +17,7 @@ public class SystemConfig extends Config {
 
     @Override public void putDefaults() {
         putProperty("db_url", FileIO.TARGET_DATABASE);
+        putProperty("auto_migrate", "true");
     }
 
     private void checkFileSystem() {

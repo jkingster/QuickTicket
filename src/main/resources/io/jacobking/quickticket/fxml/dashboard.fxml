@@ -19,7 +19,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="System">
                   <items>
-                        <MenuItem mnemonicParsing="false" onAction="#onDatabase" text="Database" />
+                        <MenuItem mnemonicParsing="false" onAction="#onConfiguration" text="Configuration" />
                         <MenuItem mnemonicParsing="false" onAction="#onSMTP" text="SMTP" />
                         <MenuItem mnemonicParsing="false" onAction="#onSettings" text="Settings" />
                         <SeparatorMenuItem mnemonicParsing="false" />
