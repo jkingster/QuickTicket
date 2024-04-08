@@ -3,7 +3,6 @@ package io.jacobking.quickticket.core;
 import io.jacobking.quickticket.core.config.impl.FlywayConfig;
 import io.jacobking.quickticket.core.config.impl.SystemConfig;
 import io.jacobking.quickticket.core.database.Database;
-import io.jacobking.quickticket.core.lock.InstanceLock;
 import javafx.application.Platform;
 
 import java.util.concurrent.ExecutorService;

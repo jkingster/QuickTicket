@@ -3,7 +3,7 @@ package io.jacobking.quickticket.gui.controller.impl;
 import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.config.impl.SystemConfig;
 import io.jacobking.quickticket.core.database.DatabaseSchemaCheck;
-import io.jacobking.quickticket.core.reload.ReloadMechanism;
+import io.jacobking.quickticket.core.ReloadMechanism;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.alert.Alerts;

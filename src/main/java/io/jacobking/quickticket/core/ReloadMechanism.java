@@ -1,4 +1,4 @@
-package io.jacobking.quickticket.core.reload;
+package io.jacobking.quickticket.core;
 
 import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.database.Database;

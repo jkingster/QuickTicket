@@ -1,7 +1,6 @@
-package io.jacobking.quickticket.core.lock;
+package io.jacobking.quickticket.core;
 
 
-import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import javafx.scene.control.ButtonType;
