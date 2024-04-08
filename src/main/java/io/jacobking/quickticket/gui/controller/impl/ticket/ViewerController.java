@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.email.EmailResolvedSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
@@ -61,6 +62,7 @@ public class ViewerController extends Controller {
     @FXML private Button                 attachJournalButton;
     @FXML private Button                 viewJournalButton;
     @FXML private ListView<CommentModel> commentList;
+
 
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.email.EmailResolvedSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
@@ -71,6 +72,7 @@ public class TicketController extends Controller {
     @FXML private Pane activePane;
     @FXML private Pane pausedPane;
     @FXML private Pane resolvedPane;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();

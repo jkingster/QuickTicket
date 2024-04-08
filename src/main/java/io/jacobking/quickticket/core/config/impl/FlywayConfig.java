@@ -17,23 +17,16 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 public class FlywayConfig extends Config {
-    private static final String       SOURCE_PATH = FileIO.TARGET_SQL_FOLDER;
-    private static       FlywayConfig instance;
+    private static final String SOURCE_PATH = FileIO.TARGET_SQL_FOLDER;
 
     public FlywayConfig() {
         super(FileIO.TARGET_FLYWAY_PROPERTIES);
+        checkForConfig();
         copyOverScripts();
     }
 
-    public static FlywayConfig getInstance() {
-        if (instance == null) {
-            instance = new FlywayConfig();
-        }
-        return instance;
-    }
-
     @Override public void putDefaults() {
-        putProperty("flyway.url", String.format("jdbc:sqlite:%s", SystemConfig.getInstance().getProperty("db_url")));
+        putProperty("flyway.url", String.format("jdbc:sqlite:%s", FileIO.TARGET_DATABASE));
         putProperty("flyway.locations", "filesystem:" + SOURCE_PATH);
     }
 

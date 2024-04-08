@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.email.EmailConfig;
 import io.jacobking.quickticket.core.email.EmailSender;
 import io.jacobking.quickticket.core.type.TransportType;

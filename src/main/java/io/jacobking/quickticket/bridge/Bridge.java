@@ -2,6 +2,7 @@ package io.jacobking.quickticket.bridge;
 
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.Entity;
+import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.model.ViewModel;
 import javafx.application.Platform;
@@ -13,10 +14,12 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
-    private final ObservableList<V> observableList;
-    private final RepoType          repoType;
+    private final   ObservableList<V> observableList;
+    private final   RepoType          repoType;
+    protected final RepoCrud          crud;
 
-    public Bridge(final RepoType repoType) {
+    public Bridge(final Database database, final RepoType repoType) {
+        this.crud = database.call();
         this.observableList = FXCollections.observableArrayList();
         this.repoType = repoType;
         loadEntities();
@@ -24,7 +27,7 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
     }
 
     protected void loadEntities() {
-        final List<E> entities = Database.call().getAll(repoType);
+        final List<E> entities = crud.getAll(repoType);
         if (entities.isEmpty())
             return;
 
@@ -37,7 +40,7 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
     public abstract V convertEntity(final E entity);
 
     public E fetch(final int id) {
-        return Database.call().getById(repoType, id);
+        return crud.getById(repoType, id);
     }
 
     public V getModel(final int id) {
@@ -64,7 +67,7 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
     }
 
     public V createModel(final E entity) {
-        final E returnedEntity = Database.call().save(repoType, entity);
+        final E returnedEntity = crud.save(repoType, entity);
         final V model = convertEntity(returnedEntity);
 
         if (model != null) {
@@ -75,7 +78,7 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
     }
 
     public boolean update(final V model) {
-        return Database.call().update(repoType, model.toEntity());
+        return crud.update(repoType, model.toEntity());
     }
 
     public void remove(final int id) {
@@ -110,7 +113,7 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
                 if (change.wasRemoved()) {
                     change.getRemoved().forEach(removed -> {
                         final int id = removed.getId();
-                        if (!Database.call().deleteWhere(repoType, id)) {
+                        if (!crud.deleteWhere(repoType, id)) {
                             // TODO: Alert?
                         }
                     });

@@ -14,8 +14,8 @@ import static io.jacobking.quickticket.Tables.COMMENT;
 
 public class CommentBridge extends Bridge<Comment, CommentModel> {
 
-    public CommentBridge() {
-        super(RepoType.COMMENT);
+    public CommentBridge(final Database database) {
+        super(database, RepoType.COMMENT);
     }
 
     public ObservableList<CommentModel> getCommentsByTicketId(final int ticketId) {
@@ -28,7 +28,7 @@ public class CommentBridge extends Bridge<Comment, CommentModel> {
 
     public void removeCommentsByTicketId(final int ticketId) {
         Platform.runLater(() -> getObservableList().removeIf(cm -> cm.getTicketId() == ticketId));
-        if (!Database.call().deleteWhere(RepoType.COMMENT, DSL.condition(COMMENT.TICKET_ID.eq(ticketId)))) {
+        if (!crud.deleteWhere(RepoType.COMMENT, DSL.condition(COMMENT.TICKET_ID.eq(ticketId)))) {
             Notifications.showError(
                     "Failed to delete comments.",
                     "Could not delete all comments associated with deleted ticket."

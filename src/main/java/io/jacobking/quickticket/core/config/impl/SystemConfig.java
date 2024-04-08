@@ -4,18 +4,11 @@ import io.jacobking.quickticket.core.config.Config;
 import io.jacobking.quickticket.core.utility.FileIO;
 
 public class SystemConfig extends Config {
-    private static SystemConfig instance;
 
     public SystemConfig() {
         super(FileIO.TARGET_PROPERTIES);
+        checkForConfig();
         checkFileSystem();
-    }
-
-    public static synchronized SystemConfig getInstance() {
-        if (instance == null) {
-            instance = new SystemConfig();
-        }
-        return instance;
     }
 
     @Override public void putDefaults() {

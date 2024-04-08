@@ -1,74 +1,59 @@
 package io.jacobking.quickticket.bridge;
 
 import io.jacobking.quickticket.bridge.impl.*;
+import io.jacobking.quickticket.core.database.Database;
 
 public class BridgeContext {
 
-    private static BridgeContext instance = null;
+    private final CompanyBridge       company;
+    private final DepartmentBridge    department;
+    private final EmployeeBridge      employee;
+    private final TicketBridge        ticket;
+    private final CommentBridge       comment;
+    private final EmailBridge         email;
+    private final AlertSettingsBridge alertSettings;
+    private final FlywayBridge        flyway;
 
-    private final TicketBridge  ticketBridge;
-    private final CommentBridge commentBridge;
-
-    private final EmployeeBridge employeeBridge;
-    private final EmailBridge    emailBridge;
-
-    private final AlertSettingsBridge  alertSettingsBridge;
-    private final CompanyBridge        companyBridge;
-    private final DepartmentBridge     departmentBridge;
-    private final FlywayBridge         flywayBridge;
-
-    private BridgeContext() {
-        this.ticketBridge = new TicketBridge();
-        this.commentBridge = new CommentBridge();
-        this.employeeBridge = new EmployeeBridge();
-        this.emailBridge = new EmailBridge();
-        this.alertSettingsBridge = new AlertSettingsBridge();
-        this.companyBridge = new CompanyBridge();
-        this.departmentBridge = new DepartmentBridge();
-        this.flywayBridge = new FlywayBridge();
+    public BridgeContext(final Database database) {
+        this.company = new CompanyBridge(database);
+        this.department = new DepartmentBridge(database);
+        this.employee = new EmployeeBridge(database);
+        this.ticket = new TicketBridge(database);
+        this.comment = new CommentBridge(database);
+        this.email = new EmailBridge(database);
+        this.alertSettings = new AlertSettingsBridge(database);
+        this.flyway = new FlywayBridge(database);
     }
 
-    public static BridgeContext getInstance() {
-        if (instance == null) instance = new BridgeContext();
-        return instance;
+    public CompanyBridge getCompany() {
+        return company;
     }
 
-    public static void rebuildInstance() {
-        instance = null;
-        getInstance();
+    public DepartmentBridge getDepartment() {
+        return department;
     }
 
-    public static TicketBridge ticket() {
-        return getInstance().ticketBridge;
+    public EmployeeBridge getEmployee() {
+        return employee;
     }
 
-    public static CommentBridge comment() {
-        return getInstance().commentBridge;
+    public TicketBridge getTicket() {
+        return ticket;
     }
 
-    public static EmployeeBridge employee() {
-        return getInstance().employeeBridge;
+    public CommentBridge getComment() {
+        return comment;
     }
 
-    public static EmailBridge email() {
-        return getInstance().emailBridge;
+    public EmailBridge getEmail() {
+        return email;
     }
 
-
-    public static AlertSettingsBridge alertSettings() {
-        return getInstance().alertSettingsBridge;
+    public AlertSettingsBridge getAlertSettings() {
+        return alertSettings;
     }
 
-
-    public static CompanyBridge company() {
-        return getInstance().companyBridge;
-    }
-
-    public static DepartmentBridge department() {
-        return getInstance().departmentBridge;
-    }
-
-    public static FlywayBridge flyway() {
-        return getInstance().flywayBridge;
+    public FlywayBridge getFlyway() {
+        return flyway;
     }
 }

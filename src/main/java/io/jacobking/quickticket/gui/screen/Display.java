@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Display {
-    private static final Display            instance       = new Display();
+    private static Display display;
+
     private static final String             SCREEN_PACKAGE = "io.jacobking.quickticket.gui.screen.impl.%sScreen";
     private final        Map<Route, Screen> screens        = new HashMap<>();
 
@@ -17,8 +18,11 @@ public class Display {
         loadScreens();
     }
 
-    public static Display getInstance() {
-        return instance;
+    public static synchronized  Display getInstance() {
+        if (display == null) {
+            display = new Display();
+        }
+        return display;
     }
 
     public static void show(final Route route, final DataRelay dataRelay) {

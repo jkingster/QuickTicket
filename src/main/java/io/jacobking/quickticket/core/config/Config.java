@@ -1,28 +1,21 @@
 package io.jacobking.quickticket.core.config;
 
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.gui.alert.Alerts;
 import org.jooq.tools.StringUtils;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 public abstract class Config implements ConfigDefaulter {
 
+    private final Properties properties = new Properties();
 
-    private final String     path;
-    private final Properties properties;
-
-    private boolean configExists = false;
+    private final String filePath;
 
     public Config(final String path) {
-        this.path = path;
-        this.properties = new Properties();
-        readProperties();
+        this.filePath = path;
     }
 
     public String getProperty(final String key, final String defaultValue) {
@@ -33,63 +26,53 @@ public abstract class Config implements ConfigDefaulter {
         return getProperty(key, StringUtils.EMPTY);
     }
 
-    public boolean parseBoolean(final String key, final boolean defaultValue) {
-        final String target = getProperty(key);
-        if (target.isEmpty())
-            return defaultValue;
-        return Boolean.parseBoolean(target);
+    public boolean parseBoolean(final String key) {
+        return Boolean.parseBoolean(getProperty(key));
     }
 
     public Object putProperty(final String key, final String value) {
-        final Object insert = properties.setProperty(key, value);
-        if (insert != null) {
+        final Object object = properties.setProperty(key, value);
+        if (object != null) {
             storeProperties();
         }
-        return insert;
+        return object;
+    }
+
+    public void checkForConfig() {
+        if (FileIO.fileExists(filePath)) {
+            loadProperties();
+            return;
+        }
+        createConfig();
+    }
+
+    private void createConfig() {
+        if (FileIO.createFile(filePath)) {
+            System.out.println(filePath);
+            putDefaults();
+            storeProperties();
+        }
+    }
+
+    private void loadProperties() {
+        try (final FileInputStream fileInputStream = new FileInputStream(filePath)) {
+            properties.load(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void storeProperties() {
+        if (!properties.isEmpty()) {
+            try (final FileOutputStream fileOutputStream = new FileOutputStream(filePath)) {
+                properties.store(fileOutputStream, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Properties getProperties() {
         return properties;
-    }
-
-    public void readProperties() {
-        if (!FileIO.fileExists(path)) {
-            createProperties(path);
-            return;
-        }
-
-        try (final FileInputStream fileInputStream = new FileInputStream(path)) {
-            properties.load(fileInputStream);
-            this.configExists = true;
-        } catch (IOException e) {
-            Alerts.showException("Failed to read properties file.", e.fillInStackTrace());
-        }
-    }
-
-    public void storeProperties() {
-        try (final FileOutputStream fileOutputStream = new FileOutputStream(path)) {
-            properties.store(fileOutputStream, null);
-        } catch (IOException e) {
-            Alerts.showException("Failed to store properties file.", e.fillInStackTrace());
-        }
-    }
-
-    public boolean doesConfigExist() {
-        return configExists;
-    }
-
-    public Config chain(final Runnable runnable) {
-        if (doesConfigExist()) {
-            runnable.run();
-        }
-        return this;
-    }
-
-    private void createProperties(final String path) {
-        if (FileIO.createFile(path)) {
-            this.configExists = true;
-            putDefaults();
-            storeProperties();
-        }
     }
 }

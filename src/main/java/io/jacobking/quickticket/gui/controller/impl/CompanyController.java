@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
@@ -29,6 +30,7 @@ public class CompanyController extends Controller {
     @FXML private Button createButton;
     @FXML private Button updateButton;
     @FXML private Button deleteButton;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureCompanyComboBox();

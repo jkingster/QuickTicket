@@ -43,7 +43,6 @@ public class FileIO {
         try {
             return file.createNewFile();
         } catch (IOException e) {
-            Alerts.showException("Failed to create file.", e.fillInStackTrace());
             return false;
         }
     }
@@ -53,7 +52,6 @@ public class FileIO {
         try (final FileWriter ignored = new FileWriter(file)) {
             return true;
         } catch (IOException e) {
-            Alerts.showException("Failed to create file.", e.fillInStackTrace());
             return false;
         }
     }
@@ -63,7 +61,6 @@ public class FileIO {
             FileUtils.copyFile(source, destination);
             return true;
         } catch (IOException e) {
-            Alerts.showException("Failed to copy file.", e.fillInStackTrace());
             return false;
         }
     }

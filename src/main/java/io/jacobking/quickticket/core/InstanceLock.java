@@ -7,17 +7,10 @@ import javafx.scene.control.ButtonType;
 
 public class InstanceLock {
 
-    private static InstanceLock instance;
+    private boolean isUnlocked = false;
 
-    private InstanceLock() {
+    public InstanceLock() {
         checkLock();
-    }
-
-    public static synchronized InstanceLock getInstance() {
-        if (instance == null) {
-            instance = new InstanceLock();
-        }
-        return instance;
     }
 
     public void deleteLock() {
@@ -59,8 +52,7 @@ public class InstanceLock {
                     "Please submit bug report.");
             return;
         }
-
-        QuickTicket.launch();
+        this.isUnlocked = true;
     }
 
     private void attemptToDeleteAndStart() {
@@ -73,8 +65,10 @@ public class InstanceLock {
             );
             return;
         }
-        QuickTicket.launch();
+        this.isUnlocked = true;
     }
 
-
+    public boolean isUnlocked() {
+        return isUnlocked;
+    }
 }

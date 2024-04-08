@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.email.EmailConfig;
 import io.jacobking.quickticket.core.email.EmailSender;
 import io.jacobking.quickticket.core.type.PriorityType;
@@ -63,6 +64,7 @@ public class TicketCreatorController extends Controller {
     @FXML private Button createButton;
 
     @FXML private CheckBox emailCheckBox;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         setDataRelay();

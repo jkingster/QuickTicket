@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.utility.ChangelogReader;
 import io.jacobking.quickticket.gui.controller.Controller;
 import javafx.collections.FXCollections;
@@ -17,6 +18,7 @@ import java.util.ResourceBundle;
 
 public class ChangelogController extends Controller {
     @FXML private ListView<ChangelogReader.Changelog> changeList;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         changeList.setItems(FXCollections.observableArrayList(ChangelogReader.getChanges()));

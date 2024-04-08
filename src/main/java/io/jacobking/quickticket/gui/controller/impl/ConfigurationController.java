@@ -1,17 +1,13 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.bridge.BridgeContext;
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.config.impl.SystemConfig;
-import io.jacobking.quickticket.core.database.DatabaseSchemaCheck;
-import io.jacobking.quickticket.core.ReloadMechanism;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.FlywayModel;
-import io.jacobking.quickticket.gui.screen.Display;
-import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -57,13 +53,14 @@ public class ConfigurationController extends Controller {
     @FXML private Button copyBackupButton;
     @FXML private Button openBackupButton;
 
+
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
         configureButtons();
 
         configurationField.setText(FileIO.TARGET_PROPERTIES);
-        autoMigrateField.setText(SystemConfig.getInstance().getProperty("auto_migrate"));
-        databaseField.setText(SystemConfig.getInstance().getProperty("db_url"));
+        autoMigrateField.setText(core.getSystemConfig().getProperty("db_url"));
+        databaseField.setText(core.getSystemConfig().getProperty("auto_migraton"));
         flywayField.setText(FileIO.TARGET_FLYWAY_PROPERTIES);
         migrationField.setText(FileIO.TARGET_SQL_FOLDER);
         backupField.setText(FileIO.TARGET_BACKUP_FOLDER);
@@ -76,38 +73,15 @@ public class ConfigurationController extends Controller {
         scriptColumn.setCellValueFactory(data -> data.getValue().scriptProperty());
         checksumColumn.setCellValueFactory(data -> data.getValue().checksumProperty().asString());
         installedOnColumn.setCellValueFactory(data -> data.getValue().installedOnProperty());
-        flywayTable.setItems(BridgeContext.flyway().getObservableList());
+        flywayTable.setItems(flyway.getObservableList());
     }
 
     @FXML private void onImport() {
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a database to import.");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Database Type", "*.db", "*.sqlite", "*.sqlite3")
-        );
-        fileChooser.setInitialDirectory(new File(FileIO.TARGET_BACKUP_FOLDER));
 
-        final File file = fileChooser.showOpenDialog(copyBackupButton.getScene().getWindow());
-        if (file == null)
-            return;
-
-        final DatabaseSchemaCheck databaseSchemaCheck = new DatabaseSchemaCheck(file);
-        if (!databaseSchemaCheck.isValidDatabase()) {
-            Alerts.showError(
-                    "Failure!",
-                    "Could not import database.",
-                    "Does not match required schema."
-            );
-            return;
-        }
-
-        SystemConfig.getInstance().putProperty("db_url", file.getPath());
-        ReloadMechanism.reload();
-        Display.show(Route.CONFIGURATION);
     }
 
     @FXML private void onBackup() {
-        final File source = new File(SystemConfig.getInstance().getProperty("db_url"));
+        final File source = new File(core.getSystemConfig().getProperty("db_url"));
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(FileIO.TARGET_BACKUP_FOLDER));
 
@@ -150,11 +124,11 @@ public class ConfigurationController extends Controller {
     }
 
     @FXML private void onCopyDatabase() {
-        copyToClipBoard(SystemConfig.getInstance().getProperty("db_url"));
+        copyToClipBoard(core.getSystemConfig().getProperty("db_url"));
     }
 
     @FXML private void onOpenDatabase() {
-        openPath(SystemConfig.getInstance().getProperty("db_url"));
+        openPath(core.getSystemConfig().getProperty("db_url"));
     }
 
     @FXML private void onCopyFlyway() {

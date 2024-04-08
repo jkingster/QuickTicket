@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.bridge.impl;
 
 import io.jacobking.quickticket.bridge.Bridge;
-import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
@@ -20,8 +19,8 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
 
     private ObservableList<TicketModel> baseUnfilteredList;
 
-    public TicketBridge() {
-        super(RepoType.TICKET);
+    public TicketBridge(final Database database) {
+        super(database, RepoType.TICKET);
     }
 
     @Override protected void loadEntities() {
@@ -42,15 +41,9 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
         });
     }
 
-
     @Override
     public TicketModel convertEntity(Ticket entity) {
         return new TicketModel(entity);
-    }
-
-    @Override public void remove(int id) {
-        super.remove(id);
-        BridgeContext.comment().removeCommentsByTicketId(id);
     }
 
     public FilteredList<TicketModel> getFilteredList(final Predicate<TicketModel> predicate) {
@@ -58,8 +51,7 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
     }
 
     public TicketModel getLastViewed() {
-        final Ticket ticket = Database.call()
-                .getContext()
+        final Ticket ticket = crud.getContext()
                 .selectFrom(TICKET)
                 .orderBy(TICKET.LAST_OPENED_TIMESTAMP.desc())
                 .limit(1)

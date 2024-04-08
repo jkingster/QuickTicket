@@ -91,7 +91,7 @@ public class Screen {
         stage.setScene(scene);
         stage.getScene().getStylesheets().add(0, NotificationBuilder.getStylesheet());
         if (this.route == Route.DASHBOARD) {
-            stage.setOnCloseRequest(event -> QuickTicket.shutdown());
+            stage.setOnCloseRequest(event -> QuickTicket.getInstance().shutdown());
         }
     }
 

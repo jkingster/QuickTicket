@@ -18,4 +18,11 @@ public final class Checks {
         }
     }
 
+    public static void ifNotNullRun(final Runnable runnable, final Object... nullableObjects) {
+        for (final Object object : nullableObjects) {
+            if (object == null)
+                return;
+        }
+        runnable.run();
+    }
 }

@@ -55,6 +55,7 @@ public class EmployeeController extends Controller {
     @FXML private TableColumn<TicketModel, String>        titleColumn;
     @FXML private TableColumn<TicketModel, LocalDateTime> createdOnColumn;
 
+
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureCompanyComboBox();
         configureDepartmentComboBox();
@@ -83,8 +84,8 @@ public class EmployeeController extends Controller {
                 .setWorkPhone(workPhoneField.getText())
                 .setTitle(titleField.getText())
                 .setWorkExtension(getExtension())
-                .setCompanyId(-1)
-                .setDepartmentId(-1)
+                .setCompanyId(getCompanyId())
+                .setDepartmentId(getDepartmentId())
         );
 
         if (model != null) {
@@ -471,14 +472,16 @@ public class EmployeeController extends Controller {
     }
 
     private int getCompanyId() {
-        return orgCompanyCheckBox.getSelectionModel()
-                .getSelectedItem()
-                .getId();
+        final CompanyModel companyModel = orgCompanyCheckBox
+                .getSelectionModel()
+                .getSelectedItem();
+        return companyModel == null ? 0 : companyModel.getId();
     }
 
     private int getDepartmentId() {
-        return orgDepartmentCheckBox.getSelectionModel()
-                .getSelectedItem()
-                .getId();
+        final DepartmentModel departmentModel = orgDepartmentCheckBox
+                .getSelectionModel()
+                .getSelectedItem();
+        return departmentModel == null ? 0 : departmentModel.getId();
     }
 }

@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.core.database;
 
-import io.jacobking.quickticket.core.config.impl.SystemConfig;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.FileIO;
 import org.apache.commons.io.FileUtils;
@@ -17,12 +16,12 @@ public class DatabaseBackup {
 
     private boolean wasBackedUp = false;
 
-    private DatabaseBackup() {
-        this.databasePath = SystemConfig.getInstance().getProperty("db_url");
+    private DatabaseBackup(final String dbUrl) {
+        this.databasePath = dbUrl;
     }
 
-    public static DatabaseBackup init() {
-        return new DatabaseBackup();
+    public static DatabaseBackup init(final String dbUrl) {
+        return new DatabaseBackup(dbUrl);
     }
 
     public void backup() {

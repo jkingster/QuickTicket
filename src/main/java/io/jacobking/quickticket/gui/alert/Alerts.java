@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.gui.alert;
 
-import io.jacobking.quickticket.bridge.BridgeContext;
+import io.jacobking.quickticket.core.QuickTicket;
+import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.gui.alert.builder.AlertBuilder;
 import io.jacobking.quickticket.gui.alert.builder.InputDialogBuilder;
 import io.jacobking.quickticket.gui.model.impl.AlertSettingsModel;
@@ -11,14 +12,17 @@ import java.util.Optional;
 
 public class Alerts {
 
-    private static final AlertSettingsModel settings = BridgeContext.alertSettings().getModel(0);
+    private static final AlertSettingsModel settings = Database.getInstance()
+            .getBridgeContext()
+            .getAlertSettings()
+            .getModel(0);
 
     private Alerts() {
 
     }
 
     public static void showInfo(final String title, final String header, final String content) {
-        if (settings.isDisableInfoAlertsProperty())
+        if (settings != null && settings.isDisableInfoAlertsProperty())
             return;
 
         new AlertBuilder(Alert.AlertType.INFORMATION)
@@ -29,7 +33,7 @@ public class Alerts {
     }
 
     public static void showError(final String title, final String header, final String content) {
-        if (settings.isDisableErrorAlertsProperty())
+        if (settings != null && settings.isDisableErrorAlertsProperty())
             return;
 
         new AlertBuilder(Alert.AlertType.ERROR)
@@ -40,7 +44,7 @@ public class Alerts {
     }
 
     public static void showWarning(final String title, final String header, final String content) {
-        if (settings.isDisableWarningAlertsProperty())
+        if (settings != null &&settings.isDisableWarningAlertsProperty())
             return;
 
         new AlertBuilder(Alert.AlertType.WARNING)
@@ -52,7 +56,7 @@ public class Alerts {
 
     // HANDLE THIS EXTERNALLY WHERE WE NEED CONFIRMATION. NOT INSIDE THE BASE METHOD.
     public static Optional<ButtonType> showConfirmation(final Runnable preProcessing, final String title, final String header, final String content, final ButtonType... buttonTypes) {
-        if (settings.isDisableConfirmationAlertsProperty()) {
+        if (settings != null &&settings.isDisableConfirmationAlertsProperty()) {
             preProcessing.run();
             return Optional.empty();
         }

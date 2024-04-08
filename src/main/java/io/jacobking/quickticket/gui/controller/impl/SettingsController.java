@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.AlertSettingsModel;
@@ -30,6 +31,7 @@ public class SettingsController extends Controller {
 
     @FXML private VBox alertsModule;
     @FXML private VBox notificationsModule;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         this.alertSettingsModel = alertSettings.getModel(0);

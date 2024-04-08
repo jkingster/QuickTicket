@@ -12,6 +12,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        QuickTicket.launch();
+       QuickTicket.getInstance();
+       QuickTicket.getInstance().checkLock();
     }
 }
