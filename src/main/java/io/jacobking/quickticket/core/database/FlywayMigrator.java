@@ -18,7 +18,7 @@ public class FlywayMigrator {
                 .dataSource(DB_URL, null, null)
                 .validateMigrationNaming(true)
                 .baselineOnMigrate(true)
-                .baselineVersion("1.1")
+                .baselineVersion("base")
                 .load();
 
         checkForPendingMigrations();

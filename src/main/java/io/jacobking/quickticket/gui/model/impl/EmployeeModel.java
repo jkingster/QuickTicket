@@ -15,13 +15,12 @@ public class EmployeeModel extends ViewModel<Employee> {
     private final StringProperty  titleProperty         = new SimpleStringProperty();
     private final IntegerProperty companyIdProperty     = new SimpleIntegerProperty();
     private final IntegerProperty departmentIdProperty  = new SimpleIntegerProperty();
-    private final IntegerProperty profilePictureId      = new SimpleIntegerProperty();
     private final StringProperty  workPhoneProperty     = new SimpleStringProperty();
     private final IntegerProperty workExtensionProperty = new SimpleIntegerProperty();
     private final StringProperty  mobilePhoneProperty   = new SimpleStringProperty();
     private final StringProperty  miscInfoProperty = new SimpleStringProperty();
 
-    public EmployeeModel(int id, String firstName, String lastName, String email, String title, int companyId, int departmentId, int profilePictureId,
+    public EmployeeModel(int id, String firstName, String lastName, String email, String title, int companyId, int departmentId,
                          String workPhone, int workExtension, String mobilePhone, String miscInfo) {
         super(id);
         this.firstNameProperty.setValue(firstName);
@@ -30,7 +29,6 @@ public class EmployeeModel extends ViewModel<Employee> {
         this.titleProperty.setValue(title);
         this.companyIdProperty.setValue(companyId);
         this.departmentIdProperty.setValue(departmentId);
-        this.profilePictureId.setValue(profilePictureId);
         this.workPhoneProperty.setValue(workPhone);
         this.workExtensionProperty.setValue(workExtension);
         this.mobilePhoneProperty.setValue(mobilePhone);
@@ -46,7 +44,6 @@ public class EmployeeModel extends ViewModel<Employee> {
                 employee.getTitle(),
                 employee.getCompanyId(),
                 employee.getDepartmentId(),
-                employee.getProfilePicture(),
                 employee.getWorkPhone(),
                 employee.getWorkExtension(),
                 employee.getMobilePhone(),
@@ -115,18 +112,6 @@ public class EmployeeModel extends ViewModel<Employee> {
         this.departmentIdProperty.set(departmentIdProperty);
     }
 
-    public int getProfilePictureId() {
-        return profilePictureId.get();
-    }
-
-    public IntegerProperty profilePictureIdProperty() {
-        return profilePictureId;
-    }
-
-    public void setProfilePictureId(int profilePictureId) {
-        this.profilePictureId.set(profilePictureId);
-    }
-
     public String getWorkPhoneProperty() {
         return workPhoneProperty.get();
     }
@@ -190,7 +175,6 @@ public class EmployeeModel extends ViewModel<Employee> {
                 .setTitle(getTitle())
                 .setCompanyId(getCompanyIdProperty())
                 .setDepartmentId(getDepartmentIdProperty())
-                .setProfilePicture(getProfilePictureId())
                 .setWorkPhone(getWorkPhoneProperty())
                 .setMobilePhone(getMobilePhoneProperty())
                 .setComments(getMiscInfoProperty())

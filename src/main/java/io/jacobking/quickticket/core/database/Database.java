@@ -9,22 +9,23 @@ import java.sql.SQLException;
 
 public class Database {
 
-    private static Database instance = null;
+    private static Database instance;
 
     private final SQLiteConnector sqLiteConnector;
     private final RepoCrud        repoCrud;
 
+    private boolean isInitialized = false;
+
     private Database() {
         this.sqLiteConnector = new SQLiteConnector(SystemConfig.getInstance());
-        SQLLoader.process(sqLiteConnector.getConnection());
-
         runMigrationHandler();
 
         final JOOQConnector jooqConnector = new JOOQConnector(sqLiteConnector);
         this.repoCrud = new RepoCrud(jooqConnector.getContext());
+
     }
 
-    public static Database getInstance() {
+    public static synchronized Database getInstance() {
         if (instance == null)
             instance = new Database();
         return instance;

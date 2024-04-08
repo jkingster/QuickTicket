@@ -7,12 +7,17 @@ import org.jooq.tools.StringUtils;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public abstract class Config implements ConfigDefaulter {
 
+
     private final String     path;
     private final Properties properties;
+
+    private boolean configExists = false;
 
     public Config(final String path) {
         this.path = path;
@@ -55,6 +60,7 @@ public abstract class Config implements ConfigDefaulter {
 
         try (final FileInputStream fileInputStream = new FileInputStream(path)) {
             properties.load(fileInputStream);
+            this.configExists = true;
         } catch (IOException e) {
             Alerts.showException("Failed to read properties file.", e.fillInStackTrace());
         }
@@ -68,8 +74,20 @@ public abstract class Config implements ConfigDefaulter {
         }
     }
 
+    public boolean doesConfigExist() {
+        return configExists;
+    }
+
+    public Config chain(final Runnable runnable) {
+        if (doesConfigExist()) {
+            runnable.run();
+        }
+        return this;
+    }
+
     private void createProperties(final String path) {
         if (FileIO.createFile(path)) {
+            this.configExists = true;
             putDefaults();
             storeProperties();
         }

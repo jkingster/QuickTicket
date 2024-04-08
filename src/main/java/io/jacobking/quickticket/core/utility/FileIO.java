@@ -18,7 +18,7 @@ public class FileIO {
     public static final  String TARGET_LOCK              = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, ".lock");
     public static final  String TARGET_DATABASE          = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "database.db");
     public static final  String TARGET_BACKUP_FOLDER     = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "backup");
-    public static final  String TARGET_SQL_FOLDER        = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "SQL");
+    public static final  String TARGET_SQL_FOLDER        = String.format("%s%s%s", TARGET_DIRECTORY, FILE_SEPARATOR, "sql");
     public static final  String TARGET_COPY_PATH         = String.format("%s%s", TARGET_BACKUP_FOLDER, FILE_SEPARATOR);
 
     private FileIO() {

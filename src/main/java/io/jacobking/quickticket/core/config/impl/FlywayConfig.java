@@ -17,8 +17,8 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 public class FlywayConfig extends Config {
-    private static final String SOURCE_PATH = FileIO.TARGET_SQL_FOLDER;
-    private static final FlywayConfig INSTANCE = new FlywayConfig();
+    private static final String       SOURCE_PATH = FileIO.TARGET_SQL_FOLDER;
+    private static       FlywayConfig instance;
 
     public FlywayConfig() {
         super(FileIO.TARGET_FLYWAY_PROPERTIES);
@@ -26,12 +26,15 @@ public class FlywayConfig extends Config {
     }
 
     public static FlywayConfig getInstance() {
-        return INSTANCE;
+        if (instance == null) {
+            instance = new FlywayConfig();
+        }
+        return instance;
     }
 
     @Override public void putDefaults() {
         putProperty("flyway.url", String.format("jdbc:sqlite:%s", SystemConfig.getInstance().getProperty("db_url")));
-        putProperty("flyway.locations", "filesystem:"+SOURCE_PATH);
+        putProperty("flyway.locations", "filesystem:" + SOURCE_PATH);
     }
 
     private void copyOverScripts() {

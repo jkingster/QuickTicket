@@ -8,16 +8,18 @@ import javafx.scene.control.ButtonType;
 
 public class InstanceLock {
 
-    private static final InstanceLock INSTANCE = new InstanceLock();
+    private static InstanceLock instance;
 
     private InstanceLock() {
         checkLock();
     }
 
-    public static InstanceLock getInstance() {
-        return INSTANCE;
+    public static synchronized InstanceLock getInstance() {
+        if (instance == null) {
+            instance = new InstanceLock();
+        }
+        return instance;
     }
-
 
     public void deleteLock() {
         if (!FileIO.fileExists(FileIO.TARGET_LOCK)) {

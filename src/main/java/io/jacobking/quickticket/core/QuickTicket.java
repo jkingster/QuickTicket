@@ -1,9 +1,9 @@
 package io.jacobking.quickticket.core;
 
+import io.jacobking.quickticket.core.config.impl.FlywayConfig;
+import io.jacobking.quickticket.core.config.impl.SystemConfig;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.lock.InstanceLock;
-import io.jacobking.quickticket.gui.screen.Display;
-import io.jacobking.quickticket.gui.screen.Route;
 import javafx.application.Platform;
 
 import java.util.concurrent.ExecutorService;
@@ -14,8 +14,7 @@ public class QuickTicket {
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(5);
 
     private QuickTicket() {
-        Database.getInstance();
-        Display.show(Route.DASHBOARD);
+        start();
     }
 
     public static void execute(final Runnable runnable) {
@@ -26,12 +25,23 @@ public class QuickTicket {
         new QuickTicket();
     }
 
-
     public static void shutdown() {
         InstanceLock.getInstance().deleteLock();
         Database.getInstance().close();
         EXECUTOR_SERVICE.shutdown();
         Platform.exit();
+    }
+
+    private void start() {
+        SystemConfig.getInstance()
+                .chain(FlywayConfig::getInstance)
+                .chain(Database::getInstance);
+
+        attachLock();
+    }
+
+    private void attachLock() {
+
     }
 
 

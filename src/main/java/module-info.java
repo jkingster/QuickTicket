@@ -10,6 +10,7 @@ module io.jacobking.quickticket {
     requires java.desktop;
     requires java.mail;
     requires com.google.gson;
+    requires org.slf4j;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires flyway.core;
