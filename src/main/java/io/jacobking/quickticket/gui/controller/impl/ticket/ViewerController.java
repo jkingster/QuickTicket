@@ -184,10 +184,10 @@ public class ViewerController extends Controller {
 
         postSystemComment("System", "Ticket employee changed to: " + model.getFullName());
 
+        ticketModel.employeeProperty().setValue(model.getId());
         if (ticket.update(ticketModel)) {
-            ticketModel.employeeProperty().setValue(model.getId());
-            Notifications.showInfo("Update", "Ticket employee updated successfully!");
             reloadPostUpdate(employeeComboBox, popOver);
+            Notifications.showInfo("Update", "Ticket employee updated successfully!");
         }
     }
 
