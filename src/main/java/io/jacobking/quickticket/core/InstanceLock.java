@@ -2,19 +2,28 @@ package io.jacobking.quickticket.core;
 
 
 import io.jacobking.quickticket.core.utility.FileIO;
+import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import javafx.scene.control.ButtonType;
 
 public class InstanceLock {
 
+    private static InstanceLock instance;
+
     private boolean isUnlocked = false;
 
-    public InstanceLock() {
-        checkLock();
+    private InstanceLock() {
+    }
+
+    public static synchronized InstanceLock getInstance() {
+        if (instance == null) {
+            instance = new InstanceLock();
+        }
+        return instance;
     }
 
     public void deleteLock() {
-        if (!FileIO.fileExists(FileIO.TARGET_LOCK)) {
+        if (!FileIO.fileExists(FileIO.TARGET_LOCK, true)) {
             Alerts.showError("Failed to find instance lock file.",
                     "Instances potentially cannot start....",
                     "Please submit bug report.");
@@ -29,8 +38,8 @@ public class InstanceLock {
     }
 
 
-    private void checkLock() {
-        if (FileIO.fileExists(FileIO.TARGET_LOCK)) {
+    public void checkLock() {
+        if (FileIO.fileExists(FileIO.TARGET_LOCK, true)) {
             Alerts.showWarningConfirmation(
                     "Failed to launch quick ticket.",
                     "Another instance is already running!",
@@ -57,7 +66,8 @@ public class InstanceLock {
 
     private void attemptToDeleteAndStart() {
         deleteLock();
-        if (FileIO.fileExists(FileIO.TARGET_LOCK)) {
+        if (FileIO.fileExists(FileIO.TARGET_LOCK, true)) {
+            Logs.warn("Lock failed to delete on instance start.");
             Alerts.showError(
                     "Failed to force delete lock.",
                     "Failed to force delete lock.",

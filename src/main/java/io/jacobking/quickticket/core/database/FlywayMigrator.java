@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.core.database;
 
-import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.config.impl.FlywayConfig;
+import io.jacobking.quickticket.core.config.FlywayConfig;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationInfo;
 
@@ -18,7 +17,7 @@ public class FlywayMigrator {
                 .dataSource(flywayConfig.getProperty("flyway.url"), null, null)
                 .validateMigrationNaming(true)
                 .baselineOnMigrate(true)
-                .baselineVersion("base")
+                .baselineVersion("1.0")
                 .load();
 
         checkForPendingMigrations();

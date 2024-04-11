@@ -1,7 +1,5 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.config.impl.SystemConfig;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.alert.Alerts;
@@ -58,12 +56,12 @@ public class ConfigurationController extends Controller {
         configureTable();
         configureButtons();
 
-        configurationField.setText(FileIO.TARGET_PROPERTIES);
-        autoMigrateField.setText(core.getSystemConfig().getProperty("db_url"));
-        databaseField.setText(core.getSystemConfig().getProperty("auto_migraton"));
-        flywayField.setText(FileIO.TARGET_FLYWAY_PROPERTIES);
-        migrationField.setText(FileIO.TARGET_SQL_FOLDER);
-        backupField.setText(FileIO.TARGET_BACKUP_FOLDER);
+//        configurationField.setText(FileIO.TARGET_PROPERTIES);
+//        autoMigrateField.setText(core.getSystemConfig().getProperty("auto_migrate"));
+//        databaseField.setText(core.getSystemConfig().getProperty("db_url"));
+//        flywayField.setText(FileIO.TARGET_FLYWAY_PROPERTIES);
+//        migrationField.setText(FileIO.TARGET_SQL_FOLDER);
+//        backupField.setText(FileIO.TARGET_BACKUP_FOLDER);
     }
 
     private void configureTable() {
@@ -83,7 +81,7 @@ public class ConfigurationController extends Controller {
     @FXML private void onBackup() {
         final File source = new File(core.getSystemConfig().getProperty("db_url"));
         final FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File(FileIO.TARGET_BACKUP_FOLDER));
+    //    fileChooser.setInitialDirectory(new File(FileIO.TARGET_BACKUP_FOLDER));
 
         final String initialName = String.format("%s-backup_%s.db",
                 source.getName().replace(".db", ""),
@@ -93,9 +91,9 @@ public class ConfigurationController extends Controller {
         fileChooser.setInitialFileName(initialName);
         fileChooser.setTitle("Save a backup of current database!");
         final File file = fileChooser.showSaveDialog(copyConfigButton.getScene().getWindow());
-        if (file != null && FileIO.copyFile(source, file)) {
-            Notifications.showInfo("Backup Created Successfully", "Location: " + file.getPath());
-        }
+//        if (file != null && FileIO.copyFile(source, file)) {
+//            Notifications.showInfo("Backup Created Successfully", "Location: " + file.getPath());
+//        }
     }
 
     private void configureButtons() {
@@ -132,27 +130,27 @@ public class ConfigurationController extends Controller {
     }
 
     @FXML private void onCopyFlyway() {
-        copyToClipBoard(FileIO.TARGET_FLYWAY_PROPERTIES);
+      //  copyToClipBoard(FileIO.TARGET_FLYWAY_PROPERTIES);
     }
 
     @FXML private void onOpenFlyway() {
-        openPath(FileIO.TARGET_FLYWAY_PROPERTIES);
+        //openPath(FileIO.TARGET_FLYWAY_PROPERTIES);
     }
 
     @FXML private void onCopyMigration() {
-        copyToClipBoard(FileIO.TARGET_SQL_FOLDER);
+       // copyToClipBoard(FileIO.TARGET_SQL_FOLDER);
     }
 
     @FXML private void onOpenMigration() {
-        openPath(FileIO.TARGET_SQL_FOLDER);
+       // openPath(FileIO.TARGET_SQL_FOLDER);
     }
 
     @FXML private void onCopyBackup() {
-        copyToClipBoard(FileIO.TARGET_BACKUP_FOLDER);
+       // copyToClipBoard(FileIO.TARGET_BACKUP_FOLDER);
     }
 
     @FXML private void onOpenBackup() {
-        openPath(FileIO.TARGET_BACKUP_FOLDER);
+       // openPath(FileIO.TARGET_BACKUP_FOLDER);
     }
 
     private void copyToClipBoard(final String text) {

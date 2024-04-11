@@ -9,7 +9,7 @@ import javafx.fxml.Initializable;
 
 public abstract class Controller implements Initializable {
 
-    protected final   QuickTicket         core;
+    protected final QuickTicket         core;
     protected final TicketBridge        ticket;
     protected final CommentBridge       comment;
     protected final EmployeeBridge      employee;
@@ -23,14 +23,14 @@ public abstract class Controller implements Initializable {
 
     public Controller() {
         this.core = QuickTicket.getInstance();
-        this.ticket = Database.getInstance().getBridgeContext().getTicket();
-        this.comment = Database.getInstance().getBridgeContext().getComment();
-        this.flyway = Database.getInstance().getBridgeContext().getFlyway();
-        this.employee = Database.getInstance().getBridgeContext().getEmployee();
-        this.email = Database.getInstance().getBridgeContext().getEmail();
-        this.alertSettings = Database.getInstance().getBridgeContext().getAlertSettings();
-        this.company = Database.getInstance().getBridgeContext().getCompany();
-        this.department = Database.getInstance().getBridgeContext().getDepartment();
+        this.ticket = core.getDatabase().getBridgeContext().getTicket();
+        this.comment = core.getDatabase().getBridgeContext().getComment();
+        this.flyway = core.getDatabase().getBridgeContext().getFlyway();
+        this.employee = core.getDatabase().getBridgeContext().getEmployee();
+        this.email = core.getDatabase().getBridgeContext().getEmail();
+        this.alertSettings = core.getDatabase().getBridgeContext().getAlertSettings();
+        this.company = core.getDatabase().getBridgeContext().getCompany();
+        this.department = core.getDatabase().getBridgeContext().getDepartment();
         this.emailConfig = EmailConfig.getInstance()
                 .setEmail(email.getEmail())
                 .applySettings();

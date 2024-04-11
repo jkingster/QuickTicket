@@ -9,48 +9,36 @@ import java.io.IOException;
 
 public class DatabaseBackup {
 
-    private static final String BACKUP_PATH        = FileIO.TARGET_BACKUP_FOLDER;
-    private static final String BACKUP_NAME_FORMAT = "%s\\%s-backup-%s.db";
+    private static final String BACKUP_PATH        = FileIO.getPath("backup");
+    private static final String BACKUP_NAME_FORMAT = BACKUP_PATH + File.separator + "%s-backup-%s.db";
 
-    private final String databasePath;
+    private final File    source;
+    private       File    destination;
+    private       boolean successful;
 
-    private boolean wasBackedUp = false;
-
-    private DatabaseBackup(final String dbUrl) {
-        this.databasePath = dbUrl;
+    public DatabaseBackup(final String databaseUrl) {
+        this.source = new File(databaseUrl);
     }
 
-    public static DatabaseBackup init(final String dbUrl) {
-        return new DatabaseBackup(dbUrl);
+    public DatabaseBackup setDestination() {
+        this.destination = new File(BACKUP_NAME_FORMAT.formatted(
+                source.getName().replaceAll(".db", ""),
+                DateUtil.nowAsString(DateUtil.DateFormat.DATE_TIME_TWO)
+        ));
+        return this;
     }
 
-    public void backup() {
-        if (FileIO.fileExists(databasePath)) {
-            final File sourceFile = new File(databasePath);
-            final File destinationFile = getDestinationFile(sourceFile.getName().replaceAll(".db", ""));
-            createBackup(sourceFile, destinationFile);
-        }
-    }
-
-    private void createBackup(final File sourceFile, final File destinationFile) {
+    public DatabaseBackup buildBackup() {
         try {
-            FileUtils.copyFile(sourceFile, destinationFile);
-            this.wasBackedUp = true;
+            FileUtils.copyFile(source, destination);
+            this.successful = true;
         } catch (IOException e) {
-            this.wasBackedUp = false;
+            this.successful = false;
         }
+        return this;
     }
 
-    private File getDestinationFile(final String sourceName) {
-        final String newName = BACKUP_NAME_FORMAT.formatted(
-                BACKUP_PATH,
-                sourceName,
-                DateUtil.nowAsString(DateUtil.DateFormat.DATE)
-        );
-        return new File(newName);
-    }
-
-    public boolean isBackedUp() {
-        return wasBackedUp;
+    public boolean isSuccessful() {
+        return successful;
     }
 }

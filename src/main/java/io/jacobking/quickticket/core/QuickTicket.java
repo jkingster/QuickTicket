@@ -1,26 +1,29 @@
 package io.jacobking.quickticket.core;
 
-import io.jacobking.quickticket.bridge.BridgeContext;
-import io.jacobking.quickticket.core.config.impl.FlywayConfig;
-import io.jacobking.quickticket.core.config.impl.SystemConfig;
+import io.jacobking.quickticket.core.config.FlywayConfig;
+import io.jacobking.quickticket.core.config.SystemConfig;
 import io.jacobking.quickticket.core.database.Database;
-import io.jacobking.quickticket.gui.screen.Display;
-import io.jacobking.quickticket.gui.screen.Route;
+import io.jacobking.quickticket.core.utility.Logs;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class QuickTicket {
 
-    private static       QuickTicket instance = null;
+    private static       QuickTicket instance;
     private static final Executor    EXECUTOR = Executors.newFixedThreadPool(3);
 
-    private final SystemConfig  systemConfig;
-    private final FlywayConfig  flywayConfig;
+    private final InstanceLock instanceLock;
+    private final SystemConfig systemConfig;
+    private final FlywayConfig flywayConfig;
+    private final Database     database;
 
     private QuickTicket() {
+        Logs.info("Initializing QuickTicket...");
         this.systemConfig = new SystemConfig();
         this.flywayConfig = new FlywayConfig();
+        this.database = new Database(systemConfig, flywayConfig);
+        this.instanceLock = InstanceLock.getInstance();
     }
 
     public static synchronized QuickTicket getInstance() {
@@ -34,12 +37,12 @@ public class QuickTicket {
         EXECUTOR.execute(runnable);
     }
 
-    public void checkLock() {
-        final InstanceLock instanceLock = new InstanceLock();
-        if (instanceLock.isUnlocked()) {
-            Display.getInstance();
-            Display.show(Route.DASHBOARD);
-        }
+    public void shutdown() {
+
+    }
+
+    public InstanceLock getLock() {
+        return instanceLock;
     }
 
     public SystemConfig getSystemConfig() {
@@ -51,7 +54,7 @@ public class QuickTicket {
     }
 
 
-    public void shutdown() {
-        // do something()
+    public Database getDatabase() {
+        return database;
     }
 }

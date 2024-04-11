@@ -1,10 +1,10 @@
 package io.jacobking.quickticket.core.database;
 
 import io.jacobking.quickticket.bridge.BridgeContext;
-import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.config.impl.FlywayConfig;
-import io.jacobking.quickticket.core.config.impl.SystemConfig;
+import io.jacobking.quickticket.core.config.FlywayConfig;
+import io.jacobking.quickticket.core.config.SystemConfig;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
+import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import javafx.scene.control.ButtonType;
 
@@ -12,34 +12,27 @@ import java.sql.SQLException;
 
 public class Database {
 
-    private static Database instance = null;
-
     private final SystemConfig    systemConfig;
     private final FlywayConfig    flywayConfig;
     private final SQLiteConnector sqLiteConnector;
     private final RepoCrud        repoCrud;
     private final BridgeContext   bridgeContext;
 
+    private final boolean isConfigured;
+
     public Database(final SystemConfig systemConfig, final FlywayConfig flywayConfig) {
+        Logs.info("Database Initialized.");
         this.systemConfig = systemConfig;
         this.flywayConfig = flywayConfig;
         this.sqLiteConnector = new SQLiteConnector(systemConfig);
-        runMigrationHandler();
+        this.isConfigured = sqLiteConnector.hasConnection();
+        checkForMigration();
 
         final JOOQConnector jooqConnector = new JOOQConnector(sqLiteConnector);
         this.repoCrud = new RepoCrud(jooqConnector.getContext());
         this.bridgeContext = new BridgeContext(this);
     }
 
-    public static synchronized Database getInstance() {
-        if (instance == null) {
-            instance = new Database(
-                    QuickTicket.getInstance().getSystemConfig(),
-                    QuickTicket.getInstance().getFlywayConfig()
-            );
-        }
-        return instance;
-    }
 
     public RepoCrud call() {
         return repoCrud;
@@ -53,29 +46,39 @@ public class Database {
         }
     }
 
-    private void runMigrationHandler() {
-        final boolean hasAutoMigrate = systemConfig.parseBoolean("auto_migrate");
+    private void checkForMigration() {
+        if (sqLiteConnector.getConnection() == null) {
+            Alerts.showErrorOverride("Failed to establish sqlite connector.", "Please report this.");
+            return;
+        }
+
+        final boolean hasAutoMigrate = systemConfig.parseBoolean("auto_migration");
         if (!hasAutoMigrate) {
+            Logs.info("Auto-migration is disabled in system.properties.");
             return;
         }
 
         final FlywayMigrator flywayMigrator = FlywayMigrator.init(flywayConfig);
         if (!flywayMigrator.isPendingMigration()) {
-            System.out.println("No migrations.");
+            Logs.info("There are no pending migrations!");
             return;
         }
 
-        final DatabaseBackup databaseBackup = DatabaseBackup.init(systemConfig.getProperty("db_url"));
-        databaseBackup.backup();
+        final String url = systemConfig.getProperty("database_url");
+        final boolean success = new DatabaseBackup(url)
+                .setDestination()
+                .buildBackup()
+                .isSuccessful();
 
-        if (databaseBackup.isBackedUp()) {
+        if (success) {
             flywayMigrator.migrate();
             return;
         }
 
+        Logs.warn("Failed to create backup pre-migration!");
         Alerts.showWarningConfirmation(
                 "Database backup failed. Respond cautiously.",
-                "There are pending database migrations. Would you like to proceed? You can manually create a backup as well."
+                "There are pending database migrations. Would you like to proceed? You can manually create a backup before proceeding."
         ).ifPresent(type -> {
             if (type == ButtonType.YES) {
                 flywayMigrator.migrate();
@@ -86,5 +89,9 @@ public class Database {
 
     public BridgeContext getBridgeContext() {
         return bridgeContext;
+    }
+
+    public boolean isConfigured() {
+        return isConfigured;
     }
 }

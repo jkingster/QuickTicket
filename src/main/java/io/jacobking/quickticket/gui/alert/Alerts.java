@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.alert;
 
 import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.database.Database;
+import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.builder.AlertBuilder;
 import io.jacobking.quickticket.gui.alert.builder.InputDialogBuilder;
 import io.jacobking.quickticket.gui.model.impl.AlertSettingsModel;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class Alerts {
 
-    private static final AlertSettingsModel settings = Database.getInstance()
+    private static final AlertSettingsModel settings = QuickTicket.getInstance().getDatabase()
             .getBridgeContext()
             .getAlertSettings()
             .getModel(0);
@@ -44,7 +44,7 @@ public class Alerts {
     }
 
     public static void showWarning(final String title, final String header, final String content) {
-        if (settings != null &&settings.isDisableWarningAlertsProperty())
+        if (settings != null && settings.isDisableWarningAlertsProperty())
             return;
 
         new AlertBuilder(Alert.AlertType.WARNING)
@@ -56,7 +56,7 @@ public class Alerts {
 
     // HANDLE THIS EXTERNALLY WHERE WE NEED CONFIRMATION. NOT INSIDE THE BASE METHOD.
     public static Optional<ButtonType> showConfirmation(final Runnable preProcessing, final String title, final String header, final String content, final ButtonType... buttonTypes) {
-        if (settings != null &&settings.isDisableConfirmationAlertsProperty()) {
+        if (settings != null && settings.isDisableConfirmationAlertsProperty()) {
             preProcessing.run();
             return Optional.empty();
         }
@@ -91,6 +91,15 @@ public class Alerts {
         new AlertBuilder(Alert.AlertType.ERROR)
                 .withException(content, throwable)
                 .show();
+    }
+
+    public static void showErrorOverride(final String title, final String content) {
+        Logs.warn("Error: {} | {}", title, content);
+        new AlertBuilder(Alert.AlertType.ERROR)
+                .withTitle("Error")
+                .withContent(content)
+                .withHeader(title)
+                .showAndWait();
     }
 
     public static Optional<String> showInput(final String title, final String content, final String defaultValue) {
