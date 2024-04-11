@@ -15,12 +15,19 @@ import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import org.controlsfx.control.SearchableComboBox;
 import org.controlsfx.glyphfont.FontAwesome;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
@@ -483,5 +490,28 @@ public class EmployeeController extends Controller {
                 .getSelectionModel()
                 .getSelectedItem();
         return departmentModel == null ? 0 : departmentModel.getId();
+    }
+
+    @FXML private void onEmail() {
+        final String email = emailField.getText();
+        if (email.isEmpty()) {
+            Alerts.showError(
+                    "Failure",
+                    "Cannot e-mail employee.",
+                    "No e-mail is set!"
+            );
+            return;
+        }
+        openEmail(email);
+    }
+
+    private void openEmail(final String email) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().mail(new URI("mailto:" + email));
+            } catch (IOException | URISyntaxException e) {
+                Alerts.showException("Failed to open e-mail.", e.fillInStackTrace());
+            }
+        }
     }
 }
