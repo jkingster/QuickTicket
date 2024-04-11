@@ -28,6 +28,14 @@
                                     <Button fx:id="openConfigButton" mnemonicParsing="false" onAction="#openConfigPath" prefHeight="25.0" prefWidth="31.0" stylesheets="@../css/core/button.css" />
                                  </children>
                               </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="418.0" spacing="5.0">
+                                 <children>
+                                    <Label contentDisplay="CENTER" prefHeight="26.0" prefWidth="103.0" text="Logs Path:" textAlignment="CENTER" textFill="WHITE" />
+                                    <TextField fx:id="logsField" editable="false" prefHeight="25.0" prefWidth="229.0" />
+                                    <Button fx:id="copyLogsButton" mnemonicParsing="false" onAction="#onCopyLogs" prefHeight="25.0" prefWidth="31.0" stylesheets="@../css/core/button.css" />
+                                    <Button fx:id="openLogsButton" mnemonicParsing="false" onAction="#onOpenLogs" prefHeight="25.0" prefWidth="31.0" stylesheets="@../css/core/button.css" />
+                                 </children>
+                              </HBox>
                               <HBox alignment="CENTER_LEFT" prefHeight="4.0" prefWidth="418.0" spacing="5.0">
                                  <children>
                                     <Label contentDisplay="CENTER" prefHeight="26.0" prefWidth="103.0" text="Auto-Migrate:" textAlignment="CENTER" textFill="WHITE" />

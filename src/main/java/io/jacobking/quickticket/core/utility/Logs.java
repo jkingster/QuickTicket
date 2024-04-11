@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public class Logs {
 
-    private static Logs instance = null;
+    private static final Logs INSTANCE = new Logs();
 
     private final Logger logger;
 
@@ -13,11 +13,8 @@ public class Logs {
         this.logger = LoggerFactory.getLogger(Logs.class);
     }
 
-    public static synchronized Logs getInstance() {
-        if (instance == null) {
-            instance = new Logs();
-        }
-        return instance;
+    public static Logs getInstance() {
+        return INSTANCE;
     }
 
     public static void warn(final String message, final Object... objects) {

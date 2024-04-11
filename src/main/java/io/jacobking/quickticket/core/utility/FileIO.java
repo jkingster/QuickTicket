@@ -2,6 +2,7 @@ package io.jacobking.quickticket.core.utility;
 
 
 import io.jacobking.quickticket.core.exception.QuickTicketException;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,15 @@ public class FileIO {
         } catch (IOException e) {
             Logs.warn("Could not create file: {}", path);
             throw new QuickTicketException("Could not create file: " + path, e.fillInStackTrace());
+        }
+    }
+
+    public static boolean copyFile(final File source, final File destination) {
+        try {
+            FileUtils.copyFile(source, destination);
+            return true;
+        } catch (IOException e) {
+            return false;
         }
     }
 

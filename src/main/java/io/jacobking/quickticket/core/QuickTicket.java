@@ -4,14 +4,15 @@ import io.jacobking.quickticket.core.config.FlywayConfig;
 import io.jacobking.quickticket.core.config.SystemConfig;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.utility.Logs;
+import javafx.application.Platform;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class QuickTicket {
 
-    private static       QuickTicket instance;
-    private static final Executor    EXECUTOR = Executors.newFixedThreadPool(3);
+    private static       QuickTicket     instance;
+    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(3);
 
     private final InstanceLock instanceLock;
     private final SystemConfig systemConfig;
@@ -38,7 +39,12 @@ public class QuickTicket {
     }
 
     public void shutdown() {
-
+        Platform.runLater(() -> {
+            EXECUTOR.shutdown();
+            database.close();
+            instanceLock.deleteLock();
+            Platform.exit();
+        });
     }
 
     public InstanceLock getLock() {
@@ -52,7 +58,6 @@ public class QuickTicket {
     public FlywayConfig getFlywayConfig() {
         return flywayConfig;
     }
-
 
     public Database getDatabase() {
         return database;

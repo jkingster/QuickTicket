@@ -34,6 +34,7 @@ public class ConfigurationController extends Controller {
     @FXML private TableColumn<FlywayModel, String> installedOnColumn;
 
     @FXML private TextField configurationField;
+    @FXML private TextField logsField;
     @FXML private TextField autoMigrateField;
     @FXML private TextField databaseField;
     @FXML private TextField flywayField;
@@ -50,18 +51,21 @@ public class ConfigurationController extends Controller {
     @FXML private Button openMigrationButton;
     @FXML private Button copyBackupButton;
     @FXML private Button openBackupButton;
+    @FXML private Button openLogsButton;
+    @FXML private Button copyLogsButton;
 
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
         configureButtons();
 
-//        configurationField.setText(FileIO.TARGET_PROPERTIES);
-//        autoMigrateField.setText(core.getSystemConfig().getProperty("auto_migrate"));
-//        databaseField.setText(core.getSystemConfig().getProperty("db_url"));
-//        flywayField.setText(FileIO.TARGET_FLYWAY_PROPERTIES);
-//        migrationField.setText(FileIO.TARGET_SQL_FOLDER);
-//        backupField.setText(FileIO.TARGET_BACKUP_FOLDER);
+        configurationField.setText(FileIO.getPath("system.properties"));
+        logsField.setText(FileIO.getPath("logs"));
+        autoMigrateField.setText(core.getSystemConfig().getProperty("auto_migration"));
+        databaseField.setText(core.getSystemConfig().getProperty("database_url"));
+         flywayField.setText(FileIO.getPath("flyway.properties"));
+        migrationField.setText(FileIO.getPath("migrations"));
+        backupField.setText(FileIO.getPath("backup"));
     }
 
     private void configureTable() {
@@ -79,9 +83,9 @@ public class ConfigurationController extends Controller {
     }
 
     @FXML private void onBackup() {
-        final File source = new File(core.getSystemConfig().getProperty("db_url"));
+        final File source = new File(core.getSystemConfig().getProperty("database_url"));
         final FileChooser fileChooser = new FileChooser();
-    //    fileChooser.setInitialDirectory(new File(FileIO.TARGET_BACKUP_FOLDER));
+        fileChooser.setInitialDirectory(new File(FileIO.getPath("backup")));
 
         final String initialName = String.format("%s-backup_%s.db",
                 source.getName().replace(".db", ""),
@@ -91,9 +95,9 @@ public class ConfigurationController extends Controller {
         fileChooser.setInitialFileName(initialName);
         fileChooser.setTitle("Save a backup of current database!");
         final File file = fileChooser.showSaveDialog(copyConfigButton.getScene().getWindow());
-//        if (file != null && FileIO.copyFile(source, file)) {
-//            Notifications.showInfo("Backup Created Successfully", "Location: " + file.getPath());
-//        }
+        if (file != null && FileIO.copyFile(source, file)) {
+            Notifications.showInfo("Backup Created Successfully", "Location: " + file.getPath());
+        }
     }
 
     private void configureButtons() {
@@ -111,6 +115,9 @@ public class ConfigurationController extends Controller {
 
         setButtonAsCopyGraphic(copyBackupButton);
         setButtonAsOpenGraphic(openBackupButton);
+
+        setButtonAsCopyGraphic(copyLogsButton);
+        setButtonAsOpenGraphic(openLogsButton);
     }
 
     @FXML private void copyConfigPath() {
@@ -130,27 +137,35 @@ public class ConfigurationController extends Controller {
     }
 
     @FXML private void onCopyFlyway() {
-      //  copyToClipBoard(FileIO.TARGET_FLYWAY_PROPERTIES);
+          copyToClipBoard(flywayField.getText());
     }
 
     @FXML private void onOpenFlyway() {
-        //openPath(FileIO.TARGET_FLYWAY_PROPERTIES);
+        openPath(flywayField.getText());
     }
 
     @FXML private void onCopyMigration() {
-       // copyToClipBoard(FileIO.TARGET_SQL_FOLDER);
+         copyToClipBoard(migrationField.getText());
     }
 
     @FXML private void onOpenMigration() {
-       // openPath(FileIO.TARGET_SQL_FOLDER);
+         openPath(migrationField.getText());
     }
 
     @FXML private void onCopyBackup() {
-       // copyToClipBoard(FileIO.TARGET_BACKUP_FOLDER);
+         copyToClipBoard(backupField.getText());
     }
 
     @FXML private void onOpenBackup() {
-       // openPath(FileIO.TARGET_BACKUP_FOLDER);
+         openPath(backupField.getText());
+    }
+
+    @FXML private void onOpenLogs() {
+        openPath(FileIO.getPath("logs"));
+    }
+
+    @FXML private void onCopyLogs() {
+        copyToClipBoard(FileIO.getPath("logs"));
     }
 
     private void copyToClipBoard(final String text) {
