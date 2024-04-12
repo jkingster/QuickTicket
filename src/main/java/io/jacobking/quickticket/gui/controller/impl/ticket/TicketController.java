@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.email.EmailResolvedSender;
+import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -242,12 +241,26 @@ public class TicketController extends Controller {
                     return;
                 }
 
-                final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
-                emailResolvedSender.sendEmail();
+                new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
+                        .format(
+                                ticketModel.getId(),
+                                ticketModel.getTitle(),
+                                DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation()),
+                                model.getFullName(),
+                                comment
+                        )
+                        .email(emailConfig)
+                        .setSubject(getSubject(ticketModel))
+                        .sendEmail();
+
                 postCommentOnTicket(ticketModel, comment);
             }, () -> postCommentOnTicket(ticketModel, "No resolving comment."));
             ticketTable.refresh();
         }
+    }
+
+    private String getSubject(final TicketModel ticketModel) {
+        return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());
     }
 
     private void postCommentOnTicket(final TicketModel ticketModel, final String systemComment) {

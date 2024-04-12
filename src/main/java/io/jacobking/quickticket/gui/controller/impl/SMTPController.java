@@ -1,8 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.core.QuickTicket;
+import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.email.EmailConfig;
-import io.jacobking.quickticket.core.email.EmailSender;
 import io.jacobking.quickticket.core.type.TransportType;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.EmailModel;
@@ -63,8 +62,10 @@ public class SMTPController extends Controller {
 
         EmailConfig.getInstance().setEmail(getEmail()).applySettings();
 
-        final EmailSender sender = new EmailSender(EmailConfig.getInstance());
-        sender.sendEmail("QuickTicket SMTP Test", testEmail, "This email can be ignored.");
+        new EmailBuilder(testEmail, EmailBuilder.EmailType.TEST)
+                .email(emailConfig)
+                .setSubject("This is a test e-mail from QuickTicket.")
+                .sendEmail();
     }
 
     @FXML private void onSave() {

@@ -2,6 +2,7 @@ package io.jacobking.quickticket.bridge;
 
 import io.jacobking.quickticket.bridge.impl.*;
 import io.jacobking.quickticket.core.database.Database;
+import io.jacobking.quickticket.core.email.EmailConfig;
 
 public class BridgeContext {
 
@@ -13,6 +14,7 @@ public class BridgeContext {
     private final EmailBridge         email;
     private final AlertSettingsBridge alertSettings;
     private final FlywayBridge        flyway;
+    private final EmailConfig         emailConfig;
 
     public BridgeContext(final Database database) {
         this.company = new CompanyBridge(database);
@@ -23,6 +25,7 @@ public class BridgeContext {
         this.email = new EmailBridge(database);
         this.alertSettings = new AlertSettingsBridge(database);
         this.flyway = new FlywayBridge(database);
+        this.emailConfig = EmailConfig.getInstance();
     }
 
     public CompanyBridge getCompany() {
@@ -55,5 +58,9 @@ public class BridgeContext {
 
     public FlywayBridge getFlyway() {
         return flyway;
+    }
+
+    public EmailConfig getEmailConfig() {
+        return emailConfig;
     }
 }

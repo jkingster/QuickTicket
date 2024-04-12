@@ -1,8 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.core.QuickTicket;
+import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.email.EmailConfig;
-import io.jacobking.quickticket.core.email.EmailSender;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -23,31 +22,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TicketCreatorController extends Controller {
-
-    private static final String TICKET_BODY = """
-            <style>
-            body {
-                font-family: Aptos, Arial, sans-serif;
-                font-size: 12px;
-            }
-            </style>
-            %s, your support ticket has been created. IT will reach out to you shortly to help resolve your issue.
-            <br/>
-            <br/>
-            Ticket Information:
-            <br/>
-            - <b>Ticket ID:</b> %d
-            <br/>
-            - <b>Ticket Subject:</b> %s
-            <br/>
-            - <b>Ticket Creation Date:</b> %s
-            <br/>
-            - <b>Ticket Initial Comments:</b> %s
-            <br/>
-            <br/>
-            <br/>
-            <span style="font-weight: bolder; color: red;">Please do not reply to this ticket. This is an unmanaged inbox.</span>
-            """;
 
     private TableView<TicketModel> ticketTable;
 
@@ -158,10 +132,15 @@ public class TicketCreatorController extends Controller {
         final String email = model.getEmail();
         if (email.isEmpty()) return;
 
-        final EmailSender emailSender = new EmailSender(EmailConfig.getInstance());
-        final String initialComment = commentField.getText().isEmpty() ? "Nothing was provided." : commentField.getText();
-        final String ticketBody = TICKET_BODY.formatted(model.getFullName(), ticketModel.getId(), ticketModel.getTitle(), ticketModel.getCreation(), initialComment);
-        emailSender.sendEmail(String.format("Ticket Created (Ticket ID: %d) | %s", ticketModel.getId(), ticketModel.getTitle()), email, ticketBody);
+        new EmailBuilder(email, EmailBuilder.EmailType.NEW_TICKET)
+                .format(model.getFullName(), ticketModel.getId(), ticketModel.getTitle(), model.getFullName(), ticketModel.getCreation())
+                .email(emailConfig)
+                .setSubject(getSubject(ticketModel))
+                .sendEmail();
+    }
+
+    private String getSubject(final TicketModel ticketModel) {
+        return String.format("Your support ticket has been created. | Ticket ID: %s", ticketModel.getId());
     }
 
 
