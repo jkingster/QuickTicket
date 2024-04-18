@@ -58,6 +58,20 @@
                   </AnchorPane>
             </content>
           </Tab>
+            <Tab styleClass="t" text="Misc.">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@../css/core/tab-pane.css">
+                     <children>
+                        <Button layoutX="10.0" layoutY="170.0" mnemonicParsing="false" onAction="#onUpdateMisc" text="Update" />
+                        <VBox layoutX="14.0" layoutY="7.0" prefHeight="158.0" prefWidth="419.0">
+                           <children>
+                              <CheckBox fx:id="emailDebugCheckBox" mnemonicParsing="false" text="Enable E-Mail Debugging" textFill="WHITE" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>

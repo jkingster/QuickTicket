@@ -132,8 +132,9 @@ public class TicketCreatorController extends Controller {
         final String email = model.getEmail();
         if (email.isEmpty()) return;
 
+        final String creation = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation());
         new EmailBuilder(email, EmailBuilder.EmailType.NEW_TICKET)
-                .format(model.getFullName(), ticketModel.getId(), ticketModel.getTitle(), model.getFullName(), ticketModel.getCreation())
+                .format(model.getFullName(), ticketModel.getId(), ticketModel.getTitle(), model.getFullName(), creation)
                 .email(emailConfig)
                 .setSubject(getSubject(ticketModel))
                 .sendEmail();

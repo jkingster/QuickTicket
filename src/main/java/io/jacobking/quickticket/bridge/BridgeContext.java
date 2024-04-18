@@ -25,7 +25,7 @@ public class BridgeContext {
         this.email = new EmailBridge(database);
         this.alertSettings = new AlertSettingsBridge(database);
         this.flyway = new FlywayBridge(database);
-        this.emailConfig = EmailConfig.getInstance();
+        this.emailConfig = new EmailConfig();
     }
 
     public CompanyBridge getCompany() {

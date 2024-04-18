@@ -26,6 +26,8 @@ module io.jacobking.quickticket {
     opens io.jacobking.quickticket.tables.records to org.jooq;
     exports io.jacobking.quickticket.tables.records;
 
+
+
     opens io.jacobking.quickticket.tables.pojos to org.jooq;
     exports io.jacobking.quickticket.tables.pojos;
 

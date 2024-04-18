@@ -1,9 +1,10 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.core.QuickTicket;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.AlertSettingsModel;
+import io.jacobking.quickticket.gui.model.impl.EmailModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -32,6 +33,8 @@ public class SettingsController extends Controller {
     @FXML private VBox alertsModule;
     @FXML private VBox notificationsModule;
 
+    @FXML private CheckBox emailDebugCheckBox;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         this.alertSettingsModel = alertSettings.getModel(0);
@@ -54,6 +57,17 @@ public class SettingsController extends Controller {
         bindBidirectional(disableErrorNotification, alertSettingsModel.disableErrorNotificationProperty());
         bindBidirectional(disableConfirmationNotification, alertSettingsModel.disableConfirmationNotificationProperty());
         bindBidirectional(disableWarningNotification, alertSettingsModel.disableWarningNotificationProperty());
+
+        emailDebugCheckBox.setSelected(email.getEmailModel().isDebugging());
+        emailDebugCheckBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (t1) {
+                Alerts.showWarning(
+                        "File I/O",
+                        "Enabling e-mail debugging has potential File I/O overhead.",
+                        "Do not keep this enabled for extended periods, only for testing. Log files will continously generate."
+                );
+            }
+        });
     }
 
     private void bindBidirectional(final CheckBox checkBox, final BooleanProperty property) {
@@ -80,5 +94,15 @@ public class SettingsController extends Controller {
         }
     }
 
+    @FXML private void onUpdateMisc() {
+        final EmailModel model = email.getEmailModel();
+
+        model.setDebugging(emailDebugCheckBox.isSelected());
+        if (email.update(model)) {
+            email.update(model);
+            emailConfig.setEmail(model.toEntity());
+            Notifications.showInfo("Settings Changed", "Miscellaneous settings changed.");
+        }
+    }
 
 }

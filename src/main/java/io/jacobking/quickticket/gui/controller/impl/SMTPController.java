@@ -39,7 +39,7 @@ public class SMTPController extends Controller {
     }
 
     private void preloadValues() {
-        final EmailModel model = new EmailModel(EmailConfig.getInstance().getEmail());
+        final EmailModel model = new EmailModel(emailConfig.getEmail());
         hostField.setText(model.getHostProperty());
         portField.setText(model.getPortProperty());
         fromAddressField.setText(model.getFromAddressProperty());
@@ -60,7 +60,7 @@ public class SMTPController extends Controller {
         final String testEmail = testAddressField.getText();
         if (testEmail.isEmpty()) return;
 
-        EmailConfig.getInstance().setEmail(getEmail()).applySettings();
+        emailConfig.setEmail(getEmail()).applySettings();
 
         new EmailBuilder(testEmail, EmailBuilder.EmailType.TEST)
                 .email(emailConfig)
@@ -71,7 +71,7 @@ public class SMTPController extends Controller {
     @FXML private void onSave() {
         final Email savedEmail = getEmail();
         email.update(new EmailModel(savedEmail));
-        EmailConfig.getInstance().setEmail(savedEmail);
+        emailConfig.setEmail(savedEmail);
         Display.close(Route.SMTP);
     }
 

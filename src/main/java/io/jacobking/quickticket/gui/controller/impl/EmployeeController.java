@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
+import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
@@ -12,6 +13,7 @@ import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import io.jacobking.quickticket.tables.pojos.Employee;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -29,7 +31,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class EmployeeController extends Controller {
@@ -56,11 +57,11 @@ public class EmployeeController extends Controller {
 
     @FXML private TextArea infoTextArea;
 
-    @FXML private TableView<TicketModel>                  ticketTable;
-    @FXML private TableColumn<TicketModel, Void>          actionsColumn;
-    @FXML private TableColumn<TicketModel, String>        ticketIdColumn;
-    @FXML private TableColumn<TicketModel, String>        titleColumn;
-    @FXML private TableColumn<TicketModel, LocalDateTime> createdOnColumn;
+    @FXML private TableView<TicketModel>           ticketTable;
+    @FXML private TableColumn<TicketModel, Void>   actionsColumn;
+    @FXML private TableColumn<TicketModel, String> ticketIdColumn;
+    @FXML private TableColumn<TicketModel, String> titleColumn;
+    @FXML private TableColumn<TicketModel, String> createdOnColumn;
 
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -247,7 +248,9 @@ public class EmployeeController extends Controller {
 
         ticketIdColumn.setCellValueFactory(data -> data.getValue().getIdProperty().asString());
         titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
-        createdOnColumn.setCellValueFactory(data -> data.getValue().createdProperty());
+        createdOnColumn.setCellValueFactory(data -> new SimpleStringProperty(
+                DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, data.getValue().getCreation())
+        ));
     }
 
     private void onUnAssignTicket(final TicketModel ticketModel) {

@@ -2,7 +2,6 @@ package io.jacobking.quickticket.gui.controller;
 
 import io.jacobking.quickticket.bridge.impl.*;
 import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.email.EmailConfig;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import javafx.fxml.Initializable;
@@ -31,7 +30,7 @@ public abstract class Controller implements Initializable {
         this.alertSettings = core.getDatabase().getBridgeContext().getAlertSettings();
         this.company = core.getDatabase().getBridgeContext().getCompany();
         this.department = core.getDatabase().getBridgeContext().getDepartment();
-        this.emailConfig = EmailConfig.getInstance()
+        this.emailConfig = core.getDatabase().getBridgeContext().getEmailConfig()
                 .setEmail(email.getEmail())
                 .applySettings();
         this.dataRelay = DataRelay.empty();

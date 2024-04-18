@@ -48,4 +48,5 @@ public class DateUtil {
     public static String formatDateTime(final DateFormat dateFormat, final String string) {
         return LocalDateTime.parse(string, dateFormat.formatter).toString();
     }
+
 }

@@ -8,6 +8,7 @@ import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.shape.SVGPath;
 
 import java.awt.*;
 import java.io.IOException;

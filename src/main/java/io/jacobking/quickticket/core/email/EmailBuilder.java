@@ -39,7 +39,6 @@ public class EmailBuilder {
         private static final String RESOLVED_STRING   = getHTMLAsString(EmailType.RESOLVED);
         private static final String NEW_TICKET_STRING = getHTMLAsString(EmailType.NEW_TICKET);
 
-
         private final String path;
 
         EmailType(final String path) {

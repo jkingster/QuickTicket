@@ -15,6 +15,10 @@ public class EmailBridge extends Bridge<Email, EmailModel> {
         return getModel(0).toEntity();
     }
 
+    public EmailModel getEmailModel() {
+        return getModel(0);
+    }
+
     @Override
     public EmailModel convertEntity(Email entity) {
         return new EmailModel(entity);

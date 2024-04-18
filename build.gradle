@@ -49,15 +49,15 @@ sourceSets {
 
 
 dependencies {
-  implementation group: 'org.controlsfx',             name: 'controlsfx',       version: '11.1.2'
-  implementation group: 'com.sun.mail',               name: 'javax.mail',       version: '1.6.2'
-  implementation group: 'org.xerial',                 name: 'sqlite-jdbc',      version: '3.42.0.0'
-  implementation group: 'com.google.code.gson',       name: 'gson',             version: '2.10.1'
-  implementation group: 'ch.qos.logback',             name: 'logback-classic',  version: '1.5.4'
-  implementation group: 'org.flywaydb',               name: 'flyway-core',      version: '10.10.0'
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
-  implementation group: 'org.slf4j',                  name: 'slf4j-api',        version: '1.7.36'
-  implementation group: 'commons-io',                 name: 'commons-io',       version: '2.15.0'
+  implementation group: 'org.controlsfx',              name: 'controlsfx',       version: '11.1.2'
+  implementation group: 'com.sun.mail',                name: 'javax.mail',       version: '1.6.2'
+  implementation group: 'org.xerial',                  name: 'sqlite-jdbc',      version: '3.42.0.0'
+  implementation group: 'com.google.code.gson',        name: 'gson',             version: '2.10.1'
+  implementation group: 'ch.qos.logback',              name: 'logback-classic',  version: '1.5.4'
+  implementation group: 'org.flywaydb',                name: 'flyway-core',      version: '10.10.0'
+  implementation group: 'com.fasterxml.jackson.core',  name: 'jackson-databind', version: '2.16.1'
+  implementation group: 'org.slf4j',                   name: 'slf4j-api',        version: '1.7.36'
+  implementation group: 'commons-io',                  name: 'commons-io',       version: '2.15.0'
   jooqGenerator 'org.xerial:sqlite-jdbc:3.42.0.0'
 }
 
@@ -72,7 +72,7 @@ jlink {
   }
   jpackage {
     installerOptions = [
-            '--description', 'Free-to-use ticket management solution aimed to streamline ticket support services.',
+            '--description', 'A lightweight application to streamline the process of logging and managing IT support-related tickets locally on your machine.',
             '--copyright', 'Copyright 2024-2025 Jacob King',
             '--win-dir-chooser',
             '--win-menu', '--win-shortcut-prompt',
@@ -80,6 +80,7 @@ jlink {
             '--vendor', 'Jacob King',
             '--app-version', '1.0.0',
     ]
+    imageOptions += ['--icon', 'src/main/resources/io/jacobking/quickticket/icons/quickticket-icon.ico']
     installerType = project.findProperty('installerType')
   }
 }
