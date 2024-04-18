@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;

@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
 import io.jacobking.quickticket.core.email.EmailBuilder;
-import io.jacobking.quickticket.core.email.EmailConfig;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;

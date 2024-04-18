@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.utility.ChangelogReader;
 import io.jacobking.quickticket.gui.controller.Controller;
 import javafx.collections.FXCollections;

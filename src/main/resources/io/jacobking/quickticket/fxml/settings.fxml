@@ -63,9 +63,28 @@
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@../css/core/tab-pane.css">
                      <children>
                         <Button layoutX="10.0" layoutY="170.0" mnemonicParsing="false" onAction="#onUpdateMisc" text="Update" />
-                        <VBox layoutX="14.0" layoutY="7.0" prefHeight="158.0" prefWidth="419.0">
+                        <VBox layoutX="14.0" layoutY="7.0" prefHeight="158.0" prefWidth="419.0" spacing="5.0">
                            <children>
                               <CheckBox fx:id="emailDebugCheckBox" mnemonicParsing="false" text="Enable E-Mail Debugging" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox1" disable="true" mnemonicParsing="false" text="Disable System Logging" textFill="WHITE" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab styleClass="t" text="Startup">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@../css/core/tab-pane.css">
+                     <children>
+                        <Button layoutX="10.0" layoutY="170.0" mnemonicParsing="false" onAction="#onUpdateMisc" text="Update" />
+                        <VBox disable="true" layoutX="14.0" layoutY="7.0" prefHeight="158.0" prefWidth="419.0" spacing="5.0">
+                           <children>
+                              <CheckBox fx:id="emailDebugCheckBox1" mnemonicParsing="false" text="Show Open Tickets" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox11" mnemonicParsing="false" text="Show Active Tickets" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox111" mnemonicParsing="false" text="Show Paused Tickets" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox1111" mnemonicParsing="false" text="Show Resolved Tickets" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox11111" mnemonicParsing="false" text="Require Login Authentication" textFill="WHITE" />
                            </children>
                         </VBox>
                      </children>
