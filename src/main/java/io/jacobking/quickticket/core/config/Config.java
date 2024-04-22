@@ -1,70 +1,86 @@
 package io.jacobking.quickticket.core.config;
 
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.core.utility.Logs;
 import org.jooq.tools.StringUtils;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-public abstract class Config implements ConfigDefaulter {
+public abstract class Config {
 
-    private final String     path;
+    private final String     fileName;
     private final Properties properties;
 
-    public Config(final String path) {
-        this.path = path;
+    public Config(String fileName) {
+        Logs.info("{} initialized.", getClass().getName());
+        this.fileName = FileIO.getPath(fileName);
+        System.out.println(fileName);
         this.properties = new Properties();
-        readProperties();
+        configureProperties();
+    }
+
+    public abstract void putDefaultProperties();
+
+    public void setProperty(final String key, final String value) {
+        properties.setProperty(key, value);
+    }
+
+    public void setPropertyAndStore(final String key, final String value) {
+        setProperty(key, value);
+        storeProperties();
     }
 
     public String getProperty(final String key, final String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
 
-    public String getProperty(final String key) {
-        return getProperty(key, StringUtils.EMPTY);
+    public boolean parseBoolean(final String key) {
+        return Boolean.parseBoolean(properties.getProperty(key));
     }
 
-    public Object putProperty(final String key, final String value) {
-        final Object insert = properties.setProperty(key, value);
-        if (insert != null) {
-            storeProperties();
-        }
-        return insert;
+    public String getProperty(final String key) {
+        return getProperty(key, StringUtils.EMPTY);
     }
 
     public Properties getProperties() {
         return properties;
     }
 
-    public void readProperties() {
-        if (!FileIO.fileExists(path)) {
-            createProperties(path);
+    private void configureProperties() {
+        if (FileIO.fileExists(fileName, false)) {
+            loadProperties();
+            checkIfEmpty();
             return;
         }
 
-        try (final FileInputStream fileInputStream = new FileInputStream(path)) {
-            properties.load(fileInputStream);
-        } catch (IOException e) {
-            Alerts.showException("Failed to read properties file.", e.fillInStackTrace());
-        }
+        putDefaultProperties();
+        storeProperties();
     }
 
-    public void storeProperties() {
-        try (final FileOutputStream fileOutputStream = new FileOutputStream(path)) {
-            properties.store(fileOutputStream, null);
-        } catch (IOException e) {
-            Alerts.showException("Failed to store properties file.", e.fillInStackTrace());
-        }
-    }
-
-    private void createProperties(final String path) {
-        if (FileIO.createFile(path)) {
-            putDefaults();
+    private void checkIfEmpty() {
+        if (properties.isEmpty()) {
+            putDefaultProperties();
             storeProperties();
         }
     }
+
+    private void loadProperties() {
+        try {
+            properties.load(new FileReader(fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void storeProperties() {
+        try {
+            properties.store(new FileOutputStream(fileName), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

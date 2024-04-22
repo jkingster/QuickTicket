@@ -1,0 +1,14 @@
+@import url("base.css");
+
+.titled-pane {
+    -fx-text-fill: -fx-typography;
+    -fx-box-border: transparent;
+}
+
+.titled-pane > .title {
+    -fx-background-color: -fx-offset-blue;
+}
+
+.titled-pane > *.content {
+    -fx-background-color: derive(-fx-primary, 25%);
+}

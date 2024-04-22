@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.core.email.EmailConfig;
-import io.jacobking.quickticket.core.email.EmailSender;
+import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.TransportType;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.EmailModel;
@@ -39,7 +38,7 @@ public class SMTPController extends Controller {
     }
 
     private void preloadValues() {
-        final EmailModel model = new EmailModel(EmailConfig.getInstance().getEmail());
+        final EmailModel model = new EmailModel(emailConfig.getEmail());
         hostField.setText(model.getHostProperty());
         portField.setText(model.getPortProperty());
         fromAddressField.setText(model.getFromAddressProperty());
@@ -60,16 +59,18 @@ public class SMTPController extends Controller {
         final String testEmail = testAddressField.getText();
         if (testEmail.isEmpty()) return;
 
-        EmailConfig.getInstance().setEmail(getEmail()).applySettings();
+        emailConfig.setEmail(getEmail()).applySettings();
 
-        final EmailSender sender = new EmailSender(EmailConfig.getInstance());
-        sender.sendEmail("QuickTicket SMTP Test", testEmail, "This email can be ignored.");
+        new EmailBuilder(testEmail, EmailBuilder.EmailType.TEST)
+                .email(emailConfig)
+                .setSubject("This is a test e-mail from QuickTicket.")
+                .sendEmail();
     }
 
     @FXML private void onSave() {
         final Email savedEmail = getEmail();
         email.update(new EmailModel(savedEmail));
-        EmailConfig.getInstance().setEmail(savedEmail);
+        emailConfig.setEmail(savedEmail);
         Display.close(Route.SMTP);
     }
 

@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1280.0" styleClass="body" stylesheets="@../css/screen/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.ticket.TicketController">
    <children>
@@ -17,55 +16,36 @@
          <children>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Button layoutX="28.0" layoutY="41.0" mnemonicParsing="false" onAction="#onCreate" prefHeight="25.0" prefWidth="85.0" text="Create" />
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Ticket" textAlignment="CENTER" />
+                  <Button layoutX="38.0" layoutY="41.0" mnemonicParsing="false" onAction="#onCreate" prefHeight="25.0" prefWidth="85.0" text="Create" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Ticket" textAlignment="CENTER" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Last Viewed" textAlignment="CENTER" />
-                  <Button fx:id="lastViewButton" disable="true" layoutX="28.0" layoutY="41.0" mnemonicParsing="false" onAction="#onOpenLastViewed" prefWidth="85.0" styleClass="b" text="Open" />
-               </children>
-            </Pane>
-            <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
-               <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="35.0" prefWidth="140.0" styleClass="card-header" text="Emp. Portal" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="10.0" />
-                     </font></Label>
-                  <Button layoutX="28.0" layoutY="41.0" mnemonicParsing="false" onAction="#onManageEmployees" prefWidth="85.0" styleClass="b" text="Manage" />
-               </children>
-            </Pane>
-            <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
-               <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Journal" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
-                  <Button layoutX="28.0" layoutY="41.0" mnemonicParsing="false" onAction="#onJournal" prefWidth="85.0" styleClass="b" text="View" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Last Viewed" textAlignment="CENTER" />
+                  <Button fx:id="lastViewButton" disable="true" layoutX="38.0" layoutY="41.0" mnemonicParsing="false" onAction="#onOpenLastViewed" prefWidth="85.0" styleClass="b" text="Open" />
                </children>
             </Pane>
             <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane fx:id="openPane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">
                <children>
                   <Label fx:id="openLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="82.0" styleClass="card-text" text="Open Tickets" />
                </children>
             </Pane>
-            <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane fx:id="activePane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">
                <children>
                   <Label fx:id="activeLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="124.0" styleClass="card-text" text="Active Tickets" />
                </children>
             </Pane>
-            <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane fx:id="pausedPane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">
                <children>
                   <Label fx:id="pausedLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="124.0" styleClass="card-text" text="Paused Tickets" />
                </children>
             </Pane>
-            <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane fx:id="resolvedPane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">
                <children>
                   <Label fx:id="resolvedLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="124.0" styleClass="card-text" text="Resolved Tickets" />
@@ -91,12 +71,11 @@
             </TableView>
          </children>
       </AnchorPane>
-      <VBox alignment="TOP_CENTER" layoutX="1127.0" layoutY="138.0" prefHeight="141.0" prefWidth="124.0" spacing="5.0" style="-fx-padding: 10 0 0 0;" styleClass="card" stylesheets="@../css/core/card.css">
+      <VBox alignment="TOP_CENTER" layoutX="1127.0" layoutY="138.0" prefHeight="107.0" prefWidth="124.0" spacing="5.0" style="-fx-padding: 10 0 0 0;" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
             <Button mnemonicParsing="false" onAction="#onResolve" prefHeight="25.0" prefWidth="68.0" text="Resolve" />
             <Button mnemonicParsing="false" onAction="#onReopen" prefHeight="25.0" prefWidth="68.0" text="Re-open" />
             <Button mnemonicParsing="false" onAction="#onRefresh" prefHeight="25.0" prefWidth="68.0" text="Refresh" />
-            <Button mnemonicParsing="false" onAction="#onOrderBy" prefHeight="25.0" prefWidth="68.0" text="Order By" />
          </children>
       </VBox>
    </children>

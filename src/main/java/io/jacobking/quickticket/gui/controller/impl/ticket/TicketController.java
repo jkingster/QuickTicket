@@ -1,6 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.core.email.EmailResolvedSender;
+import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -16,14 +16,18 @@ import io.jacobking.quickticket.gui.utility.FALoader;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -34,6 +38,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class TicketController extends Controller {
@@ -44,6 +50,8 @@ public class TicketController extends Controller {
     private final FilteredList<TicketModel> resolved = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.RESOLVED);
 
     private final ObjectProperty<TicketModel> lastViewed = new SimpleObjectProperty<>();
+
+    private final Map<Pane, FilteredList<TicketModel>> activePaneMap = new HashMap<>();
 
     @FXML private TableView<TicketModel>                  ticketTable;
     @FXML private TableColumn<TicketModel, PriorityType>  indicatorColumn;
@@ -59,10 +67,27 @@ public class TicketController extends Controller {
     @FXML private Label                                   resolvedLabel;
     @FXML private Button                                  lastViewButton;
 
+    @FXML private Pane openPane;
+    @FXML private Pane activePane;
+    @FXML private Pane pausedPane;
+    @FXML private Pane resolvedPane;
+
+
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
         configureLabels();
+
+        openPane.setUserData(StatusType.OPEN);
+        activePane.setUserData(StatusType.ACTIVE);
+        pausedPane.setUserData(StatusType.PAUSED);
+        resolvedPane.setUserData(StatusType.RESOLVED);
+
+        openPane.setOnMousePressed(this::togglePane);
+        activePane.setOnMousePressed(this::togglePane);
+        pausedPane.setOnMousePressed(this::togglePane);
+        resolvedPane.setOnMousePressed(this::togglePane);
     }
+
 
     private void configureTable() {
         handleIndicatorColumn();
@@ -99,7 +124,7 @@ public class TicketController extends Controller {
                     return;
                 }
 
-                setText(DateUtil.parseAsString(localDateTime));
+                setText(DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, localDateTime));
             }
         });
 
@@ -186,11 +211,6 @@ public class TicketController extends Controller {
         Display.show(Route.TICKET_CREATOR, DataRelay.of(ticketTable));
     }
 
-    @FXML private void onManageEmployees() {
-        Display.show(Route.EMPLOYEE_MANAGER);
-    }
-
-
     @FXML private void onResolve() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
         if (ticketModel == null) {
@@ -221,17 +241,31 @@ public class TicketController extends Controller {
                     return;
                 }
 
-                final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
-                emailResolvedSender.sendEmail();
+                new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
+                        .format(
+                                ticketModel.getId(),
+                                ticketModel.getTitle(),
+                                DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation()),
+                                model.getFullName(),
+                                comment
+                        )
+                        .email(emailConfig)
+                        .setSubject(getSubject(ticketModel))
+                        .sendEmail();
+
                 postCommentOnTicket(ticketModel, comment);
             }, () -> postCommentOnTicket(ticketModel, "No resolving comment."));
             ticketTable.refresh();
         }
     }
 
+    private String getSubject(final TicketModel ticketModel) {
+        return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());
+    }
+
     private void postCommentOnTicket(final TicketModel ticketModel, final String systemComment) {
         comment.createModel(new Comment().setTicketId(ticketModel.getId())
-                .setPostedOn(DateUtil.nowWithTime().format(DateUtil.DATE_TIME_FORMATTER))
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setPost(String.format("[%s]: %s", "System", systemComment)));
     }
 
@@ -257,10 +291,6 @@ public class TicketController extends Controller {
         Display.show(Route.VIEWER, DataRelay.of(lastViewed.getValue(), ticketTable, lastViewed));
     }
 
-    @FXML
-    private void onJournal() {
-        Display.show(Route.JOURNAL, DataRelay.empty());
-    }
 
     private void onDelete(final TicketModel ticketModel) {
         if (ticketModel == null) {
@@ -371,8 +401,63 @@ public class TicketController extends Controller {
         });
     }
 
-    @FXML private void onOrderBy() {
-
+    private void togglePane(final MouseEvent event) {
+        if (event.getSource() instanceof Pane pane) {
+            if (activePaneMap.containsKey(pane)) {
+                deactivatePane(pane);
+            } else {
+                activatePane(pane);
+            }
+        }
     }
 
+
+    private void activatePane(final Pane pane) {
+        final StatusType statusType = (StatusType) pane.getUserData();
+        final FilteredList<TicketModel> filteredList = getFilteredListByStatus(statusType);
+        activePaneMap.put(pane, filteredList);
+        highlightPane(pane);
+        setTicketTable();
+    }
+
+    private void deactivatePane(final Pane pane) {
+        activePaneMap.remove(pane);
+        removePaneHighlight(pane);
+        if (activePaneMap.isEmpty()) {
+            ticketTable.setItems(ticket.getObservableList());
+            ticketTable.refresh();
+            return;
+        }
+
+        setTicketTable();
+    }
+
+    private void highlightPane(final Pane pane) {
+        pane.setStyle("-fx-background-color: #5DADD5;");
+    }
+
+    private void removePaneHighlight(final Pane pane) {
+        pane.setStyle("-fx-background-color: derive(-fx-primary, 25%);");
+    }
+
+
+    private FilteredList<TicketModel> getFilteredListByStatus(final StatusType statusType) {
+        return switch (statusType) {
+            case OPEN -> open;
+            case ACTIVE -> active;
+            case RESOLVED -> resolved;
+            case PAUSED -> paused;
+        };
+    }
+
+    private void setTicketTable() {
+        final ObservableList<TicketModel> mergedList = FXCollections.observableArrayList();
+
+        for (final FilteredList<TicketModel> filteredList : activePaneMap.values()) {
+            mergedList.addAll(filteredList);
+        }
+
+        ticketTable.setItems(mergedList);
+        ticketTable.refresh();
+    }
 }

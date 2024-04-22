@@ -10,6 +10,7 @@
 
 .dialog-pane:header .header-panel .label{
     -fx-text-fill: -fx-typography;
+    -fx-font-size: 1.5em;
 }
 
 .dialog-pane .button {
@@ -21,7 +22,7 @@
 .dialog-pane > .content.label {
     -fx-padding: 0.5em 0.5em 0.5em 0.5em;
     -fx-text-fill: -fx-typography;
-    -fx-font-size: 1.5em;
+    -fx-font-size: 1.25em;
 }
 
 .dialog-pane .button:hover {

@@ -48,6 +48,10 @@ public class EmailRepository implements Repository<Email> {
         throw new UnsupportedOperationException("Email#delete(Context, Integer) not supported!");
     }
 
+    @Override public boolean deleteWhere(DSLContext context, Condition condition) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override
     public boolean update(DSLContext context, Email email) {
         final EmailRecord record = new EmailRecord(email);

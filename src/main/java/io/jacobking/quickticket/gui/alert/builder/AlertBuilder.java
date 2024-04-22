@@ -2,7 +2,10 @@ package io.jacobking.quickticket.gui.alert.builder;
 
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.utility.Checks;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;

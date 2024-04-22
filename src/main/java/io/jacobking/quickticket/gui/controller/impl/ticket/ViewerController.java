@@ -1,23 +1,19 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.App;
-import io.jacobking.quickticket.core.email.EmailResolvedSender;
+import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.CommentModel;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
-import io.jacobking.quickticket.gui.model.impl.JournalModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.StyleCommons;
 import io.jacobking.quickticket.tables.pojos.Comment;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -26,7 +22,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -37,6 +32,7 @@ import org.controlsfx.control.SearchableComboBox;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -78,7 +74,7 @@ public class ViewerController extends Controller {
     @FXML private void onPost() {
         comment.createModel(new Comment()
                 .setPost(commentField.getText())
-                .setPostedOn(DateUtil.nowWithTime().format(DateUtil.DATE_TIME_FORMATTER))
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setTicketId(ticketId));
 
         commentField.clear();
@@ -184,12 +180,12 @@ public class ViewerController extends Controller {
             return;
         }
 
-        postSystemComment("System", "Ticket employee changed to: " + model.getFullName());
 
+        ticketModel.employeeProperty().setValue(model.getId());
         if (ticket.update(ticketModel)) {
-            ticketModel.employeeProperty().setValue(model.getId());
-            Notifications.showInfo("Update", "Ticket employee updated successfully!");
             reloadPostUpdate(employeeComboBox, popOver);
+            postSystemComment("System", "Ticket employee changed to: " + model.getFullName());
+            Notifications.showInfo("Update", "Ticket employee updated successfully!");
         }
     }
 
@@ -259,11 +255,25 @@ public class ViewerController extends Controller {
                     return;
                 }
 
-                final EmailResolvedSender emailResolvedSender = new EmailResolvedSender(ticketModel, model, comment);
-                emailResolvedSender.sendEmail();
+                new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
+                        .format(
+                                ticketModel.getId(),
+                                ticketModel.getTitle(),
+                                DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation()),
+                                model.getFullName(),
+                                comment
+                        )
+                        .email(emailConfig)
+                        .setSubject(getSubject(ticketModel))
+                        .sendEmail();
+
                 postSystemComment("Ticket Resolved", comment);
             }, () -> postSystemComment("Ticket Resolved", "No resolving comment."));
         }
+    }
+
+    private String getSubject(final TicketModel ticketModel) {
+        return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());
     }
 
     private void refreshTable() {
@@ -274,7 +284,7 @@ public class ViewerController extends Controller {
 
     private void postSystemComment(final String prefix, final String commentText) {
         comment.createModel(new Comment().setTicketId(ticketId)
-                .setPostedOn(DateUtil.nowWithTime().format(DateUtil.DATE_TIME_FORMATTER))
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setPost(String.format("[%s]: %s", prefix, commentText)));
         commentList.refresh();
         scrollToLastComment();
@@ -283,9 +293,12 @@ public class ViewerController extends Controller {
     private void populateData(final TicketModel ticketModel) {
         this.ticketModel = ticketModel;
         this.ticketId = ticketModel.getId();
-        this.comments = comment.getComments(ticketId);
+        this.comments = comment.getCommentsByTicketId(ticketId);
         titleField.setText(ticketModel.getTitle());
-        creationField.setText(String.format("Date: %s", ticketModel.getCreation()));
+        creationField.setText(String.format("Date: %s", DateUtil.formatDateTime(
+                DateUtil.DateFormat.DATE_TIME_ONE,
+                ticketModel.getCreation())
+        ));
         priorityLabel.textProperty().bind(ticketModel.priorityProperty().asString());
         statusLabel.textProperty().bind(ticketModel.statusProperty().asString());
 
@@ -294,12 +307,10 @@ public class ViewerController extends Controller {
             employeeField.setText(employeeModel.getFullName());
         }
 
-        final JournalModel journalModel = journal.getModel(ticketModel.getAttachedJournalId());
-        viewJournalButton.disableProperty().bind(Bindings.createBooleanBinding(() -> journalModel == null));
     }
 
     private void configureComments() {
-        commentList.setItems(comments);
+        commentList.setItems(comments.sorted(Comparator.comparing(CommentModel::getPostedOn)));
         commentList.setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(CommentModel commentModel, boolean b) {
                 super.updateItem(commentModel, b);
@@ -311,7 +322,11 @@ public class ViewerController extends Controller {
                 final VBox vBox = new VBox();
                 VBox.setVgrow(vBox, Priority.ALWAYS);
 
-                final Label date = new Label(commentModel.getPostedOn());
+                final Label date = new Label(DateUtil.formatDateTime(
+                        DateUtil.DateFormat.DATE_TIME_ONE,
+                        commentModel.getPostedOn()
+                ));
+
                 date.setStyle(StyleCommons.COMMON_LABEL_STYLE);
 
                 final Text comment = new Text(commentModel.getPost());
@@ -379,91 +394,6 @@ public class ViewerController extends Controller {
         Display.close(Route.VIEWER);
     }
 
-    @FXML private void onJournal() {
-        final ObservableList<JournalModel> journalList = journal.getObservableList();
-        if (journalList.isEmpty()) {
-            Alerts.showError("Failed to open journal list.", "There are no journals to select from.", "Create one and try again!");
-            return;
-        }
-
-        final VBox vBox = new VBox();
-        vBox.setSpacing(5.0);
-        vBox.setAlignment(Pos.CENTER_LEFT);
-        vBox.setPadding(new Insets(10, 10, 10, 10));
-
-        final ListView<JournalModel> journalListView = new ListView<>(journalList);
-        journalListView.setPrefHeight(100.0);
-        journalListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        configureJournalListView(journalListView);
-
-        final Button select = new Button("Select");
-        select.disableProperty().bind(journalListView.selectionModelProperty().isNull());
-
-        vBox.getChildren().addAll(journalListView, select);
-
-        final PopOverBuilder popOverBuilder = PopOverBuilder.build()
-                .useDefault()
-                .setOwner(attachJournalButton)
-                .withTitle("Select a journal")
-                .withContent(vBox);
-
-        select.setOnAction(event -> selectJournalForTicket(popOverBuilder.getPopOver(), journalListView));
-        popOverBuilder.showWithoutOffset();
-    }
-
-    private void configureJournalListView(final ListView<JournalModel> journalModelListView) {
-        journalModelListView.getStylesheets().add(App.class.getResource("css/core/list.css").toExternalForm());
-        journalModelListView.getStyleClass().add("ticket-list-view");
-        journalModelListView.setCellFactory(data -> new ListCell<>() {
-            @Override protected void updateItem(JournalModel journalModel, boolean b) {
-                super.updateItem(journalModel, b);
-                if (b || journalModel == null) {
-                    setText(null);
-                    return;
-                }
-
-                setText(String.format("Journal ID: %s | %s", journalModel.getId(), journalModel.getNoteProperty()));
-                setStyle("-fx-text-fill: white");
-            }
-        });
-    }
-
-    private void selectJournalForTicket(final PopOver popOver, final ListView<JournalModel> journalModelListView) {
-        final JournalModel selected = journalModelListView.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            Alerts.showError(
-                    "Invalid Journal Model",
-                    "You must select a journal to attach!",
-                    "Please try again."
-            );
-            return;
-        }
-
-        ticketModel.setAttachedJournalId(selected.getId());
-        if (ticket.update(ticketModel)) {
-            Notifications.showInfo("Update", "Journal attached to ticket successfully!");
-            popOver.hide();
-        }
-    }
-
-    @FXML private void onViewJournal() {
-        final JournalModel journalModel = journal.getModel(ticketModel.getAttachedJournalId());
-        if (journalModel != null) {
-            openJournal(journalModel);
-        }
-    }
-
-    private void openJournal(final JournalModel journalModel) {
-        final BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(new Text(journalModel.getNoteProperty()));
-
-        final PopOverBuilder popOver = PopOverBuilder.build()
-                .withTitle("Journal Date: " + journalModel.getCreatedOnProperty())
-                .withContent(borderPane)
-                .setOwner(viewJournalButton);
-
-        popOver.show();
-    }
 
     private void updateLastViewed() {
         ticketModel.lastViewedProperty().setValue(LocalDateTime.now());

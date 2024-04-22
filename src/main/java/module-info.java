@@ -1,6 +1,7 @@
 module io.jacobking.quickticket {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.swing;
     requires java.sql;
     requires org.controlsfx.controls;
     requires org.jooq;
@@ -8,11 +9,13 @@ module io.jacobking.quickticket {
     requires org.xerial.sqlitejdbc;
     requires java.desktop;
     requires java.mail;
-    requires com.fasterxml.jackson.core;
     requires com.google.gson;
-    requires com.fasterxml.jackson.databind;
     requires org.slf4j;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.databind;
     requires flyway.core;
+    requires ch.qos.logback.classic;
+    requires ch.qos.logback.core;
 
     opens io.jacobking.quickticket to javafx.fxml;
     exports io.jacobking.quickticket;
@@ -23,14 +26,13 @@ module io.jacobking.quickticket {
     opens io.jacobking.quickticket.tables.records to org.jooq;
     exports io.jacobking.quickticket.tables.records;
 
+
+
     opens io.jacobking.quickticket.tables.pojos to org.jooq;
     exports io.jacobking.quickticket.tables.pojos;
 
     opens io.jacobking.quickticket.gui.controller.impl.ticket to javafx.fxml;
     exports io.jacobking.quickticket.gui.controller.impl.ticket;
-
-    opens io.jacobking.quickticket.gui.controller.impl.journal to javafx.fxml;
-    exports io.jacobking.quickticket.gui.controller.impl.journal;
 
     opens io.jacobking.quickticket.gui.controller.impl to javafx.fxml;
     exports io.jacobking.quickticket.gui.controller.impl;

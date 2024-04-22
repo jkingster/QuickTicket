@@ -7,12 +7,12 @@ import io.jacobking.quickticket.gui.model.impl.AlertSettingsModel;
 import io.jacobking.quickticket.tables.pojos.AlertSettings;
 
 public class AlertSettingsBridge extends Bridge<AlertSettings, AlertSettingsModel> {
-    public AlertSettingsBridge() {
-        super(RepoType.ALERT);
+    public AlertSettingsBridge(final Database database) {
+        super(database, RepoType.ALERT);
     }
 
     @Override protected void loadEntities() {
-        final AlertSettings settings = Database.call().getById(RepoType.ALERT, 0);
+        final AlertSettings settings = crud.getById(RepoType.ALERT, 0);
         if (settings == null)
             return;
         getObservableList().add(0, convertEntity(settings));

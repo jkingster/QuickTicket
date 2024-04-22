@@ -19,7 +19,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="System">
                   <items>
-                        <MenuItem mnemonicParsing="false" onAction="#onDatabase" text="Database" />
+                        <MenuItem mnemonicParsing="false" onAction="#onConfiguration" text="Configuration" />
                         <MenuItem mnemonicParsing="false" onAction="#onSMTP" text="SMTP" />
                         <MenuItem mnemonicParsing="false" onAction="#onSettings" text="Settings" />
                         <SeparatorMenuItem mnemonicParsing="false" />
@@ -27,12 +27,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
                   </items>
                 </Menu>
-                  <Menu disable="true" mnemonicParsing="false" text="Settings">
-                     <items>
-                        <MenuItem disable="true" mnemonicParsing="false" text="Ticket Settings" />
-                        <MenuItem disable="true" mnemonicParsing="false" text="App Settings" />
-                     </items>
-                  </Menu>
               </menus>
                <opaqueInsets>
                   <Insets top="10.0" />
@@ -45,9 +39,9 @@
             <Tab text="Ticket">
                <fx:include source="ticket.fxml" />
             </Tab>
-            <Tab text="Portal">
+            <Tab text="Employee">
                <content>
-                  <fx:include source="ticket.fxml" />
+                  <fx:include source="employee.fxml" />
                </content>
             </Tab>
          </tabs>

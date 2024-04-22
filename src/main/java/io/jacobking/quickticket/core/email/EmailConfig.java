@@ -1,27 +1,30 @@
 package io.jacobking.quickticket.core.email;
 
+import io.jacobking.quickticket.core.utility.DateUtil;
+import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.tables.pojos.Email;
 
+import javax.mail.Session;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Properties;
 
 import static io.jacobking.quickticket.core.email.EmailConfig.EmailCommons.*;
 
 public class EmailConfig {
 
-    private static final String      DEFAULT_CONNECTION_TIMEOUT = "15000";
-    private static final String      DEFAULT_TIMEOUT            = "60000";
-    private static final EmailConfig instance                   = new EmailConfig();
+    private static final String DEFAULT_CONNECTION_TIMEOUT = "15000";
+    private static final String DEFAULT_TIMEOUT            = "60000";
 
     private final Properties properties;
     private       Email      email;
+    private       Session    session;
 
-    private EmailConfig() {
+    public EmailConfig() {
         this.properties = new Properties();
-    }
-
-    public static EmailConfig getInstance() {
-        return instance;
     }
 
     public EmailConfig applySettings() {
@@ -37,12 +40,12 @@ public class EmailConfig {
         return !email.getHost().isEmpty();
     }
 
-    public Properties getProperties() {
-        return properties;
-    }
-
     public Email getEmail() {
         return email;
+    }
+
+    public Session getSession() {
+        return session;
     }
 
     public EmailConfig setEmail(final Email email) {
@@ -71,8 +74,30 @@ public class EmailConfig {
 
         properties.setProperty(SMTP_CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
         properties.setProperty(SMTP_TIMEOUT, DEFAULT_TIMEOUT);
+        properties.setProperty("mail.debug", booleanAsString(email.getDebugging()));
+        properties.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
+
+        this.session = Session.getDefaultInstance(properties);
+
+        if (email.getDebugging()) {
+            configureDebugLogs();
+        }
     }
 
+    private String booleanAsString(final boolean state) {
+        return state ? "true" : "false";
+    }
+
+    private void configureDebugLogs() {
+        try {
+            final String fileName = String.format("mail-debug-%s.log", DateUtil.nowAsString(DateUtil.DateFormat.DATE_TIME_TWO));
+            final FileOutputStream output = new FileOutputStream(FileIO.getPath("logs") + File.separator + fileName);
+            final PrintStream printStream = new PrintStream(output);
+            session.setDebugOut(printStream);
+        } catch (IOException e) {
+            Alerts.showException("Configuring Debug Logs", e.fillInStackTrace());
+        }
+    }
 
     static class EmailCommons {
         static final String SMTP_HOST = "mail.smtp.host";

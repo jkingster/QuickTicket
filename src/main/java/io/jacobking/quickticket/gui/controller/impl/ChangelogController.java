@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 public class ChangelogController extends Controller {
     @FXML private ListView<ChangelogReader.Changelog> changeList;
 
+
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         changeList.setItems(FXCollections.observableArrayList(ChangelogReader.getChanges()));
         changeList.setCellFactory(data -> new ListCell<>() {

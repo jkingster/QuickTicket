@@ -12,10 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="238.0" prefWidth="443.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TabPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/core/tab-pane.css" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="238.0" prefWidth="443.0" stylesheets="@../css/core/tab-pane.css" tabClosingPolicy="UNAVAILABLE" tabMaxWidth="2.0" tabMinWidth="2.0">
         <tabs>
           <Tab styleClass="t" text="Alerts">
             <content>
@@ -27,7 +26,7 @@
                               <CheckBox fx:id="disableNotificationsCheckBox" mnemonicParsing="false" text="Disable Notifications" textFill="WHITE" />
                            </children>
                         </HBox>
-                        <Button layoutX="14.0" layoutY="325.0" mnemonicParsing="false" onAction="#onUpdate" text="Update" />
+                        <Button layoutX="10.0" layoutY="170.0" mnemonicParsing="false" onAction="#onUpdate" text="Update" />
                         <Separator layoutX="10.0" layoutY="25.0" prefHeight="14.0" prefWidth="580.0" />
                         <VBox fx:id="alertsModule" layoutX="10.0" layoutY="32.0" prefHeight="153.0" prefWidth="225.0" spacing="5.0">
                            <children>
@@ -59,6 +58,39 @@
                   </AnchorPane>
             </content>
           </Tab>
+            <Tab styleClass="t" text="Misc.">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@../css/core/tab-pane.css">
+                     <children>
+                        <Button layoutX="10.0" layoutY="170.0" mnemonicParsing="false" onAction="#onUpdateMisc" text="Update" />
+                        <VBox layoutX="14.0" layoutY="7.0" prefHeight="158.0" prefWidth="419.0" spacing="5.0">
+                           <children>
+                              <CheckBox fx:id="emailDebugCheckBox" mnemonicParsing="false" text="Enable E-Mail Debugging" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox1" disable="true" mnemonicParsing="false" text="Disable System Logging" textFill="WHITE" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab styleClass="t" text="Startup">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@../css/core/tab-pane.css">
+                     <children>
+                        <Button layoutX="10.0" layoutY="170.0" mnemonicParsing="false" onAction="#onUpdateMisc" text="Update" />
+                        <VBox disable="true" layoutX="14.0" layoutY="7.0" prefHeight="158.0" prefWidth="419.0" spacing="5.0">
+                           <children>
+                              <CheckBox fx:id="emailDebugCheckBox1" mnemonicParsing="false" text="Show Open Tickets" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox11" mnemonicParsing="false" text="Show Active Tickets" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox111" mnemonicParsing="false" text="Show Paused Tickets" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox1111" mnemonicParsing="false" text="Show Resolved Tickets" textFill="WHITE" />
+                              <CheckBox fx:id="emailDebugCheckBox11111" mnemonicParsing="false" text="Require Login Authentication" textFill="WHITE" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>

@@ -1,12 +1,17 @@
 package io.jacobking.quickticket.gui.alert;
 
-import io.jacobking.quickticket.bridge.BridgeContext;
+import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.gui.alert.builder.NotificationBuilder;
 import io.jacobking.quickticket.gui.model.impl.AlertSettingsModel;
 
 public class Notifications {
 
-    private static final AlertSettingsModel settings = BridgeContext.alertSettings().getModel(0);
+    private static final AlertSettingsModel settings = QuickTicket
+            .getInstance()
+            .getDatabase()
+            .getBridgeContext()
+            .getAlertSettings()
+            .getModel(0);
 
     private Notifications() {
     }

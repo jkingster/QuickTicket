@@ -28,6 +28,10 @@ public class TicketRepository implements Repository<Ticket> {
                 .fetchOneInto(Ticket.class);
     }
 
+    @Override public boolean deleteWhere(DSLContext context, Condition condition) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override
     public List<Ticket> getAll(DSLContext context) {
         return context.selectFrom(TICKET)

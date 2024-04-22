@@ -19,8 +19,8 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
 
     private ObservableList<TicketModel> baseUnfilteredList;
 
-    public TicketBridge() {
-        super(RepoType.TICKET);
+    public TicketBridge(final Database database) {
+        super(database, RepoType.TICKET);
     }
 
     @Override protected void loadEntities() {
@@ -41,7 +41,6 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
         });
     }
 
-
     @Override
     public TicketModel convertEntity(Ticket entity) {
         return new TicketModel(entity);
@@ -52,8 +51,7 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
     }
 
     public TicketModel getLastViewed() {
-        final Ticket ticket = Database.call()
-                .getContext()
+        final Ticket ticket = crud.getContext()
                 .selectFrom(TICKET)
                 .orderBy(TICKET.LAST_OPENED_TIMESTAMP.desc())
                 .limit(1)

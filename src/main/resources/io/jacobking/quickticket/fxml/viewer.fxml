@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="800.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ListView fx:id="commentList" layoutX="38.0" layoutY="83.0" prefHeight="311.0" prefWidth="724.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
       <HBox layoutX="38.0" layoutY="405.0" prefHeight="26.0" prefWidth="724.0" spacing="5.0">
@@ -34,12 +34,7 @@
                   <Button minWidth="105.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="26.0" styleClass="button-warning" text="Delete" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="545.0" spacing="5.0">
-               <children>
-                  <Button fx:id="attachJournalButton" minWidth="105.0" mnemonicParsing="false" onAction="#onJournal" prefHeight="26.0" styleClass="button-primary" text="Attach Journal" />
-                  <Button fx:id="viewJournalButton" minWidth="105.0" mnemonicParsing="false" onAction="#onViewJournal" prefHeight="26.0" styleClass="button-primary" text="View Journal" />
-               </children>
-            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="545.0" spacing="5.0" />
          </children>
       </VBox>
       <TextField fx:id="employeeField" editable="false" layoutX="38.0" layoutY="47.0" prefHeight="26.0" prefWidth="217.0" promptText="Undefined" />
