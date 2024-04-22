@@ -2,7 +2,7 @@ package io.jacobking.quickticket.core;
 
 public class Version {
 
-    private static final Version CURRENT = new Version(1, 1, 0, "beta");
+    private static final Version CURRENT = new Version(1, 0, 0, "");
 
     private final int    major;
     private final int    minor;
@@ -16,12 +16,35 @@ public class Version {
         this.suffix = suffix;
     }
 
+    private static Version VERSION() {
+        return CURRENT;
+    }
+
     public static String current() {
-        return CURRENT.asString();
+        final Version current = VERSION();
+        if (current.suffix.isEmpty()) {
+            return String.format("v%d.%d.%d", current.major, current.minor, current.patch);
+        }
+        return current.asString();
     }
 
     public String asString() {
         return String.format("v%d.%d.%d-%s", major, minor, patch, suffix);
     }
 
+    public int getMajor() {
+        return major;
+    }
+
+    public int getMinor() {
+        return minor;
+    }
+
+    public int getPatch() {
+        return patch;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
 }

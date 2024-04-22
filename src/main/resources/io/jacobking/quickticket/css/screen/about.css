@@ -16,3 +16,9 @@
     -fx-font-size: 2.0em;
     -fx-text-fill: white;
 }
+
+.header {
+    -fx-background-image: url('../../svg/header.svg');
+    -fx-background-size: contain;
+}
+

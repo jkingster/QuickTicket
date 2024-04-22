@@ -1,0 +1,23 @@
+@import url("base.css");
+
+.text-area {
+    -fx-font-weight: bolder;
+    -fx-font-size: 1em;
+    -fx-text-fill: -fx-typography;
+    -fx-border-style: none;
+    -fx-padding: 0;
+}
+
+.text-area .content {
+    -fx-background-color: derive(-fx-primary, 25%);
+    -fx-border-color: none;
+}
+
+.text-area:hover {
+    -fx-cursor: hand;
+}
+
+.text-area:focused .content {
+    -fx-border-style: none;
+    -fx-border-color: none;
+}

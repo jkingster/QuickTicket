@@ -1,9 +1,6 @@
 package io.jacobking.quickticket.core.database.repository;
 
-import io.jacobking.quickticket.core.database.repository.impl.CommentRepository;
-import io.jacobking.quickticket.core.database.repository.impl.EmailRepository;
-import io.jacobking.quickticket.core.database.repository.impl.EmployeeRepository;
-import io.jacobking.quickticket.core.database.repository.impl.TicketRepository;
+import io.jacobking.quickticket.core.database.repository.impl.*;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 
@@ -21,6 +18,10 @@ public class RepoCrud {
         loadRepositories();
     }
 
+    public DSLContext getContext() {
+        return context;
+    }
+
     public <T extends Entity> T getById(final RepoType type, final int id) {
         return (T) getRepository(type).getById(context, id);
     }
@@ -29,8 +30,12 @@ public class RepoCrud {
         return (T) getRepository(type).save(context, value);
     }
 
-    public boolean delete(final RepoType type, final int id) {
+    public boolean deleteWhere(final RepoType type, final int id) {
         return getRepository(type).delete(context, id);
+    }
+
+    public boolean deleteWhere(final RepoType type, final Condition condition) {
+        return getRepository(type).deleteWhere(context, condition);
     }
 
     public <T extends Entity> boolean update(final RepoType type, final T value) {
@@ -52,12 +57,15 @@ public class RepoCrud {
     private <T extends Entity> void loadRepositories() {
         for (RepoType value : RepoType.values()) {
             repositoryMap.computeIfAbsent(value, type -> switch (type) {
-                case TICKET -> (Repository<? extends Entity>) new TicketRepository();
-                case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
-                case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
-                case EMAIL -> (Repository<? extends Entity>) new EmailRepository();
+                case TICKET     -> (Repository<? extends Entity>) new TicketRepository();
+                case COMMENT    -> (Repository<? extends Entity>) new CommentRepository();
+                case EMPLOYEE   -> (Repository<? extends Entity>) new EmployeeRepository();
+                case EMAIL      -> (Repository<? extends Entity>) new EmailRepository();
+                case ALERT      -> (Repository<? extends Entity>) new AlertSettingsRepository();
+                case COMPANY    -> (Repository<? extends Entity>) new CompanyRepository();
+                case DEPARTMENT -> (Repository<? extends Entity>) new DepartmentRepository();
+                case FLYWAY     -> (Repository<? extends Entity>) new FlywayRepository();
             });
         }
     }
-
 }

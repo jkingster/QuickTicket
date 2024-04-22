@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.screen;
 
 
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.data.DataRelay;
 
 import java.lang.reflect.Constructor;
@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Display {
-    private static final Display            instance       = new Display();
+    private static Display display;
+
     private static final String             SCREEN_PACKAGE = "io.jacobking.quickticket.gui.screen.impl.%sScreen";
     private final        Map<Route, Screen> screens        = new HashMap<>();
 
@@ -17,8 +18,11 @@ public class Display {
         loadScreens();
     }
 
-    public static Display getInstance() {
-        return instance;
+    public static synchronized  Display getInstance() {
+        if (display == null) {
+            display = new Display();
+        }
+        return display;
     }
 
     public static void show(final Route route, final DataRelay dataRelay) {
@@ -33,11 +37,15 @@ public class Display {
         getInstance().closeRoute(route);
     }
 
+    public static void closeAll() {
+        getInstance().closeAllRoutes();
+    }
+
     public void showRoute(final Route route, final DataRelay dataRelay) {
         final Screen screen = screens.get(route);
         if (screen == null) {
             final RuntimeException exception = new RuntimeException("Failed to load screen: " + route.getName());
-            Notify.showException("Failed to load screen.", exception.fillInStackTrace());
+            Alerts.showException("Failed to load screen.", exception.fillInStackTrace());
             return;
         }
         screen.display(dataRelay);
@@ -48,6 +56,10 @@ public class Display {
         if (screen == null)
             return;
         screen.close();
+    }
+
+    public void closeAllRoutes() {
+        screens.values().forEach(Screen::close);
     }
 
     private void loadScreens() {

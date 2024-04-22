@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1280.0" styleClass="body" stylesheets="@../css/screen/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.ticket.TicketController">
    <children>
@@ -17,45 +16,36 @@
          <children>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Button layoutX="38.0" layoutY="49.0" mnemonicParsing="false" onAction="#onCreate" prefHeight="25.0" prefWidth="85.0" text="Create" />
+                  <Button layoutX="38.0" layoutY="41.0" mnemonicParsing="false" onAction="#onCreate" prefHeight="25.0" prefWidth="85.0" text="Create" />
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Ticket" textAlignment="CENTER" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Last Viewed" textAlignment="CENTER" />
-                  <Button disable="true" layoutX="38.0" layoutY="50.0" mnemonicParsing="false" prefWidth="85.0" styleClass="b" text="Open" />
-               </children>
-            </Pane>
-            <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
-               <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="-3.0" prefHeight="53.0" prefWidth="141.0" styleClass="card-header" text="Employee Portal" textAlignment="CENTER" wrapText="true">
-                     <font>
-                        <Font size="10.0" />
-                     </font></Label>
-                  <Button layoutX="38.0" layoutY="50.0" mnemonicParsing="false" onAction="#onManageEmployees" prefWidth="85.0" styleClass="b" text="Manage" />
+                  <Button fx:id="lastViewButton" disable="true" layoutX="38.0" layoutY="41.0" mnemonicParsing="false" onAction="#onOpenLastViewed" prefWidth="85.0" styleClass="b" text="Open" />
                </children>
             </Pane>
             <Separator orientation="VERTICAL" prefHeight="200.0" />
-            <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane fx:id="openPane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">
                <children>
                   <Label fx:id="openLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="82.0" styleClass="card-text" text="Open Tickets" />
                </children>
             </Pane>
-            <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane fx:id="activePane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">
                <children>
                   <Label fx:id="activeLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="124.0" styleClass="card-text" text="Active Tickets" />
                </children>
             </Pane>
-            <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane fx:id="pausedPane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">
                <children>
                   <Label fx:id="pausedLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="124.0" styleClass="card-text" text="Paused Tickets" />
                </children>
             </Pane>
-            <Pane prefHeight="82.0" prefWidth="141.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane fx:id="resolvedPane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">
                <children>
                   <Label fx:id="resolvedLabel" layoutX="9.0" layoutY="14.0" prefHeight="35.0" prefWidth="124.0" styleClass="card-header" text="0" />
                   <Label layoutX="9.0" layoutY="49.0" prefHeight="27.0" prefWidth="124.0" styleClass="card-text" text="Resolved Tickets" />
@@ -68,12 +58,12 @@
             <TableView fx:id="ticketTable" layoutY="-37.0" prefHeight="634.0" prefWidth="1086.0" stylesheets="@../css/core/table.css">
               <columns>
                   <TableColumn fx:id="indicatorColumn" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" resizable="false" />
-                <TableColumn fx:id="actionsColumn" maxWidth="200.0" minWidth="160.0" prefWidth="160.0" resizable="false" text="Actions" />
-                <TableColumn fx:id="titleColumn" maxWidth="500.0" minWidth="346.0" prefWidth="386.0" resizable="false" text="Title" />
-                  <TableColumn fx:id="statusColumn" maxWidth="229.0" minWidth="75.0" prefWidth="131.0" resizable="false" text="Status" />
-                  <TableColumn fx:id="priorityColumn" maxWidth="173.0" minWidth="75.0" prefWidth="87.0" resizable="false" text="Priority" />
-                  <TableColumn fx:id="employeeColumn" maxWidth="286.0" minWidth="133.0" prefWidth="133.0" resizable="false" text="Employee" />
-                  <TableColumn fx:id="createdColumn" maxWidth="334.0" minWidth="172.0" prefWidth="172.0" resizable="false" text="Created" />
+                <TableColumn fx:id="actionsColumn" editable="false" maxWidth="200.0" minWidth="160.0" prefWidth="160.0" resizable="false" sortable="false" text="Actions" />
+                <TableColumn fx:id="titleColumn" editable="false" maxWidth="500.0" minWidth="346.0" prefWidth="386.0" resizable="false" sortable="false" text="Title" />
+                  <TableColumn fx:id="statusColumn" editable="false" maxWidth="229.0" minWidth="75.0" prefWidth="131.0" resizable="false" sortable="false" text="Status" />
+                  <TableColumn fx:id="priorityColumn" editable="false" maxWidth="173.0" minWidth="75.0" prefWidth="87.0" resizable="false" sortable="false" text="Priority" />
+                  <TableColumn fx:id="employeeColumn" editable="false" maxWidth="286.0" minWidth="133.0" prefWidth="133.0" resizable="false" sortable="false" text="Employee" />
+                  <TableColumn fx:id="createdColumn" editable="false" maxWidth="334.0" minWidth="172.0" prefWidth="172.0" resizable="false" sortType="DESCENDING" text="Created" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -81,13 +71,11 @@
             </TableView>
          </children>
       </AnchorPane>
-      <VBox alignment="CENTER" layoutX="1126.0" layoutY="133.0" prefHeight="212.0" prefWidth="124.0" spacing="5.0" style="-fx-padding: 10 0 0 0;" styleClass="card" stylesheets="@../css/core/card.css">
+      <VBox alignment="TOP_CENTER" layoutX="1127.0" layoutY="138.0" prefHeight="107.0" prefWidth="124.0" spacing="5.0" style="-fx-padding: 10 0 0 0;" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
-            <Button fx:id="filterButton" disable="true" mnemonicParsing="false" onAction="#onFilter" prefHeight="25.0" prefWidth="68.0" text="Filter" />
-            <Button disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Export" />
-            <Button disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Search" />
             <Button mnemonicParsing="false" onAction="#onResolve" prefHeight="25.0" prefWidth="68.0" text="Resolve" />
             <Button mnemonicParsing="false" onAction="#onReopen" prefHeight="25.0" prefWidth="68.0" text="Re-open" />
+            <Button mnemonicParsing="false" onAction="#onRefresh" prefHeight="25.0" prefWidth="68.0" text="Refresh" />
          </children>
       </VBox>
    </children>

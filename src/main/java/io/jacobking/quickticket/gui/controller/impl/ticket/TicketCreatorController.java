@@ -1,11 +1,10 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.core.email.EmailConfig;
-import io.jacobking.quickticket.core.email.EmailSender;
+import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
@@ -23,31 +22,6 @@ import java.util.ResourceBundle;
 
 public class TicketCreatorController extends Controller {
 
-    private static final String TICKET_BODY = """
-            <style>
-            body {
-                font-family: Aptos, Arial, sans-serif;
-                font-size: 12px;
-            }
-            </style>
-            Dear %s, your support ticket has been created. IT will reach out to your shortly to help resolve your issue.
-            <br/>
-            <br/>
-            Ticket Information:
-            <br/>
-            - <b>Ticket ID:</b> %d
-            <br/>
-            - <b>Ticket Subject:</b> %s
-            <br/>
-            - <b>Ticket Creation Date:</b> %s
-            <br/>
-            - <b>Ticket Initial Comments:</b> %s
-            <br/>
-            <br/>
-            <br/>
-            <span style="font-weight: bolder; color: red;">Please do not reply to this ticket. This is an unmanaged inbox.</span>
-            """;
-
     private TableView<TicketModel> ticketTable;
 
     @FXML private ComboBox<StatusType> statusTypeComboBox;
@@ -63,6 +37,7 @@ public class TicketCreatorController extends Controller {
     @FXML private Button createButton;
 
     @FXML private CheckBox emailCheckBox;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         setDataRelay();
@@ -80,7 +55,7 @@ public class TicketCreatorController extends Controller {
         dataRelay.mapFirst(TableView.class).ifPresentOrElse(tableView -> {
             this.ticketTable = (TableView<TicketModel>) tableView;
         }, () -> {
-            Notify.showError("Data Relay Failure", "TicketTable<TicketModel> was not passed via data relay.", "Please report this.");
+            Alerts.showError("Data Relay Failure", "TicketTable<TicketModel> was not passed via data relay.", "Please report this.");
         });
     }
 
@@ -133,11 +108,18 @@ public class TicketCreatorController extends Controller {
     @FXML private void onCreate() {
         final String title = titleField.getText();
         final EmployeeModel employeeModel = employeeComboBox.getSelectionModel().getSelectedItem();
-        final TicketModel newTicket = ticket.createModel(new Ticket().setTitle(title).setCreatedOn(DateUtil.now()).setPriority(getPriority()).setStatus(getStatus()).setUserId(employeeModel == null ? 0 : employeeModel.getId()));
+        final TicketModel newTicket = ticket.createModel(new Ticket()
+                .setTitle(title)
+                .setCreatedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
+                .setPriority(getPriority())
+                .setStatus(getStatus())
+                .setEmployeeId(employeeModel == null ? 0 : employeeModel.getId()));
 
         insertInitialComment(newTicket);
         sendInitialEmail(newTicket);
         Display.close(Route.TICKET_CREATOR);
+
+        ticketTable.scrollTo(0);
     }
 
     private void sendInitialEmail(final TicketModel ticketModel) {
@@ -149,10 +131,16 @@ public class TicketCreatorController extends Controller {
         final String email = model.getEmail();
         if (email.isEmpty()) return;
 
-        final EmailSender emailSender = new EmailSender(EmailConfig.getInstance());
-        final String initialComment = commentField.getText().isEmpty() ? "Nothing was provided." : commentField.getText();
-        final String ticketBody = TICKET_BODY.formatted(model.getFullName(), ticketModel.getId(), ticketModel.getCreation(), ticketModel.getTitle(), initialComment);
-        emailSender.sendEmail(String.format("Ticket Created (Ticket ID: %d) | %s", ticketModel.getId(), ticketModel.getTitle()), email, ticketBody);
+        final String creation = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation());
+        new EmailBuilder(email, EmailBuilder.EmailType.NEW_TICKET)
+                .format(model.getFullName(), ticketModel.getId(), ticketModel.getTitle(), model.getFullName(), creation)
+                .email(emailConfig)
+                .setSubject(getSubject(ticketModel))
+                .sendEmail();
+    }
+
+    private String getSubject(final TicketModel ticketModel) {
+        return String.format("Your support ticket has been created. | Ticket ID: %s", ticketModel.getId());
     }
 
 
@@ -161,7 +149,10 @@ public class TicketCreatorController extends Controller {
         if (initialComment.isEmpty()) return;
 
         final int ticketId = ticketModel.getId();
-        comment.createModel(new Comment().setTicketId(ticketId).setPost(initialComment).setPostedOn(DateUtil.nowWithTime()));
+        comment.createModel(new Comment()
+                .setTicketId(ticketId)
+                .setPost(initialComment)
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE)));
     }
 
     @FXML private void onReset() {

@@ -45,6 +45,12 @@ public class CommentRepository implements Repository<Comment> {
                 .execute() == SUCCESS;
     }
 
+    @Override public boolean deleteWhere(DSLContext context, Condition condition) {
+        return context.deleteFrom(COMMENT)
+                .where(condition)
+                .execute() == SUCCESS;
+    }
+
     @Override
     public boolean update(DSLContext context, Comment comment) {
         throw new UnsupportedOperationException("CommentRepository#update(DSLContext, Comment) not supported!");

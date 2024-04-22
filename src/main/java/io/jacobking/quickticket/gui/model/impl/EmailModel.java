@@ -19,10 +19,11 @@ public class EmailModel extends ViewModel<Email> {
     private final StringProperty  usernameProperty       = new SimpleStringProperty();
     private final StringProperty  passwordProperty       = new SimpleStringProperty();
     private final StringProperty  fromAddressProperty    = new SimpleStringProperty();
-    private final StringProperty bccAddressProperty = new SimpleStringProperty();
+    private final StringProperty  bccAddressProperty     = new SimpleStringProperty();
+    private final BooleanProperty debuggingProperty      = new SimpleBooleanProperty();
 
     public EmailModel(final int id, String host, String port, boolean startTLS, boolean overSSL, boolean authentication, String username, String password,
-                      String fromAddress, String bccAddress) {
+                      String fromAddress, String bccAddress, boolean debugging) {
         super(id);
         this.hostProperty.setValue(host);
         this.portProperty.setValue(port);
@@ -33,6 +34,7 @@ public class EmailModel extends ViewModel<Email> {
         this.passwordProperty.setValue(password);
         this.fromAddressProperty.setValue(fromAddress);
         this.bccAddressProperty.setValue(bccAddress);
+        this.debuggingProperty.setValue(debugging);
 
         startTLSProperty.addListener(((observableValue, aBoolean, t1) -> {
             if (t1) {
@@ -58,7 +60,8 @@ public class EmailModel extends ViewModel<Email> {
                 email.getUsername(),
                 email.getPassword(),
                 email.getFromAddress(),
-                email.getBccAddress()
+                email.getBccAddress(),
+                email.getDebugging()
         );
     }
 
@@ -167,6 +170,14 @@ public class EmailModel extends ViewModel<Email> {
         this.bccAddressProperty.set(bccAddressProperty);
     }
 
+    public boolean isDebugging() {
+        return debuggingProperty.get();
+    }
+
+    public void setDebugging(boolean state) {
+        this.debuggingProperty.setValue(state);
+    }
+
     @Override
     public Email toEntity() {
         return new Email()
@@ -179,6 +190,7 @@ public class EmailModel extends ViewModel<Email> {
                 .setUsername(getUsernameProperty())
                 .setPassword(getPasswordProperty())
                 .setFromAddress(getFromAddressProperty())
-                .setBccAddress(getBccAddress());
+                .setBccAddress(getBccAddress())
+                .setDebugging(isDebugging());
     }
 }

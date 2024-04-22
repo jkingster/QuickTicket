@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.SearchableComboBox?>
+
+<AnchorPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="377.0" prefWidth="306.0" styleClass="body" stylesheets="@../css/core/base.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <SearchableComboBox fx:id="companySearchBox" layoutX="28.0" layoutY="14.0" prefHeight="25.0" prefWidth="251.0" promptText="Select Company" stylesheets="@../css/core/combo-box.css" translateY="30.0" />
+      <SearchableComboBox fx:id="departmentSearchBox" layoutX="28.0" layoutY="46.0" prefHeight="25.0" prefWidth="251.0" promptText="Select Department" stylesheets="@../css/core/combo-box.css" translateY="30.0" />
+      <VBox alignment="TOP_CENTER" layoutX="28.0" layoutY="80.0" prefHeight="260.0" prefWidth="251.0" spacing="5.0" translateY="30.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="251.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="122.0" text="Department Name:" textFill="WHITE" />
+                  <TextField fx:id="nameField" stylesheets="@../css/core/text-field.css" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="251.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="122.0" text="Department Email:" textFill="WHITE" />
+                  <TextField fx:id="emailField" stylesheets="@../css/core/text-field.css" />
+               </children>
+            </HBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="138.0" text="Department Description:" textFill="WHITE" />
+                  <TextArea fx:id="descriptionArea" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/core/text-area.css" />
+               </children>
+            </VBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+               <children>
+                  <Button fx:id="createButton" minWidth="60.0" mnemonicParsing="false" onAction="#onCreate" stylesheets="@../css/core/button.css" text="Create" />
+                  <Button fx:id="updateButton" minWidth="60.0" mnemonicParsing="false" onAction="#onUpdate" prefWidth="55.0" styleClass="button-success" stylesheets="@../css/core/button.css" text="Update" />
+                  <Button fx:id="deleteButton" minWidth="60.0" mnemonicParsing="false" onAction="#onDelete" prefWidth="55.0" styleClass="button-warning" stylesheets="@../css/core/button.css" text="Delete" />
+                  <Button minWidth="60.0" mnemonicParsing="false" onAction="#onReset" prefWidth="55.0" stylesheets="@../css/core/button.css" text="Reset" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <CheckBox fx:id="newDepartmentCheckBox" layoutX="28.0" layoutY="14.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="251.0" text="Create New Department" textFill="WHITE" />
+   </children>
+</AnchorPane>

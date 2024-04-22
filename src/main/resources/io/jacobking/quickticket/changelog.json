@@ -1,61 +1,8 @@
 [
   {
-    "version": "1.1.0-beta",
+    "version": "Version: 1.0.0",
     "changes": [
-      "New feature: Implements file locking to only allow single-instance of QuickTicket. Prevent connection issues with the SQLite database.",
-      "New feature: Implemented sending e-mails when the ticket is resolved.",
-      "UI update: When a ticket is marked resolved, it changes the color of the circular icon."
-    ]
-  },
-  {
-    "version": "1.0.0-beta",
-    "changes": [
-      "Breaking change: Introduced database migration tool to allow for updating tables/etc. when versions change. This introduces it's own db version separate of the software version."
-    ]
-  },
-  {
-    "version": "0.3.0-alpha",
-    "changes": [
-      "New feature: Implemented the option to BCC an address for SMTP settings.",
-      "Internals: Optimized imports."
-    ]
-  },
-  {
-    "version": "0.2.2-alpha",
-    "changes": [
-      "Fixed bug: Deleting tickets was not updating the corresponding ticket count correctly. Previous bug from 0.2.1-alpha."
-    ]
-  },
-  {
-    "version": "0.2.1-alpha",
-    "changes": [
-      "Fixed bug: Marking tickets opened/resolved now updates the corresponding ticket count correctly."
-    ]
-  },
-  {
-    "version": "0.2.0-alpha",
-    "changes": [
-      "New feature: Added an e-mail button to automatically open the mail app with a predefined subject related to the targeted ticket.",
-      "New feature: Added buttons to quickly resolve/re-open tickets along with potential other features.",
-      "New bug: Marking tickets opened/resolved doesn't update the ticket count labels at the top."
-    ]
-  },
-  {
-    "version": "0.1.3-alpha",
-    "changes": [
-      "Fixed bug: Introduced a bug in 0.1.2-alpha (not really a bug, I'm just dumb) where if any screen is exited the entire application shuts down."
-    ]
-  },
-  {
-    "version": "0.1.2-alpha",
-    "changes": [
-      "Fixed bug: When creating a new ticket and marking it to send e-mail notifications, it hangs and stops responding."
-    ]
-  },
-  {
-    "version": "0.1.1-alpha",
-    "changes": [
-      "Fixed bug: Updated SQL query to ignore trigger creation if existing."
+      "Initial release. No changelogs."
     ]
   }
 ]

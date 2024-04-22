@@ -1,8 +1,11 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
+import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.core.utility.DateUtil;
+import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
@@ -10,14 +13,21 @@ import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
+import io.jacobking.quickticket.tables.pojos.Comment;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -27,6 +37,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class TicketController extends Controller {
@@ -36,31 +49,55 @@ public class TicketController extends Controller {
     private final FilteredList<TicketModel> paused   = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.PAUSED);
     private final FilteredList<TicketModel> resolved = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.RESOLVED);
 
-    @FXML private TableView<TicketModel>                 ticketTable;
-    @FXML private TableColumn<TicketModel, PriorityType> indicatorColumn;
-    @FXML private TableColumn<TicketModel, Void>         actionsColumn;
-    @FXML private TableColumn<TicketModel, String>       titleColumn;
-    @FXML private TableColumn<TicketModel, StatusType>   statusColumn;
-    @FXML private TableColumn<TicketModel, PriorityType> priorityColumn;
-    @FXML private TableColumn<TicketModel, Integer>      employeeColumn;
-    @FXML private TableColumn<TicketModel, String>       createdColumn;
-    @FXML private Label                                  openLabel;
-    @FXML private Label                                  activeLabel;
-    @FXML private Label                                  pausedLabel;
-    @FXML private Label                                  resolvedLabel;
-    @FXML private Button                                 filterButton;
+    private final ObjectProperty<TicketModel> lastViewed = new SimpleObjectProperty<>();
+
+    private final Map<Pane, FilteredList<TicketModel>> activePaneMap = new HashMap<>();
+
+    @FXML private TableView<TicketModel>                  ticketTable;
+    @FXML private TableColumn<TicketModel, PriorityType>  indicatorColumn;
+    @FXML private TableColumn<TicketModel, Void>          actionsColumn;
+    @FXML private TableColumn<TicketModel, String>        titleColumn;
+    @FXML private TableColumn<TicketModel, StatusType>    statusColumn;
+    @FXML private TableColumn<TicketModel, PriorityType>  priorityColumn;
+    @FXML private TableColumn<TicketModel, Integer>       employeeColumn;
+    @FXML private TableColumn<TicketModel, LocalDateTime> createdColumn;
+    @FXML private Label                                   openLabel;
+    @FXML private Label                                   activeLabel;
+    @FXML private Label                                   pausedLabel;
+    @FXML private Label                                   resolvedLabel;
+    @FXML private Button                                  lastViewButton;
+
+    @FXML private Pane openPane;
+    @FXML private Pane activePane;
+    @FXML private Pane pausedPane;
+    @FXML private Pane resolvedPane;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
         configureLabels();
+
+        openPane.setUserData(StatusType.OPEN);
+        activePane.setUserData(StatusType.ACTIVE);
+        pausedPane.setUserData(StatusType.PAUSED);
+        resolvedPane.setUserData(StatusType.RESOLVED);
+
+        openPane.setOnMousePressed(this::togglePane);
+        activePane.setOnMousePressed(this::togglePane);
+        pausedPane.setOnMousePressed(this::togglePane);
+        resolvedPane.setOnMousePressed(this::togglePane);
     }
+
 
     private void configureTable() {
         handleIndicatorColumn();
         handleActionsColumn();
         titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
+        titleColumn.setSortable(false);
         statusColumn.setCellValueFactory(data -> data.getValue().statusProperty());
+        statusColumn.setSortable(false);
         priorityColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
+        priorityColumn.setSortable(false);
         employeeColumn.setCellValueFactory(data -> data.getValue().employeeProperty().asObject());
         employeeColumn.setCellFactory(data -> new TableCell<>() {
             @Override protected void updateItem(Integer integer, boolean b) {
@@ -77,13 +114,41 @@ public class TicketController extends Controller {
                 setText(model.getFullName());
             }
         });
-
+        employeeColumn.setSortable(false);
         createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
+        createdColumn.setCellFactory(data -> new TableCell<>() {
+            @Override protected void updateItem(LocalDateTime localDateTime, boolean b) {
+                super.updateItem(localDateTime, b);
+                if (b || localDateTime == null) {
+                    setText(null);
+                    return;
+                }
+
+                setText(DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, localDateTime));
+            }
+        });
+
+
         ticketTable.setItems(ticket.getObservableList());
+
+        createdColumn.setComparator(LocalDateTime::compareTo);
+        createdColumn.setSortType(TableColumn.SortType.DESCENDING);
+        ticketTable.getSortOrder().clear();
+        ticketTable.getSortOrder().add(createdColumn);
+        ticketTable.sort();
+
+        final TicketModel lastViewedModel = ticket.getLastViewed();
+        if (lastViewedModel != null) {
+            lastViewed.setValue(lastViewedModel);
+        }
+
+        lastViewButton.disableProperty().bind(lastViewed.isNull());
     }
 
     private void handleIndicatorColumn() {
         indicatorColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
+        indicatorColumn.setSortable(false);
+        indicatorColumn.setReorderable(false);
         indicatorColumn.setCellFactory(data -> new TableCell<>() {
 
             private final Glyph glyph = FALoader.create(FontAwesome.Glyph.CIRCLE, null);
@@ -146,77 +211,142 @@ public class TicketController extends Controller {
         Display.show(Route.TICKET_CREATOR, DataRelay.of(ticketTable));
     }
 
-    @FXML private void onManageEmployees() {
-        Display.show(Route.EMPLOYEE_MANAGER);
-    }
-
-    @FXML private void onFilter() {
-        Notify.showInfo("Not implemented.", "Not implemented.", "This feature has not been implement yet.");
-    }
-
     @FXML private void onResolve() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
         if (ticketModel == null) {
-            Notify.showError("Failed to resolve ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
+            Alerts.showError("Failed to resolve ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
             return;
         }
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
-        ticket.update(ticketModel);
+
+        if (ticket.update(ticketModel)) {
+            Alerts.showInput(
+                    "Notify Employee",
+                    "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
+                    "No resolving comment was added."
+            ).ifPresentOrElse(comment -> {
+                final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
+                if (model == null) {
+                    Alerts.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
+                    return;
+                }
+
+                final String email = model.getEmail();
+                if (email.isEmpty()) {
+                    Alerts.showError(
+                            "Error notifying employee.",
+                            "Could not send notification e-mail.",
+                            "There is no e-mail attached for this employee."
+                    );
+                    return;
+                }
+
+                new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
+                        .format(
+                                ticketModel.getId(),
+                                ticketModel.getTitle(),
+                                DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation()),
+                                model.getFullName(),
+                                comment
+                        )
+                        .email(emailConfig)
+                        .setSubject(getSubject(ticketModel))
+                        .sendEmail();
+
+                postCommentOnTicket(ticketModel, comment);
+            }, () -> postCommentOnTicket(ticketModel, "No resolving comment."));
+            ticketTable.refresh();
+        }
+    }
+
+    private String getSubject(final TicketModel ticketModel) {
+        return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());
+    }
+
+    private void postCommentOnTicket(final TicketModel ticketModel, final String systemComment) {
+        comment.createModel(new Comment().setTicketId(ticketModel.getId())
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
+                .setPost(String.format("[%s]: %s", "System", systemComment)));
     }
 
     @FXML private void onReopen() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
         if (ticketModel == null) {
-            Notify.showError("Failed to re-open ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
+            Alerts.showError("Failed to re-open ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
             return;
         }
+
         ticketModel.statusProperty().setValue(StatusType.OPEN);
-        ticket.update(ticketModel);
+        if (ticket.update(ticketModel)) {
+            Notifications.showInfo("Success", "Ticket re-opened successfully.");
+            ticketTable.refresh();
+        }
     }
+
+    @FXML private void onRefresh() {
+        ticketTable.refresh();
+    }
+
+    @FXML private void onOpenLastViewed() {
+        Display.show(Route.VIEWER, DataRelay.of(lastViewed.getValue(), ticketTable, lastViewed));
+    }
+
 
     private void onDelete(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Notify.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
+            Alerts.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
-        Notify.showConfirmation("Are you sure you want to delete this ticket?", "This action cannot be undone.").ifPresent(type -> {
-            if (type == ButtonType.YES) {
-                ticket.remove(ticketModel.getId());
+        Alerts.showConfirmation(() -> removeTicket(ticketModel), "Are you sure you want to delete this ticket?", "This action cannot be undone.")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        removeTicket(ticketModel);
+                    }
+                });
+    }
+
+    private void removeTicket(final TicketModel ticketModel) {
+        ticket.remove(ticketModel.getId());
+        final TicketModel lastViewedModel = lastViewed.getValue();
+        if (lastViewedModel != null) {
+            final int ticketId = ticketModel.getId();
+            if (ticketId == lastViewedModel.getId()) {
+                lastViewed.setValue(null);
             }
-        });
+        }
     }
 
     private void onOpen(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Notify.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
+            Alerts.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
-        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable));
+        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable, lastViewed));
     }
 
     private void onEmail(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Notify.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
+            Alerts.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
         final Desktop desktop = Desktop.getDesktop();
         if (!Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
-            Notify.showError("Failed to open mail.", "Failed to open mail app.", "Mailing is not supported.");
+            Alerts.showError("Failed to open mail.", "Failed to open mail app.", "Mailing is not supported.");
             return;
         }
 
         final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
         if (model == null) {
-            Notify.showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
+            Alerts.showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
             return;
         }
 
         final String employeeEmail = model.getEmail();
         if (employeeEmail.isEmpty()) {
-            Notify.showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
+            Alerts.showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
             return;
         }
 
@@ -232,11 +362,13 @@ public class TicketController extends Controller {
             final URI uri = new URI(uriEncoded);
             desktop.mail(uri);
         } catch (URISyntaxException | IOException e) {
-            Notify.showException("Failed to open mail app.", e.fillInStackTrace());
+            Alerts.showException("Failed to open mail app.", e.fillInStackTrace());
         }
     }
 
     private void handleActionsColumn() {
+        actionsColumn.setReorderable(false);
+        actionsColumn.setSortable(false);
         actionsColumn.setCellFactory(ticketModelVoidTableColumn -> new TableCell<>() {
             private final Button open = new Button();
             private final Button delete = new Button();
@@ -269,5 +401,63 @@ public class TicketController extends Controller {
         });
     }
 
+    private void togglePane(final MouseEvent event) {
+        if (event.getSource() instanceof Pane pane) {
+            if (activePaneMap.containsKey(pane)) {
+                deactivatePane(pane);
+            } else {
+                activatePane(pane);
+            }
+        }
+    }
 
+
+    private void activatePane(final Pane pane) {
+        final StatusType statusType = (StatusType) pane.getUserData();
+        final FilteredList<TicketModel> filteredList = getFilteredListByStatus(statusType);
+        activePaneMap.put(pane, filteredList);
+        highlightPane(pane);
+        setTicketTable();
+    }
+
+    private void deactivatePane(final Pane pane) {
+        activePaneMap.remove(pane);
+        removePaneHighlight(pane);
+        if (activePaneMap.isEmpty()) {
+            ticketTable.setItems(ticket.getObservableList());
+            ticketTable.refresh();
+            return;
+        }
+
+        setTicketTable();
+    }
+
+    private void highlightPane(final Pane pane) {
+        pane.setStyle("-fx-background-color: #5DADD5;");
+    }
+
+    private void removePaneHighlight(final Pane pane) {
+        pane.setStyle("-fx-background-color: derive(-fx-primary, 25%);");
+    }
+
+
+    private FilteredList<TicketModel> getFilteredListByStatus(final StatusType statusType) {
+        return switch (statusType) {
+            case OPEN -> open;
+            case ACTIVE -> active;
+            case RESOLVED -> resolved;
+            case PAUSED -> paused;
+        };
+    }
+
+    private void setTicketTable() {
+        final ObservableList<TicketModel> mergedList = FXCollections.observableArrayList();
+
+        for (final FilteredList<TicketModel> filteredList : activePaneMap.values()) {
+            mergedList.addAll(filteredList);
+        }
+
+        ticketTable.setItems(mergedList);
+        ticketTable.refresh();
+    }
 }

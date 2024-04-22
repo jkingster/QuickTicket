@@ -1,6 +1,12 @@
 @import url("../core/base.css");
-@import url("../core/button.css");
 
-.body {
-    -fx-background-color: -fx-primary;
+
+.text-field {
+    -fx-background-color: -fx-offset-blue;
+    -fx-text-fill: -fx-typography;
+    -fx-font-weight: bolder;
+}
+
+.text-field:hover {
+    -fx-cursor: hand;
 }

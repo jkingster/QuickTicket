@@ -18,5 +18,7 @@ public interface Repository<T extends Entity> {
 
     boolean delete(final DSLContext context, final int id);
 
+    boolean deleteWhere(final DSLContext context, final Condition condition);
+
     boolean update(final DSLContext context, final T t);
 }

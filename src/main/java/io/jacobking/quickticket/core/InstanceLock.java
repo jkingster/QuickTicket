@@ -1,48 +1,46 @@
-package io.jacobking.quickticket.core.lock;
+package io.jacobking.quickticket.core;
 
 
-import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.core.utility.Logs;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import javafx.scene.control.ButtonType;
 
 public class InstanceLock {
 
-    private static final InstanceLock INSTANCE = new InstanceLock();
+    private static InstanceLock instance;
+
+    private boolean isUnlocked = false;
 
     private InstanceLock() {
-        checkLock();
     }
 
-    public static InstanceLock getInstance() {
-        return INSTANCE;
+    public static synchronized InstanceLock getInstance() {
+        if (instance == null) {
+            instance = new InstanceLock();
+        }
+        return instance;
     }
-
 
     public void deleteLock() {
-        if (!FileIO.fileExists(FileIO.TARGET_LOCK)) {
-            Notify.showError("Failed to find instance lock file.",
+        if (!FileIO.fileExists(FileIO.TARGET_LOCK, true)) {
+            Alerts.showError("Failed to find instance lock file.",
                     "Instances potentially cannot start....",
                     "Please submit bug report.");
             return;
         }
 
         if (!FileIO.deleteFile(FileIO.TARGET_LOCK)) {
-            Notify.showError("Failed to delete instance lock file.",
+            Alerts.showError("Failed to delete instance lock file.",
                     "Instances potentially cannot start....",
                     "Please submit bug report.");
         }
     }
 
 
-    private void checkLock() {
-        if (FileIO.fileExists(FileIO.TARGET_LOCK)) {
-            Notify.showError(
-                    "Failed to launch quick ticket.",
-                    "Another instance is already running!",
-                    "Please close it out and try again.");
-
-            Notify.showConfirmation(
+    public void checkLock() {
+        if (FileIO.fileExists(FileIO.TARGET_LOCK, true)) {
+            Alerts.showWarningConfirmation(
                     "Failed to launch quick ticket.",
                     "Another instance is already running!",
                     "Please close it out and try again. To force-delete the file, click the apply button." +
@@ -57,28 +55,30 @@ public class InstanceLock {
         }
 
         if (!FileIO.createFile(FileIO.TARGET_LOCK)) {
-            Notify.showError(
+            Alerts.showError(
                     "Failed to create instance lock file.",
                     "Multiple instances can be started.",
                     "Please submit bug report.");
             return;
         }
-
-        QuickTicket.launch();
+        this.isUnlocked = true;
     }
 
     private void attemptToDeleteAndStart() {
         deleteLock();
-        if (FileIO.fileExists(FileIO.TARGET_LOCK)) {
-            Notify.showError(
+        if (FileIO.fileExists(FileIO.TARGET_LOCK, true)) {
+            Logs.warn("Lock failed to delete on instance start.");
+            Alerts.showError(
                     "Failed to force delete lock.",
                     "Failed to force delete lock.",
                     "Consider manually deleting the file in your AppData directory or submitting a bug report."
             );
             return;
         }
-        QuickTicket.launch();
+        this.isUnlocked = true;
     }
 
-
+    public boolean isUnlocked() {
+        return isUnlocked;
+    }
 }

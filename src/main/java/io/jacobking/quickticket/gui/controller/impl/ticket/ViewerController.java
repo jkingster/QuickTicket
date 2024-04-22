@@ -1,11 +1,11 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.core.email.EmailConfig;
-import io.jacobking.quickticket.core.email.EmailSender;
+import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Notify;
+import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.CommentModel;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
@@ -14,6 +14,7 @@ import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.StyleCommons;
 import io.jacobking.quickticket.tables.pojos.Comment;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -30,15 +31,18 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
 
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ViewerController extends Controller {
     private static final int COMMENT_OFFSET = 50;
 
-    private TicketModel            ticketModel;
-    private TableView<TicketModel> ticketTable;
-    private int                    ticketId;
+    private TicketModel                 ticketModel;
+    private TableView<TicketModel>      ticketTable;
+    private int                         ticketId;
+    private ObjectProperty<TicketModel> lastViewed;
 
     private ObservableList<CommentModel> comments;
 
@@ -54,6 +58,8 @@ public class ViewerController extends Controller {
     @FXML private Button                 statusButton;
     @FXML private Button                 priorityButton;
     @FXML private Button                 resolvedButton;
+    @FXML private Button                 attachJournalButton;
+    @FXML private Button                 viewJournalButton;
     @FXML private ListView<CommentModel> commentList;
 
 
@@ -61,10 +67,15 @@ public class ViewerController extends Controller {
         handleDataRelay();
         configureComments();
         postButton.disableProperty().bind(commentField.textProperty().isEmpty());
+
+        updateLastViewed();
     }
 
     @FXML private void onPost() {
-        comment.createModel(new Comment().setPost(commentField.getText()).setPostedOn(DateUtil.nowWithTime()).setTicketId(ticketId));
+        comment.createModel(new Comment()
+                .setPost(commentField.getText())
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
+                .setTicketId(ticketId));
 
         commentField.clear();
         commentList.refresh();
@@ -74,7 +85,7 @@ public class ViewerController extends Controller {
     @FXML private void onDeleteComment() {
         final CommentModel selected = commentList.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            Notify.showError("Delete failure.", "No deletion occurred.", "You must select a comment to delete.");
+            Alerts.showError("Delete failure.", "No deletion occurred.", "You must select a comment to delete.");
             return;
         }
         commentList.getItems().removeIf(model -> model.getId() == selected.getId());
@@ -165,105 +176,129 @@ public class ViewerController extends Controller {
     private void updateTicketEmployee(final SearchableComboBox<EmployeeModel> employeeComboBox, final PopOver popOver) {
         final EmployeeModel model = employeeComboBox.getSelectionModel().getSelectedItem();
         if (model == null) {
-            Notify.showError("Update failure.", "No update occurred.", "You must select an employee.");
+            Alerts.showError("Update failure.", "No update occurred.", "You must select an employee.");
             return;
         }
 
-        ticketModel.employeeProperty().setValue(model.getId());
-        postSystemComment("Ticket employee changed to: " + model.getFullName());
 
-        ticket.update(ticketModel);
-        reloadPostUpdate(employeeComboBox, popOver);
+        ticketModel.employeeProperty().setValue(model.getId());
+        if (ticket.update(ticketModel)) {
+            reloadPostUpdate(employeeComboBox, popOver);
+            postSystemComment("System", "Ticket employee changed to: " + model.getFullName());
+            Notifications.showInfo("Update", "Ticket employee updated successfully!");
+        }
     }
 
     private void updateTicketStatus(final SearchableComboBox<StatusType> statusComboBox, final PopOver popOver) {
         final StatusType type = statusComboBox.getSelectionModel().getSelectedItem();
         if (type == null) {
-            Notify.showError("Update failure.", "No update occurred.", "You must select a status.");
+            Alerts.showError("Update failure.", "No update occurred.", "You must select a status.");
             return;
         }
 
         ticketModel.statusProperty().setValue(type);
-        postSystemComment("Ticket status changed to: " + type.name());
-        ticket.update(ticketModel);
-        reloadPostUpdate(statusComboBox, popOver);
+
+        if (ticket.update(ticketModel)) {
+            postSystemComment("System", "Ticket status changed to: " + type.name());
+            reloadPostUpdate(statusComboBox, popOver);
+            Notifications.showInfo("Update", "Ticket status updated successfully!");
+        }
     }
 
     private void updateTicketPriority(final SearchableComboBox<PriorityType> priorityComboBox, final PopOver popOver) {
         final PriorityType type = priorityComboBox.getSelectionModel().getSelectedItem();
         if (type == null) {
-            Notify.showError("Update failure.", "No update occurred.", "You must select a priority.");
+            Alerts.showError("Update failure.", "No update occurred.", "You must select a priority.");
             return;
         }
 
         ticketModel.priorityProperty().setValue(type);
-        postSystemComment("Ticket priority changed to: " + type.name());
-        ticket.update(ticketModel);
-        reloadPostUpdate(priorityComboBox, popOver);
+        if (ticket.update(ticketModel)) {
+            postSystemComment("System", "Ticket priority changed to: " + type.name());
+            reloadPostUpdate(priorityComboBox, popOver);
+            Notifications.showInfo("Update", "Ticket priority updated successfully!");
+        }
     }
 
     private <T> void reloadPostUpdate(final SearchableComboBox<T> box, final PopOver popOver) {
         box.getSelectionModel().clearSelection();
         popOver.hide();
-        ticketTable.refresh();
+
+        refreshTable();
     }
 
     @FXML private void onMarkResolved() {
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
-        postSystemComment("This ticket has been marked resolved.");
-        ticket.update(ticketModel);
-        ticketTable.refresh();
+        postSystemComment("System", "This ticket has been marked resolved.");
 
-        Notify.showConfirmation("Do you want to notify the employee?", "Click yes to send an e-mail.")
-                .ifPresent(type -> {
-                    if (type == ButtonType.YES) {
-                        final EmployeeModel employeeModel = employee.getModel(ticketModel.getEmployeeId());
-                        if (employeeModel == null) {
-                            Notify.showError("Could not notify employee.", "No employee attached to ticket.", "Please set an employee.");
-                            return;
-                        }
+        if (ticket.update(ticketModel)) {
+            refreshTable();
 
-                        final String targetEmail = employeeModel.getEmail();
-                        if (targetEmail == null || targetEmail.isEmpty()) {
-                            Notify.showError("Could not notify employee.", "The attached employee does not have an e-mail set.", "Please set one and try again.");
-                            return;
-                        }
+            Alerts.showInput(
+                    "Notify Employee",
+                    "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
+                    "No resolving comment was added."
+            ).ifPresentOrElse(comment -> {
+                final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
+                if (model == null) {
+                    Alerts.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
+                    return;
+                }
 
-                        final EmailSender emailSender = new EmailSender(EmailConfig.getInstance());
-                        final String subject = String.format("Ticket Resolved (Ticket ID: %s) | %s", ticketModel.getId(), ticketModel.getTitle());
-                        final String body = getTicketBody();
+                final String email = model.getEmail();
+                if (email.isEmpty()) {
+                    Alerts.showError(
+                            "Error notifying employee.",
+                            "Could not send notification e-mail.",
+                            "There is no e-mail attached for this employee."
+                    );
+                    return;
+                }
 
-                        emailSender.sendEmail(subject, targetEmail, body);
-                    }
-                });
+                new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
+                        .format(
+                                ticketModel.getId(),
+                                ticketModel.getTitle(),
+                                DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation()),
+                                model.getFullName(),
+                                comment
+                        )
+                        .email(emailConfig)
+                        .setSubject(getSubject(ticketModel))
+                        .sendEmail();
+
+                postSystemComment("Ticket Resolved", comment);
+            }, () -> postSystemComment("Ticket Resolved", "No resolving comment."));
+        }
     }
 
-    private String getTicketBody() {
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<b>").append("Your support ticket has been resolved.").append("</b>");
-        stringBuilder.append("<br/><span style=\"color:red; font-weight:bolder;\">").append("Do not reply to this e-mail. This inbox is not managed.").append("</span>");
-        stringBuilder.append("<br/><br/>");
-        stringBuilder.append("<b>Ticket Comments:</b>");
-        commentList.getItems().forEach(model -> stringBuilder.append("<br/><span style=\"font-size: 15px;\">")
-                .append(model.getPostedOn())
-                .append("</span>: ")
-                .append(model.getPost()));
-        return stringBuilder.toString();
+    private String getSubject(final TicketModel ticketModel) {
+        return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());
     }
 
-    private void postSystemComment(final String commentText) {
-        comment.createModel(new Comment().setTicketId(ticketId).setPostedOn(DateUtil.nowWithTime()).setPost(String.format("[System] %s", commentText)));
+    private void refreshTable() {
+        if (ticketTable != null) {
+            ticketTable.refresh();
+        }
+    }
+
+    private void postSystemComment(final String prefix, final String commentText) {
+        comment.createModel(new Comment().setTicketId(ticketId)
+                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
+                .setPost(String.format("[%s]: %s", prefix, commentText)));
         commentList.refresh();
-
         scrollToLastComment();
     }
 
     private void populateData(final TicketModel ticketModel) {
         this.ticketModel = ticketModel;
         this.ticketId = ticketModel.getId();
-        this.comments = comment.getComments(ticketId);
+        this.comments = comment.getCommentsByTicketId(ticketId);
         titleField.setText(ticketModel.getTitle());
-        creationField.setText(String.format("Date: %s", ticketModel.getCreation()));
+        creationField.setText(String.format("Date: %s", DateUtil.formatDateTime(
+                DateUtil.DateFormat.DATE_TIME_ONE,
+                ticketModel.getCreation())
+        ));
         priorityLabel.textProperty().bind(ticketModel.priorityProperty().asString());
         statusLabel.textProperty().bind(ticketModel.statusProperty().asString());
 
@@ -271,10 +306,11 @@ public class ViewerController extends Controller {
         if (employeeModel != null) {
             employeeField.setText(employeeModel.getFullName());
         }
+
     }
 
     private void configureComments() {
-        commentList.setItems(comments);
+        commentList.setItems(comments.sorted(Comparator.comparing(CommentModel::getPostedOn)));
         commentList.setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(CommentModel commentModel, boolean b) {
                 super.updateItem(commentModel, b);
@@ -286,7 +322,11 @@ public class ViewerController extends Controller {
                 final VBox vBox = new VBox();
                 VBox.setVgrow(vBox, Priority.ALWAYS);
 
-                final Label date = new Label(commentModel.getPostedOn());
+                final Label date = new Label(DateUtil.formatDateTime(
+                        DateUtil.DateFormat.DATE_TIME_ONE,
+                        commentModel.getPostedOn()
+                ));
+
                 date.setStyle(StyleCommons.COMMON_LABEL_STYLE);
 
                 final Text comment = new Text(commentModel.getPost());
@@ -294,6 +334,8 @@ public class ViewerController extends Controller {
 
                 if (commentModel.getPost().contains("[System]")) {
                     comment.setFill(Color.valueOf("#FF474C"));
+                } else if (commentModel.getPost().contains("[Resolved]")) {
+                    comment.setFill(Color.valueOf("#248232").brighter());
                 } else {
                     comment.setFill(Color.WHITE);
                 }
@@ -321,23 +363,41 @@ public class ViewerController extends Controller {
             resolvedButton.disableProperty().bind(model.statusProperty().isEqualTo(StatusType.RESOLVED));
             populateData(model);
         }, () -> {
-            Notify.showError("Data Relay Failure", "TicketModel was not passed via data relay.", "Please report this.");
         }); // TODO: error
 
         final Optional<TableView<TicketModel>> tableOptional = dataRelay.mapTable(1);
         tableOptional.ifPresentOrElse(table -> {
             this.ticketTable = table;
         }, () -> {
-            Notify.showError("Data Relay Failure", "TicketTable<TicketModel> was not passed via data relay.", "Please report this.");
         });// TODO: error
+
+        final Optional<ObjectProperty<TicketModel>> lastViewedOptional = dataRelay.mapObjectProperty(2);
+        lastViewedOptional.ifPresentOrElse(last -> {
+            this.lastViewed = last;
+            lastViewed.setValue(ticketModel);
+        }, () -> {
+            // TODO: SILENT LOG
+        });
     }
 
     @FXML private void onDelete() {
-        Notify.showConfirmation("Are you sure you want to delete this ticket?", "It cannot be recovered.").ifPresent(type -> {
+        Alerts.showConfirmation(this::deleteTicket, "Are you sure you want to delete this ticket?", "It cannot be recovered.").ifPresent(type -> {
             if (type == ButtonType.YES) {
-                ticket.remove(ticketId);
-                Display.close(Route.VIEWER);
+                deleteTicket();
             }
         });
     }
+
+    private void deleteTicket() {
+        ticket.remove(ticketId);
+        lastViewed.setValue(null);
+        Display.close(Route.VIEWER);
+    }
+
+
+    private void updateLastViewed() {
+        ticketModel.lastViewedProperty().setValue(LocalDateTime.now());
+        ticket.update(ticketModel);
+    }
+
 }
