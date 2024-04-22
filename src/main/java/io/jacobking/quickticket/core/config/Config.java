@@ -28,6 +28,11 @@ public abstract class Config {
         properties.setProperty(key, value);
     }
 
+    public void setPropertyAndStore(final String key, final String value) {
+        setProperty(key, value);
+        storeProperties();
+    }
+
     public String getProperty(final String key, final String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
