@@ -10,8 +10,8 @@ import java.util.ResourceBundle;
 
 
 public class WelcomeController extends Controller {
-    private static final String HOW_TO_LINK       = "";
-    private static final String TROUBLESHOOT_LINK = "";
+    private static final String HOW_TO_LINK       = "https://github.com/jkingster/QuickTicket/blob/master/docs/how-to/index.md";
+    private static final String TROUBLESHOOT_LINK = "https://github.com/jkingster/QuickTicket/blob/master/docs/troubleshooting/index.md";
 
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
