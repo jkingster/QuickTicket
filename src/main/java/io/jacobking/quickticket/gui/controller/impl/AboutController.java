@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.Version;
-import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
@@ -9,10 +8,6 @@ import io.jacobking.quickticket.gui.utility.MiscUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
