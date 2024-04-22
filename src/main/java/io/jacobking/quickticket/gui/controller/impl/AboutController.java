@@ -5,6 +5,7 @@ import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
+import io.jacobking.quickticket.gui.utility.MiscUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -30,17 +31,17 @@ public class AboutController extends Controller {
 
     @FXML
     private void onGitHub() {
-        openWebpage(GITHUB_URL);
+        MiscUtil.openLink(GITHUB_URL);
     }
 
     @FXML
     private void onSuggestion() {
-        openWebpage(SUGGESTION_URL);
+        MiscUtil.openLink(SUGGESTION_URL);
     }
 
     @FXML
     private void onBugReport() {
-        openWebpage(BUG_REPORT_URL);
+        MiscUtil.openLink(BUG_REPORT_URL);
     }
 
     @FXML
@@ -48,12 +49,5 @@ public class AboutController extends Controller {
         Display.show(Route.CHANGELOG);
     }
 
-    private void openWebpage(final String url) {
-        try {
-            Desktop.getDesktop().browse(new URI(url));
-        } catch (URISyntaxException | IOException e) {
-            Alerts.showException("Failed to open web browser.", e.fillInStackTrace());
-        }
-    }
 
 }

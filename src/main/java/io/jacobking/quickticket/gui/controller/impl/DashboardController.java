@@ -2,6 +2,7 @@ package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.Version;
+import io.jacobking.quickticket.core.config.Config;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.screen.Display;
@@ -24,6 +25,10 @@ public class DashboardController extends Controller {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         versionLabel.setText(Version.current());
+
+        if (QuickTicket.getInstance().getSystemConfig().parseBoolean("first_launch")) {
+            Display.show(Route.WELCOME);
+        }
     }
 
     @FXML

@@ -63,7 +63,7 @@ public class ConfigurationController extends Controller {
         logsField.setText(FileIO.getPath("logs"));
         autoMigrateField.setText(core.getSystemConfig().getProperty("auto_migration"));
         databaseField.setText(core.getSystemConfig().getProperty("database_url"));
-         flywayField.setText(FileIO.getPath("flyway.properties"));
+        flywayField.setText(FileIO.getPath("flyway.properties"));
         migrationField.setText(FileIO.getPath("migrations"));
         backupField.setText(FileIO.getPath("backup"));
     }
@@ -137,7 +137,7 @@ public class ConfigurationController extends Controller {
     }
 
     @FXML private void onCopyFlyway() {
-          copyToClipBoard(flywayField.getText());
+        copyToClipBoard(flywayField.getText());
     }
 
     @FXML private void onOpenFlyway() {
@@ -145,19 +145,19 @@ public class ConfigurationController extends Controller {
     }
 
     @FXML private void onCopyMigration() {
-         copyToClipBoard(migrationField.getText());
+        copyToClipBoard(migrationField.getText());
     }
 
     @FXML private void onOpenMigration() {
-         openPath(migrationField.getText());
+        openPath(migrationField.getText());
     }
 
     @FXML private void onCopyBackup() {
-         copyToClipBoard(backupField.getText());
+        copyToClipBoard(backupField.getText());
     }
 
     @FXML private void onOpenBackup() {
-         openPath(backupField.getText());
+        openPath(backupField.getText());
     }
 
     @FXML private void onOpenLogs() {

@@ -48,15 +48,15 @@ public class SettingsController extends Controller {
         bindBidirectional(disableAlertsCheckBox, alertSettingsModel.disableAlertsProperty());
         bindBidirectional(disableNotificationsCheckBox, alertSettingsModel.disableNotificationsProperty());
 
-        bindBidirectional(disableInfoAlerts, alertSettingsModel.disableInfoAlertsProperty());
-        bindBidirectional(disableErrorAlerts, alertSettingsModel.disableErrorAlertsProperty());
+        bindBidirectional(disableInfoAlerts,         alertSettingsModel.disableInfoAlertsProperty());
+        bindBidirectional(disableErrorAlerts,        alertSettingsModel.disableErrorAlertsProperty());
         bindBidirectional(disableConfirmationAlerts, alertSettingsModel.disableConfirmationAlertsProperty());
-        bindBidirectional(disableWarningAlerts, alertSettingsModel.disableWarningAlertsProperty());
+        bindBidirectional(disableWarningAlerts,      alertSettingsModel.disableWarningAlertsProperty());
 
-        bindBidirectional(disableInfoNotification, alertSettingsModel.disableInfoNotificationProperty());
-        bindBidirectional(disableErrorNotification, alertSettingsModel.disableErrorNotificationProperty());
+        bindBidirectional(disableInfoNotification,         alertSettingsModel.disableInfoNotificationProperty());
+        bindBidirectional(disableErrorNotification,        alertSettingsModel.disableErrorNotificationProperty());
         bindBidirectional(disableConfirmationNotification, alertSettingsModel.disableConfirmationNotificationProperty());
-        bindBidirectional(disableWarningNotification, alertSettingsModel.disableWarningNotificationProperty());
+        bindBidirectional(disableWarningNotification,      alertSettingsModel.disableWarningNotificationProperty());
 
         emailDebugCheckBox.setSelected(email.getEmailModel().isDebugging());
         emailDebugCheckBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {

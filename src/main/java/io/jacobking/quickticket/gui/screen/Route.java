@@ -10,7 +10,8 @@ public enum Route {
     CONFIGURATION("Configuration"),
     SETTINGS("Settings"),
     DEPARTMENT("Department"),
-    COMPANY("Company");
+    COMPANY("Company"),
+    WELCOME("Welcome");
 
     private static final Route[] VALUES    = values();
     private static final String  BASE_PATH = "fxml/%s";
