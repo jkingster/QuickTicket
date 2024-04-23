@@ -41,8 +41,8 @@ Windows 10/11
 <td>
 MacOS
 </td>
-:x:
 <tr>
+:x:
 </tr>
 </table>
 
