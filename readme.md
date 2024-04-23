@@ -1,4 +1,4 @@
-<img src="https://github.com/jkingster/QuickTicket/blob/master/src/main/resources/io/jacobking/quickticket/icons/quickticket.png"/>
+![QuickTicket](https://github.com/jkingster/QuickTicket/blob/development/docs/images/quickticket.png)
 
 ![Static Badge](https://img.shields.io/badge/stable_version-1.0.0-green) ![Static Badge](https://img.shields.io/badge/contributions-welcome-blue) ![Static Badge](https://img.shields.io/badge/download-link-red?link=https%3A%2F%2Fgithub.com%2Fjkingster%2FQuickTicket%2Freleases%2Ftag%2Fv1.0.0)
  
