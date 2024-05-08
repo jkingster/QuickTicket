@@ -195,6 +195,8 @@ public class EmployeeController extends Controller {
         ticketTable.setItems(null);
         orgCompanyCheckBox.getSelectionModel().clearSelection();
         orgDepartmentCheckBox.getSelectionModel().clearSelection();
+        companyComboBox.getSelectionModel().clearSelection();
+        departmentComboBox.getSelectionModel().clearSelection();
     }
 
     private void configureWorkExtensionField() {
