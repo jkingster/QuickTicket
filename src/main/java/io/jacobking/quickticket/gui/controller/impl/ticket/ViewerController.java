@@ -88,7 +88,21 @@ public class ViewerController extends Controller {
             Alerts.showError("Delete failure.", "No deletion occurred.", "You must select a comment to delete.");
             return;
         }
-        commentList.getItems().removeIf(model -> model.getId() == selected.getId());
+
+        final int commentId = selected.getId();
+        Alerts.showConfirmation(
+                () -> deleteComment(commentId),
+                "Are you sure you want to delete this comment?",
+                "The comment cannot be recovered."
+        ).ifPresent(type -> {
+            if (type == ButtonType.YES) {
+                deleteComment(commentId);
+            }
+        });
+    }
+
+    private void deleteComment(final int commentId) {
+        comment.remove(commentId);
         commentList.refresh();
     }
 
