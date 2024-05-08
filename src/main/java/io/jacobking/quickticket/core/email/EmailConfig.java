@@ -74,17 +74,21 @@ public class EmailConfig {
 
         properties.setProperty(SMTP_CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
         properties.setProperty(SMTP_TIMEOUT, DEFAULT_TIMEOUT);
+
         properties.setProperty("mail.debug", booleanAsString(email.getDebugging()));
         properties.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
 
         this.session = Session.getDefaultInstance(properties);
 
-        if (email.getDebugging()) {
+        if (email.getDebugging() != null && email.getDebugging()) {
             configureDebugLogs();
         }
     }
 
-    private String booleanAsString(final boolean state) {
+    private String booleanAsString(final Boolean state) {
+        if (state == null) {
+            return "false";
+        }
         return state ? "true" : "false";
     }
 
