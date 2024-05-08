@@ -180,12 +180,12 @@ public class ViewerController extends Controller {
             return;
         }
 
-
         ticketModel.employeeProperty().setValue(model.getId());
         if (ticket.update(ticketModel)) {
             reloadPostUpdate(employeeComboBox, popOver);
             postSystemComment("System", "Ticket employee changed to: " + model.getFullName());
             Notifications.showInfo("Update", "Ticket employee updated successfully!");
+            employeeField.setText(model.getFullName());
         }
     }
 
