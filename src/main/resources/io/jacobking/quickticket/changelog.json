@@ -1,6 +1,6 @@
 [
   {
-    "version:": "Version: 1.0.1",
+    "version": "Version: 1.0.1",
     "changes": [
       "Fixed bug: Test SMTP e-mails not sending.",
       "Fixed bug: Comments would not delete from tickets. Added confirmation.",
