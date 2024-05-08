@@ -64,7 +64,7 @@ public class SettingsController extends Controller {
                 Alerts.showWarning(
                         "File I/O",
                         "Enabling e-mail debugging has potential File I/O overhead.",
-                        "Do not keep this enabled for extended periods, only for testing. Log files will continously generate."
+                        "Do not keep this enabled for extended periods, only for testing. Log files will continuously generate.\n\nPlease note- debugging will not be enabled until the QuickTicket client has been restarted."
                 );
             }
         });
