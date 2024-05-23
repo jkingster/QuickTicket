@@ -14,6 +14,7 @@ import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -147,12 +148,10 @@ public class EmployeeController extends Controller {
 
         employeeComboBox.getSelectionModel().selectedItemProperty().
                 addListener(((observableValue, employeeModel, t1) -> {
-                    if (t1 == null) {
-                        clearFields();
-                        return;
+                    if (t1 != null) {
+                        populateFields(t1);
+                        loadTickets(t1);
                     }
-                    populateFields(t1);
-                    loadTickets(t1);
                 }));
     }
 
@@ -195,8 +194,9 @@ public class EmployeeController extends Controller {
         ticketTable.setItems(null);
         orgCompanyCheckBox.getSelectionModel().clearSelection();
         orgDepartmentCheckBox.getSelectionModel().clearSelection();
-        companyComboBox.getSelectionModel().clearSelection();
-        departmentComboBox.getSelectionModel().clearSelection();
+        companyComboBox.getSelectionModel().clearAndSelect(0);
+        departmentComboBox.getSelectionModel().clearAndSelect(0);
+        employeeComboBox.setItems(employee.getObservableList());
     }
 
     private void configureWorkExtensionField() {
@@ -399,7 +399,13 @@ public class EmployeeController extends Controller {
 
 
                     final int departmentId = t1.getId();
-                    final int companyId = companyComboBox.getSelectionModel().getSelectedItem().getId();
+                    final CompanyModel companyModel = companyComboBox.getSelectionModel().getSelectedItem();
+                    if (companyModel == null) {
+                        Alerts.showError("Failure.", "Company model returned null.", "Please try again.");
+                        return;
+                    }
+
+                    final int companyId = companyModel.getId();
                     if (companyId == 0 && departmentId == 0) {
                         employeeComboBox.setItems(employee.getObservableList());
                         return;
