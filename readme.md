@@ -112,7 +112,7 @@ QuickTicket is built using the following technologies to help streamline the pro
 
 ## [Changelog](#changelog)
 
-### **v1.0.2** - 5/2/2024
+### **v1.0.2** - 5/24/2024
 - Fixed bug: Clicking the reset button resets the employee lookup combo boxes.
 - Fixed bug: Creating, deleting or updating tickets when a filter is selected now appropriately updates the ticket table.
 
