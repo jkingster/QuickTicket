@@ -4,7 +4,6 @@ import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
@@ -22,6 +21,7 @@ import java.util.ResourceBundle;
 
 public class TicketCreatorController extends Controller {
 
+    private TicketController       ticketController;
     private TableView<TicketModel> ticketTable;
 
     @FXML private ComboBox<StatusType> statusTypeComboBox;
@@ -47,15 +47,14 @@ public class TicketCreatorController extends Controller {
         createButton.disableProperty().bind(titleField.textProperty().isEmpty());
     }
 
-    @SuppressWarnings("unchecked") private void setDataRelay() {
+    private void setDataRelay() {
         if (dataRelay == null) {
             return;
         }
 
-        dataRelay.mapFirst(TableView.class).ifPresentOrElse(tableView -> {
-            this.ticketTable = (TableView<TicketModel>) tableView;
-        }, () -> {
-            Alerts.showError("Data Relay Failure", "TicketTable<TicketModel> was not passed via data relay.", "Please report this.");
+        dataRelay.mapIndex(0, TicketController.class).ifPresent(controller -> {
+            this.ticketController = controller;
+            this.ticketTable = ticketController.getTicketTable();
         });
     }
 
@@ -119,6 +118,7 @@ public class TicketCreatorController extends Controller {
         sendInitialEmail(newTicket);
         Display.close(Route.TICKET_CREATOR);
 
+        ticketController.setTicketTable();
         ticketTable.scrollTo(0);
     }
 

@@ -19,7 +19,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -38,20 +38,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class TicketController extends Controller {
-
-    private final FilteredList<TicketModel> open     = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.OPEN);
-    private final FilteredList<TicketModel> active   = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.ACTIVE);
-    private final FilteredList<TicketModel> paused   = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.PAUSED);
-    private final FilteredList<TicketModel> resolved = ticket.getFilteredList(ticketModel -> ticketModel.statusProperty().getValue() == StatusType.RESOLVED);
-
     private final ObjectProperty<TicketModel> lastViewed = new SimpleObjectProperty<>();
 
-    private final Map<Pane, FilteredList<TicketModel>> activePaneMap = new HashMap<>();
+    private final ObservableMap<Pane, ObservableList<TicketModel>> activePaneMap = FXCollections.observableHashMap();
 
     @FXML private TableView<TicketModel>                  ticketTable;
     @FXML private TableColumn<TicketModel, PriorityType>  indicatorColumn;
@@ -187,28 +179,32 @@ public class TicketController extends Controller {
     }
 
     private void configureLabels() {
-        openLabel.setText(String.valueOf(open.size()));
-        activeLabel.setText(String.valueOf(active.size()));
-        pausedLabel.setText(String.valueOf(paused.size()));
-        resolvedLabel.setText(String.valueOf(resolved.size()));
+        openLabel.setText(String.valueOf(getListByStatus(StatusType.OPEN).size()));
+        activeLabel.setText(String.valueOf(getListByStatus(StatusType.ACTIVE).size()));
+        pausedLabel.setText(String.valueOf(getListByStatus(StatusType.PAUSED).size()));
+        resolvedLabel.setText(String.valueOf(getListByStatus(StatusType.RESOLVED).size()));
 
-        addListener(openLabel, open);
-        addListener(activeLabel, active);
-        addListener(pausedLabel, paused);
-        addListener(resolvedLabel, resolved);
+        addListener(openLabel, getListByStatus(StatusType.OPEN));
+        addListener(activeLabel, getListByStatus(StatusType.ACTIVE));
+        addListener(pausedLabel, getListByStatus(StatusType.PAUSED));
+        addListener(resolvedLabel, getListByStatus(StatusType.RESOLVED));
     }
 
-    private void addListener(final Label label, final FilteredList<TicketModel> filteredList) {
-        filteredList.addListener((ListChangeListener<? super TicketModel>) change -> {
+    public TableView<TicketModel> getTicketTable() {
+        return ticketTable;
+    }
+
+    private void addListener(final Label label, final ObservableList<TicketModel> targetList) {
+        targetList.addListener((ListChangeListener<? super TicketModel>) change -> {
             while (change.next()) {
-                final int size = filteredList.size();
+                final int size = targetList.size();
                 label.setText(String.valueOf(size));
             }
         });
     }
 
     @FXML private void onCreate() {
-        Display.show(Route.TICKET_CREATOR, DataRelay.of(ticketTable));
+        Display.show(Route.TICKET_CREATOR, DataRelay.of(this));
     }
 
     @FXML private void onResolve() {
@@ -217,9 +213,10 @@ public class TicketController extends Controller {
             Alerts.showError("Failed to resolve ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
             return;
         }
+        final StatusType originalStatus = ticketModel.statusProperty().getValue();
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
 
-        if (ticket.update(ticketModel)) {
+        if (ticket.update(ticketModel, originalStatus)) {
             Alerts.showInput(
                     "Notify Employee",
                     "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
@@ -276,8 +273,9 @@ public class TicketController extends Controller {
             return;
         }
 
+        final StatusType originalStatus = ticketModel.statusProperty().getValue();
         ticketModel.statusProperty().setValue(StatusType.OPEN);
-        if (ticket.update(ticketModel)) {
+        if (ticket.update(ticketModel, originalStatus)) {
             Notifications.showInfo("Success", "Ticket re-opened successfully.");
             ticketTable.refresh();
         }
@@ -315,6 +313,7 @@ public class TicketController extends Controller {
                 lastViewed.setValue(null);
             }
         }
+        setTicketTable();
     }
 
     private void onOpen(final TicketModel ticketModel) {
@@ -414,8 +413,8 @@ public class TicketController extends Controller {
 
     private void activatePane(final Pane pane) {
         final StatusType statusType = (StatusType) pane.getUserData();
-        final FilteredList<TicketModel> filteredList = getFilteredListByStatus(statusType);
-        activePaneMap.put(pane, filteredList);
+        final ObservableList<TicketModel> targetList = getListByStatus(statusType);
+        activePaneMap.put(pane, targetList);
         highlightPane(pane);
         setTicketTable();
     }
@@ -432,6 +431,10 @@ public class TicketController extends Controller {
         setTicketTable();
     }
 
+    private ObservableList<TicketModel> getListByStatus(final StatusType type) {
+        return ticket.getListByStatus(type);
+    }
+
     private void highlightPane(final Pane pane) {
         pane.setStyle("-fx-background-color: #5DADD5;");
     }
@@ -441,20 +444,11 @@ public class TicketController extends Controller {
     }
 
 
-    private FilteredList<TicketModel> getFilteredListByStatus(final StatusType statusType) {
-        return switch (statusType) {
-            case OPEN -> open;
-            case ACTIVE -> active;
-            case RESOLVED -> resolved;
-            case PAUSED -> paused;
-        };
-    }
-
-    private void setTicketTable() {
+    public void setTicketTable() {
         final ObservableList<TicketModel> mergedList = FXCollections.observableArrayList();
 
-        for (final FilteredList<TicketModel> filteredList : activePaneMap.values()) {
-            mergedList.addAll(filteredList);
+        for (final ObservableList<TicketModel> targetList : activePaneMap.values()) {
+            mergedList.addAll(targetList);
         }
 
         ticketTable.setItems(mergedList);
