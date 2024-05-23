@@ -1,5 +1,12 @@
 [
   {
+    "version": "Version 1.0.2",
+    "changes": [
+      "Fixed bug: Clicking the reset button resets the employee lookup combo boxes.",
+      "Fixed bug: Creating, deleting or updating tickets when a filter is selected now appropriately updates the ticket table."
+    ]
+  },
+  {
     "version": "Version: 1.0.1",
     "changes": [
       "Fixed bug: Test SMTP e-mails not sending.",

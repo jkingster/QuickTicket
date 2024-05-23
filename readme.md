@@ -1,6 +1,6 @@
 ![QuickTicket](https://github.com/jkingster/QuickTicket/blob/development/docs/images/quickticket.png)
 
-![Static Badge](https://img.shields.io/badge/stable_version-1.0.1-green) ![Static Badge](https://img.shields.io/badge/contributions-welcome-blue) ![Static Badge](https://img.shields.io/badge/download-link-red?link=https%3A%2F%2Fgithub.com%2Fjkingster%2FQuickTicket%2Freleases%2Ftag%2Fv1.0.0)
+![Static Badge](https://img.shields.io/badge/stable_version-1.0.2-green) ![Static Badge](https://img.shields.io/badge/contributions-welcome-blue) ![Static Badge](https://img.shields.io/badge/download-link-red?link=https%3A%2F%2Fgithub.com%2Fjkingster%2FQuickTicket%2Freleases%2Ftag%2Fv1.0.0)
 
 # Welcome to the repo of QuickTicket.
 
@@ -111,6 +111,10 @@ QuickTicket is built using the following technologies to help streamline the pro
 ------------------------------------
 
 ## [Changelog](#changelog)
+
+### **v1.0.2** - 5/2/24/2024
+- Fixed bug: Clicking the reset button resets the employee lookup combo boxes.
+- Fixed bug: Creating, deleting or updating tickets when a filter is selected now appropriately updates the ticket table.
 
 ### **v1.0.1** - 5/8/2024
 - Fixed bug: Test SMTP e-mails not sending.
