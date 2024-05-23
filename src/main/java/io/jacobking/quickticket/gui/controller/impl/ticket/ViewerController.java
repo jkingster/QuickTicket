@@ -204,6 +204,7 @@ public class ViewerController extends Controller {
     }
 
     private void updateTicketStatus(final SearchableComboBox<StatusType> statusComboBox, final PopOver popOver) {
+        final StatusType originalStatus = ticketModel.statusProperty().getValue();
         final StatusType type = statusComboBox.getSelectionModel().getSelectedItem();
         if (type == null) {
             Alerts.showError("Update failure.", "No update occurred.", "You must select a status.");
@@ -212,7 +213,7 @@ public class ViewerController extends Controller {
 
         ticketModel.statusProperty().setValue(type);
 
-        if (ticket.update(ticketModel)) {
+        if (ticket.update(ticketModel, originalStatus)) {
             postSystemComment("System", "Ticket status changed to: " + type.name());
             reloadPostUpdate(statusComboBox, popOver);
             Notifications.showInfo("Update", "Ticket status updated successfully!");
