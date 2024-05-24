@@ -445,6 +445,12 @@ public class TicketController extends Controller {
 
 
     public void setTicketTable() {
+        if (activePaneMap.isEmpty()) {
+            ticketTable.setItems(ticket.getObservableList());
+            ticketTable.refresh();
+            return;
+        }
+
         final ObservableList<TicketModel> mergedList = FXCollections.observableArrayList();
 
         for (final ObservableList<TicketModel> targetList : activePaneMap.values()) {
