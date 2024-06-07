@@ -1,6 +1,6 @@
 ![QuickTicket](https://github.com/jkingster/QuickTicket/blob/development/docs/images/quickticket.png)
 
-![Static Badge](https://img.shields.io/badge/stable_version-1.0.2-green) ![Static Badge](https://img.shields.io/badge/contributions-welcome-blue) ![Static Badge](https://img.shields.io/badge/download-link-red?link=https%3A%2F%2Fgithub.com%2Fjkingster%2FQuickTicket%2Freleases%2Ftag%2Fv1.0.0)
+![Static Badge](https://img.shields.io/badge/stable_version-1.0.3-green) ![Static Badge](https://img.shields.io/badge/contributions-welcome-blue) ![Static Badge](https://img.shields.io/badge/download-link-red?link=https%3A%2F%2Fgithub.com%2Fjkingster%2FQuickTicket%2Freleases%2Ftag%2Fv1.0.0)
 
 # Welcome to the repo of QuickTicket.
 
@@ -111,6 +111,10 @@ QuickTicket is built using the following technologies to help streamline the pro
 ------------------------------------
 
 ## [Changelog](#changelog)
+
+#### **v1.0.3** - 6/7/2024
+- Fixed bug: When clicking the "mark resolved" button on the ticket viewer or dashboard, the resolving comment would not be added if choosing NOT to notify the employee.
+- Fixed bug: Notification e-mail of ticket creation discrepancies with the creation date and initial comments were swapped. 
 
 ### **v1.0.2** - 5/24/2024
 - Fixed bug: Clicking the reset button resets the employee lookup combo boxes.

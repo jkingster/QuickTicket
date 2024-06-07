@@ -1,5 +1,12 @@
 [
   {
+    "version": "Version 1.0.3",
+    "changes": [
+      "Fixed bug: When clicking the \"mark resolved\" button on the ticket viewer or dashboard, the resolving comment would not be added if choosing NOT to notify the employee.",
+      "Fixed bug: Notification e-mail of ticket creation discrepancies with the creation date and initial comments were swapped. "
+    ]
+  },
+  {
     "version": "Version 1.0.2",
     "changes": [
       "Fixed bug: Clicking the reset button resets the employee lookup combo boxes.",

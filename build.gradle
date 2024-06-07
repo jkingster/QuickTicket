@@ -67,7 +67,7 @@ jlink {
   options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
   launcher {
     name = 'QuickTicket'
-    version = "1.0.2"
+    version = "1.0.3"
     description = "Free-to-use ticket management solution aimed to streamline ticket support services."
   }
   jpackage {
@@ -78,7 +78,7 @@ jlink {
             '--win-menu', '--win-shortcut-prompt',
             '--win-update-url', 'https://www.github.com/jkingster/QuickTicket',
             '--vendor', 'Jacob King',
-            '--app-version', '1.0.2',
+            '--app-version', '1.0.3',
     ]
     imageOptions += ['--icon', 'src/main/resources/io/jacobking/quickticket/icons/quickticket-icon.ico']
     installerType = project.findProperty('installerType')
