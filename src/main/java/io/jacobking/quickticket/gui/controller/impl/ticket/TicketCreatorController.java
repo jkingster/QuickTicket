@@ -132,8 +132,9 @@ public class TicketCreatorController extends Controller {
         if (email.isEmpty()) return;
 
         final String creation = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation());
+        final String initialComment = commentField.getText().isEmpty() ? "No initial comment provided." : commentField.getText();
         new EmailBuilder(email, EmailBuilder.EmailType.NEW_TICKET)
-                .format(model.getFullName(), ticketModel.getId(), ticketModel.getTitle(), model.getFullName(), creation)
+                .format(model.getFullName(), ticketModel.getId(), ticketModel.getTitle(), creation, model.getFullName(), initialComment)
                 .email(emailConfig)
                 .setSubject(getSubject(ticketModel))
                 .sendEmail();
@@ -142,7 +143,6 @@ public class TicketCreatorController extends Controller {
     private String getSubject(final TicketModel ticketModel) {
         return String.format("Your support ticket has been created. | Ticket ID: %s", ticketModel.getId());
     }
-
 
     private void insertInitialComment(final TicketModel ticketModel) {
         final String initialComment = commentField.getText();

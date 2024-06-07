@@ -67,4 +67,10 @@ public class EmailBuilder {
         }
     }
 
+    @Override public String toString() {
+        return "EmailBuilder{" +
+                "targetAddress='" + targetAddress + '\'' +
+                ", resolvedHTML='" + resolvedHTML + '\'' +
+                '}';
+    }
 }
