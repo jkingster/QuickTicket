@@ -16,11 +16,9 @@ import java.util.Optional;
 public class InputDialogBuilder {
 
     private final Dialog<String> dialog;
-    private final String         defaultValue;
 
-    public InputDialogBuilder(String defaultValue) {
+    public InputDialogBuilder() {
         this.dialog = new Dialog<>();
-        this.defaultValue = defaultValue;
         initializeStyle();
     }
 
@@ -49,9 +47,10 @@ public class InputDialogBuilder {
             if (type == ButtonType.YES) {
                 return textArea.getText();
             } else if (type == ButtonType.NO) {
-                return null;
+                final String comment = textArea.getText();
+                return comment.isEmpty() ? "" : comment;
             }
-            return defaultValue;
+            return "";
         });
         return this;
     }

@@ -102,8 +102,8 @@ public class Alerts {
                 .showAndWait();
     }
 
-    public static Optional<String> showInput(final String title, final String content, final String defaultValue) {
-        return new InputDialogBuilder(defaultValue)
+    public static Optional<String> showInput(final String title, final String content) {
+        return new InputDialogBuilder()
                 .buildDialog(title, content)
                 .result();
     }

@@ -217,43 +217,48 @@ public class TicketController extends Controller {
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
 
         if (ticket.update(ticketModel, originalStatus)) {
-            Alerts.showInput(
-                    "Notify Employee",
-                    "Would you like to notify the employee the ticket is resolved along with adding an ending comment?",
-                    "No resolving comment was added."
-            ).ifPresentOrElse(comment -> {
-                final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
-                if (model == null) {
-                    Alerts.showError("Error notifying employee.", "Could not retrieve employee.", "Is there an employee attached to this ticket?");
-                    return;
-                }
-
-                final String email = model.getEmail();
-                if (email.isEmpty()) {
-                    Alerts.showError(
-                            "Error notifying employee.",
-                            "Could not send notification e-mail.",
-                            "There is no e-mail attached for this employee."
-                    );
-                    return;
-                }
-
-                new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
-                        .format(
-                                ticketModel.getId(),
-                                ticketModel.getTitle(),
-                                DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation()),
-                                model.getFullName(),
-                                comment
-                        )
-                        .email(emailConfig)
-                        .setSubject(getSubject(ticketModel))
-                        .sendEmail();
-
-                postCommentOnTicket(ticketModel, comment);
-            }, () -> postCommentOnTicket(ticketModel, "No resolving comment."));
-            ticketTable.refresh();
+            pushNotifyAlert(ticketModel);
         }
+    }
+
+    private void pushNotifyAlert(final TicketModel ticketModel) {
+        Alerts.showInput("Resolving Ticket", "Would you like to notify the employee this ticket is resolved? Please provide any closing comments.")
+                .ifPresentOrElse(resolvingComment -> {
+                    if (resolvingComment.isEmpty()) {
+                        postCommentOnTicket(ticketModel, "No resolving comment added.");
+                        return;
+                    }
+
+                    final int employeeId = ticketModel.getEmployeeId();
+                    final EmployeeModel employeeModel = employee.getModel(employeeId);
+                    if (employeeModel == null) {
+                        Alerts.showError("Failed to send e-mail.", "Could not notify employee ticket is resolved.", "Could not fetch employee record.");
+                        return;
+                    }
+
+                    final String employeeEmail = employeeModel.getEmail();
+                    if (employeeEmail.isEmpty()) {
+                        Alerts.showError("Failed to send e-mail.", "Could not notify employee ticket is resolved.", "Employee has no e-mail attached to employee record.");
+                        return;
+                    }
+
+                    postCommentOnTicket(ticketModel, resolvingComment);
+                    sendResolvedEmail(ticketModel, employeeEmail, resolvingComment, employeeModel);
+                }, () -> postCommentOnTicket(ticketModel, "No resolving comment added."));
+    }
+
+    private void sendResolvedEmail(final TicketModel ticketModel, final String email, final String resolvingComment,  final EmployeeModel employeeModel) {
+        new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
+                .format(
+                        ticketModel.getId(),
+                        ticketModel.getTitle(),
+                        DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation()),
+                        employeeModel.getFullName(),
+                        resolvingComment
+                )
+                .email(emailConfig)
+                .setSubject(getSubject(ticketModel))
+                .sendEmail();
     }
 
     private String getSubject(final TicketModel ticketModel) {
