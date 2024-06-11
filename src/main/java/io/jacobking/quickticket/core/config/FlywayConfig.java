@@ -16,11 +16,6 @@ import java.util.zip.ZipInputStream;
 
 public class FlywayConfig extends Config {
 
-    private static final String[] SCRIPT_NAMES = {
-            "V1.0__INITIAL.SQL"
-    };
-
-
     public FlywayConfig() {
         super("flyway.properties");
         copyOverScripts();
