@@ -16,6 +16,7 @@ module io.jacobking.quickticket {
     requires flyway.core;
     requires ch.qos.logback.classic;
     requires ch.qos.logback.core;
+    requires zip4j;
 
     opens io.jacobking.quickticket to javafx.fxml;
     exports io.jacobking.quickticket;

@@ -58,6 +58,8 @@ dependencies {
   implementation group: 'com.fasterxml.jackson.core',  name: 'jackson-databind', version: '2.16.1'
   implementation group: 'org.slf4j',                   name: 'slf4j-api',        version: '1.7.36'
   implementation group: 'commons-io',                  name: 'commons-io',       version: '2.15.0'
+  implementation group: 'net.lingala.zip4j',           name: 'zip4j',           version: '2.11.5'
+
   jooqGenerator 'org.xerial:sqlite-jdbc:3.42.0.0'
 }
 

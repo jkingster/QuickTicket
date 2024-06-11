@@ -4,14 +4,14 @@ import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.Alerts;
+import net.lingala.zip4j.io.inputstream.ZipInputStream;
+import net.lingala.zip4j.model.LocalFileHeader;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+
 
 
 public class FlywayConfig extends Config {
@@ -26,40 +26,71 @@ public class FlywayConfig extends Config {
         setProperty("flyway.locations", "filesystem:" + FileIO.getPath("migrations"));
     }
 
-    private void copyOverScripts() {
+//    private void copyOverScripts() {
+//        final URL zipFileUrl = App.class.getResource("sql/scripts.zip");
+//        if (zipFileUrl == null) {
+//            Alerts.showErrorOverride("scripts.zip not found!", "Please report this.");
+//            return;
+//        }
+//
+//        try (final InputStream inputStream = zipFileUrl.openStream();
+//             final ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
+//            ZipEntry zipEntry;
+//            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+//                final String name = zipEntry.getName();
+//                Logs.debug("Zip Name: {}", name);
+//                copyScriptOver(zipInputStream, name);
+//                zipInputStream.closeEntry();
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+//    private void copyScriptOver(final ZipInputStream zipInputStream, final String name) {
+//        final String targetDirectory = FileIO.getPath("migrations");
+//        final File outputFile = new File(targetDirectory + File.separator + name);
+//
+//        try {
+//            FileUtils.copyInputStreamToFile(zipInputStream, outputFile);
+//        } catch (IOException e) {
+//            Logs.warn("IOException: {}", e.fillInStackTrace());
+//        }
+
+
+        private void copyOverScripts() {
         final URL zipFileUrl = App.class.getResource("sql/scripts.zip");
         if (zipFileUrl == null) {
             Alerts.showErrorOverride("scripts.zip not found!", "Please report this.");
             return;
         }
 
-        try (final InputStream inputStream = zipFileUrl.openStream()) {
-            if (inputStream == null) {
-                Alerts.showErrorOverride("Could not open scripts.zip stream!", "Please report this.");
-                return;
+        LocalFileHeader localFileHeader;
+        int readLen;
+        byte[] readBuffer = new byte[4096];
+        try (final InputStream inputStream = zipFileUrl.openStream();
+            final ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
+            while ((localFileHeader = zipInputStream.getNextEntry()) != null) {
+                final File extractedFile = new File(getMigrationPath(localFileHeader.getFileName()));
+                try (final OutputStream outputStream = new FileOutputStream(extractedFile)) {
+                    while ((readLen = zipInputStream.read(readBuffer)) != -1) {
+                        outputStream.write(readBuffer, 0, readLen);
+                    }
+                }
             }
-            final ZipInputStream zipInputStream = new ZipInputStream(inputStream);
-
-            ZipEntry zipEntry;
-            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                final String name = zipEntry.getName();
-                copyScriptOver(zipInputStream, name);
-            }
-
-        } catch (IOException e) {
-            Logs.warn("IOException: {}", e.fillInStackTrace());
+        } catch (IOException e ) {
+            Logs.debug(e.fillInStackTrace().getMessage());
         }
     }
 
-    private void copyScriptOver(final ZipInputStream zipInputStream, final String name) {
+    private String getMigrationPath(final String fileName) {
         final String targetDirectory = FileIO.getPath("migrations");
-        final File outputFile = new File(targetDirectory + File.separator + name);
-
-        try {
-            FileUtils.copyInputStreamToFile(zipInputStream, outputFile);
-        } catch (IOException e) {
-            Logs.warn("IOException: {}", e.fillInStackTrace());
-        }
+        final File outputFile = new File(targetDirectory + File.separator + fileName);
+        return outputFile.getPath();
     }
-
 }
+
+
+
+
+
