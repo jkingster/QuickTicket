@@ -8,78 +8,60 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="800.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="1044.0" styleClass="body" stylesheets="@../css/core/base.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ListView fx:id="commentList" layoutX="38.0" layoutY="83.0" prefHeight="311.0" prefWidth="724.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
-      <HBox layoutX="38.0" layoutY="405.0" prefHeight="26.0" prefWidth="724.0" spacing="5.0">
+      <Pane layoutX="11.0" layoutY="7.0" prefHeight="37.0" prefWidth="829.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
-            <TextField fx:id="commentField" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="562.0" />
-            <Button fx:id="postButton" mnemonicParsing="false" onAction="#onPost" prefHeight="26.0" styleClass="button-primary" text="Post" />
-            <Button mnemonicParsing="false" onAction="#onDeleteComment" styleClass="button-primary" text="Delete Comment" />
-         </children>
-      </HBox>
-      <TextField fx:id="titleField" editable="false" layoutX="38.0" layoutY="14.0" prefHeight="26.0" prefWidth="503.0" promptText="Undefined" />
-      <TextField fx:id="creationField" editable="false" layoutX="265.0" layoutY="47.0" prefHeight="26.0" prefWidth="158.0" promptText="Undefined" />
-      <VBox layoutX="38.0" layoutY="437.0" prefHeight="53.0" prefWidth="545.0" spacing="5.0">
-         <children>
-            <HBox prefHeight="36.0" prefWidth="545.0" spacing="5.0">
+            <HBox alignment="CENTER_LEFT" layoutX="7.0" prefHeight="37.0" prefWidth="815.0" spacing="7.0">
                <children>
-                  <Button fx:id="priorityButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdatePriority" prefHeight="26.0" styleClass="button-primary" text="Update Priority" />
-                  <Button fx:id="statusButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateStatus" prefHeight="26.0" styleClass="button-primary" text="Update Status" />
-                  <Button fx:id="updateUserButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateUser" prefHeight="26.0" styleClass="button-primary" text="Update User" />
-                  <Button fx:id="resolvedButton" minWidth="105.0" mnemonicParsing="false" onAction="#onMarkResolved" prefHeight="26.0" styleClass="button-primary" text="Mark Resolved" />
-                  <Button minWidth="105.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="26.0" styleClass="button-warning" text="Delete" />
+                  <Label text="Update:" textFill="WHITE">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <Button mnemonicParsing="false" stylesheets="@../css/core/button.css" text="Priority" />
+                  <Button mnemonicParsing="false" stylesheets="@../css/core/button.css" text="Status" />
+                  <Button mnemonicParsing="false" stylesheets="@../css/core/button.css" text="User" />
+                  <Button mnemonicParsing="false" stylesheets="@../css/core/button.css" text="Title" />
+                  <Button mnemonicParsing="false" stylesheets="@../css/core/button.css" text="Resolve By" />
+                  <Label text="Ticket:" textFill="WHITE">
+                     <font>
+                        <Font size="17.0" />
+                     </font>
+                  </Label>
+                  <Button mnemonicParsing="false" styleClass="button-warning" stylesheets="@../css/core/button.css" text="Delete" />
+                  <Button mnemonicParsing="false" styleClass="button-success" stylesheets="@../css/core/button.css" text="Quick Resolve" />
+                  <TextField fx:id="priorityField" alignment="CENTER" editable="false" prefHeight="25.0" prefWidth="80.0" promptText="Priority" styleClass="list-cell">
+                     <stylesheets>
+                        <URL value="@../css/core/text-field.css" />
+                        <URL value="@../css/core/combo-box.css" />
+                     </stylesheets>
+                  </TextField>
+                  <TextField fx:id="statusField" alignment="CENTER" editable="false" prefHeight="25.0" prefWidth="80.0" promptText="Status" stylesheets="@../css/core/text-field.css" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="545.0" spacing="5.0" />
          </children>
-      </VBox>
-      <TextField fx:id="employeeField" editable="false" layoutX="38.0" layoutY="47.0" prefHeight="26.0" prefWidth="217.0" promptText="Undefined" />
-      <Pane layoutX="562.0" layoutY="14.0" prefHeight="26.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
+      </Pane>
+      <HBox layoutX="11.0" layoutY="52.0" prefHeight="26.0" prefWidth="829.0" spacing="5.0">
          <children>
-            <Label fx:id="statusLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="127.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-            <Label fx:id="statusLabel1" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Priority:">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-         </children></Pane>
-      <Pane layoutX="562.0" layoutY="47.0" prefHeight="26.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <TextField fx:id="titleField" editable="false" prefHeight="25.0" prefWidth="362.0" promptText="Title" stylesheets="@../css/core/text-field.css" />
+            <TextField fx:id="createdOnField" editable="false" prefHeight="25.0" prefWidth="154.0" promptText="Created On" stylesheets="@../css/core/text-field.css" />
+            <TextField fx:id="resolveByField" editable="false" promptText="Resolve By" stylesheets="@../css/core/text-field.css" />
+            <TextField fx:id="employeeField" editable="false" prefHeight="25.0" prefWidth="139.0" promptText="Employee" stylesheets="@../css/core/text-field.css" />
+         </children>
+      </HBox>
+      <ListView fx:id="commentList" layoutX="11.0" layoutY="85.0" prefHeight="253.0" prefWidth="829.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
+      <HBox layoutX="11.0" layoutY="344.0" prefHeight="26.0" prefWidth="829.0" spacing="5.0">
          <children>
-            <Label fx:id="priorityLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="127.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-            <Label fx:id="statusLabel11" contentDisplay="CENTER" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Status:" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-         </children></Pane>
-      <Pane layoutX="428.0" layoutY="47.0" prefHeight="26.0" prefWidth="112.0" styleClass="card" stylesheets="@../css/core/card.css">
-         <children>
-            <Label fx:id="statusLabel111" contentDisplay="CENTER" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="99.0" styleClass="card-text" text="Comments:" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-            <Label fx:id="totalCommentsLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="77.0" layoutY="5.0" prefHeight="17.0" prefWidth="24.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-         </children></Pane>
+            <TextField fx:id="commentField" prefHeight="25.0" prefWidth="744.0" stylesheets="@../css/core/text-field.css" />
+            <Button fx:id="postButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="38.0" stylesheets="@../css/core/button.css" />
+            <Button fx:id="deleteButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="38.0" stylesheets="@../css/core/button.css" />
+         </children>
+      </HBox>
+      <ListView fx:id="linkedTicketList" layoutX="846.0" layoutY="8.0" prefHeight="331.0" prefWidth="192.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
+      <Button layoutX="897.0" layoutY="345.0" mnemonicParsing="false" stylesheets="@../css/core/button.css" text="Link Ticket" />
+      <Button layoutX="978.0" layoutY="345.0" mnemonicParsing="false" stylesheets="@../css/core/button.css" text="Remove" />
    </children>
-   <stylesheets>
-      <URL value="@../css/core/base.css" />
-      <URL value="@../css/screen/viewer.css" />
-   </stylesheets>
 </AnchorPane>
