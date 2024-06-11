@@ -25,6 +25,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -135,6 +136,29 @@ public class TicketController extends Controller {
         }
 
         lastViewButton.disableProperty().bind(lastViewed.isNull());
+        handleDoubleClick();
+    }
+
+    private void handleDoubleClick() {
+        ticketTable.setRowFactory(ticketModelTableView -> {
+            final TableRow<TicketModel> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                    final TicketModel ticket = row.getItem();
+                    openTicket(ticket);
+                }
+            });
+            return row;
+        });
+    }
+
+    private void openTicket(final TicketModel ticketModel) {
+        if (ticketModel == null) {
+            Alerts.showError("Failed", "Could not open ticket.", "Please try again.");
+            return;
+        }
+
+        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable, lastViewed));
     }
 
     private void handleIndicatorColumn() {
@@ -247,7 +271,7 @@ public class TicketController extends Controller {
                 }, () -> postCommentOnTicket(ticketModel, "No resolving comment added."));
     }
 
-    private void sendResolvedEmail(final TicketModel ticketModel, final String email, final String resolvingComment,  final EmployeeModel employeeModel) {
+    private void sendResolvedEmail(final TicketModel ticketModel, final String email, final String resolvingComment, final EmployeeModel employeeModel) {
         new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
                 .format(
                         ticketModel.getId(),
