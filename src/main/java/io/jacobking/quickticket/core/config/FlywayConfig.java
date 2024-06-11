@@ -6,12 +6,9 @@ import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import net.lingala.zip4j.io.inputstream.ZipInputStream;
 import net.lingala.zip4j.model.LocalFileHeader;
-import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.net.URL;
-import java.util.zip.ZipEntry;
-
 
 
 public class FlywayConfig extends Config {
@@ -58,7 +55,7 @@ public class FlywayConfig extends Config {
 //        }
 
 
-        private void copyOverScripts() {
+    private void copyOverScripts() {
         final URL zipFileUrl = App.class.getResource("sql/scripts.zip");
         if (zipFileUrl == null) {
             Alerts.showErrorOverride("scripts.zip not found!", "Please report this.");
@@ -69,7 +66,7 @@ public class FlywayConfig extends Config {
         int readLen;
         byte[] readBuffer = new byte[4096];
         try (final InputStream inputStream = zipFileUrl.openStream();
-            final ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
+             final ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
             while ((localFileHeader = zipInputStream.getNextEntry()) != null) {
                 final File extractedFile = new File(getMigrationPath(localFileHeader.getFileName()));
                 try (final OutputStream outputStream = new FileOutputStream(extractedFile)) {
@@ -78,7 +75,7 @@ public class FlywayConfig extends Config {
                     }
                 }
             }
-        } catch (IOException e ) {
+        } catch (IOException e) {
             Logs.debug(e.fillInStackTrace().getMessage());
         }
     }

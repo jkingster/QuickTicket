@@ -16,8 +16,9 @@ public class TicketModel extends ViewModel<Ticket> {
     private final IntegerProperty               employeeProperty    = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDateTime> createdProperty     = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDateTime> lastViewedTimestamp = new SimpleObjectProperty<>();
+    private final ObjectProperty<LocalDateTime> resolveBy = new SimpleObjectProperty<>();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, LocalDateTime resolveBy) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
@@ -25,6 +26,7 @@ public class TicketModel extends ViewModel<Ticket> {
         this.employeeProperty.setValue(employeeId);
         this.createdProperty.setValue(created);
         this.lastViewedTimestamp.setValue(lastViewedTimestamp);
+        this.resolveBy.setValue(resolveBy);
     }
 
     public TicketModel(final Ticket ticket) {
@@ -35,7 +37,8 @@ public class TicketModel extends ViewModel<Ticket> {
                 PriorityType.of(ticket.getPriority()),
                 ticket.getEmployeeId(), // need to update from user -> employee eventually.
                 ticket.getCreatedOn(),
-                ticket.getLastOpenedTimestamp()
+                ticket.getLastOpenedTimestamp(),
+                ticket.getResolvedBy()
         );
     }
 
@@ -87,7 +90,13 @@ public class TicketModel extends ViewModel<Ticket> {
         return lastViewedTimestamp.getValue();
     }
 
+    public LocalDateTime getResolveBy() {
+        return resolveBy.get();
+    }
 
+    public ObjectProperty<LocalDateTime> resolveByProperty() {
+        return resolveBy;
+    }
 
     @Override
     public String toString() {
@@ -110,7 +119,8 @@ public class TicketModel extends ViewModel<Ticket> {
                 getPriority(),
                 getCreation(),
                 getEmployeeId(),
-                getLastViewedTimestamp()
+                getLastViewedTimestamp(),
+                getResolveBy()
         );
     }
 }

@@ -65,6 +65,7 @@ public class RepoCrud {
                 case COMPANY    -> (Repository<? extends Entity>) new CompanyRepository();
                 case DEPARTMENT -> (Repository<? extends Entity>) new DepartmentRepository();
                 case FLYWAY     -> (Repository<? extends Entity>) new FlywayRepository();
+                case LINKED_TICKET -> (Repository<? extends Entity>) new LinkedTicketRepository();
             });
         }
     }
