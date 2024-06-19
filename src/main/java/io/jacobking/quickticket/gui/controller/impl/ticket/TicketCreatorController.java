@@ -5,6 +5,7 @@ import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.controller.Controller;
+import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
@@ -24,19 +25,14 @@ public class TicketCreatorController extends Controller {
     private TicketController       ticketController;
     private TableView<TicketModel> ticketTable;
 
-    @FXML private ComboBox<StatusType> statusTypeComboBox;
-
-    @FXML private ComboBox<PriorityType> priorityTypeComboBox;
-
+    @FXML private ComboBox<StatusType>              statusTypeComboBox;
+    @FXML private ComboBox<PriorityType>            priorityTypeComboBox;
     @FXML private SearchableComboBox<EmployeeModel> employeeComboBox;
-
-    @FXML private TextField titleField;
-
-    @FXML private TextArea commentField;
-
-    @FXML private Button createButton;
-
-    @FXML private CheckBox emailCheckBox;
+    @FXML private TextField                         titleField;
+    @FXML private TextArea                          commentField;
+    @FXML private Button                            createButton;
+    @FXML private CheckBox                          emailCheckBox;
+    @FXML private CheckBox                          openCheckBox;
 
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -117,6 +113,10 @@ public class TicketCreatorController extends Controller {
         insertInitialComment(newTicket);
         sendInitialEmail(newTicket);
         Display.close(Route.TICKET_CREATOR);
+
+        if (openCheckBox.isSelected()) {
+            Display.show(Route.VIEWER, DataRelay.of(newTicket, ticketTable));
+        }
 
         ticketController.setTicketTable();
         ticketTable.scrollTo(0);

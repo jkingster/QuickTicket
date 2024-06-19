@@ -23,7 +23,12 @@
             <TextField fx:id="titleField" promptText="Ticket Title" styleClass="text-field" />
             <TextArea fx:id="commentField" prefHeight="200.0" prefWidth="200.0" promptText="Any initial information...." wrapText="true" />
             <SearchableComboBox fx:id="employeeComboBox" promptText="Employee" styleClass="sear" stylesheets="@../css/core/combo-box.css" />
-            <CheckBox fx:id="emailCheckBox" mnemonicParsing="false" text="Send notification e-mail" textFill="WHITE" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+               <children>
+                  <CheckBox fx:id="emailCheckBox" mnemonicParsing="false" text="Send notification e-mail" textFill="WHITE" />
+                  <CheckBox fx:id="openCheckBox" mnemonicParsing="false" text="Open ticket after creation" textFill="WHITE" />
+               </children>
+            </HBox>
          </children>
       </VBox>
       <HBox alignment="CENTER_RIGHT" layoutX="18.0" layoutY="286.0" prefHeight="34.0" prefWidth="316.0" spacing="5.0">
