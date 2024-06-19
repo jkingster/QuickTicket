@@ -301,6 +301,7 @@ public class ViewerController extends Controller {
     @FXML private void onQuickResolve() {
         final StatusType originalStatus = viewedTicket.statusProperty().getValue();
         viewedTicket.statusProperty().setValue(StatusType.RESOLVED);
+        updateStatusColor(StatusType.RESOLVED);
 
         if (ticket.update(viewedTicket, originalStatus)) {
             promptNotifyEmployeeAlert(viewedTicket);
