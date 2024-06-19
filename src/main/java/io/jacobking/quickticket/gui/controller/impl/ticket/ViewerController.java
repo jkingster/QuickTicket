@@ -37,6 +37,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -275,12 +276,28 @@ public class ViewerController extends Controller {
                                  : String.format("Resolve by: %s", DateUtil.formatDate(resolveDate.toString()));
         resolveByField.setText(resolveBy);
 
+        handleDate(resolveDate);
+
         final EmployeeModel employeeModel = employee.getModel(ticketModel.getEmployeeId());
         final String employeeName = (employeeModel == null) ? "No employee." : employeeModel.getFullName();
         employeeField.setText(employeeName);
 
         handlePriority(ticketModel.priorityProperty());
         handleStatus(ticketModel.statusProperty());
+    }
+
+    private void handleDate(final LocalDate localDate) {
+        if (localDate == null)
+            return;
+
+        final LocalDate now = LocalDate.now();
+        final long difference = ChronoUnit.DAYS.between(now, localDate);
+
+        if (now.isEqual(localDate)) {
+            resolveByField.setStyle("-fx-text-fill: RED;");
+        } else if (Math.abs(difference) <= 5) {
+            resolveByField.setStyle("-fx-text-fill: YELLOW;");
+        }
     }
 
     private void handlePriority(final ObjectProperty<PriorityType> priority) {
