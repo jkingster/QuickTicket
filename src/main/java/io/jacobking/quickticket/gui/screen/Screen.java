@@ -9,6 +9,7 @@ import io.jacobking.quickticket.gui.data.DataRelay;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -68,6 +69,13 @@ public class Screen {
 
         if (scene != null) {
             initializeStageDefaults();
+            if (this.route != Route.DASHBOARD) {
+                scene.setOnKeyPressed(event -> {
+                    if (event.getCode() == KeyCode.ESCAPE) {
+                        Display.close(route);
+                    }
+                });
+            }
         }
     }
 
