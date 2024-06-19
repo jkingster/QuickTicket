@@ -6,6 +6,7 @@ import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.Ticket;
 import javafx.beans.property.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TicketModel extends ViewModel<Ticket> {
@@ -16,9 +17,9 @@ public class TicketModel extends ViewModel<Ticket> {
     private final IntegerProperty               employeeProperty    = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDateTime> createdProperty     = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDateTime> lastViewedTimestamp = new SimpleObjectProperty<>();
-    private final ObjectProperty<LocalDateTime> resolveBy = new SimpleObjectProperty<>();
+    private final ObjectProperty<LocalDate>     resolveBy           = new SimpleObjectProperty<>();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, LocalDateTime resolveBy) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, LocalDate resolveBy) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
@@ -90,11 +91,11 @@ public class TicketModel extends ViewModel<Ticket> {
         return lastViewedTimestamp.getValue();
     }
 
-    public LocalDateTime getResolveBy() {
+    public LocalDate getResolveBy() {
         return resolveBy.get();
     }
 
-    public ObjectProperty<LocalDateTime> resolveByProperty() {
+    public ObjectProperty<LocalDate> resolveByProperty() {
         return resolveBy;
     }
 

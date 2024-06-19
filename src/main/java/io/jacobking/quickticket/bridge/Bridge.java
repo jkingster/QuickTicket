@@ -95,9 +95,7 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
         if (!contains(id))
             return;
 
-        Platform.runLater(() -> {
-            observableList.removeIf(filter -> filter.getId() == id);
-        });
+        Platform.runLater(() -> observableList.removeIf(filter -> filter.getId() == id));
     }
 
     public boolean contains(final int id) {

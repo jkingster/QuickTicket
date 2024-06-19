@@ -184,17 +184,17 @@ public class TicketController extends Controller {
                 }
 
                 if (StatusType.of(ticketModel.getStatus()) == StatusType.RESOLVED) {
-                    indicator.setGraphic(glyph.color(Color.valueOf("#282B36")));
+                    indicator.setGraphic(glyph.color(Color.valueOf("#5DADD5")));
                     setGraphic(indicator);
                     return;
                 }
 
                 if (priorityType == PriorityType.HIGH) {
-                    indicator.setGraphic(glyph.color(Color.valueOf("#C1292E")));
+                    indicator.setGraphic(glyph.color(Color.ORANGE));
                 } else if (priorityType == PriorityType.MEDIUM) {
-                    indicator.setGraphic(glyph.color(Color.valueOf("#FFF200")));
+                    indicator.setGraphic(glyph.color(Color.YELLOW));
                 } else if (priorityType == PriorityType.LOW) {
-                    indicator.setGraphic(glyph.color(Color.valueOf("#248232")));
+                    indicator.setGraphic(glyph.color(Color.GREEN));
                 }
 
                 setGraphic(indicator);
@@ -241,47 +241,63 @@ public class TicketController extends Controller {
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
 
         if (ticket.update(ticketModel, originalStatus)) {
-            pushNotifyAlert(ticketModel);
+            promptNotifyEmployeeAlert(ticketModel);
         }
     }
 
-    private void pushNotifyAlert(final TicketModel ticketModel) {
-        Alerts.showInput("Resolving Ticket", "Would you like to notify the employee this ticket is resolved? Please provide any closing comments.")
-                .ifPresentOrElse(resolvingComment -> {
-                    if (resolvingComment.isEmpty()) {
-                        postCommentOnTicket(ticketModel, "No resolving comment added.");
-                        return;
+    private void promptNotifyEmployeeAlert(final TicketModel viewedTicket) {
+        Alerts.showInput("This ticket has been marked resolved.", "Would you like to notify the employee? Please provide any closing comments.")
+                .ifPresent(pair -> {
+                    final ButtonType type = pair.getLeft();
+                    final String comment = pair.getRight();
+                    if (type == ButtonType.YES) {
+                        postComment(viewedTicket, comment);
+                        processNotificationEmail(viewedTicket, comment);
+                    } else if (type == ButtonType.NO) {
+                        postComment(viewedTicket, comment);
+                    } else if (type == ButtonType.CANCEL) {
+                        postFailureComment(viewedTicket, "Notification not sent and resolving comment unknown.");
                     }
-
-                    final int employeeId = ticketModel.getEmployeeId();
-                    final EmployeeModel employeeModel = employee.getModel(employeeId);
-                    if (employeeModel == null) {
-                        Alerts.showError("Failed to send e-mail.", "Could not notify employee ticket is resolved.", "Could not fetch employee record.");
-                        return;
-                    }
-
-                    final String employeeEmail = employeeModel.getEmail();
-                    if (employeeEmail.isEmpty()) {
-                        Alerts.showError("Failed to send e-mail.", "Could not notify employee ticket is resolved.", "Employee has no e-mail attached to employee record.");
-                        return;
-                    }
-
-                    postCommentOnTicket(ticketModel, resolvingComment);
-                    sendResolvedEmail(ticketModel, employeeEmail, resolvingComment, employeeModel);
-                }, () -> postCommentOnTicket(ticketModel, "No resolving comment added."));
+                });
     }
 
-    private void sendResolvedEmail(final TicketModel ticketModel, final String email, final String resolvingComment, final EmployeeModel employeeModel) {
+    private void processNotificationEmail(final TicketModel viewedTicket, final String resolvingComment) {
+        final EmployeeModel employee = getEmployee();
+        if (employee == null) {
+            Alerts.showError("Failed to retrieve record.", "Employee could not be fetched from database.", "Please attach an employee.");
+            postFailureComment(viewedTicket, "Could not retrieve employee record.");
+            return;
+        }
+
+        final String employeeEmail = employee.getEmail();
+        if (employeeEmail.isEmpty()) {
+            Alerts.showError("Failed to retrieve e-mail.", "Could not notify employee.", "PLease attach an e-mail to employees' record.");
+            postFailureComment(viewedTicket, "Could not retrieve employee e-mail.");
+            return;
+        }
+
+        notifyEmployee(viewedTicket, employeeEmail, resolvingComment, employee);
+    }
+
+    private void postEmptyResolvingComment(final TicketModel viewedTicket) {
+        postComment(viewedTicket, "No resolving comment.");
+    }
+
+    private void postFailureComment(final TicketModel ticketModel, final String comment) {
+        postComment(ticketModel, comment);
+    }
+
+    private void notifyEmployee(final TicketModel viewedTicket, final String email, final String resolvingComment, final EmployeeModel employeeModel) {
         new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
                 .format(
-                        ticketModel.getId(),
-                        ticketModel.getTitle(),
-                        DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation()),
+                        viewedTicket.getId(),
+                        viewedTicket.getTitle(),
+                        DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, viewedTicket.getCreation()),
                         employeeModel.getFullName(),
                         resolvingComment
                 )
                 .email(emailConfig)
-                .setSubject(getSubject(ticketModel))
+                .setSubject(getSubject(viewedTicket))
                 .sendEmail();
     }
 
@@ -289,10 +305,24 @@ public class TicketController extends Controller {
         return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());
     }
 
-    private void postCommentOnTicket(final TicketModel ticketModel, final String systemComment) {
-        comment.createModel(new Comment().setTicketId(ticketModel.getId())
+    private void postComment(final TicketModel ticket, final String commentText) {
+        if (commentText.isEmpty()) {
+            postEmptyResolvingComment(ticket);
+            return;
+        }
+
+        comment.createModel(new Comment()
+                .setTicketId(ticket.getId())
+                .setPost(commentText)
                 .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
-                .setPost(String.format("[%s]: %s", "System", systemComment)));
+        );
+    }
+
+    private EmployeeModel getEmployee() {
+        final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
+        if (ticketModel == null)
+            return null;
+        return employee.getModel(ticketModel.getEmployeeId());
     }
 
     @FXML private void onReopen() {

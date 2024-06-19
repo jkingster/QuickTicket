@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.gui.alert;
 
 import io.jacobking.quickticket.core.QuickTicket;
+import io.jacobking.quickticket.core.utility.ImmutablePair;
 import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.builder.AlertBuilder;
 import io.jacobking.quickticket.gui.alert.builder.InputDialogBuilder;
@@ -102,7 +103,7 @@ public class Alerts {
                 .showAndWait();
     }
 
-    public static Optional<String> showInput(final String title, final String content) {
+    public static Optional<ImmutablePair<ButtonType, String>> showInput(final String title, final String content) {
         return new InputDialogBuilder()
                 .buildDialog(title, content)
                 .result();

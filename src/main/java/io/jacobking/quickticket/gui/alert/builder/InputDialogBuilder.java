@@ -2,6 +2,7 @@ package io.jacobking.quickticket.gui.alert.builder;
 
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.utility.Checks;
+import io.jacobking.quickticket.core.utility.ImmutablePair;
 import javafx.geometry.Pos;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 public class InputDialogBuilder {
 
-    private final Dialog<String> dialog;
+    private final Dialog<ImmutablePair<ButtonType, String>> dialog;
 
     public InputDialogBuilder() {
         this.dialog = new Dialog<>();
@@ -43,19 +44,22 @@ public class InputDialogBuilder {
         this.dialog.getDialogPane().getButtonTypes().clear();
         this.dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
 
-        dialog.setResultConverter(type -> {
-            if (type == ButtonType.YES) {
-                return textArea.getText();
-            } else if (type == ButtonType.NO) {
-                final String comment = textArea.getText();
-                return comment.isEmpty() ? "" : comment;
+        dialog.setResultConverter(buttonType -> {
+            final String comment = textArea.getText();
+            final String finalComment = comment.isEmpty() ? "" : comment;
+
+            if (buttonType == ButtonType.YES) {
+                return ImmutablePair.of(ButtonType.YES, finalComment);
+            } else if (buttonType == ButtonType.NO) {
+                return ImmutablePair.of(ButtonType.NO, finalComment);
+            } else {
+                return ImmutablePair.of(ButtonType.CANCEL, "");
             }
-            return "";
         });
         return this;
     }
 
-    public Optional<String> result() {
+    public Optional<ImmutablePair<ButtonType, String>> result() {
         return dialog.showAndWait();
     }
 

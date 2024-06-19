@@ -18,6 +18,7 @@ public abstract class Controller implements Initializable {
     protected final FlywayBridge        flyway;
     protected final CompanyBridge       company;
     protected final DepartmentBridge    department;
+    protected final LinkedTicketBridge linkedTicket;
     protected       DataRelay           dataRelay;
 
     public Controller() {
@@ -30,6 +31,7 @@ public abstract class Controller implements Initializable {
         this.alertSettings = core.getDatabase().getBridgeContext().getAlertSettings();
         this.company = core.getDatabase().getBridgeContext().getCompany();
         this.department = core.getDatabase().getBridgeContext().getDepartment();
+        this.linkedTicket = core.getDatabase().getBridgeContext().getLinkedTicket();
         this.emailConfig = core.getDatabase().getBridgeContext().getEmailConfig()
                 .setEmail(email.getEmail())
                 .applySettings();

@@ -33,6 +33,14 @@ public class CommentModel extends ViewModel<Comment> {
         );
     }
 
+    public CommentModel(final int ticketId, final String post) {
+        this(new Comment()
+                .setTicketId(ticketId)
+                .setPost(post)
+                .setPostedOn(LocalDateTime.now())
+        );
+    }
+
     public int getTicketId() {
         return ticketId;
     }
