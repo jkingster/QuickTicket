@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -114,6 +115,18 @@ public class ViewerController extends Controller {
 
         postButton.disableProperty().bind(commentField.textProperty().isEmpty());
         deleteButton.disableProperty().bind(commentList.getSelectionModel().selectedItemProperty().isNull());
+
+        commentField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                final String comment = commentField.getText();
+                if (comment.isEmpty())
+                    return;
+
+                postComment(viewedTicket, comment);
+                commentField.clear();
+                scrollToComment();
+            }
+        });
     }
 
     private void updatePriorityColor(final PriorityType type) {
