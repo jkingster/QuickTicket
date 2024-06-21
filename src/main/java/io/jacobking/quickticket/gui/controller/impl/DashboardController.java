@@ -2,6 +2,7 @@ package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.Version;
+import io.jacobking.quickticket.core.config.SystemConfig;
 import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.screen.Display;
@@ -11,28 +12,39 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.util.Duration;
+import org.controlsfx.control.NotificationPane;
+import org.controlsfx.dialog.CommandLinksDialog;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DashboardController extends Controller {
 
-    @FXML
-    private Label versionLabel;
-
-
-    @FXML
+    @FXML private Label versionLabel;
+    @FXML private TabPane tabPane;
+    @FXML private Tab developerTab;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         versionLabel.setText(Version.current());
 
-        if (QuickTicket.getInstance().getSystemConfig().parseBoolean("first_launch")) {
+
+        final SystemConfig systemConfig = QuickTicket.getInstance().getSystemConfig();
+        if (systemConfig.parseBoolean("first_launch")) {
             final Timeline timeline = new Timeline(
                     new KeyFrame(Duration.seconds(3), (__) -> Display.show(Route.WELCOME))
             );
             timeline.play();
+        }
+
+        if (systemConfig.parseBoolean("developer_mode")) {
+            developerTab.setStyle("visibility: visible;");
+            developerTab.setDisable(false);
         }
     }
 
@@ -54,6 +66,11 @@ public class DashboardController extends Controller {
     @FXML
     private void onAbout() {
         Display.show(Route.ABOUT);
+    }
+
+    @FXML
+    private void onMetrics() {
+        Display.show(Route.METRICS);
     }
 
     @FXML
