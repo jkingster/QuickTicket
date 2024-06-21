@@ -11,7 +11,8 @@ public enum Route {
     SETTINGS("Settings"),
     DEPARTMENT("Department"),
     COMPANY("Company"),
-    WELCOME("Welcome");
+    WELCOME("Welcome"),
+    METRICS("Metrics");
 
     private static final Route[] VALUES    = values();
     private static final String  BASE_PATH = "fxml/%s";

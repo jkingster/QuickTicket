@@ -30,6 +30,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.controlsfx.control.NotificationPane;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -79,6 +80,7 @@ public class TicketController extends Controller {
         activePane.setOnMousePressed(this::togglePane);
         pausedPane.setOnMousePressed(this::togglePane);
         resolvedPane.setOnMousePressed(this::togglePane);
+
     }
 
 
