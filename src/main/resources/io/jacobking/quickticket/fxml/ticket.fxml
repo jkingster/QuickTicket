@@ -26,6 +26,12 @@
                   <Button fx:id="lastViewButton" disable="true" layoutX="38.0" layoutY="41.0" mnemonicParsing="false" onAction="#onOpenLastViewed" prefWidth="85.0" styleClass="b" text="Open" />
                </children>
             </Pane>
+            <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Tools" textAlignment="CENTER" />
+                  <Button layoutX="38.0" layoutY="41.0" mnemonicParsing="false" onAction="#onOpenTicketTools" prefWidth="85.0" styleClass="b" text="Open" />
+               </children>
+            </Pane>
             <Separator orientation="VERTICAL" prefHeight="200.0" />
             <Pane fx:id="openPane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">
                <children>
@@ -59,7 +65,8 @@
               <columns>
                   <TableColumn fx:id="indicatorColumn" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" resizable="false" />
                 <TableColumn fx:id="actionsColumn" editable="false" maxWidth="200.0" minWidth="160.0" prefWidth="160.0" resizable="false" sortable="false" text="Actions" />
-                <TableColumn fx:id="titleColumn" editable="false" maxWidth="500.0" minWidth="346.0" prefWidth="386.0" resizable="false" sortable="false" text="Title" />
+                  <TableColumn fx:id="categoryColumn" editable="false" maxWidth="200.0" minWidth="100.0" prefWidth="101.0" resizable="false" sortable="false" text="Category" />
+                <TableColumn fx:id="titleColumn" editable="false" maxWidth="500.0" minWidth="346.0" prefWidth="445.0" resizable="false" sortable="false" text="Title" />
                   <TableColumn fx:id="statusColumn" editable="false" maxWidth="229.0" minWidth="75.0" prefWidth="131.0" resizable="false" sortable="false" text="Status" />
                   <TableColumn fx:id="priorityColumn" editable="false" maxWidth="173.0" minWidth="75.0" prefWidth="87.0" resizable="false" sortable="false" text="Priority" />
                   <TableColumn fx:id="employeeColumn" editable="false" maxWidth="286.0" minWidth="133.0" prefWidth="133.0" resizable="false" sortable="false" text="Employee" />

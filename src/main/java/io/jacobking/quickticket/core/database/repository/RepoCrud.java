@@ -54,18 +54,19 @@ public class RepoCrud {
         return (Repository<T>) repositoryMap.getOrDefault(repoType, null);
     }
 
-    private <T extends Entity> void loadRepositories() {
+    private void loadRepositories() {
         for (RepoType value : RepoType.values()) {
             repositoryMap.computeIfAbsent(value, type -> switch (type) {
-                case TICKET     -> (Repository<? extends Entity>) new TicketRepository();
-                case COMMENT    -> (Repository<? extends Entity>) new CommentRepository();
-                case EMPLOYEE   -> (Repository<? extends Entity>) new EmployeeRepository();
-                case EMAIL      -> (Repository<? extends Entity>) new EmailRepository();
-                case ALERT      -> (Repository<? extends Entity>) new AlertSettingsRepository();
-                case COMPANY    -> (Repository<? extends Entity>) new CompanyRepository();
+                case TICKET -> (Repository<? extends Entity>) new TicketRepository();
+                case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
+                case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
+                case EMAIL -> (Repository<? extends Entity>) new EmailRepository();
+                case ALERT -> (Repository<? extends Entity>) new AlertSettingsRepository();
+                case COMPANY -> (Repository<? extends Entity>) new CompanyRepository();
                 case DEPARTMENT -> (Repository<? extends Entity>) new DepartmentRepository();
-                case FLYWAY     -> (Repository<? extends Entity>) new FlywayRepository();
+                case FLYWAY -> (Repository<? extends Entity>) new FlywayRepository();
                 case LINKED_TICKET -> (Repository<? extends Entity>) new LinkedTicketRepository();
+                case CATEGORY -> (Repository<? extends Entity>) new CategoryRepository();
             });
         }
     }

@@ -18,8 +18,9 @@ public class TicketModel extends ViewModel<Ticket> {
     private final ObjectProperty<LocalDateTime> createdProperty     = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDateTime> lastViewedTimestamp = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDate>     resolveBy           = new SimpleObjectProperty<>();
+    private final IntegerProperty categoryProperty = new SimpleIntegerProperty();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, LocalDate resolveBy) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, LocalDate resolveBy, int categoryId) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
@@ -28,6 +29,7 @@ public class TicketModel extends ViewModel<Ticket> {
         this.createdProperty.setValue(created);
         this.lastViewedTimestamp.setValue(lastViewedTimestamp);
         this.resolveBy.setValue(resolveBy);
+        this.categoryProperty.setValue(categoryId);
     }
 
     public TicketModel(final Ticket ticket) {
@@ -39,7 +41,8 @@ public class TicketModel extends ViewModel<Ticket> {
                 ticket.getEmployeeId(), // need to update from user -> employee eventually.
                 ticket.getCreatedOn(),
                 ticket.getLastOpenedTimestamp(),
-                ticket.getResolvedBy()
+                ticket.getResolvedBy(),
+                ticket.getCategoryId()
         );
     }
 
@@ -99,6 +102,14 @@ public class TicketModel extends ViewModel<Ticket> {
         return resolveBy;
     }
 
+    public int getCategory() {
+        return categoryProperty.get();
+    }
+
+    public IntegerProperty categoryProperty() {
+        return categoryProperty;
+    }
+
     @Override
     public String toString() {
         return "TicketModel{" +
@@ -121,7 +132,8 @@ public class TicketModel extends ViewModel<Ticket> {
                 getCreation(),
                 getEmployeeId(),
                 getLastViewedTimestamp(),
-                getResolveBy()
+                getResolveBy(),
+                getCategory()
         );
     }
 }

@@ -19,7 +19,9 @@ public abstract class Controller implements Initializable {
     protected final CompanyBridge       company;
     protected final DepartmentBridge    department;
     protected final LinkedTicketBridge linkedTicket;
+    protected final CategoryBridge categoryBridge;
     protected       DataRelay           dataRelay;
+
 
     public Controller() {
         this.core = QuickTicket.getInstance();
@@ -32,10 +34,12 @@ public abstract class Controller implements Initializable {
         this.company = core.getDatabase().getBridgeContext().getCompany();
         this.department = core.getDatabase().getBridgeContext().getDepartment();
         this.linkedTicket = core.getDatabase().getBridgeContext().getLinkedTicket();
+        this.categoryBridge = core.getDatabase().getBridgeContext().getCategoryBridge();
         this.emailConfig = core.getDatabase().getBridgeContext().getEmailConfig()
                 .setEmail(email.getEmail())
                 .applySettings();
         this.dataRelay = DataRelay.empty();
+
     }
 
     public Controller setData(final DataRelay dataRelay) {

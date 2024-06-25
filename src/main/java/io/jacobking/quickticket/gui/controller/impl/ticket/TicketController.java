@@ -9,6 +9,7 @@ import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
+import io.jacobking.quickticket.gui.model.impl.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
@@ -30,7 +31,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import org.controlsfx.control.NotificationPane;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -50,6 +50,7 @@ public class TicketController extends Controller {
     @FXML private TableView<TicketModel>                  ticketTable;
     @FXML private TableColumn<TicketModel, PriorityType>  indicatorColumn;
     @FXML private TableColumn<TicketModel, Void>          actionsColumn;
+    @FXML private TableColumn<TicketModel, Integer>       categoryColumn;
     @FXML private TableColumn<TicketModel, String>        titleColumn;
     @FXML private TableColumn<TicketModel, StatusType>    statusColumn;
     @FXML private TableColumn<TicketModel, PriorityType>  priorityColumn;
@@ -87,6 +88,30 @@ public class TicketController extends Controller {
     private void configureTable() {
         handleIndicatorColumn();
         handleActionsColumn();
+        categoryColumn.setCellValueFactory(data -> data.getValue().categoryProperty().asObject());
+        categoryColumn.setCellFactory(data -> new TableCell<>() {
+            @Override protected void updateItem(Integer integer, boolean b) {
+                super.updateItem(integer, b);
+                if (integer == null || b) {
+                    setGraphic(null);
+                    return;
+                }
+
+                System.out.println(integer);
+
+                final TicketCategoryModel model = categoryBridge.getModel(integer);
+                if (model == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                final Label label = new Label(model.getNameProperty());
+                final String color = model.getColorProperty();
+
+                label.setStyle(String.format("-fx-text-fill: %s; -fx-font-weight: bolder;", color));
+                setGraphic(label);
+            }
+        });
         titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
         titleColumn.setSortable(false);
         statusColumn.setCellValueFactory(data -> data.getValue().statusProperty());

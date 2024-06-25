@@ -9,6 +9,7 @@ public enum RepoType {
     COMMENT(new CommentRepository()),
     EMPLOYEE(new EmployeeRepository()),
     EMAIL(new EmailRepository()),
+    CATEGORY(new CategoryRepository()),
     ALERT(new AlertSettingsRepository()),
     COMPANY(new CompanyRepository()),
     DEPARTMENT(new DepartmentRepository()),

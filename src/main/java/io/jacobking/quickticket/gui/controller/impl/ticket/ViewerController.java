@@ -200,6 +200,7 @@ public class ViewerController extends Controller {
                 setGraphic(hBox);
             }
         });
+
         linkedTicketList.setItems(linkedTicket.getLinkedTickets(viewedTicket.getId()));
     }
 
@@ -208,7 +209,8 @@ public class ViewerController extends Controller {
     }
 
     @FXML private void onLinkTicket() {
-        setPopOver("Link Ticket", linkTicketButton, ticket.getObservableList(), ((popOver, ticketModelSearchableComboBox) -> {
+        final ObservableList<TicketModel> ticketList = ticket.getObservableListByFilter(pm -> pm.getId() != viewedTicket.getId());
+        setPopOver("Link Ticket", linkTicketButton, ticketList, ((popOver, ticketModelSearchableComboBox) -> {
             final TicketModel selectedTicket = ticketModelSearchableComboBox.getSelectionModel().getSelectedItem();
             if (selectedTicket == null)
                 return;
