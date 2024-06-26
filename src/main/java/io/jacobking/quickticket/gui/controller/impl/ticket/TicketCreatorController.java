@@ -7,6 +7,7 @@ import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
+import io.jacobking.quickticket.gui.model.impl.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
@@ -25,14 +26,15 @@ public class TicketCreatorController extends Controller {
     private TicketController       ticketController;
     private TableView<TicketModel> ticketTable;
 
-    @FXML private ComboBox<StatusType>              statusTypeComboBox;
-    @FXML private ComboBox<PriorityType>            priorityTypeComboBox;
-    @FXML private SearchableComboBox<EmployeeModel> employeeComboBox;
-    @FXML private TextField                         titleField;
-    @FXML private TextArea                          commentField;
-    @FXML private Button                            createButton;
-    @FXML private CheckBox                          emailCheckBox;
-    @FXML private CheckBox                          openCheckBox;
+    @FXML private ComboBox<StatusType>                    statusTypeComboBox;
+    @FXML private ComboBox<PriorityType>                  priorityTypeComboBox;
+    @FXML private SearchableComboBox<EmployeeModel>       employeeComboBox;
+    @FXML private SearchableComboBox<TicketCategoryModel> categoryComboBox;
+    @FXML private TextField                               titleField;
+    @FXML private TextArea                                commentField;
+    @FXML private Button                                  createButton;
+    @FXML private CheckBox                                emailCheckBox;
+    @FXML private CheckBox                                openCheckBox;
 
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -40,6 +42,7 @@ public class TicketCreatorController extends Controller {
         configureStatusComboBox();
         configurePriorityComboBox();
         configureEmployeeComboBox();
+        configureCategoryComboBox();
         createButton.disableProperty().bind(titleField.textProperty().isEmpty());
     }
 
@@ -100,6 +103,20 @@ public class TicketCreatorController extends Controller {
         });
     }
 
+    private void configureCategoryComboBox() {
+        categoryComboBox.setItems(categoryBridge.getObservableList());
+        categoryComboBox.setCellFactory(data -> new ListCell<>() {
+            @Override protected void updateItem(TicketCategoryModel ticketCategoryModel, boolean b) {
+                super.updateItem(ticketCategoryModel, b);
+                if (ticketCategoryModel == null || b) {
+                    setText(null);
+                    return;
+                }
+                setText(ticketCategoryModel.getNameProperty());
+            }
+        });
+    }
+
     @FXML private void onCreate() {
         final String title = titleField.getText();
         final EmployeeModel employeeModel = employeeComboBox.getSelectionModel().getSelectedItem();
@@ -108,6 +125,7 @@ public class TicketCreatorController extends Controller {
                 .setCreatedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setPriority(getPriority())
                 .setStatus(getStatus())
+                .setCategoryId(getCategoryId())
                 .setEmployeeId(employeeModel == null ? 0 : employeeModel.getId()));
 
         insertInitialComment(newTicket);
@@ -120,6 +138,11 @@ public class TicketCreatorController extends Controller {
 
         ticketController.setTicketTable();
         ticketTable.scrollTo(0);
+    }
+
+    private int getCategoryId() {
+        final TicketCategoryModel selected = categoryComboBox.getSelectionModel().getSelectedItem();
+        return selected == null ? 0 : selected.getId();
     }
 
     private void sendInitialEmail(final TicketModel ticketModel) {

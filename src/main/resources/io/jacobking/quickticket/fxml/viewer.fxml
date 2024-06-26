@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="1044.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="1133.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane layoutX="11.0" layoutY="7.0" prefHeight="37.0" prefWidth="855.0" styleClass="card" stylesheets="@../css/core/card.css">
+      <Pane layoutX="11.0" layoutY="7.0" prefHeight="37.0" prefWidth="909.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
-            <HBox alignment="CENTER_LEFT" layoutX="7.0" prefHeight="37.0" prefWidth="848.0" spacing="7.0">
+            <HBox alignment="CENTER_LEFT" layoutX="7.0" prefHeight="37.0" prefWidth="909.0" spacing="5.0">
                <children>
                   <Label prefHeight="26.0" prefWidth="67.0" text="Update:" textFill="WHITE">
                      <font>
@@ -26,6 +26,7 @@
                   <Button fx:id="userButton" mnemonicParsing="false" onAction="#onUpdateUser" stylesheets="@../css/core/button.css" text="User" />
                   <Button fx:id="titleButton" mnemonicParsing="false" onAction="#onUpdateTitle" stylesheets="@../css/core/button.css" text="Title" />
                   <Button fx:id="resolveByButton" mnemonicParsing="false" onAction="#onResolveBy" stylesheets="@../css/core/button.css" text="Resolve By" />
+                  <Button fx:id="categoryButton" mnemonicParsing="false" onAction="#onUpdateCategory" stylesheets="@../css/core/button.css" text="Category" />
                   <Label text="Ticket:" textFill="WHITE">
                      <font>
                         <Font size="17.0" />
@@ -54,25 +55,27 @@
             </HBox>
          </children>
       </Pane>
-      <HBox layoutX="11.0" layoutY="52.0" prefHeight="26.0" prefWidth="855.0" spacing="5.0">
+      <HBox layoutX="11.0" layoutY="52.0" prefHeight="26.0" prefWidth="909.0" spacing="5.0">
          <children>
-            <TextField fx:id="titleField" editable="false" prefHeight="25.0" prefWidth="395.0" promptText="Title" stylesheets="@../css/core/text-field.css" />
+            <TextField fx:id="titleField" editable="false" prefHeight="25.0" prefWidth="379.0" promptText="Title" stylesheets="@../css/core/text-field.css" />
+            <TextField fx:id="categoryField" editable="false" prefHeight="25.0" prefWidth="166.0" promptText="Category" stylesheets="@../css/core/text-field.css" />
             <TextField fx:id="createdOnField" editable="false" prefHeight="25.0" prefWidth="154.0" promptText="Created On" stylesheets="@../css/core/text-field.css" />
             <TextField fx:id="resolveByField" editable="false" promptText="Resolve By" stylesheets="@../css/core/text-field.css" />
             <TextField fx:id="employeeField" editable="false" prefHeight="25.0" prefWidth="139.0" promptText="Employee" stylesheets="@../css/core/text-field.css" />
          </children>
       </HBox>
-      <ListView fx:id="commentList" layoutX="11.0" layoutY="85.0" prefHeight="253.0" prefWidth="855.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
-      <HBox layoutX="11.0" layoutY="344.0" prefHeight="26.0" prefWidth="855.0" spacing="5.0">
+      <ListView fx:id="commentList" layoutX="11.0" layoutY="85.0" prefHeight="253.0" prefWidth="909.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
+      <HBox layoutX="11.0" layoutY="344.0" prefHeight="26.0" prefWidth="909.0" spacing="5.0">
          <children>
             <TextField fx:id="commentField" prefHeight="25.0" prefWidth="810.0" stylesheets="@../css/core/text-field.css" />
             <Button fx:id="postButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onPostComment" prefHeight="25.0" prefWidth="30.0" stylesheets="@../css/core/button.css" />
             <Button fx:id="deleteButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onDeleteComment" prefHeight="25.0" prefWidth="30.0" stylesheets="@../css/core/button.css" />
+            <Button fx:id="deleteButton1" disable="true" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onDeleteComment" prefHeight="25.0" prefWidth="64.0" stylesheets="@../css/core/button.css" text="Format" />
          </children>
       </HBox>
-      <ListView fx:id="linkedTicketList" layoutX="872.0" layoutY="8.0" prefHeight="331.0" prefWidth="166.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
-      <Button fx:id="linkTicketButton" layoutX="871.0" layoutY="345.0" mnemonicParsing="false" onAction="#onLinkTicket" prefHeight="25.0" prefWidth="103.0" stylesheets="@../css/core/button.css" text="Link Ticket" />
-      <Button fx:id="removeTicketButton" layoutX="978.0" layoutY="345.0" mnemonicParsing="false" onAction="#onRemoveTicket" stylesheets="@../css/core/button.css" text="Remove" />
+      <ListView fx:id="linkedTicketList" layoutX="924.0" layoutY="8.0" prefHeight="331.0" prefWidth="204.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
+      <Button fx:id="linkTicketButton" layoutX="928.0" layoutY="344.0" mnemonicParsing="false" onAction="#onLinkTicket" prefHeight="25.0" prefWidth="132.0" stylesheets="@../css/core/button.css" text="Link Ticket" />
+      <Button fx:id="removeTicketButton" layoutX="1066.0" layoutY="344.0" mnemonicParsing="false" onAction="#onRemoveTicket" stylesheets="@../css/core/button.css" text="Remove" />
    </children>
    <stylesheets>
       <URL value="@../css/core/base.css" />

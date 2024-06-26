@@ -23,6 +23,7 @@
             <TextField fx:id="titleField" promptText="Ticket Title" styleClass="text-field" />
             <TextArea fx:id="commentField" prefHeight="200.0" prefWidth="200.0" promptText="Any initial information...." wrapText="true" />
             <SearchableComboBox fx:id="employeeComboBox" promptText="Employee" styleClass="sear" stylesheets="@../css/core/combo-box.css" />
+            <SearchableComboBox fx:id="categoryComboBox" prefHeight="25.0" prefWidth="240.0" promptText="Category" stylesheets="@../css/core/combo-box.css" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                <children>
                   <CheckBox fx:id="emailCheckBox" mnemonicParsing="false" text="Send notification e-mail" textFill="WHITE" />

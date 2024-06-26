@@ -8,6 +8,7 @@ import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
+import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
@@ -22,15 +23,21 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.SearchableComboBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -106,7 +113,7 @@ public class TicketController extends Controller {
                 }
 
                 final Label label = new Label(model.getNameProperty());
-                final String color = model.getColorProperty();
+                final String color = model.getColorAsRGB();
 
                 label.setStyle(String.format("-fx-text-fill: %s; -fx-font-weight: bolder;", color));
                 setGraphic(label);
@@ -545,5 +552,134 @@ public class TicketController extends Controller {
 
         ticketTable.setItems(mergedList);
         ticketTable.refresh();
+    }
+
+    @FXML private Button categoriesButton;
+
+    @FXML private void onCategories() {
+        final PopOverBuilder popOverBuilder = new PopOverBuilder()
+                .setArrowOrientation(PopOver.ArrowLocation.BOTTOM_RIGHT)
+                .setTitle("Ticket Categories")
+                .useDefaultSettings()
+                .setContent(getCategoryNode())
+                .setOwner(categoriesButton);
+        popOverBuilder.show();
+    }
+
+    private VBox getCategoryNode() {
+        final SearchableComboBox<TicketCategoryModel> comboBox = new SearchableComboBox<>(categoryBridge.getObservableList());
+        configureComboBox(comboBox);
+
+        comboBox.setMinWidth(180);
+        final VBox vBox = new VBox(5.0);
+        vBox.setOnMousePressed(event -> {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                comboBox.getSelectionModel().clearSelection();
+            }
+        });
+        vBox.setPrefWidth(200);
+        vBox.setPadding(new Insets(10));
+        vBox.setAlignment(Pos.CENTER);
+
+        final HBox hBox = new HBox(5.0);
+        final Button newButton = new Button();
+        newButton.setGraphic(FALoader.createDefault(FontAwesome.Glyph.PLUS_SQUARE));
+        newButton.setOnAction(event -> Display.show(Route.CATEGORY_CREATOR));
+        newButton.disableProperty().bind(comboBox.getSelectionModel().selectedItemProperty().isNotNull());
+
+        final Button editButton = new Button();
+        editButton.setGraphic(FALoader.createDefault(FontAwesome.Glyph.EDIT));
+        editButton.disableProperty().bind(comboBox
+                .getSelectionModel()
+                .selectedItemProperty()
+                .isEqualTo(categoryBridge.getModel(0))
+        );
+
+        editButton.setOnAction(event -> {
+            final TicketCategoryModel selected = comboBox.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                Alerts.showError("Failure.", "Could not edit category.", "Please select one!");
+                return;
+            }
+            Display.show(Route.CATEGORY_CREATOR, DataRelay.of(selected));
+        });
+
+        final Button deleteButton = new Button();
+        deleteButton.setGraphic(FALoader.createDefault(FontAwesome.Glyph.CLOSE));
+        deleteButton.disableProperty().bind(comboBox
+                .getSelectionModel()
+                .selectedItemProperty()
+                .isEqualTo(categoryBridge.getModel(0))
+        );
+
+        deleteButton.setOnAction(event -> {
+            final TicketCategoryModel selected = comboBox.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                Alerts.showError("Failure.", "Could not delete category.", "Please select one!");
+                return;
+            }
+
+            confirmCategoryDeletion(selected);
+        });
+
+
+        final Button clearButton = new Button();
+        clearButton.setGraphic(FALoader.createDefault(FontAwesome.Glyph.ERASER));
+        clearButton.setOnAction(event -> comboBox.getSelectionModel().clearSelection());
+
+        hBox.setAlignment(Pos.CENTER);
+        hBox.getChildren().addAll(newButton, editButton, deleteButton, clearButton);
+
+        vBox.getChildren().addAll(comboBox, hBox);
+        return vBox;
+    }
+
+    private void confirmCategoryDeletion(final TicketCategoryModel model) {
+        Alerts.showConfirmation(() -> deleteCategory(model),
+                "Are you sure you want to delete this category?",
+                "It cannot be recovered once deleted."
+        ).ifPresent(type -> {
+            if (type == ButtonType.YES) {
+                deleteCategory(model);
+            }
+        });
+    }
+
+    private void deleteCategory(final TicketCategoryModel model) {
+        categoryBridge.remove(model.getId());
+    }
+
+    private void configureComboBox(final SearchableComboBox<TicketCategoryModel> comboBox) {
+        comboBox.setCellFactory(data -> new ListCell<>() {
+            @Override protected void updateItem(TicketCategoryModel ticketCategoryModel, boolean b) {
+                super.updateItem(ticketCategoryModel, b);
+                if (ticketCategoryModel == null || b) {
+                    setText(null);
+                    return;
+                }
+
+                final String description = ticketCategoryModel.getDescriptionProperty().isEmpty()
+                                           ? "No description provided."
+                                           : ticketCategoryModel.getDescriptionProperty();
+
+                setText(String.format("%s - %s", ticketCategoryModel.getNameProperty(), description));
+            }
+        });
+
+        comboBox.setConverter(new StringConverter<>() {
+            @Override public String toString(TicketCategoryModel ticketCategoryModel) {
+                if (ticketCategoryModel == null)
+                    return "";
+
+                final String description = ticketCategoryModel.getDescriptionProperty().isEmpty()
+                                           ? "No description provided."
+                                           : ticketCategoryModel.getDescriptionProperty();
+                return String.format("%s - %s", ticketCategoryModel.getNameProperty(), description);
+            }
+
+            @Override public TicketCategoryModel fromString(String s) {
+                return null;
+            }
+        });
     }
 }

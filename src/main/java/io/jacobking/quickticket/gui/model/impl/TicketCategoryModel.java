@@ -4,6 +4,7 @@ import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.TicketCategories;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.paint.Color;
 
 public class TicketCategoryModel extends ViewModel<TicketCategories> {
 
@@ -63,11 +64,23 @@ public class TicketCategoryModel extends ViewModel<TicketCategories> {
         this.descriptionProperty.set(descriptionProperty);
     }
 
+    public String getColorAsRGB() {
+        final Color color = Color.web(getColorProperty());
+        final int red = (int) (color.getRed() * 255);
+        final int green = (int) (color.getGreen() * 255);
+        final int blue = (int) (color.getBlue() * 255);
+        return String.format("#%02x%02x%02x", red, green, blue);
+    }
+
     @Override public TicketCategories toEntity() {
         return new TicketCategories()
                 .setId(getId())
                 .setColor(getColorProperty())
                 .setDescription(getDescriptionProperty())
                 .setName(getNameProperty());
+    }
+
+    @Override public String toString() {
+        return getNameProperty();
     }
 }

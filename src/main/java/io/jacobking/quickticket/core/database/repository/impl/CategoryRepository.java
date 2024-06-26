@@ -37,8 +37,8 @@ public class CategoryRepository implements Repository<TicketCategories> {
 
     @Override public boolean delete(DSLContext context, int id) {
         return context.deleteFrom(TICKET_CATEGORIES)
-                .where(TICKET.CATEGORY_ID.eq(id))
-                .execute() >= SUCCESS;
+                .where(TICKET_CATEGORIES.ID.eq(id))
+                .execute() == SUCCESS;
     }
 
     @Override public boolean deleteWhere(DSLContext context, Condition condition) {

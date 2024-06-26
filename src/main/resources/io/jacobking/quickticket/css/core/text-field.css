@@ -9,3 +9,7 @@
 .text-field:hover {
     -fx-cursor: hand;
 }
+
+.text-field .color-picker-label {
+    -fx-text-fill: -fx-typography;
+}

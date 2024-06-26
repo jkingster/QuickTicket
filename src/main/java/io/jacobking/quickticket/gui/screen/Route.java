@@ -12,7 +12,9 @@ public enum Route {
     DEPARTMENT("Department"),
     COMPANY("Company"),
     WELCOME("Welcome"),
-    METRICS("Metrics");
+    METRICS("Metrics"),
+    CATEGORY_CREATOR("CategoryCreator");
+
 
     private static final Route[] VALUES    = values();
     private static final String  BASE_PATH = "fxml/%s";

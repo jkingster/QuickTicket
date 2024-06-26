@@ -8,10 +8,7 @@ import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
-import io.jacobking.quickticket.gui.model.impl.CommentModel;
-import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
-import io.jacobking.quickticket.gui.model.impl.LinkedTicketModel;
-import io.jacobking.quickticket.gui.model.impl.TicketModel;
+import io.jacobking.quickticket.gui.model.impl.*;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
@@ -58,6 +55,7 @@ public class ViewerController extends Controller {
     @FXML private TextField resolveByField;
     @FXML private TextField employeeField;
     @FXML private TextField commentField;
+    @FXML private TextField categoryField;
 
     @FXML private ListView<CommentModel>      commentList;
     @FXML private ListView<LinkedTicketModel> linkedTicketList;
@@ -71,6 +69,7 @@ public class ViewerController extends Controller {
     @FXML private Button deleteButton;
     @FXML private Button linkTicketButton;
     @FXML private Button removeTicketButton;
+    @FXML private Button categoryButton;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureCommentList();
@@ -297,6 +296,9 @@ public class ViewerController extends Controller {
         final String employeeName = (employeeModel == null) ? "No employee." : employeeModel.getFullName();
         employeeField.setText(employeeName);
 
+        final TicketCategoryModel categoryModel = categoryBridge.getModel(ticketModel.getCategory());
+        handleCategory(categoryModel);
+
         handlePriority(ticketModel.priorityProperty());
         handleStatus(ticketModel.statusProperty());
     }
@@ -323,6 +325,18 @@ public class ViewerController extends Controller {
     private void handleStatus(final ObjectProperty<StatusType> status) {
         statusField.setText(status.getValue().name());
         updateStatusColor(status.getValue());
+    }
+
+    private void handleCategory(final TicketCategoryModel categoryModel) {
+        if (categoryModel == null) {
+            categoryField.setText("Undefined");
+            return;
+        }
+
+        final String name = categoryModel.getNameProperty();
+        categoryField.setText(name);
+
+        categoryField.setStyle("-fx-text-fill: " + categoryModel.getColorAsRGB() + ";");
     }
 
     private void loadComments(final TicketModel ticketModel) {
@@ -584,6 +598,23 @@ public class ViewerController extends Controller {
 
         popOverBuilder.show();
     }
+
+    @FXML private void onUpdateCategory() {
+        setPopOver("Update Category", categoryButton, categoryBridge.getObservableList(), ((popOver, comboBox) -> {
+            final TicketCategoryModel newCategory = comboBox.getSelectionModel().getSelectedItem();
+            if (newCategory == null) {
+                Alerts.showError("Failure", "Could not update ticket category.", "Please select one and try again.");
+                return;
+            }
+
+            viewedTicket.categoryProperty().setValue(newCategory.getId());
+            if (ticket.update(viewedTicket)) {
+                handleCategory(newCategory);
+                popOver.hide();
+            }
+        }), null);
+    }
+
 
     private void updateEmployee(final EmployeeModel employeeModel) {
         employeeField.setText(employeeModel.getFullName());
