@@ -164,7 +164,7 @@ public class ViewerController extends Controller {
                 statusField.setText("PAUSED");
             }
         }
-        ticketTable.refresh();
+        refreshTable();
     }
 
     private void configureTicketLinks() {
@@ -206,6 +206,12 @@ public class ViewerController extends Controller {
 
     private void openTicket(final TicketModel ticketModel) {
         Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable));
+    }
+
+    private void refreshTable() {
+        if (ticketTable != null) {
+            ticketTable.refresh();
+        }
     }
 
     @FXML private void onLinkTicket() {
@@ -445,7 +451,7 @@ public class ViewerController extends Controller {
     private void deleteTicket(final int ticketId) {
         comment.removeCommentsByTicketId(ticketId);
         ticket.remove(ticketId);
-        ticketTable.refresh();
+        refreshTable();
         Display.close(Route.VIEWER);
     }
 
@@ -498,7 +504,7 @@ public class ViewerController extends Controller {
             if (ticket.update(viewedTicket)) {
                 updatePriorityColor(newPriority);
                 popOver.hide();
-                ticketTable.refresh();
+                refreshTable();
             }
         }, null);
     }
@@ -512,7 +518,7 @@ public class ViewerController extends Controller {
             if (ticket.update(viewedTicket, originalStatus)) {
                 updateStatusColor(newStatus);
                 popOver.hide();
-                ticketTable.refresh();
+              refreshTable();
             }
         }), null);
     }
@@ -525,7 +531,7 @@ public class ViewerController extends Controller {
             if (ticket.update(viewedTicket)) {
                 updateEmployee(newEmployee);
                 popOver.hide();
-                ticketTable.refresh();
+              refreshTable();
             }
         }), null);
     }
@@ -560,7 +566,7 @@ public class ViewerController extends Controller {
                 titleField.setText(newTitle);
                 inputTitleField.clear();
                 popOverBuilder.get().hide();
-                ticketTable.refresh();
+                refreshTable();
             }
         });
 
@@ -596,6 +602,7 @@ public class ViewerController extends Controller {
 
             viewedTicket.resolveByProperty().setValue(localDate);
             if (ticket.update(viewedTicket)) {
+                refreshTable();
                 resolveByField.setText(String.format("Resolve by: %s", DateUtil.formatDate(localDate.toString())));
                 popOverBuilder.get().hide();
             }
@@ -623,7 +630,7 @@ public class ViewerController extends Controller {
 
     private void updateEmployee(final EmployeeModel employeeModel) {
         employeeField.setText(employeeModel.getFullName());
-        ticketTable.refresh();
+        refreshTable();
     }
 
     private <T> void setPopOver(final String title, final Button owner, final ObservableList<T> observableList, final BiConsumer<PopOver, SearchableComboBox<T>> biConsumer, final Consumer<ListCell<T>> cellFactoryConsumer) {

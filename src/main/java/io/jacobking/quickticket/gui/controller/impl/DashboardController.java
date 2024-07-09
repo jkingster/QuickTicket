@@ -70,7 +70,7 @@ public class DashboardController extends Controller {
 
     @FXML
     private void onMetrics() {
-        Display.show(Route.METRICS);
+       // Display.show(Route.METRICS);
     }
 
     @FXML

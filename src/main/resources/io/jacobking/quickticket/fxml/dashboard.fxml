@@ -17,14 +17,13 @@
          <children>
             <MenuBar prefHeight="25.0" prefWidth="1280.0">
               <menus>
-                <Menu mnemonicParsing="false" text="System">
+                <Menu mnemonicParsing="false" text="Help">
                   <items>
-                        <MenuItem mnemonicParsing="false" onAction="#onConfiguration" text="Configuration" />
+                    <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
+                        <MenuItem mnemonicParsing="false" onAction="#onConfiguration" text="Database" />
                         <MenuItem mnemonicParsing="false" onAction="#onSMTP" text="SMTP" />
                         <MenuItem mnemonicParsing="false" onAction="#onSettings" text="Settings" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
-                        <MenuItem disable="true" mnemonicParsing="false" onAction="#onMetrics" text="Metrics" />
                         <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
                   </items>
                 </Menu>
@@ -41,6 +40,11 @@
                <fx:include source="ticket.fxml" />
             </Tab>
             <Tab text="Employee">
+               <content>
+                  <fx:include source="employee.fxml" />
+               </content>
+            </Tab>
+            <Tab text="Settings">
                <content>
                   <fx:include source="employee.fxml" />
                </content>

@@ -60,11 +60,11 @@
                   <TableColumn fx:id="indicatorColumn" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" resizable="false" />
                 <TableColumn fx:id="actionsColumn" editable="false" maxWidth="200.0" minWidth="160.0" prefWidth="160.0" resizable="false" sortable="false" text="Actions" />
                   <TableColumn fx:id="categoryColumn" editable="false" maxWidth="200.0" minWidth="100.0" prefWidth="101.0" resizable="false" sortable="false" text="Category" />
-                <TableColumn fx:id="titleColumn" editable="false" maxWidth="500.0" minWidth="346.0" prefWidth="445.0" resizable="false" sortable="false" text="Title" />
-                  <TableColumn fx:id="statusColumn" editable="false" maxWidth="229.0" minWidth="75.0" prefWidth="131.0" resizable="false" sortable="false" text="Status" />
-                  <TableColumn fx:id="priorityColumn" editable="false" maxWidth="173.0" minWidth="75.0" prefWidth="87.0" resizable="false" sortable="false" text="Priority" />
-                  <TableColumn fx:id="employeeColumn" editable="false" maxWidth="286.0" minWidth="133.0" prefWidth="133.0" resizable="false" sortable="false" text="Employee" />
-                  <TableColumn fx:id="createdColumn" editable="false" maxWidth="334.0" minWidth="172.0" prefWidth="172.0" resizable="false" sortType="DESCENDING" text="Created" />
+                <TableColumn fx:id="titleColumn" editable="false" maxWidth="500.0" minWidth="269.0" prefWidth="283.0" resizable="false" sortable="false" text="Title" />
+                  <TableColumn fx:id="statusColumn" editable="false" maxWidth="307.0" minWidth="75.0" prefWidth="124.0" resizable="false" sortable="false" text="Status" />
+                  <TableColumn fx:id="priorityColumn" editable="false" maxWidth="256.0" minWidth="75.0" prefWidth="114.0" resizable="false" sortable="false" text="Priority" />
+                  <TableColumn fx:id="employeeColumn" editable="false" maxWidth="286.0" minWidth="115.0" prefWidth="115.0" resizable="false" sortable="false" text="Employee" />
+                  <TableColumn fx:id="createdColumn" editable="false" maxWidth="334.0" minWidth="163.0" prefWidth="163.0" resizable="false" sortType="DESCENDING" text="Created" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

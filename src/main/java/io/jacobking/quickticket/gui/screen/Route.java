@@ -12,7 +12,6 @@ public enum Route {
     DEPARTMENT("Department"),
     COMPANY("Company"),
     WELCOME("Welcome"),
-    METRICS("Metrics"),
     CATEGORY_CREATOR("CategoryCreator");
 
 
