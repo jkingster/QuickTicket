@@ -1,85 +1,103 @@
 package io.jacobking.quickticket.core.config;
 
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.core.utility.Logs;
 import org.jooq.tools.StringUtils;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
 public abstract class Config {
 
-    private final String     fileName;
-    private final Properties properties;
+    private final Properties defaultProperties = new Properties();
+    private final String     filePath;
+    private final Properties loadedProperties;
 
-    public Config(String fileName) {
-        Logs.info("{} initialized.", getClass().getName());
-        this.fileName = FileIO.getPath(fileName);
-        System.out.println(fileName);
-        this.properties = new Properties();
-        configureProperties();
+    public Config(final String filePath) {
+        this.filePath = filePath;
+        this.loadedProperties = new Properties();
+        initialize();
     }
 
-    public abstract void putDefaultProperties();
+    public abstract void setDefaultProperties();
 
-    public void setProperty(final String key, final String value) {
-        properties.setProperty(key, value);
+    public Properties getProperties() {
+        return loadedProperties;
     }
 
-    public void setPropertyAndStore(final String key, final String value) {
-        setProperty(key, value);
-        storeProperties();
-    }
-
-    public String getProperty(final String key, final String defaultValue) {
-        return properties.getProperty(key, defaultValue);
-    }
-
-    public boolean parseBoolean(final String key) {
-        return Boolean.parseBoolean(properties.getProperty(key));
+    public void putDefaultProperty(final String key, final String value) {
+        defaultProperties.setProperty(key, value);
     }
 
     public String getProperty(final String key) {
-        return getProperty(key, StringUtils.EMPTY);
+        return loadedProperties.getProperty(key, StringUtils.EMPTY);
     }
 
-    public Properties getProperties() {
-        return properties;
-    }
-
-    private void configureProperties() {
-        if (FileIO.fileExists(fileName, false)) {
-            loadProperties();
-            checkIfEmpty();
+    public void setPropertyAndStore(final String key, final String value) {
+        if (!loadedProperties.containsKey(key))
             return;
-        }
-
-        putDefaultProperties();
+        loadedProperties.setProperty(key, value);
         storeProperties();
     }
 
-    private void checkIfEmpty() {
-        if (properties.isEmpty()) {
-            putDefaultProperties();
+    public boolean parseBoolean(final String key) {
+        if (!loadedProperties.containsKey(key))
+            return false;
+        return Boolean.parseBoolean(loadedProperties.getProperty(key));
+    }
+
+    private void initialize() {
+        setDefaultProperties();
+        if (FileIO.fileExists(filePath, true)) {
+            loadProperties(filePath);
+            storeNewProperties(compareProperties(loadedProperties, defaultProperties));
+            return;
+        }
+        handleNewPropertiesFile();
+    }
+
+    private void handleNewPropertiesFile() {
+        for (final String key : defaultProperties.stringPropertyNames()) {
+            loadedProperties.setProperty(key, defaultProperties.getProperty(key));
+        }
+        storeProperties();
+    }
+
+    private boolean compareProperties(final Properties loadedProperties, final Properties defaultProperties) {
+        boolean storeNewProperties = false;
+        for (final String key : defaultProperties.stringPropertyNames()) {
+            if (loadedProperties.containsKey(key))
+                continue;
+            loadedProperties.setProperty(key, defaultProperties.getProperty(key));
+            storeNewProperties = true;
+        }
+        return storeNewProperties;
+    }
+
+    private void storeNewProperties(final boolean hasNewProperties) {
+        if (hasNewProperties) {
             storeProperties();
         }
     }
 
-    private void loadProperties() {
+    private void loadProperties(final String filePath) {
         try {
-            properties.load(new FileReader(fileName));
+            final FileInputStream fileInputStream = new FileInputStream(FileIO.getPath(filePath));
+            loadedProperties.load(fileInputStream);
+            fileInputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
     private void storeProperties() {
         try {
-            properties.store(new FileOutputStream(fileName), null);
+            final FileOutputStream fileOutputStream = new FileOutputStream(FileIO.getPath(filePath));
+            loadedProperties.store(fileOutputStream, null);
+            fileOutputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

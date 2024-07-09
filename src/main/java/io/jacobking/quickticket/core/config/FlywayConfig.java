@@ -9,6 +9,7 @@ import net.lingala.zip4j.model.LocalFileHeader;
 
 import java.io.*;
 import java.net.URL;
+import java.util.Properties;
 
 
 public class FlywayConfig extends Config {
@@ -18,9 +19,9 @@ public class FlywayConfig extends Config {
         copyOverScripts();
     }
 
-    @Override public void putDefaultProperties() {
-        setProperty("flyway.url", "jdbc:sqlite:" + FileIO.getPath("database.db"));
-        setProperty("flyway.locations", "filesystem:" + FileIO.getPath("migrations"));
+    @Override public void setDefaultProperties() {
+          putDefaultProperty("flyway.url", "jdbc:sqlite:" + FileIO.getPath("database.db"));
+          putDefaultProperty("flyway.locations", "filesystem:" + FileIO.getPath("migrations"));
     }
 
 //    private void copyOverScripts() {

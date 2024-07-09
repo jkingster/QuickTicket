@@ -9,10 +9,11 @@ public class SystemConfig extends Config {
         super("system.properties");
     }
 
-
-    @Override public void putDefaultProperties() {
-        setProperty("database_url", FileIO.getPath("database.db"));
-        setProperty("auto_migration", "true");
-        setProperty("first_launch", "true");
+    @Override public void setDefaultProperties() {
+        putDefaultProperty("database_url", FileIO.getPath("database.db"));
+        putDefaultProperty("auto_migration", "true");
+        putDefaultProperty("first_launch", "true");
+        putDefaultProperty("disable_file_locking", "false");
+        putDefaultProperty("testing", "true");
     }
 }
