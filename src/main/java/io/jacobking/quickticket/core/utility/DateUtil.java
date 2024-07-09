@@ -61,4 +61,8 @@ public class DateUtil {
         return DateFormat.DATE_ONE.getFormatter().format(localDate);
     }
 
+    public static String formatDate(final DateFormat dateFormat, final String inputDate) {
+        final LocalDate localDate = LocalDate.parse(inputDate, dateFormat.formatter);
+        return dateFormat.getFormatter().format(localDate);
+    }
 }

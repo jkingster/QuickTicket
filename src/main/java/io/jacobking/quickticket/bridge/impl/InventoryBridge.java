@@ -12,6 +12,6 @@ public class InventoryBridge extends Bridge<Inventory, InventoryModel> {
     }
 
     @Override public InventoryModel convertEntity(Inventory entity) {
-        return null;
+        return new InventoryModel(entity);
     }
 }

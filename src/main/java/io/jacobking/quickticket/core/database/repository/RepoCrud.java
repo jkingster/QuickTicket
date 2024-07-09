@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.core.database.repository;
 
 import io.jacobking.quickticket.core.database.repository.impl.*;
+import io.jacobking.quickticket.gui.controller.impl.InventoryController;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 
@@ -59,6 +60,7 @@ public class RepoCrud {
             repositoryMap.computeIfAbsent(value, type -> switch (type) {
                 case TICKET -> (Repository<? extends Entity>) new TicketRepository();
                 case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
+                case INVENTORY -> (Repository<? extends Entity>) new InventoryRepository();
                 case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
                 case EMAIL -> (Repository<? extends Entity>) new EmailRepository();
                 case ALERT -> (Repository<? extends Entity>) new AlertSettingsRepository();

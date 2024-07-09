@@ -14,15 +14,16 @@
    <stylesheets>
       <URL value="@../css/screen/ticket.css" />
       <URL value="@../css/core/card.css" />
+      <URL value="@../css/core/button.css" />
    </stylesheets>
    <children>
-      <TableView layoutX="7.0" layoutY="64.0" prefHeight="680.0" prefWidth="712.0" stylesheets="@../css/core/table.css">
+      <TableView fx:id="inventoryTable" layoutX="7.0" layoutY="64.0" prefHeight="680.0" prefWidth="712.0" stylesheets="@../css/core/table.css">
         <columns>
-            <TableColumn prefWidth="65.0" text="Actions" />
-          <TableColumn prefWidth="235.0" text="Asset Name" />
-          <TableColumn minWidth="0.0" prefWidth="138.0" text="Total Inventory" />
-            <TableColumn minWidth="0.0" prefWidth="136.0" text="Last Issued To" />
-            <TableColumn minWidth="0.0" prefWidth="137.0" text="Last Issued Date" />
+            <TableColumn fx:id="actionsColumn" prefWidth="65.0" text="Actions" />
+          <TableColumn fx:id="nameColumn" prefWidth="235.0" text="Asset Name" />
+          <TableColumn fx:id="totalColumn" minWidth="0.0" prefWidth="138.0" text="Total Inventory" />
+            <TableColumn fx:id="issuedColumn" minWidth="0.0" prefWidth="136.0" text="Last Issued To" />
+            <TableColumn fx:id="issuedDateColumn" minWidth="0.0" prefWidth="137.0" text="Last Issued Date" />
         </columns>
       </TableView>
       <Pane layoutX="7.0" layoutY="14.0" prefHeight="40.0" prefWidth="1266.0" styleClass="card">
@@ -38,6 +39,6 @@
             </HBox>
          </children>
       </Pane>
-      <PieChart layoutX="736.0" layoutY="204.0" />
+      <PieChart fx:id="pieChart" layoutX="736.0" layoutY="204.0" />
    </children>
 </AnchorPane>

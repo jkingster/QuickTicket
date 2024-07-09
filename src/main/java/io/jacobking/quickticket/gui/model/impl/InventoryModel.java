@@ -17,11 +17,22 @@ public class InventoryModel extends ViewModel<Inventory> {
 
     public InventoryModel(final int id, String assetName, String assetDesc, int totalCount, int issued, String lastIssuedDate) {
         super(id);
-        this.assetName.setValue(assetDesc);
+        this.assetName.setValue(assetName);
         this.assetDesc.setValue(assetDesc);
         this.totalCount.setValue(totalCount);
         this.lastIssued.setValue(issued);
         this.lastIssuedDate.setValue(lastIssuedDate);
+    }
+
+    public InventoryModel(final Inventory inventory) {
+        this(
+                inventory.getId(),
+                inventory.getAssetName(),
+                inventory.getAssetDesc(),
+                inventory.getTotalCount(),
+                inventory.getLastIssued(),
+                inventory.getLastIssuedDate()
+        );
     }
 
     public String getAssetName() {
