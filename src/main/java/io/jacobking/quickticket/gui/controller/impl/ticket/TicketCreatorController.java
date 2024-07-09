@@ -138,6 +138,7 @@ public class TicketCreatorController extends Controller {
 
         ticketController.setTicketTable();
         ticketTable.scrollTo(0);
+        ticketTable.refresh();
     }
 
     private int getCategoryId() {
@@ -184,6 +185,7 @@ public class TicketCreatorController extends Controller {
         priorityTypeComboBox.getSelectionModel().clearSelection();
         statusTypeComboBox.getSelectionModel().clearSelection();
         employeeComboBox.getSelectionModel().clearSelection();
+        categoryComboBox.getSelectionModel().clearSelection();
     }
 
     private String getPriority() {

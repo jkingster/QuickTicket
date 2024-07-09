@@ -164,6 +164,7 @@ public class ViewerController extends Controller {
                 statusField.setText("PAUSED");
             }
         }
+        ticketTable.refresh();
     }
 
     private void configureTicketLinks() {
@@ -497,6 +498,7 @@ public class ViewerController extends Controller {
             if (ticket.update(viewedTicket)) {
                 updatePriorityColor(newPriority);
                 popOver.hide();
+                ticketTable.refresh();
             }
         }, null);
     }
@@ -510,6 +512,7 @@ public class ViewerController extends Controller {
             if (ticket.update(viewedTicket, originalStatus)) {
                 updateStatusColor(newStatus);
                 popOver.hide();
+                ticketTable.refresh();
             }
         }), null);
     }
@@ -522,6 +525,7 @@ public class ViewerController extends Controller {
             if (ticket.update(viewedTicket)) {
                 updateEmployee(newEmployee);
                 popOver.hide();
+                ticketTable.refresh();
             }
         }), null);
     }
@@ -556,6 +560,7 @@ public class ViewerController extends Controller {
                 titleField.setText(newTitle);
                 inputTitleField.clear();
                 popOverBuilder.get().hide();
+                ticketTable.refresh();
             }
         });
 
@@ -618,6 +623,7 @@ public class ViewerController extends Controller {
 
     private void updateEmployee(final EmployeeModel employeeModel) {
         employeeField.setText(employeeModel.getFullName());
+        ticketTable.refresh();
     }
 
     private <T> void setPopOver(final String title, final Button owner, final ObservableList<T> observableList, final BiConsumer<PopOver, SearchableComboBox<T>> biConsumer, final Consumer<ListCell<T>> cellFactoryConsumer) {

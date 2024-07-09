@@ -104,8 +104,6 @@ public class TicketController extends Controller {
                     return;
                 }
 
-                System.out.println(integer);
-
                 final TicketCategoryModel model = categoryBridge.getModel(integer);
                 if (model == null) {
                     setGraphic(null);
