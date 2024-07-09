@@ -104,7 +104,7 @@ public class TicketCreatorController extends Controller {
     }
 
     private void configureCategoryComboBox() {
-        categoryComboBox.setItems(categoryBridge.getObservableList());
+        categoryComboBox.setItems(category.getObservableList());
         categoryComboBox.setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(TicketCategoryModel ticketCategoryModel, boolean b) {
                 super.updateItem(ticketCategoryModel, b);

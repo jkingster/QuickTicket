@@ -16,7 +16,8 @@ public class BridgeContext {
     private final FlywayBridge        flyway;
     private final LinkedTicketBridge  linkedTicket;
     private final EmailConfig         emailConfig;
-    private final CategoryBridge categoryBridge;
+    private final CategoryBridge      categoryBridge;
+    private final InventoryBridge     inventory;
 
     public BridgeContext(final Database database) {
         this.company = new CompanyBridge(database);
@@ -30,6 +31,7 @@ public class BridgeContext {
         this.linkedTicket = new LinkedTicketBridge(database);
         this.emailConfig = new EmailConfig();
         this.categoryBridge = new CategoryBridge(database);
+        this.inventory = new InventoryBridge(database);
     }
 
     public CompanyBridge getCompany() {
@@ -72,8 +74,11 @@ public class BridgeContext {
         return emailConfig;
     }
 
-
     public CategoryBridge getCategoryBridge() {
         return categoryBridge;
+    }
+
+    public InventoryBridge getInventory() {
+        return inventory;
     }
 }

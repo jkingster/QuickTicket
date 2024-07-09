@@ -14,6 +14,7 @@ public enum RepoType {
     COMPANY(new CompanyRepository()),
     DEPARTMENT(new DepartmentRepository()),
     FLYWAY(new FlywayRepository()),
+    INVENTORY(new InventoryRepository()),
     LINKED_TICKET(new LinkedTicketRepository());
 
     private final Repository<? extends Entity> repository;

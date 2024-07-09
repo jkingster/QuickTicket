@@ -45,7 +45,7 @@ public class CategoryCreatorController extends Controller {
                 .setName(nameField.getText())
                 .setDescription(description);
 
-        final TicketCategoryModel newModel = categoryBridge.createModel(ticketCategories);
+        final TicketCategoryModel newModel = category.createModel(ticketCategories);
         if (newModel == null) {
             Alerts.showError("Failed", "Could not create new category.", "Please try again.");
             return;
@@ -74,7 +74,7 @@ public class CategoryCreatorController extends Controller {
         final String description = descriptionField.getText().isEmpty() ? "" : descriptionField.getText();
         model.setDescriptionProperty(description);
 
-        if (!categoryBridge.update(model)) {
+        if (!category.update(model)) {
             Alerts.showError("Failed", "Could not update category.", "Please try again.");
             return;
         }

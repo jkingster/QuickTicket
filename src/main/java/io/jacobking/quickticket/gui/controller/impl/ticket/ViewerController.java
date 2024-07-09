@@ -303,7 +303,7 @@ public class ViewerController extends Controller {
         final String employeeName = (employeeModel == null) ? "No employee." : employeeModel.getFullName();
         employeeField.setText(employeeName);
 
-        final TicketCategoryModel categoryModel = categoryBridge.getModel(ticketModel.getCategory());
+        final TicketCategoryModel categoryModel = category.getModel(ticketModel.getCategory());
         handleCategory(categoryModel);
 
         handlePriority(ticketModel.priorityProperty());
@@ -612,7 +612,7 @@ public class ViewerController extends Controller {
     }
 
     @FXML private void onUpdateCategory() {
-        setPopOver("Update Category", categoryButton, categoryBridge.getObservableList(), ((popOver, comboBox) -> {
+        setPopOver("Update Category", categoryButton, category.getObservableList(), ((popOver, comboBox) -> {
             final TicketCategoryModel newCategory = comboBox.getSelectionModel().getSelectedItem();
             if (newCategory == null) {
                 Alerts.showError("Failure", "Could not update ticket category.", "Please select one and try again.");

@@ -28,7 +28,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -104,7 +103,7 @@ public class TicketController extends Controller {
                     return;
                 }
 
-                final TicketCategoryModel model = categoryBridge.getModel(integer);
+                final TicketCategoryModel model = category.getModel(integer);
                 if (model == null) {
                     setGraphic(null);
                     return;
@@ -565,7 +564,7 @@ public class TicketController extends Controller {
     }
 
     private VBox getCategoryNode() {
-        final SearchableComboBox<TicketCategoryModel> comboBox = new SearchableComboBox<>(categoryBridge.getObservableList());
+        final SearchableComboBox<TicketCategoryModel> comboBox = new SearchableComboBox<>(category.getObservableList());
         configureComboBox(comboBox);
 
         comboBox.setMinWidth(180);
@@ -590,7 +589,7 @@ public class TicketController extends Controller {
         editButton.disableProperty().bind(comboBox
                 .getSelectionModel()
                 .selectedItemProperty()
-                .isEqualTo(categoryBridge.getModel(0))
+                .isEqualTo(category.getModel(0))
         );
 
         editButton.setOnAction(event -> {
@@ -607,7 +606,7 @@ public class TicketController extends Controller {
         deleteButton.disableProperty().bind(comboBox
                 .getSelectionModel()
                 .selectedItemProperty()
-                .isEqualTo(categoryBridge.getModel(0))
+                .isEqualTo(category.getModel(0))
         );
 
         deleteButton.setOnAction(event -> {
@@ -644,7 +643,7 @@ public class TicketController extends Controller {
     }
 
     private void deleteCategory(final TicketCategoryModel model) {
-        categoryBridge.remove(model.getId());
+        category.remove(model.getId());
     }
 
     private void configureComboBox(final SearchableComboBox<TicketCategoryModel> comboBox) {
