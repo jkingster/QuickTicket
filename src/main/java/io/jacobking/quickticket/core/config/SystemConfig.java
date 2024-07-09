@@ -14,6 +14,6 @@ public class SystemConfig extends Config {
         putDefaultProperty("auto_migration", "true");
         putDefaultProperty("first_launch", "true");
         putDefaultProperty("disable_file_locking", "false");
-        putDefaultProperty("testing", "true");
+        putDefaultProperty("developer_mode", "false");
     }
 }
