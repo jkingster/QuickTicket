@@ -22,6 +22,15 @@ public class App extends Application {
 
         final QuickTicket quickTicket = QuickTicket.getInstance();
         if (quickTicket.getDatabase().isConfigured()) {
+            final boolean fileLockingDisabled = QuickTicket.getInstance()
+                    .getSystemConfig()
+                    .parseBoolean("disable_file_locking");
+
+            if (fileLockingDisabled) {
+                Display.show(Route.DASHBOARD);
+                return;
+            }
+
             quickTicket.getLock().checkLock();
             if (quickTicket.getLock().isUnlocked()) {
                 Display.show(Route.DASHBOARD);
