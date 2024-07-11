@@ -2,20 +2,22 @@ package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.InventoryModel;
 import io.jacobking.quickticket.gui.utility.FALoader;
+import io.jacobking.quickticket.tables.pojos.Inventory;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
@@ -35,9 +37,13 @@ public class InventoryController extends Controller {
 
     @FXML private PieChart pieChart;
 
+    @FXML private Button deleteButton;
+    @FXML private Button editButton;
+
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
         configurePieChart();
+        configureButtonBindings();
     }
 
     private void configureTable() {
@@ -113,11 +119,11 @@ public class InventoryController extends Controller {
                 .setTitle("Issue Asset")
                 .useDefaultSettings();
 
-        builder.setContent(getContent(builder, inventoryModel));
+        builder.setContent(getDecrementContent(builder, inventoryModel));
         builder.show();
     }
 
-    private HBox getContent(final PopOverBuilder builder, final InventoryModel model) {
+    private HBox getDecrementContent(final PopOverBuilder builder, final InventoryModel model) {
         final HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(5.0);
@@ -152,5 +158,101 @@ public class InventoryController extends Controller {
     }
 
     private void configurePieChart() {
+        final ObservableList<InventoryModel> inventoryList = inventory.getObservableList();
+        final ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        for (final InventoryModel model : inventoryList) {
+            addDataAndBind(model, pieChartData);
+        }
+        configureInventoryListener(pieChartData, inventoryList);
+        pieChart.setData(pieChartData);
+    }
+
+    private void configureInventoryListener(final ObservableList<PieChart.Data> pieChartData, final ObservableList<InventoryModel> inventoryModels) {
+        inventoryModels.addListener((ListChangeListener<? super InventoryModel>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (final InventoryModel model : change.getAddedSubList()) {
+                        addDataAndBind(model, pieChartData);
+                    }
+                }
+
+                if (change.wasRemoved()) {
+                    for (final InventoryModel model : change.getRemoved()) {
+                        pieChartData.removeIf(data -> data.getName().equals(model.getAssetName()));
+                    }
+                }
+            }
+        });
+    }
+
+    private void addDataAndBind(final InventoryModel inventoryModel, final ObservableList<PieChart.Data> pieChartData) {
+        final PieChart.Data data = new PieChart.Data(inventoryModel.getAssetName(), inventoryModel.getTotalCount());
+        data.pieValueProperty().bind(inventoryModel.totalCountProperty());
+        pieChartData.add(data);
+    }
+
+    private void configureButtonBindings() {
+        editButton.disableProperty().bind(inventoryTable.selectionModelProperty().isNull());
+        deleteButton.disableProperty().bind(editButton.disabledProperty());
+    }
+
+    @FXML private void onNew() {
+
+    }
+
+    private HBox getNewContent() {
+        final HBox hBox = new HBox(5.0);
+        hBox.setPadding(new Insets(12));
+        hBox.setPrefWidth(250);
+
+        final TextField assetNameField = new TextField();
+        assetNameField.setPromptText("Asset Name");
+
+        final TextField countField = new TextField();
+        countField.setPromptText("Total Count");
+        configureCountField(countField);
+
+        final Button button = new Button();
+        button.setGraphic(FALoader.createDefault(FontAwesome.Glyph.CHECK));
+        button.setOnAction(event -> createNewAsset(assetNameField.getText(), countField.getText()));
+        button.disableProperty().bind(assetNameField.textProperty().isEmpty());
+        hBox.getChildren().addAll(assetNameField, countField, button);
+        return hBox;
+    }
+
+    private void configureCountField(final TextField countField) {
+
+    }
+
+    private void createNewAsset(final String assetName, final String assetCount) {
+        final int parsedCount = Integer.parseInt(assetCount);
+        if (parsedCount < 0) {
+            Alerts.showError("Failure", "You cannot have a total count less than 0.", "Try again.");
+            return;
+        }
+
+    }
+
+    @FXML private void onEdit() {
+
+    }
+
+    @FXML private void onDelete() {
+        final InventoryModel model = inventoryTable.getSelectionModel().getSelectedItem();
+        Alerts.showConfirmation(() -> deleteInventoryItem(model),
+                "Are you sure you want to delete this item?",
+                "It cannot be recovered."
+        ).ifPresent(type -> {
+            if (type == ButtonType.YES) {
+                deleteInventoryItem(model);
+            }
+        });
+    }
+
+    private void deleteInventoryItem(final InventoryModel model) {
+        inventory.remove(model.getId());
+        Notifications.showInfo("Success", "Inventory Asset Deleted");
     }
 }
+
+

@@ -10,15 +10,13 @@ import javafx.beans.property.StringProperty;
 public class InventoryModel extends ViewModel<Inventory> {
 
     private final StringProperty  assetName      = new SimpleStringProperty();
-    private final StringProperty  assetDesc      = new SimpleStringProperty();
     private final IntegerProperty totalCount     = new SimpleIntegerProperty();
     private final IntegerProperty lastIssued     = new SimpleIntegerProperty();
     private final StringProperty  lastIssuedDate = new SimpleStringProperty();
 
-    public InventoryModel(final int id, String assetName, String assetDesc, int totalCount, int issued, String lastIssuedDate) {
+    public InventoryModel(final int id, String assetName, int totalCount, int issued, String lastIssuedDate) {
         super(id);
         this.assetName.setValue(assetName);
-        this.assetDesc.setValue(assetDesc);
         this.totalCount.setValue(totalCount);
         this.lastIssued.setValue(issued);
         this.lastIssuedDate.setValue(lastIssuedDate);
@@ -28,7 +26,6 @@ public class InventoryModel extends ViewModel<Inventory> {
         this(
                 inventory.getId(),
                 inventory.getAssetName(),
-                inventory.getAssetDesc(),
                 inventory.getTotalCount(),
                 inventory.getLastIssued(),
                 inventory.getLastIssuedDate()
@@ -45,18 +42,6 @@ public class InventoryModel extends ViewModel<Inventory> {
 
     public void setAssetName(String assetName) {
         this.assetName.set(assetName);
-    }
-
-    public String getAssetDesc() {
-        return assetDesc.get();
-    }
-
-    public StringProperty assetDescProperty() {
-        return assetDesc;
-    }
-
-    public void setAssetDesc(String assetDesc) {
-        this.assetDesc.set(assetDesc);
     }
 
     public int getTotalCount() {
@@ -99,7 +84,6 @@ public class InventoryModel extends ViewModel<Inventory> {
         return new Inventory()
                 .setId(getId())
                 .setAssetName(getAssetName())
-                .setAssetDesc(getAssetDesc())
                 .setTotalCount(getTotalCount())
                 .setLastIssued(getLastIssued())
                 .setLastIssuedDate(getLastIssuedDate());
