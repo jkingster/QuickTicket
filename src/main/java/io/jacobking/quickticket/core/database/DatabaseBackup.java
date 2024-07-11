@@ -31,7 +31,6 @@ public class DatabaseBackup {
     public DatabaseBackup buildBackup() {
         try {
             FileUtils.copyFile(source, destination);
-            this.successful = true;
         } catch (IOException e) {
             this.successful = false;
         }
@@ -39,6 +38,14 @@ public class DatabaseBackup {
     }
 
     public boolean isSuccessful() {
-        return successful;
+        final long sourceSize = FileUtils.sizeOf(source);
+        final long destinationSize = FileUtils.sizeOf(destination);
+        if (sourceSize != destinationSize)
+            return false;
+
+        if (!successful)
+            return false;
+
+        return FileIO.fileExists(destination.getPath(), true);
     }
 }

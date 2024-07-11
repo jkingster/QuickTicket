@@ -25,7 +25,7 @@ public class ChangelogReader {
         try {
             this.changes = mapper.readValue(App.class.getResource(CHANGELOG_PATH), new TypeReference<>(){});
         } catch (IOException e) {
-            Alerts.showException("Failed to read changelog.json", e.fillInStackTrace());
+            Alerts.get().showException("Failed to read changelog.json", e.fillInStackTrace());
         }
     }
 

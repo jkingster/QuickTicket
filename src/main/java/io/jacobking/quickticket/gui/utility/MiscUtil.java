@@ -21,7 +21,7 @@ public class MiscUtil {
                 Desktop.getDesktop().browse(new URI(link));
             }
         } catch (IOException | URISyntaxException e) {
-            Alerts.showException("Failed to open link.", e.fillInStackTrace());
+            Alerts.get().showException("Failed to open link.", e.fillInStackTrace());
         }
     }
 

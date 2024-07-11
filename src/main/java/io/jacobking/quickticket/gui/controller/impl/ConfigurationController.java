@@ -180,7 +180,7 @@ public class ConfigurationController extends Controller {
             try {
                 Desktop.getDesktop().open(new File(path));
             } catch (IOException e) {
-                Alerts.showException("Failed to open file. Make sure you have a valid application to read the targeted file type.", e.fillInStackTrace());
+                Alerts.get().showException("Failed to open file. Make sure you have a valid application to read the targeted file type.", e.fillInStackTrace());
             }
         }
     }

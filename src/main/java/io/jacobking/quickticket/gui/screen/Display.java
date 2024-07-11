@@ -45,7 +45,7 @@ public class Display {
         final Screen screen = screens.get(route);
         if (screen == null) {
             final RuntimeException exception = new RuntimeException("Failed to load screen: " + route.getName());
-            Alerts.showException("Failed to load screen.", exception.fillInStackTrace());
+            Alerts.get().showException("Failed to load screen.", exception.fillInStackTrace());
             return;
         }
         screen.display(dataRelay);

@@ -29,7 +29,7 @@ public class EmailConfig {
 
     public EmailConfig applySettings() {
         if (this.email == null) {
-            Alerts.showError("Failed to apply settings.", "Could not apply e-mail settings.", "Passed e-mail is null in config.. ");
+            Alerts.get().showError("Failed to apply settings.", "Could not apply e-mail settings.", "Passed e-mail is null in config.. ");
             return this;
         }
         apply();
@@ -99,7 +99,7 @@ public class EmailConfig {
             final PrintStream printStream = new PrintStream(output);
             session.setDebugOut(printStream);
         } catch (IOException e) {
-            Alerts.showException("Configuring Debug Logs", e.fillInStackTrace());
+            Alerts.get().showException("Configuring Debug Logs", e.fillInStackTrace());
         }
     }
 

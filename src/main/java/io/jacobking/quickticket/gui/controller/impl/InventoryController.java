@@ -106,7 +106,7 @@ public class InventoryController extends Controller {
 
         model.setTotalCount(newCount);
         if (!inventory.update(model)) {
-            Alerts.showError("Failed", "Could not increase asset count.", "Please try again.");
+            Alerts.get().showError("Failed", "Could not increase asset count.", "Please try again.");
             return;
         }
         inventoryTable.refresh();
@@ -145,7 +145,7 @@ public class InventoryController extends Controller {
             model.setLastIssued(issuedId);
             model.setLastIssuedDate(DateUtil.nowAsString(DateUtil.DateFormat.DATE_ONE));
             if (!inventory.update(model)) {
-                Alerts.showError("Failed", "Could not decrease asset count.", "Please try again.");
+                Alerts.get().showError("Failed", "Could not decrease asset count.", "Please try again.");
                 return;
             }
             inventoryTable.refresh();
@@ -227,7 +227,7 @@ public class InventoryController extends Controller {
     private void createNewAsset(final String assetName, final String assetCount) {
         final int parsedCount = Integer.parseInt(assetCount);
         if (parsedCount < 0) {
-            Alerts.showError("Failure", "You cannot have a total count less than 0.", "Try again.");
+            Alerts.get().showError("Failure", "You cannot have a total count less than 0.", "Try again.");
             return;
         }
 
@@ -239,7 +239,7 @@ public class InventoryController extends Controller {
 
     @FXML private void onDelete() {
         final InventoryModel model = inventoryTable.getSelectionModel().getSelectedItem();
-        Alerts.showConfirmation(() -> deleteInventoryItem(model),
+        Alerts.get().showConfirmation(() -> deleteInventoryItem(model),
                 "Are you sure you want to delete this item?",
                 "It cannot be recovered."
         ).ifPresent(type -> {

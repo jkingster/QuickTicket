@@ -11,7 +11,7 @@ public class FlywayMigrator {
 
     private boolean hasPendingMigrations = false;
 
-    private FlywayMigrator(final FlywayConfig flywayConfig) {
+    public FlywayMigrator(final FlywayConfig flywayConfig) {
         this.flyway = Flyway.configure()
                 .configuration(flywayConfig.getProperties())
                 .dataSource(flywayConfig.getProperty("flyway.url"), null, null)
@@ -30,10 +30,6 @@ public class FlywayMigrator {
 
     public boolean isPendingMigration() {
         return hasPendingMigrations;
-    }
-
-    public static FlywayMigrator init(final FlywayConfig flywayConfig) {
-        return new FlywayMigrator(flywayConfig);
     }
 
     public void migrate() {

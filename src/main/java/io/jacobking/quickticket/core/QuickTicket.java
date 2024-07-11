@@ -11,31 +11,36 @@ import java.util.concurrent.Executors;
 
 public class QuickTicket {
 
-    private static       QuickTicket     instance;
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(3);
 
     private final InstanceLock instanceLock;
     private final SystemConfig systemConfig;
     private final FlywayConfig flywayConfig;
-    private final Database     database;
+    private       Database     database;
 
     private QuickTicket() {
         Logs.info("Initializing QuickTicket...");
         this.systemConfig = new SystemConfig();
         this.flywayConfig = new FlywayConfig();
-        this.database = new Database(systemConfig, flywayConfig);
         this.instanceLock = InstanceLock.getInstance();
     }
 
-    public static synchronized QuickTicket getInstance() {
-        if (instance == null) {
-            instance = new QuickTicket();
-        }
-        return instance;
+    public void initializeDatabase() {
+        if (this.database != null)
+            return;
+        this.database = new Database(systemConfig, flywayConfig);
     }
 
     public static void execute(final Runnable runnable) {
         EXECUTOR.execute(runnable);
+    }
+
+    private static final class InstanceHolder {
+        private static final QuickTicket instance = new QuickTicket();
+    }
+
+    public static QuickTicket getInstance() {
+        return InstanceHolder.instance;
     }
 
     public void shutdown() {
@@ -62,4 +67,5 @@ public class QuickTicket {
     public Database getDatabase() {
         return database;
     }
+
 }

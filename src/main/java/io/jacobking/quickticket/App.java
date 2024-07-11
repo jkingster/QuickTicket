@@ -1,8 +1,10 @@
 package io.jacobking.quickticket;
 
+import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.QuickTicket;
+import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.core.utility.Logs;
+import io.jacobking.quickticket.gui.alert.Alerts;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import javafx.application.Application;
@@ -17,25 +19,33 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        Logs.getInstance();
         FileIO.createAppDirectory();
 
         final QuickTicket quickTicket = QuickTicket.getInstance();
-        if (quickTicket.getDatabase().isConfigured()) {
-            final boolean fileLockingDisabled = QuickTicket.getInstance()
-                    .getSystemConfig()
-                    .parseBoolean("disable_file_locking");
+        quickTicket.initializeDatabase();
 
-            if (fileLockingDisabled) {
-                Display.show(Route.DASHBOARD);
-                return;
-            }
-
-            quickTicket.getLock().checkLock();
-            if (quickTicket.getLock().isUnlocked()) {
-                Display.show(Route.DASHBOARD);
-            }
+        final Database database = quickTicket.getDatabase();
+        if (!database.hasConnection()) {
+            throw new RuntimeException("FATAL: Could not establish database connection.");
         }
 
+        database.initializeBridgeContext();
+
+        final BridgeContext bridgeContext = database.getBridgeContext();
+        Alerts.get().establishSettings(bridgeContext);
+
+        final boolean fileLockingDisabled = quickTicket.getSystemConfig()
+                .parseBoolean("disable_file_locking");
+
+        if (fileLockingDisabled) {
+            Display.show(Route.DASHBOARD);
+            return;
+        }
+
+        quickTicket.getLock().checkLock();
+        if (quickTicket.getLock().isUnlocked()) {
+            Display.show(Route.DASHBOARD);
+        }
     }
+
 }

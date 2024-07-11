@@ -61,7 +61,7 @@ public class SettingsController extends Controller {
         emailDebugCheckBox.setSelected(email.getEmailModel().isDebugging());
         emailDebugCheckBox.selectedProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1) {
-                Alerts.showWarning(
+                Alerts.get().showWarning(
                         "File I/O",
                         "Enabling e-mail debugging has potential File I/O overhead.",
                         "Do not keep this enabled for extended periods, only for testing. Log files will continuously generate.\n\nPlease note- debugging will not be enabled until the QuickTicket client has been restarted."

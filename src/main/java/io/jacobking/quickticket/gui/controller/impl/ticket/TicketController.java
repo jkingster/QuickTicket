@@ -185,7 +185,7 @@ public class TicketController extends Controller {
 
     private void openTicket(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Alerts.showError("Failed", "Could not open ticket.", "Please try again.");
+            Alerts.get().showError("Failed", "Could not open ticket.", "Please try again.");
             return;
         }
 
@@ -265,7 +265,7 @@ public class TicketController extends Controller {
     @FXML private void onResolve() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
         if (ticketModel == null) {
-            Alerts.showError("Failed to resolve ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
+            Alerts.get().showError("Failed to resolve ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
             return;
         }
         final StatusType originalStatus = ticketModel.statusProperty().getValue();
@@ -277,7 +277,7 @@ public class TicketController extends Controller {
     }
 
     private void promptNotifyEmployeeAlert(final TicketModel viewedTicket) {
-        Alerts.showInput("This ticket has been marked resolved.", "Would you like to notify the employee? Please provide any closing comments.")
+        Alerts.get().showInput("This ticket has been marked resolved.", "Would you like to notify the employee? Please provide any closing comments.")
                 .ifPresent(pair -> {
                     final ButtonType type = pair.getLeft();
                     final String comment = pair.getRight();
@@ -295,14 +295,14 @@ public class TicketController extends Controller {
     private void processNotificationEmail(final TicketModel viewedTicket, final String resolvingComment) {
         final EmployeeModel employee = getEmployee();
         if (employee == null) {
-            Alerts.showError("Failed to retrieve record.", "Employee could not be fetched from database.", "Please attach an employee.");
+            Alerts.get().showError("Failed to retrieve record.", "Employee could not be fetched from database.", "Please attach an employee.");
             postFailureComment(viewedTicket, "Could not retrieve employee record.");
             return;
         }
 
         final String employeeEmail = employee.getEmail();
         if (employeeEmail.isEmpty()) {
-            Alerts.showError("Failed to retrieve e-mail.", "Could not notify employee.", "PLease attach an e-mail to employees' record.");
+            Alerts.get().showError("Failed to retrieve e-mail.", "Could not notify employee.", "PLease attach an e-mail to employees' record.");
             postFailureComment(viewedTicket, "Could not retrieve employee e-mail.");
             return;
         }
@@ -359,7 +359,7 @@ public class TicketController extends Controller {
     @FXML private void onReopen() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
         if (ticketModel == null) {
-            Alerts.showError("Failed to re-open ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
+            Alerts.get().showError("Failed to re-open ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
             return;
         }
 
@@ -382,11 +382,11 @@ public class TicketController extends Controller {
 
     private void onDelete(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Alerts.showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
+            Alerts.get().showError("Failed to delete ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
-        Alerts.showConfirmation(() -> removeTicket(ticketModel), "Are you sure you want to delete this ticket?", "This action cannot be undone.")
+        Alerts.get().showConfirmation(() -> removeTicket(ticketModel), "Are you sure you want to delete this ticket?", "This action cannot be undone.")
                 .ifPresent(type -> {
                     if (type == ButtonType.YES) {
                         removeTicket(ticketModel);
@@ -408,7 +408,7 @@ public class TicketController extends Controller {
 
     private void onOpen(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Alerts.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
+            Alerts.get().showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
@@ -417,25 +417,25 @@ public class TicketController extends Controller {
 
     private void onEmail(final TicketModel ticketModel) {
         if (ticketModel == null) {
-            Alerts.showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
+            Alerts.get().showError("Failed to open ticket.", "You must select a ticket.", "Please try again.");
             return;
         }
 
         final Desktop desktop = Desktop.getDesktop();
         if (!Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.MAIL)) {
-            Alerts.showError("Failed to open mail.", "Failed to open mail app.", "Mailing is not supported.");
+            Alerts.get().showError("Failed to open mail.", "Failed to open mail app.", "Mailing is not supported.");
             return;
         }
 
         final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
         if (model == null) {
-            Alerts.showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
+            Alerts.get().showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
             return;
         }
 
         final String employeeEmail = model.getEmail();
         if (employeeEmail.isEmpty()) {
-            Alerts.showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
+            Alerts.get().showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
             return;
         }
 
@@ -451,7 +451,7 @@ public class TicketController extends Controller {
             final URI uri = new URI(uriEncoded);
             desktop.mail(uri);
         } catch (URISyntaxException | IOException e) {
-            Alerts.showException("Failed to open mail app.", e.fillInStackTrace());
+            Alerts.get().showException("Failed to open mail app.", e.fillInStackTrace());
         }
     }
 
@@ -595,7 +595,7 @@ public class TicketController extends Controller {
         editButton.setOnAction(event -> {
             final TicketCategoryModel selected = comboBox.getSelectionModel().getSelectedItem();
             if (selected == null) {
-                Alerts.showError("Failure.", "Could not edit category.", "Please select one!");
+                Alerts.get().showError("Failure.", "Could not edit category.", "Please select one!");
                 return;
             }
             Display.show(Route.CATEGORY_CREATOR, DataRelay.of(selected));
@@ -612,7 +612,7 @@ public class TicketController extends Controller {
         deleteButton.setOnAction(event -> {
             final TicketCategoryModel selected = comboBox.getSelectionModel().getSelectedItem();
             if (selected == null) {
-                Alerts.showError("Failure.", "Could not delete category.", "Please select one!");
+                Alerts.get().showError("Failure.", "Could not delete category.", "Please select one!");
                 return;
             }
 
@@ -632,7 +632,7 @@ public class TicketController extends Controller {
     }
 
     private void confirmCategoryDeletion(final TicketCategoryModel model) {
-        Alerts.showConfirmation(() -> deleteCategory(model),
+        Alerts.get().showConfirmation(() -> deleteCategory(model),
                 "Are you sure you want to delete this category?",
                 "It cannot be recovered once deleted."
         ).ifPresent(type -> {

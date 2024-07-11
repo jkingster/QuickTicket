@@ -27,7 +27,7 @@ public class FlywayConfig extends Config {
 //    private void copyOverScripts() {
 //        final URL zipFileUrl = App.class.getResource("sql/scripts.zip");
 //        if (zipFileUrl == null) {
-//            Alerts.showErrorOverride("scripts.zip not found!", "Please report this.");
+//            Alerts.get().showErrorOverride("scripts.zip not found!", "Please report this.");
 //            return;
 //        }
 //
@@ -59,7 +59,7 @@ public class FlywayConfig extends Config {
     private void copyOverScripts() {
         final URL zipFileUrl = App.class.getResource("sql/scripts.zip");
         if (zipFileUrl == null) {
-            Alerts.showErrorOverride("scripts.zip not found!", "Please report this.");
+            Alerts.get().showErrorOverride("scripts.zip not found!", "Please report this.");
             return;
         }
 

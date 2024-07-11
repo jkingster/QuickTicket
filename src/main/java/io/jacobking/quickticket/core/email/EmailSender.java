@@ -36,12 +36,12 @@ public class EmailSender {
 
     public void sendEmail() {
         if (!emailConfig.isConfigured()) {
-            Alerts.showError("Could not send e-mail.", "Your SMTP information is not configured.", "Please check settings.");
+            Alerts.get().showError("Could not send e-mail.", "Your SMTP information is not configured.", "Please check settings.");
             return;
         }
 
         if (subject.isEmpty()) {
-            Alerts.showError(
+            Alerts.get().showError(
                     "Could not send e-mail",
                     "No subject was set.",
                     "Please set one and try again."

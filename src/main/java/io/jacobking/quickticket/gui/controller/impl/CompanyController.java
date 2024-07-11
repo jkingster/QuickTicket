@@ -40,7 +40,7 @@ public class CompanyController extends Controller {
     @FXML private void onCreate() {
         final String companyName = nameField.getText();
         if (companyName.isEmpty()) {
-            Alerts.showError("Failed!", "Could not create company.", "Company name required!");
+            Alerts.get().showError("Failed!", "Could not create company.", "Company name required!");
             return;
         }
 
@@ -74,7 +74,7 @@ public class CompanyController extends Controller {
         if (companyModel == null)
             return;
 
-        Alerts.showConfirmation(
+        Alerts.get().showConfirmation(
                 this::deleteCompany,
                 "Are you sure you want to delete this company?",
                 "This process cannot be undone."

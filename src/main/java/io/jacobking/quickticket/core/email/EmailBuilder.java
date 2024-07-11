@@ -61,7 +61,7 @@ public class EmailBuilder {
 
                 return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             } catch (IOException e) {
-                Alerts.showException("Failed to parse html.", e.fillInStackTrace());
+                Alerts.get().showException("Failed to parse html.", e.fillInStackTrace());
                 return "";
             }
         }
