@@ -29,6 +29,9 @@ public class App extends Application {
             throw new RuntimeException("FATAL: Could not establish database connection.");
         }
 
+
+
+        database.checkForMigration();
         database.initializeBridgeContext();
 
         final BridgeContext bridgeContext = database.getBridgeContext();

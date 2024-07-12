@@ -9,6 +9,7 @@ import io.jacobking.quickticket.gui.alert.Alerts;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 
+import java.io.File;
 import java.sql.SQLException;
 
 public class Database {
@@ -28,8 +29,6 @@ public class Database {
         this.systemConfig = systemConfig;
         this.flywayConfig = flywayConfig;
         this.sqLiteConnector = new SQLiteConnector(systemConfig);
-        checkForMigration();
-
         final JOOQConnector jooqConnector = new JOOQConnector(sqLiteConnector);
         this.repoCrud = new RepoCrud(jooqConnector.getContext());
     }
@@ -39,7 +38,6 @@ public class Database {
             return;
         this.bridgeContext = new BridgeContext(this);
     }
-
 
     public RepoCrud call() {
         return repoCrud;
@@ -53,7 +51,7 @@ public class Database {
         }
     }
 
-    private void checkForMigration() {
+    public void checkForMigration() {
         if (sqLiteConnector.getConnection() == null) {
             Alerts.get().showErrorOverride("Failed to establish sqlite connector.", "Please report this.");
             return;
@@ -76,27 +74,15 @@ public class Database {
             return;
         }
 
-        final String url = systemConfig.getProperty("database_url");
-        final boolean success = new DatabaseBackup(url)
-                .setDestination()
-                .buildBackup()
-                .isSuccessful();
 
-        if (success) {
-            flywayMigrator.migrate();
+        final String url = systemConfig.getProperty("database_url");
+        final File databaseFile = new File(url);
+        if (!databaseFile.exists() || !databaseFile.isFile()) {
+            Logs.warn("Target path is not of database file type or does not exist.");
             return;
         }
 
-        Logs.warn("Failed to create database backup pre-migration!");
-
-        final ButtonType migrate = new ButtonType("Migrate", ButtonBar.ButtonData.YES);
-        Alerts.get().showWarningConfirmation("WARNING!", "Database Backup Failed", WARNING_MESSAGE,
-                        migrate, ButtonType.CANCEL)
-                .ifPresent(type -> {
-                    if (type == migrate) {
-                        flywayMigrator.migrate();
-                    }
-                });
+        flywayMigrator.migrate();
 
     }
 

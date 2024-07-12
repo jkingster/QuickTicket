@@ -39,4 +39,12 @@ public class SQLiteConnector {
         return this.connection != null;
     }
 
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            Logs.warn(e.getMessage());
+        }
+    }
+
 }
