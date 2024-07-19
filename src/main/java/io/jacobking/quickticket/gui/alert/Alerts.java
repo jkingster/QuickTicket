@@ -5,7 +5,6 @@ import io.jacobking.quickticket.core.utility.ImmutablePair;
 import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.builder.AlertBuilder;
 import io.jacobking.quickticket.gui.alert.builder.InputDialogBuilder;
-import io.jacobking.quickticket.gui.model.impl.AlertSettingsModel;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 

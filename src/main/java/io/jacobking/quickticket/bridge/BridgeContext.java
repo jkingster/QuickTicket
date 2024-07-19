@@ -12,7 +12,6 @@ public class BridgeContext {
     private final TicketBridge        ticket;
     private final CommentBridge       comment;
     private final EmailBridge         email;
-    private final AlertSettingsBridge alertSettings;
     private final FlywayBridge        flyway;
     private final LinkedTicketBridge  linkedTicket;
     private final EmailConfig         emailConfig;
@@ -27,7 +26,6 @@ public class BridgeContext {
         this.ticket = new TicketBridge(database);
         this.comment = new CommentBridge(database);
         this.email = new EmailBridge(database);
-        this.alertSettings = new AlertSettingsBridge(database);
         this.flyway = new FlywayBridge(database);
         this.linkedTicket = new LinkedTicketBridge(database);
         this.emailConfig = new EmailConfig();
@@ -60,9 +58,6 @@ public class BridgeContext {
         return email;
     }
 
-    public AlertSettingsBridge getAlertSettings() {
-        return alertSettings;
-    }
 
     public FlywayBridge getFlyway() {
         return flyway;
