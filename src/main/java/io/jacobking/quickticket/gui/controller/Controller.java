@@ -21,6 +21,7 @@ public abstract class Controller implements Initializable {
     protected final LinkedTicketBridge  linkedTicket;
     protected final CategoryBridge      category;
     protected final InventoryBridge     inventory;
+    protected final InventoryLogBridge  inventoryLog;
     protected       DataRelay           dataRelay;
 
 
@@ -37,6 +38,7 @@ public abstract class Controller implements Initializable {
         this.linkedTicket = core.getDatabase().getBridgeContext().getLinkedTicket();
         this.category = core.getDatabase().getBridgeContext().getCategoryBridge();
         this.inventory = core.getDatabase().getBridgeContext().getInventory();
+        this.inventoryLog = core.getDatabase().getBridgeContext().getInventoryLog();
         this.emailConfig = core.getDatabase().getBridgeContext().getEmailConfig()
                 .setEmail(email.getEmail())
                 .applySettings();

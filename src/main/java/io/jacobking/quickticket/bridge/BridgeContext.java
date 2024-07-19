@@ -18,6 +18,7 @@ public class BridgeContext {
     private final EmailConfig         emailConfig;
     private final CategoryBridge      categoryBridge;
     private final InventoryBridge     inventory;
+    private final InventoryLogBridge  inventoryLog;
 
     public BridgeContext(final Database database) {
         this.company = new CompanyBridge(database);
@@ -32,6 +33,7 @@ public class BridgeContext {
         this.emailConfig = new EmailConfig();
         this.categoryBridge = new CategoryBridge(database);
         this.inventory = new InventoryBridge(database);
+        this.inventoryLog = new InventoryLogBridge(database);
     }
 
     public CompanyBridge getCompany() {
@@ -80,5 +82,9 @@ public class BridgeContext {
 
     public InventoryBridge getInventory() {
         return inventory;
+    }
+
+    public InventoryLogBridge getInventoryLog() {
+        return inventoryLog;
     }
 }

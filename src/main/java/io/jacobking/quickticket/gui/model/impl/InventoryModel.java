@@ -27,7 +27,7 @@ public class InventoryModel extends ViewModel<Inventory> {
                 inventory.getId(),
                 inventory.getAssetName(),
                 inventory.getTotalCount(),
-                inventory.getLastIssued(),
+                inventory.getLastIssued() == null ? -1 : inventory.getLastIssued(),
                 inventory.getLastIssuedDate()
         );
     }

@@ -1,0 +1,19 @@
+@import url("base.css");
+
+.chart-legend {
+    -fx-background-color: -fx-offset-blue
+}
+
+.chart-legend .label {
+    -fx-text-fill: -fx-typography;
+}
+
+.chart-pie-label-line {
+    -fx-stroke: -fx-offset-blue;
+    -fx-fill: -fx-offset-blue;
+}
+
+.chart-pie-label {
+    -fx-fill: -fx-offset-blue;
+    -fx-font-size: 1em;
+}

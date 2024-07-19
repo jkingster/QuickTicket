@@ -2,94 +2,36 @@
 
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import org.controlsfx.control.SearchableComboBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.NewSettingsController">
+<AnchorPane fx:id="core" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.NewSettingsController">
    <children>
-      <HBox layoutX="12.0" layoutY="14.0" prefHeight="210.0" prefWidth="1257.0" spacing="7.5">
+      <Pane layoutX="14.0" layoutY="23.0" prefHeight="271.0" prefWidth="353.0" styleClass="card">
          <children>
-            <Pane prefHeight="207.0" prefWidth="317.0" styleClass="card">
+            <TableView fx:id="alertsTable" layoutY="32.0" prefHeight="201.0" prefWidth="353.0" stylesheets="@../css/core/table.css">
+              <columns>
+                <TableColumn fx:id="checkColumn" prefWidth="33.0" />
+                <TableColumn fx:id="typeColumn" prefWidth="296.0" text="Type" />
+              </columns>
+            </TableView>
+            <HBox alignment="CENTER" layoutX="220.0" layoutY="233.0" prefHeight="37.0" prefWidth="126.0" spacing="5.0">
                <children>
-                  <Label layoutX="122.0" layoutY="1.0" styleClass="card-header" text="Alerts &amp; Notifications" />
-                  <Separator layoutX="10.0" layoutY="26.0" prefHeight="5.0" prefWidth="297.0" />
-                  <VBox alignment="TOP_CENTER" layoutX="11.0" layoutY="39.0" prefHeight="131.0" prefWidth="135.0" spacing="5.0">
-                     <children>
-                        <Label styleClass="card-text" text="Alerts">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Label>
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Disable All" textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Info Alerts" textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Error Alerts" textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Confirmaton Alerts" textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Warning Alerts" textFill="WHITE" />
-                     </children>
-                  </VBox>
-                  <VBox alignment="TOP_CENTER" layoutX="167.0" layoutY="39.0" prefHeight="137.0" prefWidth="135.0" spacing="5.0">
-                     <children>
-                        <Label styleClass="card-text" text="Notifications">
-                           <font>
-                              <Font size="10.0" />
-                           </font>
-                        </Label>
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Disable All" textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Info Notifications" textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Error Notifications" textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Confirmaton Notif..." textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" prefWidth="121.0" text="Warning Notifications" textFill="WHITE" />
-                     </children>
-                  </VBox>
-                  <Button layoutX="249.0" layoutY="176.0" mnemonicParsing="false" text="Update" />
+                  <Button mnemonicParsing="false" text="Update" />
+                  <Button mnemonicParsing="false" styleClass="button-offset" stylesheets="@../css/core/button.css" text="Reset" />
                </children>
-            </Pane>
-            <Pane prefHeight="207.0" prefWidth="317.0" styleClass="card">
-               <children>
-                  <Label layoutX="188.0" layoutY="1.0" styleClass="card-header" text="Miscellaneous" />
-                  <Separator layoutX="10.0" layoutY="26.0" prefHeight="5.0" prefWidth="297.0" />
-                  <VBox layoutX="10.0" layoutY="37.0" prefHeight="173.0" prefWidth="297.0" spacing="2.5">
-                     <children>
-                        <CheckBox mnemonicParsing="false" text="Enable Email Debugging Logs" textFill="WHITE" />
-                        <CheckBox mnemonicParsing="false" text="Disable File Locking" textFill="WHITE" />
-                     </children>
-                  </VBox>
-               </children>
-            </Pane>
-            <Pane prefHeight="207.0" prefWidth="317.0" styleClass="card">
-               <children>
-                  <Label layoutX="255.0" layoutY="1.0" styleClass="card-header" text="Ticket" />
-                  <Separator layoutX="10.0" layoutY="26.0" prefHeight="5.0" prefWidth="297.0" />
-                  <VBox layoutX="10.0" layoutY="31.0" prefHeight="173.0" prefWidth="297.0" spacing="2.5">
-                     <children>
-                        <HBox prefHeight="24.0" prefWidth="297.0" spacing="2.0">
-                           <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="143.0" text="Default Category Name:" textAlignment="CENTER" textFill="WHITE">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <TextField maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="154.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
-                           </children>
-                        </HBox>
-                        <SearchableComboBox prefHeight="18.0" prefWidth="297.0" promptText="Default Ticket Category" stylesheets="@../css/core/combo-box.css" />
-                     </children>
-                  </VBox>
-               </children>
-            </Pane>
+            </HBox>
+            <Label layoutX="162.0" layoutY="1.0" styleClass="card-header" text="Alerts &amp; Notifications" />
          </children>
-      </HBox>
+      </Pane>
    </children>
    <stylesheets>
       <URL value="@../css/screen/ticket.css" />
       <URL value="@../css/core/card.css" />
+      <URL value="@../css/core/checkbox.css" />
    </stylesheets>
 </AnchorPane>

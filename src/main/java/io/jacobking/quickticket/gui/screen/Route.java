@@ -8,7 +8,6 @@ public enum Route {
     SMTP("SMTP"),
     CHANGELOG("Changelog"),
     CONFIGURATION("Configuration"),
-    SETTINGS("Settings"),
     DEPARTMENT("Department"),
     COMPANY("Company"),
     WELCOME("Welcome"),

@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import java.net.URL?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
-            prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <AnchorPane prefHeight="200.0" prefWidth="200.0">
             <children>
@@ -14,50 +19,47 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About"/>
-                                <MenuItem mnemonicParsing="false" onAction="#onConfiguration" text="Database"/>
-                                <MenuItem mnemonicParsing="false" onAction="#onSMTP" text="SMTP"/>
-                                <MenuItem mnemonicParsing="false" onAction="#onSettings" text="Settings"/>
-                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit"/>
+                                <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
+                                <MenuItem mnemonicParsing="false" onAction="#onConfiguration" text="Database" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
                             </items>
                         </Menu>
                     </menus>
                     <opaqueInsets>
-                        <Insets top="10.0"/>
+                        <Insets top="10.0" />
                     </opaqueInsets>
                 </MenuBar>
             </children>
         </AnchorPane>
-        <TabPane fx:id="tabPane" layoutY="32.0" prefHeight="768.0" prefWidth="1280.0"
-                 stylesheets="@../css/core/tab-pane.css" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="tabPane" layoutY="32.0" prefHeight="768.0" prefWidth="1280.0" stylesheets="@../css/core/tab-pane.css" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab text="Ticket">
-                    <fx:include source="ticket.fxml"/>
+                    <fx:include source="ticket.fxml" />
                 </Tab>
                 <Tab text="Employee">
                     <content>
-                        <fx:include source="employee.fxml"/>
+                        <fx:include source="employee.fxml" />
                     </content>
                 </Tab>
                 <Tab text="Inventory">
                     <content>
-                        <fx:include source="inventory.fxml"/>
+                        <fx:include source="inventory.fxml" />
                     </content>
                 </Tab>
                 <Tab text="Settings">
                     <content>
-                        <fx:include source="new-settings.fxml"/>
+                        <fx:include source="new-settings.fxml" />
                     </content>
                 </Tab>
-                <Tab fx:id="developerTab" closable="false" disable="true" style="visibility: hidden;" text="Developer"/>
+                <Tab fx:id="developerTab" closable="false" disable="true" style="visibility: hidden;" text="Developer" />
             </tabs>
         </TabPane>
-        <Label layoutX="1127.0" layoutY="3.0" styleClass="title" text="QuickTicket"/>
-        <Label fx:id="versionLabel" layoutX="1212.0" layoutY="6.0" styleClass="version" text="undefined"/>
+        <Label layoutX="1127.0" layoutY="3.0" styleClass="title" text="QuickTicket" />
+        <Label fx:id="versionLabel" layoutX="1212.0" layoutY="6.0" styleClass="version" text="undefined" />
     </children>
     <stylesheets>
-        <URL value="@../css/core/base.css"/>
-        <URL value="@../css/screen/dashboard.css"/>
+        <URL value="@../css/core/base.css" />
+        <URL value="@../css/screen/dashboard.css" />
     </stylesheets>
 </AnchorPane>

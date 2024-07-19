@@ -6,9 +6,11 @@ import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
+import io.jacobking.quickticket.gui.model.impl.InventoryLogModel;
 import io.jacobking.quickticket.gui.model.impl.InventoryModel;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import io.jacobking.quickticket.tables.pojos.Inventory;
+import io.jacobking.quickticket.tables.pojos.InventoryLog;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -19,12 +21,18 @@ import javafx.geometry.Pos;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
 import org.controlsfx.glyphfont.FontAwesome;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class InventoryController extends Controller {
 
@@ -37,13 +45,17 @@ public class InventoryController extends Controller {
 
     @FXML private PieChart pieChart;
 
+    @FXML private Button newButton;
     @FXML private Button deleteButton;
-    @FXML private Button editButton;
+    @FXML private Button viewLogButton;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
         configurePieChart();
-        configureButtonBindings();
+        deleteButton.disableProperty().bind(inventoryTable.getSelectionModel()
+                .selectedItemProperty().isNull());
+        viewLogButton.disableProperty().bind(inventoryTable.getSelectionModel()
+                .selectedItemProperty().isNull());
     }
 
     private void configureTable() {
@@ -85,6 +97,11 @@ public class InventoryController extends Controller {
                     return;
                 }
 
+                if (s == -1) {
+                    setText("Unknown");
+                    return;
+                }
+
                 final EmployeeModel employeeModel = employee.getModel(s);
                 if (employeeModel == null) {
                     setText("Unknown");
@@ -95,9 +112,13 @@ public class InventoryController extends Controller {
             }
         });
 
+
         issuedDateColumn.setCellValueFactory(data -> new SimpleStringProperty(
-                DateUtil.formatDate(DateUtil.DateFormat.DATE_ONE, data.getValue().getLastIssuedDate())
+                data.getValue().getLastIssuedDate() == null
+                ? "Never"
+                : DateUtil.formatDate(DateUtil.DateFormat.DATE_ONE, data.getValue().getLastIssuedDate())
         ));
+
     }
 
     private void incrementAsset(final InventoryModel model) {
@@ -141,13 +162,17 @@ public class InventoryController extends Controller {
             final int currentCount = model.getTotalCount();
             final int newCount = currentCount - 1;
 
+            final String date = DateUtil.nowAsString(DateUtil.DateFormat.DATE_ONE);
+
             model.setTotalCount(newCount);
             model.setLastIssued(issuedId);
-            model.setLastIssuedDate(DateUtil.nowAsString(DateUtil.DateFormat.DATE_ONE));
+            model.setLastIssuedDate(date);
             if (!inventory.update(model)) {
                 Alerts.get().showError("Failed", "Could not decrease asset count.", "Please try again.");
                 return;
             }
+
+            createInventoryLog(date, currentCount, model);
             inventoryTable.refresh();
             builder.hide();
         });
@@ -155,6 +180,19 @@ public class InventoryController extends Controller {
         submit.setGraphic(FALoader.createDefault(FontAwesome.Glyph.CHECK));
         hBox.getChildren().addAll(comboBox, submit);
         return hBox;
+    }
+
+    private void createInventoryLog(final String date, final int currentCount, final InventoryModel model) {
+        final InventoryLogModel inventoryLogModel = inventoryLog.createModel(new InventoryLog()
+                .setAssetId(model.getId())
+                .setCountAtTime(currentCount)
+                .setIssuedDate(date)
+                .setEmployeeName(model.getLastIssued())
+        );
+
+        if (inventoryLogModel == null) {
+            Alerts.get().showError("Failure", "Failed to create asset transaction.", "Could not log asset decrement usage.");
+        }
     }
 
     private void configurePieChart() {
@@ -165,6 +203,7 @@ public class InventoryController extends Controller {
         }
         configureInventoryListener(pieChartData, inventoryList);
         pieChart.setData(pieChartData);
+
     }
 
     private void configureInventoryListener(final ObservableList<PieChart.Data> pieChartData, final ObservableList<InventoryModel> inventoryModels) {
@@ -191,16 +230,18 @@ public class InventoryController extends Controller {
         pieChartData.add(data);
     }
 
-    private void configureButtonBindings() {
-        editButton.disableProperty().bind(inventoryTable.selectionModelProperty().isNull());
-        deleteButton.disableProperty().bind(editButton.disabledProperty());
-    }
-
     @FXML private void onNew() {
+        final PopOverBuilder builder = new PopOverBuilder()
+                .useDefaultSettings()
+                .setTitle("Create New Asset")
+                .setArrowOrientation(PopOver.ArrowLocation.BOTTOM_LEFT)
+                .setOwner(newButton);
 
+        builder.setContent(getNewContent(builder));
+        builder.show();
     }
 
-    private HBox getNewContent() {
+    private HBox getNewContent(final PopOverBuilder builder) {
         final HBox hBox = new HBox(5.0);
         hBox.setPadding(new Insets(12));
         hBox.setPrefWidth(250);
@@ -210,32 +251,44 @@ public class InventoryController extends Controller {
 
         final TextField countField = new TextField();
         countField.setPromptText("Total Count");
-        configureCountField(countField);
+        countField.textProperty().addListener((observableValue, s, t1) -> {
+            if (!t1.matches("\\d*")) {
+                countField.setText(t1.replaceAll("\\D", ""));
+            }
+        });
 
         final Button button = new Button();
         button.setGraphic(FALoader.createDefault(FontAwesome.Glyph.CHECK));
-        button.setOnAction(event -> createNewAsset(assetNameField.getText(), countField.getText()));
+        button.setOnAction(event -> createNewAsset(builder, assetNameField.getText(), countField.getText()));
         button.disableProperty().bind(assetNameField.textProperty().isEmpty());
         hBox.getChildren().addAll(assetNameField, countField, button);
         return hBox;
     }
 
-    private void configureCountField(final TextField countField) {
-
-    }
-
-    private void createNewAsset(final String assetName, final String assetCount) {
+    private void createNewAsset(final PopOverBuilder builder, final String assetName, final String assetCount) {
         final int parsedCount = Integer.parseInt(assetCount);
         if (parsedCount < 0) {
             Alerts.get().showError("Failure", "You cannot have a total count less than 0.", "Try again.");
             return;
         }
 
+        final InventoryModel model = inventory.createModel(new Inventory()
+                .setAssetName(assetName)
+                .setTotalCount(parsedCount)
+                .setLastIssued(null)
+                .setLastIssued(null)
+        );
+
+        if (model == null) {
+            Alerts.get().showError("Failure", "Could not add inventory item.", "Please try again.");
+            return;
+        }
+
+        inventoryTable.refresh();
+        Notifications.showInfo("Success", "Inventory asset created.");
+        builder.hide();
     }
 
-    @FXML private void onEdit() {
-
-    }
 
     @FXML private void onDelete() {
         final InventoryModel model = inventoryTable.getSelectionModel().getSelectedItem();
@@ -252,6 +305,76 @@ public class InventoryController extends Controller {
     private void deleteInventoryItem(final InventoryModel model) {
         inventory.remove(model.getId());
         Notifications.showInfo("Success", "Inventory Asset Deleted");
+    }
+
+    @FXML private void onViewLog() {
+        final InventoryModel model = inventoryTable.getSelectionModel().getSelectedItem();
+        final int assetId = model.getId();
+
+        final ObservableList<InventoryLogModel> inventoryLogModels = inventoryLog.getObservableListByFilter(
+                filter -> filter.getAssetId() == assetId);
+
+        if (inventoryLogModels.isEmpty()) {
+            Alerts.get().showError("Failure", "There are no transactions with this asset.", "Please distribute this item.");
+            return;
+        }
+
+        final PopOverBuilder builder = new PopOverBuilder()
+                .setTitle("Asset Transaction Log")
+                .useDefaultSettings();
+
+        builder.setContent(getLogContent(builder, inventoryLogModels));
+        builder.show();
+    }
+
+    private VBox getLogContent(final PopOverBuilder builder, final ObservableList<InventoryLogModel> inventoryLogModels) {
+        final VBox vBox = new VBox(5.0);
+        vBox.setAlignment(Pos.TOP_CENTER);
+
+        AtomicReference<Double> maxFlowWidth = new AtomicReference<>(0.0);
+        for (final InventoryLogModel log : inventoryLogModels) {
+            final int assetId = log.getAssetId();
+            final InventoryModel item = inventory.getModel(assetId);
+            final String assetName = (item == null) ? "Unknown" : item.getAssetName();
+
+            final int employeeId = log.getEmployeeId();
+            final EmployeeModel employeeModel = employee.getModel(employeeId);
+            final String employeeName = (employeeModel == null) ? "Unknown" : employeeModel.getFullName();
+
+            final TextFlow flow = new TextFlow();
+            final Text assetText = new Text(assetName);
+            assetText.setFill(Color.valueOf("#5DADD5"));
+
+            final Text firstInfoText = new Text(String.format(" (Count: %s) ", log.getCountAtTime()));
+            firstInfoText.setFill(Color.WHITE);
+
+            final Text secondInfoText = new Text(" was given to ");
+            secondInfoText.setFill(Color.WHITE);
+
+            final Text thirdInfoText = new Text(employeeName);
+            thirdInfoText.setFill(Color.valueOf("#5DADD5"));
+
+            final Text fourthInfoText = new Text(" on ");
+            fourthInfoText.setFill(Color.WHITE);
+
+            final Text fifthInfoText = new Text(log.getIssuedDate());
+            fifthInfoText.setFill(Color.valueOf("#5DADD5"));
+
+
+            flow.setTextAlignment(TextAlignment.LEFT);
+            flow.setPadding(new Insets(0, 10, 0, 10));
+            flow.layoutBoundsProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.getWidth() > maxFlowWidth.get()) {
+                    maxFlowWidth.set(newValue.getWidth());
+                    vBox.setPrefWidth(maxFlowWidth.get());
+                }
+            });
+            flow.getChildren().addAll(assetText, firstInfoText, secondInfoText, thirdInfoText, fourthInfoText, fifthInfoText);
+            vBox.getChildren().add(flow);
+
+        }
+
+        return vBox;
     }
 }
 

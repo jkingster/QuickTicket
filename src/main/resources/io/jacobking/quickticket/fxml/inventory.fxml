@@ -31,14 +31,13 @@
             <HBox alignment="CENTER_LEFT" layoutX="9.0" layoutY="1.0" prefHeight="39.0" prefWidth="1248.0" spacing="5.0">
                <children>
                   <Label prefHeight="27.0" prefWidth="68.0" styleClass="card-header" text="Assets:" />
-                  <Button mnemonicParsing="false" onAction="#onNew" text="New" />
+                  <Button fx:id="newButton" mnemonicParsing="false" onAction="#onNew" text="New" />
                   <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onDelete" text="Delete" />
-                  <Button fx:id="editButton" mnemonicParsing="false" onAction="#onEdit" text="Edit" />
-                  <Button mnemonicParsing="false" text="View Log" />
+                  <Button fx:id="viewLogButton" mnemonicParsing="false" onAction="#onViewLog" text="View Log" />
                </children>
             </HBox>
          </children>
       </Pane>
-      <PieChart fx:id="pieChart" layoutX="737.0" layoutY="179.0" legendSide="TOP" />
+      <PieChart fx:id="pieChart" layoutX="742.0" layoutY="117.0" legendSide="TOP" prefHeight="574.0" prefWidth="530.0" stylesheets="@../css/core/pie-chart.css" />
    </children>
 </AnchorPane>
