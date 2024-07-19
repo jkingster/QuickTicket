@@ -1,16 +1,16 @@
 package io.jacobking.quickticket.core.database.repository.impl;
 
 import io.jacobking.quickticket.core.database.repository.Repository;
-import io.jacobking.quickticket.tables.pojos.Email;
-import io.jacobking.quickticket.tables.records.EmailRecord;
+import io.jacobking.quickticket.tables.pojos.EmailInterface;
+import io.jacobking.quickticket.tables.records.EmailInterfaceRecord;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 
 import java.util.List;
 
-import static io.jacobking.quickticket.tables.Email.EMAIL;
+import static io.jacobking.quickticket.tables.EmailInterface.EMAIL_INTERFACE;
 
-public class EmailRepository implements Repository<Email> {
+public class EmailInterfaceRepository implements Repository<EmailInterface> {
 
     /**
      * This is going to ignore the passed ID field no matter what.
@@ -21,31 +21,31 @@ public class EmailRepository implements Repository<Email> {
      * @return
      */
     @Override
-    public Email getById(DSLContext context, int id) {
-        return context.selectFrom(EMAIL)
-                .where(EMAIL.ID.eq(0))
-                .fetchOneInto(Email.class);
+    public EmailInterface getById(DSLContext context, int id) {
+        return context.selectFrom(EMAIL_INTERFACE)
+                .where(EMAIL_INTERFACE.ID.eq(0))
+                .fetchOneInto(EmailInterface.class);
     }
 
     @Override
-    public Email save(DSLContext context, Email email) {
-        throw new UnsupportedOperationException("Email#save(Context, Email) not supported!");
+    public EmailInterface save(DSLContext context, EmailInterface email) {
+        throw new UnsupportedOperationException("EmailInterface#save(Context, EmailInterface) not supported!");
     }
 
     @Override
-    public List<Email> getAll(DSLContext context) {
-        return context.selectFrom(EMAIL)
-                .fetchInto(Email.class);
+    public List<EmailInterface> getAll(DSLContext context) {
+        return context.selectFrom(EMAIL_INTERFACE)
+                .fetchInto(EmailInterface.class);
     }
 
     @Override
-    public List<Email> getAll(DSLContext context, Condition condition) {
-        throw new UnsupportedOperationException("Email#getAll(Context, Condition) not supported!");
+    public List<EmailInterface> getAll(DSLContext context, Condition condition) {
+        throw new UnsupportedOperationException("EmailInterface#getAll(Context, Condition) not supported!");
     }
 
     @Override
     public boolean delete(DSLContext context, int id) {
-        throw new UnsupportedOperationException("Email#delete(Context, Integer) not supported!");
+        throw new UnsupportedOperationException("EmailInterface#delete(Context, Integer) not supported!");
     }
 
     @Override public boolean deleteWhere(DSLContext context, Condition condition) {
@@ -53,10 +53,10 @@ public class EmailRepository implements Repository<Email> {
     }
 
     @Override
-    public boolean update(DSLContext context, Email email) {
-        final EmailRecord record = new EmailRecord(email);
-        record.changed(EMAIL.ID, false);
-        return context.update(EMAIL)
+    public boolean update(DSLContext context, EmailInterface email) {
+        final EmailInterfaceRecord record = new EmailInterfaceRecord(email);
+        record.changed(EMAIL_INTERFACE.ID, false);
+        return context.update(EMAIL_INTERFACE)
                 .set(record)
                 .execute() >= SUCCESS;
     }

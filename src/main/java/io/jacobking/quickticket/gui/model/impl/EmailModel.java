@@ -1,13 +1,13 @@
 package io.jacobking.quickticket.gui.model.impl;
 
 import io.jacobking.quickticket.gui.model.ViewModel;
-import io.jacobking.quickticket.tables.pojos.Email;
+import io.jacobking.quickticket.tables.pojos.EmailInterface;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class EmailModel extends ViewModel<Email> {
+public class EmailModel extends ViewModel<EmailInterface> {
 
     private static final String DEFAULT_PORT = "25";
 
@@ -49,7 +49,7 @@ public class EmailModel extends ViewModel<Email> {
         }));
     }
 
-    public EmailModel(final Email email) {
+    public EmailModel(final EmailInterface email) {
         this(
                 email.getId(),
                 email.getHost(),
@@ -179,8 +179,8 @@ public class EmailModel extends ViewModel<Email> {
     }
 
     @Override
-    public Email toEntity() {
-        return new Email()
+    public EmailInterface toEntity() {
+        return new EmailInterface()
                 .setId(getId())
                 .setHost(getHostProperty())
                 .setPort(getPortProperty().isEmpty() ? DEFAULT_PORT : getPortProperty())

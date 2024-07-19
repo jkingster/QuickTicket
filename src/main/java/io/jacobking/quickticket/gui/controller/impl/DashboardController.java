@@ -48,19 +48,10 @@ public class DashboardController extends Controller {
         }
     }
 
-    @FXML
-    private void onSettings() {
-        Display.show(Route.SETTINGS);
-    }
 
     @FXML
     private void onConfiguration() {
         Display.show(Route.CONFIGURATION);
-    }
-
-    @FXML
-    private void onSMTP() {
-        Display.show(Route.SMTP);
     }
 
     @FXML

@@ -62,8 +62,7 @@ public class RepoCrud {
                 case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
                 case INVENTORY -> (Repository<? extends Entity>) new InventoryRepository();
                 case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
-                case EMAIL -> (Repository<? extends Entity>) new EmailRepository();
-                case ALERT -> (Repository<? extends Entity>) new AlertSettingsRepository();
+                case EMAIL -> (Repository<? extends Entity>) new EmailInterfaceRepository();
                 case COMPANY -> (Repository<? extends Entity>) new CompanyRepository();
                 case DEPARTMENT -> (Repository<? extends Entity>) new DepartmentRepository();
                 case FLYWAY -> (Repository<? extends Entity>) new FlywayRepository();

@@ -3,7 +3,7 @@ package io.jacobking.quickticket.core.email;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.alert.Alerts;
-import io.jacobking.quickticket.tables.pojos.Email;
+import io.jacobking.quickticket.tables.pojos.EmailInterface;
 
 import javax.mail.Session;
 import java.io.File;
@@ -19,9 +19,9 @@ public class EmailConfig {
     private static final String DEFAULT_CONNECTION_TIMEOUT = "15000";
     private static final String DEFAULT_TIMEOUT            = "60000";
 
-    private final Properties properties;
-    private       Email      email;
-    private       Session    session;
+    private final Properties     properties;
+    private       EmailInterface email;
+    private       Session        session;
 
     public EmailConfig() {
         this.properties = new Properties();
@@ -40,7 +40,7 @@ public class EmailConfig {
         return !email.getHost().isEmpty();
     }
 
-    public Email getEmail() {
+    public EmailInterface getEmail() {
         return email;
     }
 
@@ -48,7 +48,7 @@ public class EmailConfig {
         return session;
     }
 
-    public EmailConfig setEmail(final Email email) {
+    public EmailConfig setEmail(final EmailInterface email) {
         this.email = email;
         return this;
     }

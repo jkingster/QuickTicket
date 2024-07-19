@@ -4,14 +4,14 @@ import io.jacobking.quickticket.bridge.Bridge;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.model.impl.EmailModel;
-import io.jacobking.quickticket.tables.pojos.Email;
+import io.jacobking.quickticket.tables.pojos.EmailInterface;
 
-public class EmailBridge extends Bridge<Email, EmailModel> {
+public class EmailBridge extends Bridge<EmailInterface, EmailModel> {
     public EmailBridge(final Database database) {
         super(database, RepoType.EMAIL);
     }
 
-    public Email getEmail() {
+    public EmailInterface getEmail() {
         return getModel(0).toEntity();
     }
 
@@ -20,7 +20,7 @@ public class EmailBridge extends Bridge<Email, EmailModel> {
     }
 
     @Override
-    public EmailModel convertEntity(Email entity) {
+    public EmailModel convertEntity(EmailInterface entity) {
         return new EmailModel(entity);
     }
 }
