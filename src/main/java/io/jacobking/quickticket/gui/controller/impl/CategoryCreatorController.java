@@ -1,6 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.AlertPopup;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.TicketCategoryModel;
@@ -47,7 +47,7 @@ public class CategoryCreatorController extends Controller {
 
         final TicketCategoryModel newModel = category.createModel(ticketCategories);
         if (newModel == null) {
-            Alerts.get().showError("Failed", "Could not create new category.", "Please try again.");
+            AlertPopup.get().showError("Failed", "Could not create new category.", "Please try again.");
             return;
         }
 
@@ -75,7 +75,7 @@ public class CategoryCreatorController extends Controller {
         model.setDescriptionProperty(description);
 
         if (!category.update(model)) {
-            Alerts.get().showError("Failed", "Could not update category.", "Please try again.");
+            AlertPopup.get().showError("Failed", "Could not update category.", "Please try again.");
             return;
         }
 

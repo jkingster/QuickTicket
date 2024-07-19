@@ -3,13 +3,12 @@ package io.jacobking.quickticket.core.config;
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.core.utility.Logs;
-import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.AlertPopup;
 import net.lingala.zip4j.io.inputstream.ZipInputStream;
 import net.lingala.zip4j.model.LocalFileHeader;
 
 import java.io.*;
 import java.net.URL;
-import java.util.Properties;
 
 
 public class FlywayConfig extends Config {
@@ -59,7 +58,7 @@ public class FlywayConfig extends Config {
     private void copyOverScripts() {
         final URL zipFileUrl = App.class.getResource("sql/scripts.zip");
         if (zipFileUrl == null) {
-            Alerts.get().showErrorOverride("scripts.zip not found!", "Please report this.");
+            AlertPopup.get().showErrorOverride("scripts.zip not found!", "Please report this.");
             return;
         }
 

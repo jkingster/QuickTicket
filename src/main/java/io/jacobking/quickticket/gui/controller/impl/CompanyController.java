@@ -1,6 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.AlertPopup;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.CompanyModel;
@@ -40,7 +40,7 @@ public class CompanyController extends Controller {
     @FXML private void onCreate() {
         final String companyName = nameField.getText();
         if (companyName.isEmpty()) {
-            Alerts.get().showError("Failed!", "Could not create company.", "Company name required!");
+            AlertPopup.get().showError("Failed!", "Could not create company.", "Company name required!");
             return;
         }
 
@@ -74,7 +74,7 @@ public class CompanyController extends Controller {
         if (companyModel == null)
             return;
 
-        Alerts.get().showConfirmation(
+        AlertPopup.get().showConfirmation(
                 this::deleteCompany,
                 "Are you sure you want to delete this company?",
                 "This process cannot be undone."

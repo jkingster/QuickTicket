@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.AlertPopup;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
@@ -127,7 +127,7 @@ public class InventoryController extends Controller {
 
         model.setTotalCount(newCount);
         if (!inventory.update(model)) {
-            Alerts.get().showError("Failed", "Could not increase asset count.", "Please try again.");
+            AlertPopup.get().showError("Failed", "Could not increase asset count.", "Please try again.");
             return;
         }
         inventoryTable.refresh();
@@ -168,7 +168,7 @@ public class InventoryController extends Controller {
             model.setLastIssued(issuedId);
             model.setLastIssuedDate(date);
             if (!inventory.update(model)) {
-                Alerts.get().showError("Failed", "Could not decrease asset count.", "Please try again.");
+                AlertPopup.get().showError("Failed", "Could not decrease asset count.", "Please try again.");
                 return;
             }
 
@@ -191,7 +191,7 @@ public class InventoryController extends Controller {
         );
 
         if (inventoryLogModel == null) {
-            Alerts.get().showError("Failure", "Failed to create asset transaction.", "Could not log asset decrement usage.");
+            AlertPopup.get().showError("Failure", "Failed to create asset transaction.", "Could not log asset decrement usage.");
         }
     }
 
@@ -268,7 +268,7 @@ public class InventoryController extends Controller {
     private void createNewAsset(final PopOverBuilder builder, final String assetName, final String assetCount) {
         final int parsedCount = Integer.parseInt(assetCount);
         if (parsedCount < 0) {
-            Alerts.get().showError("Failure", "You cannot have a total count less than 0.", "Try again.");
+            AlertPopup.get().showError("Failure", "You cannot have a total count less than 0.", "Try again.");
             return;
         }
 
@@ -280,7 +280,7 @@ public class InventoryController extends Controller {
         );
 
         if (model == null) {
-            Alerts.get().showError("Failure", "Could not add inventory item.", "Please try again.");
+            AlertPopup.get().showError("Failure", "Could not add inventory item.", "Please try again.");
             return;
         }
 
@@ -292,7 +292,7 @@ public class InventoryController extends Controller {
 
     @FXML private void onDelete() {
         final InventoryModel model = inventoryTable.getSelectionModel().getSelectedItem();
-        Alerts.get().showConfirmation(() -> deleteInventoryItem(model),
+        AlertPopup.get().showConfirmation(() -> deleteInventoryItem(model),
                 "Are you sure you want to delete this item?",
                 "It cannot be recovered."
         ).ifPresent(type -> {
@@ -315,7 +315,7 @@ public class InventoryController extends Controller {
                 filter -> filter.getAssetId() == assetId);
 
         if (inventoryLogModels.isEmpty()) {
-            Alerts.get().showError("Failure", "There are no transactions with this asset.", "Please distribute this item.");
+            AlertPopup.get().showError("Failure", "There are no transactions with this asset.", "Please distribute this item.");
             return;
         }
 

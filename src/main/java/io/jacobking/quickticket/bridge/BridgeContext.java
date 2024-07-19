@@ -6,18 +6,19 @@ import io.jacobking.quickticket.core.email.EmailConfig;
 
 public class BridgeContext {
 
-    private final CompanyBridge       company;
-    private final DepartmentBridge    department;
-    private final EmployeeBridge      employee;
-    private final TicketBridge        ticket;
-    private final CommentBridge       comment;
-    private final EmailBridge         email;
-    private final FlywayBridge        flyway;
-    private final LinkedTicketBridge  linkedTicket;
-    private final EmailConfig         emailConfig;
-    private final CategoryBridge      categoryBridge;
-    private final InventoryBridge     inventory;
-    private final InventoryLogBridge  inventoryLog;
+    private final CompanyBridge      company;
+    private final DepartmentBridge   department;
+    private final EmployeeBridge     employee;
+    private final AlertBridge        alerts;
+    private final TicketBridge       ticket;
+    private final CommentBridge      comment;
+    private final EmailBridge        email;
+    private final FlywayBridge       flyway;
+    private final LinkedTicketBridge linkedTicket;
+    private final EmailConfig        emailConfig;
+    private final CategoryBridge     categoryBridge;
+    private final InventoryBridge    inventory;
+    private final InventoryLogBridge inventoryLog;
 
     public BridgeContext(final Database database) {
         this.company = new CompanyBridge(database);
@@ -27,6 +28,7 @@ public class BridgeContext {
         this.comment = new CommentBridge(database);
         this.email = new EmailBridge(database);
         this.flyway = new FlywayBridge(database);
+        this.alerts = new AlertBridge(database);
         this.linkedTicket = new LinkedTicketBridge(database);
         this.emailConfig = new EmailConfig();
         this.categoryBridge = new CategoryBridge(database);
@@ -58,6 +60,9 @@ public class BridgeContext {
         return email;
     }
 
+    public AlertBridge getAlerts() {
+        return alerts;
+    }
 
     public FlywayBridge getFlyway() {
         return flyway;

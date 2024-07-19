@@ -1,6 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.AlertPopup;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.CompanyModel;
@@ -42,7 +42,7 @@ public class DepartmentController extends Controller {
     @FXML private void onCreate() {
         final String name = nameField.getText();
         if (name.isEmpty()) {
-            Alerts.get().showError(
+            AlertPopup.get().showError(
                     "Failed!",
                     "Could not create department.",
                     "Department name is required!"
@@ -59,7 +59,7 @@ public class DepartmentController extends Controller {
     @FXML private void onUpdate() {
         final DepartmentModel departmentModel = departmentSearchBox.getSelectionModel().getSelectedItem();
         if (departmentModel == null) {
-            Alerts.get().showError(
+            AlertPopup.get().showError(
                     "Failure!",
                     "Could not update department.",
                     "No department selected!"
@@ -80,7 +80,7 @@ public class DepartmentController extends Controller {
     @FXML private void onDelete() {
         final DepartmentModel departmentModel = departmentSearchBox.getSelectionModel().getSelectedItem();
         if (departmentModel == null) {
-            Alerts.get().showError(
+            AlertPopup.get().showError(
                     "Failure!",
                     "Could not delete department.",
                     "No department selected!"
@@ -88,7 +88,7 @@ public class DepartmentController extends Controller {
             return;
         }
 
-        Alerts.get().showConfirmation(() -> deleteDepartment(departmentModel),
+        AlertPopup.get().showConfirmation(() -> deleteDepartment(departmentModel),
                 "Are you sure you want to do this?",
                 "This department cannot be recovered if deleted."
         ).ifPresent(type -> {

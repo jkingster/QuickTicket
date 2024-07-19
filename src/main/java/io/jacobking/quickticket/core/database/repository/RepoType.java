@@ -12,6 +12,7 @@ public enum RepoType {
     CATEGORY(new CategoryRepository()),
     COMPANY(new CompanyRepository()),
     DEPARTMENT(new DepartmentRepository()),
+    ALERT(new AlertRepository()),
     FLYWAY(new FlywayRepository()),
     INVENTORY(new InventoryRepository()),
     LINKED_TICKET(new LinkedTicketRepository()),

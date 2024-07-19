@@ -2,7 +2,7 @@ package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.AlertPopup;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.FlywayModel;
@@ -180,7 +180,7 @@ public class ConfigurationController extends Controller {
             try {
                 Desktop.getDesktop().open(new File(path));
             } catch (IOException e) {
-                Alerts.get().showException("Failed to open file. Make sure you have a valid application to read the targeted file type.", e.fillInStackTrace());
+                AlertPopup.get().showException("Failed to open file. Make sure you have a valid application to read the targeted file type.", e.fillInStackTrace());
             }
         }
     }

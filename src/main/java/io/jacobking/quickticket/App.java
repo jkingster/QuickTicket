@@ -4,7 +4,7 @@ import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.AlertPopup;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import javafx.application.Application;
@@ -35,7 +35,7 @@ public class App extends Application {
         database.initializeBridgeContext();
 
         final BridgeContext bridgeContext = database.getBridgeContext();
-        Alerts.get().establishSettings(bridgeContext);
+        AlertPopup.get().establishSettings(bridgeContext);
 
         final boolean fileLockingDisabled = quickTicket.getSystemConfig()
                 .parseBoolean("disable_file_locking");

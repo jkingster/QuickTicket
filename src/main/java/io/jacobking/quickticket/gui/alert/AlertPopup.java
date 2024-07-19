@@ -8,24 +8,27 @@ import io.jacobking.quickticket.gui.alert.builder.InputDialogBuilder;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
-public class Alerts {
+public class AlertPopup {
 
-    private static Alerts instance = null;
+    private static AlertPopup instance = null;
 
-    private AlertSettingsModel settings;
+    private final Map<String, Boolean> alertStateMap = new HashMap<>();
 
-    private Alerts() {
+
+    private AlertPopup() {
     }
 
     public void establishSettings(final BridgeContext bridgeContext) {
         this.settings = bridgeContext.getAlertSettings().getModel(0);
     }
 
-    public static Alerts get() {
+    public static AlertPopup get() {
         if (instance == null) {
-            instance = new Alerts();
+            instance = new AlertPopup();
         }
         return instance;
     }

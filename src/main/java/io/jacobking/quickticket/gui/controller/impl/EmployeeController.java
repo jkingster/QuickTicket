@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Alerts;
+import io.jacobking.quickticket.gui.alert.AlertPopup;
 import io.jacobking.quickticket.gui.alert.Notifications;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
@@ -14,7 +14,6 @@ import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -81,7 +80,7 @@ public class EmployeeController extends Controller {
         final String lastName = lastNameField.getText();
 
         if (firstName.isEmpty() || lastName.isEmpty()) {
-            Alerts.get().showError("Failed to create employee.", "You must provide a first and last name.", "Try again!");
+            AlertPopup.get().showError("Failed to create employee.", "You must provide a first and last name.", "Try again!");
             return;
         }
 
@@ -104,7 +103,7 @@ public class EmployeeController extends Controller {
     }
 
     @FXML private void onDelete() {
-        Alerts.get().showConfirmation(this::deleteEmployee, "Are you sure you want to delete this employee?", "This process cannot be undone.")
+        AlertPopup.get().showConfirmation(this::deleteEmployee, "Are you sure you want to delete this employee?", "This process cannot be undone.")
                 .ifPresent(type -> {
                     if (type == ButtonType.YES) {
                         deleteEmployee();
@@ -256,7 +255,7 @@ public class EmployeeController extends Controller {
     }
 
     private void onUnAssignTicket(final TicketModel ticketModel) {
-        Alerts.get().showConfirmation(() -> unAssignTicket(ticketModel), "Are you sure you want to un-assign this ticket?", "This ticket will be removed from the employee?")
+        AlertPopup.get().showConfirmation(() -> unAssignTicket(ticketModel), "Are you sure you want to un-assign this ticket?", "This ticket will be removed from the employee?")
                 .ifPresent(type -> {
                     if (type == ButtonType.YES) {
                         unAssignTicket(ticketModel);
@@ -276,7 +275,7 @@ public class EmployeeController extends Controller {
     @FXML private void onUpdateInfo() {
         final String comment = infoTextArea.getText();
         if (comment.isEmpty()) {
-            Alerts.get().showError("Failed to update.", "Could not update employee misc. info.", "There was no information provided.");
+            AlertPopup.get().showError("Failed to update.", "Could not update employee misc. info.", "There was no information provided.");
             return;
         }
 
@@ -401,7 +400,7 @@ public class EmployeeController extends Controller {
                     final int departmentId = t1.getId();
                     final CompanyModel companyModel = companyComboBox.getSelectionModel().getSelectedItem();
                     if (companyModel == null) {
-                        Alerts.get().showError("Failure.", "Company model returned null.", "Please try again.");
+                        AlertPopup.get().showError("Failure.", "Company model returned null.", "Please try again.");
                         return;
                     }
 
@@ -506,7 +505,7 @@ public class EmployeeController extends Controller {
     @FXML private void onEmail() {
         final String email = emailField.getText();
         if (email.isEmpty()) {
-            Alerts.get().showError(
+            AlertPopup.get().showError(
                     "Failure",
                     "Cannot e-mail employee.",
                     "No e-mail is set!"
@@ -521,7 +520,7 @@ public class EmployeeController extends Controller {
             try {
                 Desktop.getDesktop().mail(new URI("mailto:" + email));
             } catch (IOException | URISyntaxException e) {
-                Alerts.get().showException("Failed to open e-mail.", e.fillInStackTrace());
+                AlertPopup.get().showException("Failed to open e-mail.", e.fillInStackTrace());
             }
         }
     }

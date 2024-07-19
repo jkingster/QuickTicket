@@ -5,9 +5,7 @@ import io.jacobking.quickticket.core.config.FlywayConfig;
 import io.jacobking.quickticket.core.config.SystemConfig;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.utility.Logs;
-import io.jacobking.quickticket.gui.alert.Alerts;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import io.jacobking.quickticket.gui.alert.AlertPopup;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -53,7 +51,7 @@ public class Database {
 
     public void checkForMigration() {
         if (sqLiteConnector.getConnection() == null) {
-            Alerts.get().showErrorOverride("Failed to establish sqlite connector.", "Please report this.");
+            AlertPopup.get().showErrorOverride("Failed to establish sqlite connector.", "Please report this.");
             return;
         }
 

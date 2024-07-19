@@ -10,6 +10,7 @@ public abstract class Controller implements Initializable {
 
     protected final QuickTicket         core;
     protected final TicketBridge        ticket;
+    protected final AlertBridge alerts;
     protected final CommentBridge       comment;
     protected final EmployeeBridge      employee;
     protected final EmailBridge         email;
@@ -29,6 +30,7 @@ public abstract class Controller implements Initializable {
         this.ticket = core.getDatabase().getBridgeContext().getTicket();
         this.comment = core.getDatabase().getBridgeContext().getComment();
         this.flyway = core.getDatabase().getBridgeContext().getFlyway();
+        this.alerts = core.getDatabase().getBridgeContext().getAlerts();
         this.employee = core.getDatabase().getBridgeContext().getEmployee();
         this.email = core.getDatabase().getBridgeContext().getEmail();
         this.company = core.getDatabase().getBridgeContext().getCompany();
