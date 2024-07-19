@@ -5,7 +5,6 @@ public enum Route {
     VIEWER("Viewer"),
     TICKET_CREATOR("TicketCreator"),
     ABOUT("About"),
-    SMTP("SMTP"),
     CHANGELOG("Changelog"),
     CONFIGURATION("Configuration"),
     DEPARTMENT("Department"),
