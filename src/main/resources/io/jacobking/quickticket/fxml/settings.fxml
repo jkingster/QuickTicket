@@ -23,7 +23,7 @@
                         <HBox layoutX="10.0" layoutY="8.0" prefHeight="22.0" prefWidth="314.0" spacing="5.0">
                            <children>
                               <CheckBox fx:id="disableAlertsCheckBox" mnemonicParsing="false" text="Disable Alerts" textFill="WHITE" />
-                              <CheckBox fx:id="disableNotificationsCheckBox" mnemonicParsing="false" text="Disable Notifications" textFill="WHITE" />
+                              <CheckBox fx:id="disableAnnouncements.get().heckBox" mnemonicParsing="false" text="Disable Announcements.get(). textFill="WHITE" />
                            </children>
                         </HBox>
                         <Button layoutX="10.0" layoutY="170.0" mnemonicParsing="false" onAction="#onUpdate" text="Update" />
@@ -41,9 +41,9 @@
                               <CheckBox fx:id="disableWarningAlerts" mnemonicParsing="false" text="Disable Warnings Alerts" textFill="WHITE" />
                            </children>
                         </VBox>
-                        <VBox fx:id="notificationsModule" layoutX="235.0" layoutY="32.0" prefHeight="153.0" prefWidth="225.0" spacing="5.0">
+                        <VBox fx:id="Announcements.get().odule" layoutX="235.0" layoutY="32.0" prefHeight="153.0" prefWidth="225.0" spacing="5.0">
                            <children>
-                              <Label prefHeight="38.0" prefWidth="225.0" text="Notifications Module" textFill="WHITE">
+                              <Label prefHeight="38.0" prefWidth="225.0" text="Announcements.get().Module" textFill="WHITE">
                                  <font>
                                     <Font size="18.0" />
                                  </font>

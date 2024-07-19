@@ -3,7 +3,7 @@ package io.jacobking.quickticket.gui.controller.impl;
 import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.Version;
 import io.jacobking.quickticket.core.config.SystemConfig;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
@@ -62,7 +62,7 @@ public class DashboardController extends Controller {
 
     @FXML
     private void onExit() {
-        AlertPopup.get().showConfirmation(() -> QuickTicket.getInstance().shutdown(), "Are you sure you want to exit?", "All data is saved.").ifPresent(type -> {
+        Announcements.get().showConfirmation(() -> QuickTicket.getInstance().shutdown(), "Are you sure you want to exit?", "All data is saved.").ifPresent(type -> {
             if (type == ButtonType.YES) {
                 QuickTicket.getInstance().shutdown();
             }

@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.utility;
 
 import io.jacobking.quickticket.core.utility.Checks;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
+import io.jacobking.quickticket.gui.alert.Announcements;
 
 import java.awt.*;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class MiscUtil {
                 Desktop.getDesktop().browse(new URI(link));
             }
         } catch (IOException | URISyntaxException e) {
-            AlertPopup.get().showException("Failed to open link.", e.fillInStackTrace());
+            Announcements.get().showException("Failed to open link.", e.fillInStackTrace());
         }
     }
 

@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.gui.alert.AlertPopup;
-import io.jacobking.quickticket.gui.alert.Notifications;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.CompanyModel;
 import io.jacobking.quickticket.tables.pojos.Company;
@@ -40,14 +39,14 @@ public class CompanyController extends Controller {
     @FXML private void onCreate() {
         final String companyName = nameField.getText();
         if (companyName.isEmpty()) {
-            AlertPopup.get().showError("Failed!", "Could not create company.", "Company name required!");
+            Announcements.get().showError("Failed!", "Could not create company.", "Company name required!");
             return;
         }
 
         final Company newCompany = getCompany();
         final CompanyModel companyModel = company.createModel(newCompany);
         if (companyModel != null) {
-            Notifications.showInfo("Creation Successful", "Your new company has been created.");
+            Announcements.get().showInfo("Creation Successful", "Your new company has been created.");
         }
     }
 
@@ -65,7 +64,7 @@ public class CompanyController extends Controller {
         companyModel.setZipCode(getZipCode());
 
         if (company.update(companyModel)) {
-            Notifications.showInfo("Update Successful", "Company model was updated.");
+            Announcements.get().showInfo("Update Successful", "Company model was updated.");
         }
     }
 
@@ -74,7 +73,7 @@ public class CompanyController extends Controller {
         if (companyModel == null)
             return;
 
-        AlertPopup.get().showConfirmation(
+        Announcements.get().showConfirmation(
                 this::deleteCompany,
                 "Are you sure you want to delete this company?",
                 "This process cannot be undone."
@@ -92,7 +91,7 @@ public class CompanyController extends Controller {
 
         final int companyId = companyModel.getId();
         if (companyId == 0) {
-            Notifications.showError("Could not delete company.", "This company is locked by internals!");
+            Announcements.get().showError("Could not delete company.", "This company is locked by internals!");
             return;
         }
         company.remove(companyId);

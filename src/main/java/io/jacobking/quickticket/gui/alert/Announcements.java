@@ -5,36 +5,36 @@ import io.jacobking.quickticket.core.utility.ImmutablePair;
 import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.builder.AlertBuilder;
 import io.jacobking.quickticket.gui.alert.builder.InputDialogBuilder;
+import io.jacobking.quickticket.gui.alert.builder.NotificationBuilder;
+import io.jacobking.quickticket.gui.model.impl.AlertModel;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class AlertPopup {
+public class Announcements {
 
-    private static AlertPopup instance = null;
+    private static Announcements instance = null;
 
-    private final Map<String, Boolean> alertStateMap = new HashMap<>();
+    private Map<String, AlertModel> alertMap;
 
-
-    private AlertPopup() {
+    private Announcements() {
     }
 
     public void establishSettings(final BridgeContext bridgeContext) {
-        this.settings = bridgeContext.getAlertSettings().getModel(0);
+        this.alertMap = bridgeContext.getAlerts().getAlertMap();
     }
 
-    public static AlertPopup get() {
+    public static Announcements get() {
         if (instance == null) {
-            instance = new AlertPopup();
+            instance = new Announcements();
         }
         return instance;
     }
 
     public void showInfo(final String title, final String header, final String content) {
-        if (settings != null && settings.isDisableInfoAlertsProperty())
+        if (!getAlertState("INFORMATIONAL_ALERTS"))
             return;
 
         new AlertBuilder(Alert.AlertType.INFORMATION)
@@ -45,7 +45,7 @@ public class AlertPopup {
     }
 
     public void showError(final String title, final String header, final String content) {
-        if (settings != null && settings.isDisableErrorAlertsProperty())
+        if (!getAlertState("ERROR_ALERTS"))
             return;
 
         new AlertBuilder(Alert.AlertType.ERROR)
@@ -56,7 +56,7 @@ public class AlertPopup {
     }
 
     public void showWarning(final String title, final String header, final String content) {
-        if (settings != null && settings.isDisableWarningAlertsProperty())
+        if (!getAlertState("WARNING_ALERTS"))
             return;
 
         new AlertBuilder(Alert.AlertType.WARNING)
@@ -68,7 +68,7 @@ public class AlertPopup {
 
     // HANDLE THIS EXTERNALLY WHERE WE NEED CONFIRMATION. NOT INSIDE THE BASE METHOD.
     public Optional<ButtonType> showConfirmation(final Runnable preProcessing, final String title, final String header, final String content, final ButtonType... buttonTypes) {
-        if (settings != null && settings.isDisableConfirmationAlertsProperty()) {
+        if (!getAlertState("CONFIRMATION_ALERTS")) {
             preProcessing.run();
             return Optional.empty();
         }
@@ -120,5 +120,51 @@ public class AlertPopup {
                 .result();
     }
 
+
+    private static NotificationBuilder buildDefault(final String title, final String content) {
+        return new NotificationBuilder()
+                .withTitle(title)
+                .withContent(content);
+    }
+
+    public void showInfo(final String title, final String content) {
+        if (!getAlertState("INFORMATION_NOTIFICATIONS"))
+            return;
+        buildDefault(title, content).showInfo();
+    }
+
+
+    public void show(final String title, final String content) {
+        buildDefault(title, content).show();
+    }
+
+    public void showWarning(final String title, final String content) {
+        if (!getAlertState("WARNING_NOTIFICATIONS"))
+            return;
+        buildDefault(title, content).showWarning();
+    }
+
+    public void showError(final String title, final String content) {
+        if (!getAlertState("ERROR_NOTIFICATIONS"))
+            return;
+        buildDefault(title, content).showError();
+    }
+
+    public void showConfirm(final String title, final String content) {
+        if (!getAlertState("CONFIRMATION_NOTIFICATIONS"))
+            return;
+        buildDefault(title, content).showConfirm();
+    }
+
+    private boolean getAlertState(final String alertName) {
+        if (alertMap == null || alertMap.isEmpty())
+            return false;
+
+        final AlertModel model = alertMap.get(alertName);
+        if (model == null)
+            return false;
+
+        return model.getAlertState();
+    }
 
 }

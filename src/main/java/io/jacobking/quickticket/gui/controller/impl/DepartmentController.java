@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.gui.alert.AlertPopup;
-import io.jacobking.quickticket.gui.alert.Notifications;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.CompanyModel;
 import io.jacobking.quickticket.gui.model.impl.DepartmentModel;
@@ -42,7 +41,7 @@ public class DepartmentController extends Controller {
     @FXML private void onCreate() {
         final String name = nameField.getText();
         if (name.isEmpty()) {
-            AlertPopup.get().showError(
+            Announcements.get().showError(
                     "Failed!",
                     "Could not create department.",
                     "Department name is required!"
@@ -52,14 +51,14 @@ public class DepartmentController extends Controller {
 
         final DepartmentModel newDepartment = department.createModel(getNewDepartment());
         if (newDepartment != null) {
-            Notifications.showInfo("Success!", "Department has been created/");
+            Announcements.get().showInfo("Success!", "Department has been created/");
         }
     }
 
     @FXML private void onUpdate() {
         final DepartmentModel departmentModel = departmentSearchBox.getSelectionModel().getSelectedItem();
         if (departmentModel == null) {
-            AlertPopup.get().showError(
+            Announcements.get().showError(
                     "Failure!",
                     "Could not update department.",
                     "No department selected!"
@@ -73,14 +72,14 @@ public class DepartmentController extends Controller {
         departmentModel.setCompanyId(getCompanyId());
 
         if (department.update(departmentModel)) {
-            Notifications.showInfo("Success!", "Department updated successfully.");
+            Announcements.get().showInfo("Success!", "Department updated successfully.");
         }
     }
 
     @FXML private void onDelete() {
         final DepartmentModel departmentModel = departmentSearchBox.getSelectionModel().getSelectedItem();
         if (departmentModel == null) {
-            AlertPopup.get().showError(
+            Announcements.get().showError(
                     "Failure!",
                     "Could not delete department.",
                     "No department selected!"
@@ -88,7 +87,7 @@ public class DepartmentController extends Controller {
             return;
         }
 
-        AlertPopup.get().showConfirmation(() -> deleteDepartment(departmentModel),
+        Announcements.get().showConfirmation(() -> deleteDepartment(departmentModel),
                 "Are you sure you want to do this?",
                 "This department cannot be recovered if deleted."
         ).ifPresent(type -> {
@@ -100,7 +99,7 @@ public class DepartmentController extends Controller {
 
     private void deleteDepartment(final DepartmentModel departmentModel) {
         department.remove(departmentModel.getId());
-        Notifications.showWarning("Success", "Department has been deleted.");
+        Announcements.get().showWarning("Success", "Department has been deleted.");
     }
 
     @FXML private void onReset() {

@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
-import io.jacobking.quickticket.gui.alert.AlertPopup;
-import io.jacobking.quickticket.gui.alert.Notifications;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.TicketCategoryModel;
 import io.jacobking.quickticket.gui.screen.Display;
@@ -47,11 +46,11 @@ public class CategoryCreatorController extends Controller {
 
         final TicketCategoryModel newModel = category.createModel(ticketCategories);
         if (newModel == null) {
-            AlertPopup.get().showError("Failed", "Could not create new category.", "Please try again.");
+            Announcements.get().showError("Failed", "Could not create new category.", "Please try again.");
             return;
         }
 
-        Notifications.showInfo("Category created successfully.", "Category name: " + nameField.getText());
+        Announcements.get().showInfo("Category created successfully.", "Category name: " + nameField.getText());
         Display.close(Route.CATEGORY_CREATOR);
     }
 
@@ -75,11 +74,11 @@ public class CategoryCreatorController extends Controller {
         model.setDescriptionProperty(description);
 
         if (!category.update(model)) {
-            AlertPopup.get().showError("Failed", "Could not update category.", "Please try again.");
+            Announcements.get().showError("Failed", "Could not update category.", "Please try again.");
             return;
         }
 
-        Notifications.showInfo("Success", "Category was successfully updated.");
+        Announcements.get().showInfo("Success", "Category was successfully updated.");
         Display.close(Route.CATEGORY_CREATOR);
     }
 }

@@ -59,6 +59,7 @@ public class RepoCrud {
         for (RepoType value : RepoType.values()) {
             repositoryMap.computeIfAbsent(value, type -> switch (type) {
                 case TICKET -> (Repository<? extends Entity>) new TicketRepository();
+                case ALERT -> (Repository<? extends Entity>) new AlertRepository();
                 case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
                 case INVENTORY -> (Repository<? extends Entity>) new InventoryRepository();
                 case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();

@@ -1,8 +1,7 @@
 package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
-import io.jacobking.quickticket.gui.alert.Notifications;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.model.impl.CompanyModel;
@@ -80,7 +79,7 @@ public class EmployeeController extends Controller {
         final String lastName = lastNameField.getText();
 
         if (firstName.isEmpty() || lastName.isEmpty()) {
-            AlertPopup.get().showError("Failed to create employee.", "You must provide a first and last name.", "Try again!");
+            Announcements.get().showError("Failed to create employee.", "You must provide a first and last name.", "Try again!");
             return;
         }
 
@@ -97,13 +96,13 @@ public class EmployeeController extends Controller {
         );
 
         if (model != null) {
-            Notifications.showInfo("Employee Created Successfully", "Employee list updated.");
+            Announcements.get().showInfo("Employee Created Successfully", "Employee list updated.");
             onReset();
         }
     }
 
     @FXML private void onDelete() {
-        AlertPopup.get().showConfirmation(this::deleteEmployee, "Are you sure you want to delete this employee?", "This process cannot be undone.")
+        Announcements.get().showConfirmation(this::deleteEmployee, "Are you sure you want to delete this employee?", "This process cannot be undone.")
                 .ifPresent(type -> {
                     if (type == ButtonType.YES) {
                         deleteEmployee();
@@ -117,7 +116,7 @@ public class EmployeeController extends Controller {
             return;
 
         employee.remove(model.getId());
-        Notifications.showWarning("Employee Deleted", "Employee list updated.");
+        Announcements.get().showWarning("Employee Deleted", "Employee list updated.");
         clearFields();
     }
 
@@ -255,7 +254,7 @@ public class EmployeeController extends Controller {
     }
 
     private void onUnAssignTicket(final TicketModel ticketModel) {
-        AlertPopup.get().showConfirmation(() -> unAssignTicket(ticketModel), "Are you sure you want to un-assign this ticket?", "This ticket will be removed from the employee?")
+        Announcements.get().showConfirmation(() -> unAssignTicket(ticketModel), "Are you sure you want to un-assign this ticket?", "This ticket will be removed from the employee?")
                 .ifPresent(type -> {
                     if (type == ButtonType.YES) {
                         unAssignTicket(ticketModel);
@@ -267,7 +266,7 @@ public class EmployeeController extends Controller {
         final int employeeId = ticketModel.getEmployeeId();
         ticketModel.employeeProperty().setValue(0);
         if (ticket.update(ticketModel)) {
-            Notifications.showInfo("Update Successful", "Employee was unassigned from ticket.");
+            Announcements.get().showInfo("Update Successful", "Employee was unassigned from ticket.");
             loadTicketsById(employeeId);
         }
     }
@@ -275,7 +274,7 @@ public class EmployeeController extends Controller {
     @FXML private void onUpdateInfo() {
         final String comment = infoTextArea.getText();
         if (comment.isEmpty()) {
-            AlertPopup.get().showError("Failed to update.", "Could not update employee misc. info.", "There was no information provided.");
+            Announcements.get().showError("Failed to update.", "Could not update employee misc. info.", "There was no information provided.");
             return;
         }
 
@@ -283,7 +282,7 @@ public class EmployeeController extends Controller {
         employeeModel.setMiscInfoProperty(comment);
 
         if (employee.update(employeeModel)) {
-            Notifications.showInfo("Update Successful", "Comment successfully added to employee.");
+            Announcements.get().showInfo("Update Successful", "Comment successfully added to employee.");
         }
     }
 
@@ -304,7 +303,7 @@ public class EmployeeController extends Controller {
         model.setDepartmentIdProperty(getDepartmentId());
 
         if (employee.update(model)) {
-            Notifications.showInfo("Update Successful", "All employee fields updated.");
+            Announcements.get().showInfo("Update Successful", "All employee fields updated.");
         }
     }
 
@@ -400,7 +399,7 @@ public class EmployeeController extends Controller {
                     final int departmentId = t1.getId();
                     final CompanyModel companyModel = companyComboBox.getSelectionModel().getSelectedItem();
                     if (companyModel == null) {
-                        AlertPopup.get().showError("Failure.", "Company model returned null.", "Please try again.");
+                        Announcements.get().showError("Failure.", "Company model returned null.", "Please try again.");
                         return;
                     }
 
@@ -505,7 +504,7 @@ public class EmployeeController extends Controller {
     @FXML private void onEmail() {
         final String email = emailField.getText();
         if (email.isEmpty()) {
-            AlertPopup.get().showError(
+            Announcements.get().showError(
                     "Failure",
                     "Cannot e-mail employee.",
                     "No e-mail is set!"
@@ -520,7 +519,7 @@ public class EmployeeController extends Controller {
             try {
                 Desktop.getDesktop().mail(new URI("mailto:" + email));
             } catch (IOException | URISyntaxException e) {
-                AlertPopup.get().showException("Failed to open e-mail.", e.fillInStackTrace());
+                Announcements.get().showException("Failed to open e-mail.", e.fillInStackTrace());
             }
         }
     }

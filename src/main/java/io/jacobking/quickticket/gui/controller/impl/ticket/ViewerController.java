@@ -4,7 +4,7 @@ import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
@@ -240,12 +240,12 @@ public class ViewerController extends Controller {
     @FXML private void onRemoveTicket() {
         final LinkedTicketModel linkedTicketModel = linkedTicketList.getSelectionModel().getSelectedItem();
         if (linkedTicketModel == null) {
-            AlertPopup.get().showError("Failure", "Could not remove linked ticket.", "Please select one and try again.");
+            Announcements.get().showError("Failure", "Could not remove linked ticket.", "Please select one and try again.");
             return;
         }
 
         final int linkedTicketId = linkedTicketModel.getId();
-        AlertPopup.get().showConfirmation(() -> removeLinkedTicket(linkedTicketId),
+        Announcements.get().showConfirmation(() -> removeLinkedTicket(linkedTicketId),
                 "Are you sure you want to remove this linked ticket?",
                 "This action cannot be undone."
         ).ifPresent(type -> {
@@ -362,7 +362,7 @@ public class ViewerController extends Controller {
     }
 
     private void promptNotifyEmployeeAlert(final TicketModel viewedTicket) {
-        AlertPopup.get().showInput("This ticket has been marked resolved.", "Would you like to notify the employee? Please provide any closing comments.")
+        Announcements.get().showInput("This ticket has been marked resolved.", "Would you like to notify the employee? Please provide any closing comments.")
                 .ifPresent(pair -> {
                     final ButtonType type = pair.getLeft();
                     final String comment = pair.getRight();
@@ -380,14 +380,14 @@ public class ViewerController extends Controller {
     private void processNotificationEmail(final TicketModel viewedTicket, final String resolvingComment) {
         final EmployeeModel employee = getEmployee();
         if (employee == null) {
-            AlertPopup.get().showError("Failed to retrieve record.", "Employee could not be fetched from database.", "Please attach an employee.");
+            Announcements.get().showError("Failed to retrieve record.", "Employee could not be fetched from database.", "Please attach an employee.");
             postFailureComment(viewedTicket, "Could not retrieve employee record.");
             return;
         }
 
         final String employeeEmail = employee.getEmail();
         if (employeeEmail.isEmpty()) {
-            AlertPopup.get().showError("Failed to retrieve e-mail.", "Could not notify employee.", "PLease attach an e-mail to employees' record.");
+            Announcements.get().showError("Failed to retrieve e-mail.", "Could not notify employee.", "PLease attach an e-mail to employees' record.");
             postFailureComment(viewedTicket, "Could not retrieve employee e-mail.");
             return;
         }
@@ -439,7 +439,7 @@ public class ViewerController extends Controller {
     }
 
     @FXML private void onDeleteTicket() {
-        AlertPopup.get().showConfirmation(() -> deleteTicket(viewedTicket.getId()),
+        Announcements.get().showConfirmation(() -> deleteTicket(viewedTicket.getId()),
                 "Are you sure you want to delete this ticket?", "It cannot be recovered. All associated comments will be purged."
         ).ifPresent(type -> {
             if (type == ButtonType.YES) {
@@ -464,7 +464,7 @@ public class ViewerController extends Controller {
         );
 
         if (newComment == null) {
-            AlertPopup.get().showError("Failure", "Failed to post comment.", "Please try again.");
+            Announcements.get().showError("Failure", "Failed to post comment.", "Please try again.");
             return;
         }
 
@@ -480,7 +480,7 @@ public class ViewerController extends Controller {
     @FXML private void onDeleteComment() {
         final CommentModel selectedComment = commentList.getSelectionModel().getSelectedItem();
         if (selectedComment != null) {
-            AlertPopup.get().showConfirmation(() -> deleteComment(selectedComment),
+            Announcements.get().showConfirmation(() -> deleteComment(selectedComment),
                             "Are you sure you want to delete this comment?",
                             "It cannot be recovered."
                     )
@@ -557,7 +557,7 @@ public class ViewerController extends Controller {
         update.setOnAction(event -> {
             final String newTitle = inputTitleField.getText();
             if (newTitle.isEmpty()) {
-                AlertPopup.get().showError("Failed.", "Could not update ticket title.", "Empty title field.");
+                Announcements.get().showError("Failed.", "Could not update ticket title.", "Empty title field.");
                 return;
             }
 
@@ -596,7 +596,7 @@ public class ViewerController extends Controller {
             final LocalDate localDate = datePicker.getValue();
             final LocalDate now = LocalDate.now();
             if (localDate.isBefore(now)) {
-                AlertPopup.get().showError("Failed to update.", "The resolve-by date cannot be in the past.", "Please try again.");
+                Announcements.get().showError("Failed to update.", "The resolve-by date cannot be in the past.", "Please try again.");
                 return;
             }
 
@@ -615,7 +615,7 @@ public class ViewerController extends Controller {
         setPopOver("Update Category", categoryButton, category.getObservableList(), ((popOver, comboBox) -> {
             final TicketCategoryModel newCategory = comboBox.getSelectionModel().getSelectedItem();
             if (newCategory == null) {
-                AlertPopup.get().showError("Failure", "Could not update ticket category.", "Please select one and try again.");
+                Announcements.get().showError("Failure", "Could not update ticket category.", "Please select one and try again.");
                 return;
             }
 

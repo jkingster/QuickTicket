@@ -3,7 +3,7 @@ package io.jacobking.quickticket.core.utility;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jacobking.quickticket.App;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
+import io.jacobking.quickticket.gui.alert.Announcements;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +25,7 @@ public class ChangelogReader {
         try {
             this.changes = mapper.readValue(App.class.getResource(CHANGELOG_PATH), new TypeReference<>(){});
         } catch (IOException e) {
-            AlertPopup.get().showException("Failed to read changelog.json", e.fillInStackTrace());
+            Announcements.get().showException("Failed to read changelog.json", e.fillInStackTrace());
         }
     }
 

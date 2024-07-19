@@ -2,7 +2,7 @@ package io.jacobking.quickticket.core.database;
 
 import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.config.FlywayConfig;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import org.flywaydb.core.Flyway;
@@ -71,7 +71,7 @@ public class FlywayMigrator {
                 if (!databaseBackup.backup()) {
                     final ButtonType migrate = new ButtonType("Migrate", ButtonBar.ButtonData.OK_DONE);
                     final ButtonType shutdown = new ButtonType("Shutdown", ButtonBar.ButtonData.NO);
-                    AlertPopup.get().showWarningConfirmation(
+                    Announcements.get().showWarningConfirmation(
                             "WARNING!", "Database Backup Failed", WARNING_MESSAGE, migrate, shutdown
                     ).ifPresent(type -> {
                         if (type == shutdown) {
@@ -87,7 +87,7 @@ public class FlywayMigrator {
                 context.getConnection().close();
                 QuickTicket.getInstance().shutdown();
             } catch (SQLException e) {
-                AlertPopup.get().showException("Shutdown", e.fillInStackTrace());
+                Announcements.get().showException("Shutdown", e.fillInStackTrace());
             }
         }
 

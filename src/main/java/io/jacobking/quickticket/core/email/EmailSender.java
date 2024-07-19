@@ -3,7 +3,7 @@ package io.jacobking.quickticket.core.email;
 import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.utility.Checks;
 import io.jacobking.quickticket.core.utility.Logs;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
+import io.jacobking.quickticket.gui.alert.Announcements;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -36,12 +36,12 @@ public class EmailSender {
 
     public void sendEmail() {
         if (!emailConfig.isConfigured()) {
-            AlertPopup.get().showError("Could not send e-mail.", "Your SMTP information is not configured.", "Please check settings.");
+            Announcements.get().showError("Could not send e-mail.", "Your SMTP information is not configured.", "Please check settings.");
             return;
         }
 
         if (subject.isEmpty()) {
-            AlertPopup.get().showError(
+            Announcements.get().showError(
                     "Could not send e-mail",
                     "No subject was set.",
                     "Please set one and try again."

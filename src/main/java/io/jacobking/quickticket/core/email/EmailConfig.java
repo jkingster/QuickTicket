@@ -2,7 +2,7 @@ package io.jacobking.quickticket.core.email;
 
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.tables.pojos.EmailInterface;
 
 import javax.mail.Session;
@@ -29,7 +29,7 @@ public class EmailConfig {
 
     public EmailConfig applySettings() {
         if (this.email == null) {
-            AlertPopup.get().showError("Failed to apply settings.", "Could not apply e-mail settings.", "Passed e-mail is null in config.. ");
+            Announcements.get().showError("Failed to apply settings.", "Could not apply e-mail settings.", "Passed e-mail is null in config.. ");
             return this;
         }
         apply();
@@ -99,7 +99,7 @@ public class EmailConfig {
             final PrintStream printStream = new PrintStream(output);
             session.setDebugOut(printStream);
         } catch (IOException e) {
-            AlertPopup.get().showException("Configuring Debug Logs", e.fillInStackTrace());
+            Announcements.get().showException("Configuring Debug Logs", e.fillInStackTrace());
         }
     }
 

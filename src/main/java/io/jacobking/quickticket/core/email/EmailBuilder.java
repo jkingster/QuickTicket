@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.core.email;
 
 import io.jacobking.quickticket.App;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class EmailBuilder {
 
                 return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             } catch (IOException e) {
-                AlertPopup.get().showException("Failed to parse html.", e.fillInStackTrace());
+                Announcements.get().showException("Failed to parse html.", e.fillInStackTrace());
                 return "";
             }
         }

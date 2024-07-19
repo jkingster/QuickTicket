@@ -2,8 +2,7 @@ package io.jacobking.quickticket.gui.controller.impl;
 
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.FileIO;
-import io.jacobking.quickticket.gui.alert.AlertPopup;
-import io.jacobking.quickticket.gui.alert.Notifications;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.model.impl.FlywayModel;
 import io.jacobking.quickticket.gui.utility.FALoader;
@@ -96,7 +95,7 @@ public class ConfigurationController extends Controller {
         fileChooser.setTitle("Save a backup of current database!");
         final File file = fileChooser.showSaveDialog(copyConfigButton.getScene().getWindow());
         if (file != null && FileIO.copyFile(source, file)) {
-            Notifications.showInfo("Backup Created Successfully", "Location: " + file.getPath());
+            Announcements.get().showInfo("Backup Created Successfully", "Location: " + file.getPath());
         }
     }
 
@@ -172,7 +171,7 @@ public class ConfigurationController extends Controller {
         Toolkit.getDefaultToolkit()
                 .getSystemClipboard()
                 .setContents(new StringSelection(text), null);
-        Notifications.showInfo("Success!", "Copied to clipboard successfully.");
+        Announcements.get().showInfo("Success!", "Copied to clipboard successfully.");
     }
 
     private void openPath(final String path) {
@@ -180,7 +179,7 @@ public class ConfigurationController extends Controller {
             try {
                 Desktop.getDesktop().open(new File(path));
             } catch (IOException e) {
-                AlertPopup.get().showException("Failed to open file. Make sure you have a valid application to read the targeted file type.", e.fillInStackTrace());
+                Announcements.get().showException("Failed to open file. Make sure you have a valid application to read the targeted file type.", e.fillInStackTrace());
             }
         }
     }
