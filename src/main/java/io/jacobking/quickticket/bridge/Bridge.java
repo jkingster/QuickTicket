@@ -115,6 +115,10 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
         return getObservableList().filtered(filter);
     }
 
+    public List<E> getOriginalEntities() {
+        return crud.getAll(repoType);
+    }
+
     private void removalListener() {
         observableList.addListener((ListChangeListener<? super V>) change -> {
             while (change.next()) {

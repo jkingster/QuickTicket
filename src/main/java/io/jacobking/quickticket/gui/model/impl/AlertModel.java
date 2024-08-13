@@ -2,27 +2,29 @@ package io.jacobking.quickticket.gui.model.impl;
 
 import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.Alerts;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 public class AlertModel extends ViewModel<Alerts> {
 
     private final StringProperty  alertName  = new SimpleStringProperty();
     private final BooleanProperty alertState = new SimpleBooleanProperty();
+    private final IntegerProperty alertParentId = new SimpleIntegerProperty();
+    private final BooleanProperty disabledState = new SimpleBooleanProperty();
 
-    public AlertModel(int id, String alertName, boolean alertState) {
+    public AlertModel(int id, String alertName, boolean alertState, int parentId) {
         super(id);
         this.alertName.setValue(alertName);
         this.alertState.setValue(alertState);
+        this.alertParentId.setValue(parentId);
+        this.disabledState.setValue(false);
     }
 
     public AlertModel(final Alerts alerts) {
         this(
                 alerts.getAlertId(),
                 alerts.getAlertName(),
-                alerts.getAlertState()
+                alerts.getAlertState(),
+                alerts.getAlertParentId()
         );
     }
 
@@ -50,10 +52,39 @@ public class AlertModel extends ViewModel<Alerts> {
         this.alertState.set(alertState);
     }
 
+    public boolean isAlertState() {
+        return alertState.get();
+    }
+
+    public int getAlertParentId() {
+        return alertParentId.get();
+    }
+
+    public IntegerProperty alertParentIdProperty() {
+        return alertParentId;
+    }
+
+    public void setAlertParentId(int alertParentId) {
+        this.alertParentId.set(alertParentId);
+    }
+
+    public boolean isDisabledState() {
+        return disabledState.get();
+    }
+
+    public BooleanProperty disabledStateProperty() {
+        return disabledState;
+    }
+
+    public void setDisabledState(boolean disabledState) {
+        this.disabledState.set(disabledState);
+    }
+
     @Override public Alerts toEntity() {
         return new Alerts()
                 .setAlertId(getId())
                 .setAlertName(getAlertName())
-                .setAlertState(getAlertState());
+                .setAlertState(getAlertState())
+                .setAlertParentId(getAlertParentId());
     }
 }

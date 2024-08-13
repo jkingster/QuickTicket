@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
@@ -61,6 +62,7 @@ public class TicketController extends Controller {
     @FXML private TableColumn<TicketModel, PriorityType>  priorityColumn;
     @FXML private TableColumn<TicketModel, Integer>       employeeColumn;
     @FXML private TableColumn<TicketModel, LocalDateTime> createdColumn;
+    @FXML private TableColumn<TicketModel, LocalDate>     resolveByColumn;
     @FXML private Label                                   openLabel;
     @FXML private Label                                   activeLabel;
     @FXML private Label                                   pausedLabel;
@@ -151,6 +153,35 @@ public class TicketController extends Controller {
             }
         });
 
+        resolveByColumn.setCellValueFactory(data -> data.getValue().resolveByProperty());
+        resolveByColumn.setCellFactory(data -> new TableCell<>() {
+            @Override protected void updateItem(LocalDate localDate, boolean b) {
+                super.updateItem(localDate, b);
+                if (localDate == null || b) {
+                    setStyle("-fx-text-fill: #5DADD5;");
+                    setText("Not available.");
+                    return;
+                }
+
+                final TicketModel ticketModel = getTableRow().getItem();
+                final boolean isResolved = StatusType.of(ticketModel.getStatus()) == StatusType.RESOLVED;
+                if (!isResolved) {
+                    final LocalDate now = LocalDate.now();
+                    if (now.isAfter(localDate)) {
+                        setStyle("-fx-text-fill: RED;");
+                    } else if (!now.isBefore(localDate.minusDays(3))) {
+                        setStyle("-fx-text-fill: YELLOW;");
+                    } else {
+                        setStyle("-fx-text-fill: GREEN");
+                    }
+                } else {
+                    setStyle("-fx-text-fill: #5DADD5;");
+                }
+
+
+                setText(DateUtil.formatDate(localDate.toString()));
+            }
+        });
 
         ticketTable.setItems(ticket.getObservableList());
 

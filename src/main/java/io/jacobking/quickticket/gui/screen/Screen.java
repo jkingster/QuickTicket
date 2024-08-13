@@ -7,6 +7,7 @@ import io.jacobking.quickticket.gui.alert.builder.NotificationBuilder;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.data.DataRelay;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -97,11 +98,10 @@ public class Screen {
         this.stage = new Stage();
         stage.initModality(modality);
         stage.setTitle(TITLE);
-        stage.centerOnScreen();
-        stage.setResizable(false);
         stage.setScene(scene);
         stage.getScene().getStylesheets().add(0, NotificationBuilder.getStylesheet());
         if (this.route == Route.DASHBOARD) {
+            stage.setMaximized(true);
             stage.setOnCloseRequest(event -> QuickTicket.getInstance().shutdown());
         }
 
@@ -109,6 +109,8 @@ public class Screen {
         if (imageIcon != null) {
             stage.getIcons().add(getIconImage());
         }
+
+        stage.centerOnScreen();
     }
 
     private FXMLLoader setAndGetLoader() {

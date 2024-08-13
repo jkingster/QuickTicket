@@ -27,7 +27,7 @@ public class InventoryLogModel extends ViewModel<InventoryLog> {
                 inventoryLog.getId(),
                 inventoryLog.getAssetId(),
                 inventoryLog.getCountAtTime(),
-                inventoryLog.getEmployeeName(),
+                inventoryLog.getEmployeeId(),
                 inventoryLog.getIssuedDate()
         );
     }
@@ -84,7 +84,7 @@ public class InventoryLogModel extends ViewModel<InventoryLog> {
         return new InventoryLog()
                 .setId(getId())
                 .setAssetId(getAssetId())
-                .setEmployeeName(getEmployeeId())
+                .setEmployeeId(getEmployeeId())
                 .setIssuedDate(getIssuedDate())
                 .setCountAtTime(getCountAtTime());
     }

@@ -186,7 +186,7 @@ public class InventoryController extends Controller {
                 .setAssetId(model.getId())
                 .setCountAtTime(currentCount)
                 .setIssuedDate(date)
-                .setEmployeeName(model.getLastIssued())
+                .setEmployeeId(model.getLastIssued())
         );
 
         if (inventoryLogModel == null) {

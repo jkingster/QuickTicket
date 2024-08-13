@@ -1,6 +1,8 @@
 package io.jacobking.quickticket.core.type;
 
-public enum PriorityType {
+import java.io.Serializable;
+
+public enum PriorityType implements Serializable {
     LOW, MEDIUM, HIGH;
 
     public static PriorityType of(final String target) {

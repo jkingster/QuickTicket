@@ -6,10 +6,14 @@ import io.jacobking.quickticket.gui.model.ViewModel;
 import io.jacobking.quickticket.tables.pojos.Ticket;
 import javafx.beans.property.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class TicketModel extends ViewModel<Ticket> {
+public class TicketModel extends ViewModel<Ticket> implements Serializable {
+
+    @Serial private static final long serialVersionUID = 1L;
 
     private final StringProperty                titleProperty       = new SimpleStringProperty();
     private final ObjectProperty<StatusType>    statusProperty      = new SimpleObjectProperty<>();
@@ -110,17 +114,18 @@ public class TicketModel extends ViewModel<Ticket> {
         return categoryProperty;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "TicketModel{" +
                 "titleProperty=" + titleProperty +
                 ", statusProperty=" + statusProperty +
                 ", priorityProperty=" + priorityProperty +
-                ", userProperty=" + employeeProperty +
+                ", employeeProperty=" + employeeProperty +
                 ", createdProperty=" + createdProperty +
+                ", lastViewedTimestamp=" + lastViewedTimestamp +
+                ", resolveBy=" + resolveBy +
+                ", categoryProperty=" + categoryProperty +
                 '}';
     }
-
 
     @Override
     public Ticket toEntity() {

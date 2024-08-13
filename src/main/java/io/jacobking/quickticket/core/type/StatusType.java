@@ -1,6 +1,8 @@
 package io.jacobking.quickticket.core.type;
 
-public enum StatusType {
+import java.io.Serializable;
+
+public enum StatusType implements Serializable {
     OPEN,
     ACTIVE,
     PAUSED,
