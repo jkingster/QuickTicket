@@ -5,7 +5,7 @@ import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.data.DataRelay;
+import io.jacobking.quickticket.gui.data.Data;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketCategoryModel;
@@ -43,7 +43,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
@@ -183,7 +182,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable, lastViewed));
+        Display.show(Route.VIEWER, Data.of(ticketModel, ticketTable, lastViewed));
     }
 
     private void handleIndicatorColumn() {
@@ -253,7 +252,7 @@ public class TicketController extends Controller {
     }
 
     @FXML private void onCreate() {
-        Display.show(Route.TICKET_CREATOR, DataRelay.of(this));
+        Display.show(Route.TICKET_CREATOR, Data.of(this));
     }
 
     @FXML private void onResolve() {
@@ -338,7 +337,7 @@ public class TicketController extends Controller {
     }
 
     @FXML private void onOpenLastViewed() {
-        Display.show(Route.VIEWER, DataRelay.of(lastViewed.getValue(), ticketTable, lastViewed));
+        Display.show(Route.VIEWER, Data.of(lastViewed.getValue(), ticketTable, lastViewed));
     }
 
 
@@ -374,7 +373,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable, lastViewed));
+        Display.show(Route.VIEWER, Data.of(ticketModel, ticketTable, lastViewed));
     }
 
     private void onEmail(final TicketModel ticketModel) {
@@ -560,7 +559,7 @@ public class TicketController extends Controller {
                 Announcements.get().showError("Failure.", "Could not edit category.", "Please select one!");
                 return;
             }
-            Display.show(Route.CATEGORY_CREATOR, DataRelay.of(selected));
+            Display.show(Route.CATEGORY_CREATOR, Data.of(selected));
         });
 
         final Button deleteButton = new Button();

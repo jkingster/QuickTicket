@@ -2,7 +2,7 @@ package io.jacobking.quickticket.gui.controller;
 
 import io.jacobking.quickticket.bridge.impl.*;
 import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.gui.data.DataRelay;
+import io.jacobking.quickticket.gui.data.Data;
 import javafx.fxml.Initializable;
 
 public abstract class Controller implements Initializable {
@@ -15,8 +15,8 @@ public abstract class Controller implements Initializable {
 
     protected final CompanyBridge       company;
     protected final DepartmentBridge    department;
-    protected final CategoryBridge      category;
-    protected       DataRelay           dataRelay;
+    protected final CategoryBridge category;
+    protected       Data           data;
 
 
     public Controller() {
@@ -29,12 +29,12 @@ public abstract class Controller implements Initializable {
         this.department = core.getDatabase().getBridgeContext().getDepartment();
         this.category = core.getDatabase().getBridgeContext().getCategoryBridge();
 
-        this.dataRelay = DataRelay.empty();
+        this.data = Data.empty();
 
     }
 
-    public Controller setData(final DataRelay dataRelay) {
-        this.dataRelay = dataRelay;
+    public Controller setData(final Data data) {
+        this.data = data;
         return this;
     }
 

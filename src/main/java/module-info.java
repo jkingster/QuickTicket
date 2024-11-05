@@ -8,7 +8,6 @@ module io.jacobking.quickticket {
     requires org.apache.commons.io;
     requires org.xerial.sqlitejdbc;
     requires java.desktop;
-    requires java.mail;
     requires com.google.gson;
     requires org.slf4j;
     requires com.fasterxml.jackson.core;

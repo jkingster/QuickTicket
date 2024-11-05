@@ -5,9 +5,8 @@ import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.builder.NotificationBuilder;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.data.DataRelay;
+import io.jacobking.quickticket.gui.data.Data;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -37,7 +36,7 @@ public class Screen {
         this(route, modality, null);
     }
 
-    public void display(final DataRelay dataRelay) {
+    public void display(final Data data) {
         configure();
         show();
     }
@@ -120,7 +119,7 @@ public class Screen {
     }
 
     private Image getIconImage() {
-        try (final InputStream stream = App.class.getResourceAsStream("icons/quickticket-icon2.png")) {
+        try (final InputStream stream = App.class.getResourceAsStream("icons/quickticket-icon.png")) {
             if (stream != null) {
                 return new Image(stream);
             }

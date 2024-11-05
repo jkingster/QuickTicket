@@ -5,7 +5,7 @@ import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.data.DataRelay;
+import io.jacobking.quickticket.gui.data.Data;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.*;
 import io.jacobking.quickticket.gui.screen.Display;
@@ -26,7 +26,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -167,7 +166,7 @@ public class ViewerController extends Controller {
 
 
     private void openTicket(final TicketModel ticketModel) {
-        Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable));
+        Display.show(Route.VIEWER, Data.of(ticketModel, ticketTable));
     }
 
     private void refreshTable() {
@@ -178,15 +177,15 @@ public class ViewerController extends Controller {
 
 
     private void initializeRelay() {
-        dataRelay.mapFirst(TicketModel.class).ifPresent(model -> {
+        data.mapFirst(TicketModel.class).ifPresent(model -> {
             this.viewedTicket = model;
             handleTicket(model);
         });
 
-        final Optional<TableView<TicketModel>> mappedTable = dataRelay.mapTable(1);
+        final Optional<TableView<TicketModel>> mappedTable = data.mapTable(1);
         mappedTable.ifPresent(table -> this.ticketTable = table);
 
-        final Optional<ObjectProperty<TicketModel>> mappedObject = dataRelay.mapObjectProperty(2);
+        final Optional<ObjectProperty<TicketModel>> mappedObject = data.mapObjectProperty(2);
         mappedObject.ifPresent(last -> {
             this.lastViewedTicket = last;
             lastViewedTicket.setValue(viewedTicket);

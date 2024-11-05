@@ -25,7 +25,7 @@ public class CategoryCreatorController extends Controller {
     @FXML private Button      createButton;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
-        dataRelay.mapFirst(TicketCategoryModel.class).ifPresent(target -> {
+        data.mapFirst(TicketCategoryModel.class).ifPresent(target -> {
             this.model = target;
             initializeFields(model);
             createButton.setText("Update");

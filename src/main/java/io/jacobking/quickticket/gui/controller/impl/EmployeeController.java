@@ -3,7 +3,7 @@ package io.jacobking.quickticket.gui.controller.impl;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.data.DataRelay;
+import io.jacobking.quickticket.gui.data.Data;
 import io.jacobking.quickticket.gui.model.impl.CompanyModel;
 import io.jacobking.quickticket.gui.model.impl.DepartmentModel;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
@@ -308,7 +308,7 @@ public class EmployeeController extends Controller {
     }
 
     private void openTicket(final TicketModel ticketModel) {
-        Display.show(Route.VIEWER, DataRelay.of(ticketModel));
+        Display.show(Route.VIEWER, Data.of(ticketModel));
     }
 
     @FXML private void onCompanyManager() {

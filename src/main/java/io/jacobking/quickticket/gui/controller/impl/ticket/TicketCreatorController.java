@@ -4,7 +4,7 @@ import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.controller.Controller;
-import io.jacobking.quickticket.gui.data.DataRelay;
+import io.jacobking.quickticket.gui.data.Data;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
 import io.jacobking.quickticket.gui.model.impl.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.impl.TicketModel;
@@ -46,11 +46,11 @@ public class TicketCreatorController extends Controller {
     }
 
     private void setDataRelay() {
-        if (dataRelay == null) {
+        if (data == null) {
             return;
         }
 
-        dataRelay.mapIndex(0, TicketController.class).ifPresent(controller -> {
+        data.mapIndex(0, TicketController.class).ifPresent(controller -> {
             this.ticketController = controller;
             this.ticketTable = ticketController.getTicketTable();
         });
@@ -132,7 +132,7 @@ public class TicketCreatorController extends Controller {
         Display.close(Route.TICKET_CREATOR);
 
         if (openCheckBox.isSelected()) {
-            Display.show(Route.VIEWER, DataRelay.of(newTicket, ticketTable));
+            Display.show(Route.VIEWER, Data.of(newTicket, ticketTable));
         }
 
         ticketController.setTicketTable();

@@ -2,7 +2,7 @@ package io.jacobking.quickticket.gui.screen;
 
 
 import io.jacobking.quickticket.gui.alert.Announcements;
-import io.jacobking.quickticket.gui.data.DataRelay;
+import io.jacobking.quickticket.gui.data.Data;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -25,12 +25,12 @@ public class Display {
         return display;
     }
 
-    public static void show(final Route route, final DataRelay dataRelay) {
-        getInstance().showRoute(route, dataRelay);
+    public static void show(final Route route, final Data data) {
+        getInstance().showRoute(route, data);
     }
 
     public static void show(final Route route) {
-        show(route, DataRelay.empty());
+        show(route, Data.empty());
     }
 
     public static void close(final Route route) {
@@ -41,14 +41,14 @@ public class Display {
         getInstance().closeAllRoutes();
     }
 
-    public void showRoute(final Route route, final DataRelay dataRelay) {
+    public void showRoute(final Route route, final Data data) {
         final Screen screen = screens.get(route);
         if (screen == null) {
             final RuntimeException exception = new RuntimeException("Failed to load screen: " + route.getName());
             Announcements.get().showException("Failed to load screen.", exception.fillInStackTrace());
             return;
         }
-        screen.display(dataRelay);
+        screen.display(data);
     }
 
     public void closeRoute(final Route route) {
