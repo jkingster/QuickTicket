@@ -3,12 +3,11 @@ package io.jacobking.quickticket.gui.controller;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.Controller;
-import io.jacobking.quickticket.gui.data.Data;
+import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.model.CompanyModel;
 import io.jacobking.quickticket.gui.model.DepartmentModel;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
-import io.jacobking.quickticket.gui.Display;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.utility.IconLoader;
 import io.jacobking.quickticket.tables.pojos.Employee;
@@ -83,7 +82,7 @@ public class EmployeeController extends Controller {
             return;
         }
 
-        final EmployeeModel model = employee.createModel(new Employee()
+        final EmployeeModel model = bridgeContext.getEmployee().createModel(new Employee()
                 .setFirstName(firstName)
                 .setLastName(lastName)
                 .setEmail(emailField.getText())
@@ -115,7 +114,7 @@ public class EmployeeController extends Controller {
         if (model == null)
             return;
 
-        employee.remove(model.getId());
+        bridgeContext.getEmployee().remove(model.getId());
         Announcements.get().showWarning("Employee Deleted", "Employee list updated.");
         clearFields();
     }
@@ -171,8 +170,8 @@ public class EmployeeController extends Controller {
         workPhoneField.setText(employeeModel.getWorkPhoneProperty());
         workPhoneExtensionField.setText(String.valueOf(employeeModel.getWorkExtensionProperty()));
         mobilePhoneField.setText(employeeModel.getMobilePhoneProperty());
-        orgCompanyCheckBox.getSelectionModel().select(company.getModel(employeeModel.getCompanyIdProperty()));
-        orgDepartmentCheckBox.getSelectionModel().select(department.getModel(employeeModel.getDepartmentIdProperty()));
+        orgCompanyCheckBox.getSelectionModel().select(bridgeContext.getCompany().getModel(employeeModel.getCompanyIdProperty()));
+        orgDepartmentCheckBox.getSelectionModel().select(bridgeContext.getDepartment().getModel(employeeModel.getDepartmentIdProperty()));
     }
 
     @FXML private void onReset() {
@@ -194,7 +193,7 @@ public class EmployeeController extends Controller {
         orgDepartmentCheckBox.getSelectionModel().clearSelection();
         companyComboBox.getSelectionModel().clearAndSelect(0);
         departmentComboBox.getSelectionModel().clearAndSelect(0);
-        employeeComboBox.setItems(employee.getObservableList());
+        employeeComboBox.setItems(bridgeContext.getEmployee().getObservableList());
     }
 
     private void configureWorkExtensionField() {
@@ -216,7 +215,7 @@ public class EmployeeController extends Controller {
     }
 
     private void loadTicketsById(final int employeeId) {
-        ticketTable.setItems(ticket.getFilteredList(ticketModel
+        ticketTable.setItems(bridgeContext.getTicket().getFilteredList(ticketModel
                 -> ticketModel.getEmployeeId() == employeeId));
     }
 
@@ -265,7 +264,7 @@ public class EmployeeController extends Controller {
     private void unAssignTicket(final TicketModel ticketModel) {
         final int employeeId = ticketModel.getEmployeeId();
         ticketModel.employeeProperty().setValue(0);
-        if (ticket.update(ticketModel)) {
+        if (bridgeContext.getTicket().update(ticketModel)) {
             Announcements.get().showInfo("Update Successful", "Employee was unassigned from ticket.");
             loadTicketsById(employeeId);
         }
@@ -281,7 +280,7 @@ public class EmployeeController extends Controller {
         final EmployeeModel employeeModel = employeeComboBox.getSelectionModel().getSelectedItem();
         employeeModel.setMiscInfoProperty(comment);
 
-        if (employee.update(employeeModel)) {
+        if (bridgeContext.getEmployee().update(employeeModel)) {
             Announcements.get().showInfo("Update Successful", "Comment successfully added to employee.");
         }
     }
@@ -302,21 +301,21 @@ public class EmployeeController extends Controller {
         model.setCompanyIdProperty(getCompanyId());
         model.setDepartmentIdProperty(getDepartmentId());
 
-        if (employee.update(model)) {
+        if (bridgeContext.getEmployee().update(model)) {
             Announcements.get().showInfo("Update Successful", "All employee fields updated.");
         }
     }
 
     private void openTicket(final TicketModel ticketModel) {
-        Display.show(Route.VIEWER, Data.of(ticketModel));
+        display.show(Route.VIEWER, Data.of(ticketModel));
     }
 
     @FXML private void onCompanyManager() {
-        Display.show(Route.COMPANY);
+        display.show(Route.COMPANY);
     }
 
     @FXML private void onDepartmentManager() {
-        Display.show(Route.DEPARTMENT);
+        display.show(Route.DEPARTMENT);
     }
 
     private void configureCompanyComboBox() {
@@ -349,21 +348,21 @@ public class EmployeeController extends Controller {
 
                     final int companyId = t1.getId();
                     if (companyId == 0) {
-                        departmentComboBox.setItems(department.getObservableList());
+                        departmentComboBox.setItems(bridgeContext.getDepartment().getObservableList());
                         return;
                     }
 
-                    final ObservableList<DepartmentModel> departments = department.getObservableListByFilter(
+                    final ObservableList<DepartmentModel> departments = bridgeContext.getDepartment().getObservableListByFilter(
                             dm -> dm.getCompanyId() == companyId
                     );
 
                     departmentComboBox.setItems(departments);
-                    employeeComboBox.setItems(employee.getObservableListByFilter(
+                    employeeComboBox.setItems(bridgeContext.getEmployee().getObservableListByFilter(
                             em -> em.getCompanyIdProperty() == companyId
                     ));
                 }));
 
-        companyComboBox.setItems(company.getObservableList());
+        companyComboBox.setItems(bridgeContext.getCompany().getObservableList());
         companyComboBox.getSelectionModel().selectFirst();
     }
 
@@ -405,11 +404,11 @@ public class EmployeeController extends Controller {
 
                     final int companyId = companyModel.getId();
                     if (companyId == 0 && departmentId == 0) {
-                        employeeComboBox.setItems(employee.getObservableList());
+                        employeeComboBox.setItems(bridgeContext.getEmployee().getObservableList());
                         return;
                     }
 
-                    final ObservableList<EmployeeModel> employees = employee.getObservableListByFilter(
+                    final ObservableList<EmployeeModel> employees = bridgeContext.getEmployee().getObservableListByFilter(
                             em -> em.getCompanyIdProperty() == companyId && em.getDepartmentIdProperty() == departmentId
                     );
 
@@ -449,15 +448,15 @@ public class EmployeeController extends Controller {
 
                     final int companyId = t1.getId();
                     if (companyId == 0) {
-                        orgDepartmentCheckBox.setItems(department.getObservableList());
+                        orgDepartmentCheckBox.setItems(bridgeContext.getDepartment().getObservableList());
                     } else if (companyId > 0) {
-                        orgDepartmentCheckBox.setItems(department.getObservableListByFilter(
+                        orgDepartmentCheckBox.setItems(bridgeContext.getDepartment().getObservableListByFilter(
                                 dm -> dm.getCompanyId() == companyId
                         ));
                     }
                 }));
 
-        orgCompanyCheckBox.setItems(company.getObservableList());
+        orgCompanyCheckBox.setItems(bridgeContext.getCompany().getObservableList());
     }
 
 

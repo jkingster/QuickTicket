@@ -5,13 +5,12 @@ import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.Controller;
-import io.jacobking.quickticket.gui.data.Data;
+import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.CommentModel;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
-import io.jacobking.quickticket.gui.Display;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.utility.IconLoader;
 import io.jacobking.quickticket.tables.pojos.Comment;
@@ -169,7 +168,7 @@ public class ViewerController extends Controller {
 
 
     private void openTicket(final TicketModel ticketModel) {
-        Display.show(Route.VIEWER, Data.of(ticketModel, ticketTable));
+        display.show(Route.VIEWER, Data.of(ticketModel, ticketTable));
     }
 
     private void refreshTable() {
@@ -207,11 +206,11 @@ public class ViewerController extends Controller {
         final String createdOn = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation());
         createdOnField.setText(createdOn);
 
-        final EmployeeModel employeeModel = employee.getModel(ticketModel.getEmployeeId());
+        final EmployeeModel employeeModel = bridgeContext.getEmployee().getModel(ticketModel.getEmployeeId());
         final String employeeName = (employeeModel == null) ? "No employee." : employeeModel.getFullName();
         employeeField.setText(employeeName);
 
-        final TicketCategoryModel categoryModel = category.getModel(ticketModel.getCategory());
+        final TicketCategoryModel categoryModel = bridgeContext.getCategory().getModel(ticketModel.getCategory());
         handleCategory(categoryModel);
 
         handlePriority(ticketModel.priorityProperty());
@@ -255,7 +254,7 @@ public class ViewerController extends Controller {
     }
 
     private void loadComments(final TicketModel ticketModel) {
-        final ObservableList<CommentModel> commentsList = comment.getCommentsByTicketId(ticketModel.getId());
+        final ObservableList<CommentModel> commentsList = bridgeContext.getComment().getCommentsByTicketId(ticketModel.getId());
         commentList.setItems(commentsList.sorted(Comparator.comparing(CommentModel::getPostedOn)));
     }
 
@@ -264,7 +263,7 @@ public class ViewerController extends Controller {
         viewedTicket.statusProperty().setValue(StatusType.RESOLVED);
         updateStatusColor(StatusType.RESOLVED);
 
-        if (ticket.update(viewedTicket, originalStatus)) {
+        if (bridgeContext.getTicket().update(viewedTicket, originalStatus)) {
             promptNotifyEmployeeAlert(viewedTicket);
         }
     }
@@ -310,19 +309,13 @@ public class ViewerController extends Controller {
         postComment(ticketModel, String.format("[SYSTEM]: %s", comment));
     }
 
-
-
-    private String getSubject(final TicketModel ticketModel) {
-        return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());
-    }
-
     private void postComment(final TicketModel ticket, final String commentText) {
         if (commentText.isEmpty()) {
             postEmptyResolvingComment(ticket);
             return;
         }
 
-        comment.createModel(new Comment()
+        bridgeContext.getComment().createModel(new Comment()
                 .setTicketId(ticket.getId())
                 .setPost(commentText)
                 .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
@@ -330,7 +323,7 @@ public class ViewerController extends Controller {
     }
 
     private EmployeeModel getEmployee() {
-        return employee.getModel(viewedTicket.getEmployeeId());
+        return bridgeContext.getEmployee().getModel(viewedTicket.getEmployeeId());
     }
 
     @FXML private void onDeleteTicket() {
@@ -344,15 +337,15 @@ public class ViewerController extends Controller {
     }
 
     private void deleteTicket(final int ticketId) {
-        comment.removeCommentsByTicketId(ticketId);
-        ticket.remove(ticketId);
+        bridgeContext.getComment().removeCommentsByTicketId(ticketId);
+        bridgeContext.getTicket().remove(ticketId);
         refreshTable();
-        Display.close(Route.VIEWER);
+        display.close(Route.VIEWER);
     }
 
     @FXML private void onPostComment() {
         final String commentText = commentField.getText();
-        final CommentModel newComment = comment.createModel(new Comment()
+        final CommentModel newComment = bridgeContext.getComment().createModel(new Comment()
                 .setTicketId(viewedTicket.getId())
                 .setPost(commentText)
                 .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
@@ -388,7 +381,7 @@ public class ViewerController extends Controller {
     }
 
     private void deleteComment(final CommentModel commentModel) {
-        comment.remove(commentModel.getId());
+        bridgeContext.getComment().remove(commentModel.getId());
     }
 
     @FXML private void onUpdatePriority() {
@@ -396,7 +389,7 @@ public class ViewerController extends Controller {
             final PriorityType newPriority = comboBox.getSelectionModel().getSelectedItem();
             viewedTicket.priorityProperty().setValue(newPriority);
 
-            if (ticket.update(viewedTicket)) {
+            if (bridgeContext.getTicket().update(viewedTicket)) {
                 updatePriorityColor(newPriority);
                 popOver.hide();
                 refreshTable();
@@ -410,7 +403,7 @@ public class ViewerController extends Controller {
             final StatusType newStatus = comboBox.getSelectionModel().getSelectedItem();
 
             viewedTicket.statusProperty().setValue(newStatus);
-            if (ticket.update(viewedTicket, originalStatus)) {
+            if (bridgeContext.getTicket().update(viewedTicket, originalStatus)) {
                 updateStatusColor(newStatus);
                 popOver.hide();
               refreshTable();
@@ -419,11 +412,11 @@ public class ViewerController extends Controller {
     }
 
     @FXML private void onUpdateUser() {
-        setPopOver("Update User", userButton, employee.getObservableList(), ((popOver, comboBox) -> {
+        setPopOver("Update User", userButton, bridgeContext.getEmployee().getObservableList(), ((popOver, comboBox) -> {
             final EmployeeModel newEmployee = comboBox.getSelectionModel().getSelectedItem();
             viewedTicket.employeeProperty().setValue(newEmployee.getId());
 
-            if (ticket.update(viewedTicket)) {
+            if (bridgeContext.getTicket().update(viewedTicket)) {
                 updateEmployee(newEmployee);
                 popOver.hide();
               refreshTable();
@@ -457,7 +450,7 @@ public class ViewerController extends Controller {
             }
 
             viewedTicket.titleProperty().setValue(newTitle);
-            if (ticket.update(viewedTicket)) {
+            if (bridgeContext.getTicket().update(viewedTicket)) {
                 titleField.setText(newTitle);
                 inputTitleField.clear();
                 popOverBuilder.get().hide();
@@ -495,7 +488,7 @@ public class ViewerController extends Controller {
                 return;
             }
 
-            if (ticket.update(viewedTicket)) {
+            if (bridgeContext.getTicket().update(viewedTicket)) {
                 refreshTable();
                 resolveByField.setText(String.format("Resolve by: %s", DateUtil.formatDate(localDate.toString())));
                 popOverBuilder.get().hide();
@@ -506,7 +499,7 @@ public class ViewerController extends Controller {
     }
 
     @FXML private void onUpdateCategory() {
-        setPopOver("Update Category", categoryButton, category.getObservableList(), ((popOver, comboBox) -> {
+        setPopOver("Update Category", categoryButton, bridgeContext.getCategory().getObservableList(), ((popOver, comboBox) -> {
             final TicketCategoryModel newCategory = comboBox.getSelectionModel().getSelectedItem();
             if (newCategory == null) {
                 Announcements.get().showError("Failure", "Could not update ticket category.", "Please select one and try again.");
@@ -514,7 +507,7 @@ public class ViewerController extends Controller {
             }
 
             viewedTicket.categoryProperty().setValue(newCategory.getId());
-            if (ticket.update(viewedTicket)) {
+            if (bridgeContext.getTicket().update(viewedTicket)) {
                 handleCategory(newCategory);
                 popOver.hide();
             }

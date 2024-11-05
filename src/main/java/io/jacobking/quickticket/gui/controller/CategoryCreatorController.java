@@ -3,7 +3,6 @@ package io.jacobking.quickticket.gui.controller;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
-import io.jacobking.quickticket.gui.Display;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.tables.pojos.TicketCategories;
 import javafx.fxml.FXML;
@@ -44,14 +43,14 @@ public class CategoryCreatorController extends Controller {
                 .setName(nameField.getText())
                 .setDescription(description);
 
-        final TicketCategoryModel newModel = category.createModel(ticketCategories);
+        final TicketCategoryModel newModel = bridgeContext.getCategory().createModel(ticketCategories);
         if (newModel == null) {
             Announcements.get().showError("Failed", "Could not create new category.", "Please try again.");
             return;
         }
 
         Announcements.get().showInfo("Category created successfully.", "Category name: " + nameField.getText());
-        Display.close(Route.CATEGORY_CREATOR);
+        display.close(Route.CATEGORY_CREATOR);
     }
 
     private void initializeFields(final TicketCategoryModel model) {
@@ -73,12 +72,12 @@ public class CategoryCreatorController extends Controller {
         final String description = descriptionField.getText().isEmpty() ? "" : descriptionField.getText();
         model.setDescriptionProperty(description);
 
-        if (!category.update(model)) {
+        if (!bridgeContext.getCategory().update(model)) {
             Announcements.get().showError("Failed", "Could not update category.", "Please try again.");
             return;
         }
 
         Announcements.get().showInfo("Success", "Category was successfully updated.");
-        Display.close(Route.CATEGORY_CREATOR);
+        display.close(Route.CATEGORY_CREATOR);
     }
 }

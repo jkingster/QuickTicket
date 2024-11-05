@@ -11,7 +11,7 @@ public class BridgeContext {
     private final AlertBridge      alerts;
     private final TicketBridge     ticket;
     private final CommentBridge    comment;
-    private final CategoryBridge   categoryBridge;
+    private final CategoryBridge   category;
 
     public BridgeContext(final Database database) {
         this.company = new CompanyBridge(database);
@@ -20,7 +20,7 @@ public class BridgeContext {
         this.ticket = new TicketBridge(database);
         this.comment = new CommentBridge(database);
         this.alerts = new AlertBridge(database);
-        this.categoryBridge = new CategoryBridge(database);
+        this.category = new CategoryBridge(database);
     }
 
     public CompanyBridge getCompany() {
@@ -49,8 +49,8 @@ public class BridgeContext {
     }
 
 
-    public CategoryBridge getCategoryBridge() {
-        return categoryBridge;
+    public CategoryBridge getCategory() {
+        return category;
     }
 
 

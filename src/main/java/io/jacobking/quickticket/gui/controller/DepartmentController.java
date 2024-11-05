@@ -49,7 +49,7 @@ public class DepartmentController extends Controller {
             return;
         }
 
-        final DepartmentModel newDepartment = department.createModel(getNewDepartment());
+        final DepartmentModel newDepartment = bridgeContext.getDepartment().createModel(getNewDepartment());
         if (newDepartment != null) {
             Announcements.get().showInfo("Success!", "Department has been created/");
         }
@@ -71,7 +71,7 @@ public class DepartmentController extends Controller {
         departmentModel.setDescription(descriptionArea.getText());
         departmentModel.setCompanyId(getCompanyId());
 
-        if (department.update(departmentModel)) {
+        if (bridgeContext.getDepartment().update(departmentModel)) {
             Announcements.get().showInfo("Success!", "Department updated successfully.");
         }
     }
@@ -98,7 +98,7 @@ public class DepartmentController extends Controller {
     }
 
     private void deleteDepartment(final DepartmentModel departmentModel) {
-        department.remove(departmentModel.getId());
+        bridgeContext.getDepartment().remove(departmentModel.getId());
         Announcements.get().showWarning("Success", "Department has been deleted.");
     }
 
@@ -145,16 +145,16 @@ public class DepartmentController extends Controller {
 
             final int companyId = t1.getId();
             if (companyId == 0) {
-                departmentSearchBox.setItems(department.getObservableList()
+                departmentSearchBox.setItems(bridgeContext.getDepartment().getObservableList()
                         .filtered(dm -> dm.getId() != 0)
                 );
             } else if (companyId > 0) {
-                departmentSearchBox.setItems(department.getObservableListByFilter(
+                departmentSearchBox.setItems(bridgeContext.getDepartment().getObservableListByFilter(
                         dm -> dm.getCompanyId() == companyId
                 ));
             }
         }));
-        companySearchBox.setItems(company.getObservableList());
+        companySearchBox.setItems(bridgeContext.getCompany().getObservableList());
     }
 
     private void configureDepartmentSearchBox() {

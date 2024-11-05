@@ -4,11 +4,10 @@ import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.Controller;
-import io.jacobking.quickticket.gui.data.Data;
+import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
-import io.jacobking.quickticket.gui.Display;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import io.jacobking.quickticket.tables.pojos.Ticket;
@@ -89,7 +88,7 @@ public class TicketCreatorController extends Controller {
     }
 
     private void configureEmployeeComboBox() {
-        employeeComboBox.setItems(employee.getObservableList());
+        employeeComboBox.setItems(bridgeContext.getEmployee().getObservableList());
         employeeComboBox.setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(EmployeeModel employeeModel, boolean b) {
                 super.updateItem(employeeModel, b);
@@ -103,7 +102,7 @@ public class TicketCreatorController extends Controller {
     }
 
     private void configureCategoryComboBox() {
-        categoryComboBox.setItems(category.getObservableList());
+        categoryComboBox.setItems(bridgeContext.getCategory().getObservableList());
         categoryComboBox.setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(TicketCategoryModel ticketCategoryModel, boolean b) {
                 super.updateItem(ticketCategoryModel, b);
@@ -119,7 +118,7 @@ public class TicketCreatorController extends Controller {
     @FXML private void onCreate() {
         final String title = titleField.getText();
         final EmployeeModel employeeModel = employeeComboBox.getSelectionModel().getSelectedItem();
-        final TicketModel newTicket = ticket.createModel(new Ticket()
+        final TicketModel newTicket = bridgeContext.getTicket().createModel(new Ticket()
                 .setTitle(title)
                 .setCreatedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setPriority(getPriority())
@@ -129,10 +128,10 @@ public class TicketCreatorController extends Controller {
 
         insertInitialComment(newTicket);
         sendInitialEmail(newTicket);
-        Display.close(Route.TICKET_CREATOR);
+        display.close(Route.TICKET_CREATOR);
 
         if (openCheckBox.isSelected()) {
-            Display.show(Route.VIEWER, Data.of(newTicket, ticketTable));
+            display.show(Route.VIEWER, Data.of(newTicket, ticketTable));
         }
 
         ticketController.setTicketTable();
@@ -167,7 +166,7 @@ public class TicketCreatorController extends Controller {
         if (initialComment.isEmpty()) return;
 
         final int ticketId = ticketModel.getId();
-        comment.createModel(new Comment()
+        bridgeContext.getComment().createModel(new Comment()
                 .setTicketId(ticketId)
                 .setPost(initialComment)
                 .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE)));

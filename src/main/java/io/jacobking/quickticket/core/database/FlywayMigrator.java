@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.core.database;
 
 import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.config.FlywayConfig;
+import io.jacobking.quickticket.core.config.SystemConfig;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -22,7 +22,7 @@ public class FlywayMigrator {
 
     private boolean hasPendingMigrations = false;
 
-    public FlywayMigrator(final FlywayConfig flywayConfig) {
+    public FlywayMigrator(final SystemConfig flywayConfig) {
         final String strippedUrl = flywayConfig.getProperty("flyway.url").replaceAll("jdbc:sqlite:", "");
         this.flyway = Flyway.configure()
                 .configuration(flywayConfig.getProperties())

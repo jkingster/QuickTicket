@@ -44,7 +44,7 @@ public class CompanyController extends Controller {
         }
 
         final Company newCompany = getCompany();
-        final CompanyModel companyModel = company.createModel(newCompany);
+        final CompanyModel companyModel = bridgeContext.getCompany().createModel(newCompany);
         if (companyModel != null) {
             Announcements.get().showInfo("Creation Successful", "Your new company has been created.");
         }
@@ -63,7 +63,7 @@ public class CompanyController extends Controller {
         companyModel.setCountry(countryField.getText());
         companyModel.setZipCode(getZipCode());
 
-        if (company.update(companyModel)) {
+        if (bridgeContext.getCompany().update(companyModel)) {
             Announcements.get().showInfo("Update Successful", "Company model was updated.");
         }
     }
@@ -94,7 +94,7 @@ public class CompanyController extends Controller {
             Announcements.get().showError("Could not delete company.", "This company is locked by internals!");
             return;
         }
-        company.remove(companyId);
+        bridgeContext.getCompany().remove(companyId);
     }
 
     @FXML private void onReset() {
@@ -109,7 +109,7 @@ public class CompanyController extends Controller {
     }
 
     private void configureCompanyComboBox() {
-        companyComboBox.setItems(company.getObservableListByFilter(cm -> cm.getId() != 0));
+        companyComboBox.setItems(bridgeContext.getCompany().getObservableListByFilter(cm -> cm.getId() != 0));
         companyComboBox.setConverter(new StringConverter<>() {
             @Override public String toString(CompanyModel companyModel) {
                 if (companyModel == null)

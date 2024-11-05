@@ -41,7 +41,7 @@ public class AboutController extends Controller {
 
     @FXML
     private void onChangelog() {
-        Display.show(Route.CHANGELOG);
+        display.show(Route.CHANGELOG);
     }
 
 

@@ -33,7 +33,7 @@ public class DashboardController extends Controller {
         final SystemConfig systemConfig = QuickTicket.getInstance().getSystemConfig();
         if (systemConfig.parseBoolean("first_launch")) {
             final Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.seconds(3), (__) -> Display.show(Route.WELCOME))
+                    new KeyFrame(Duration.seconds(3), (__) -> display.show(Route.WELCOME))
             );
             timeline.play();
         }
@@ -46,12 +46,12 @@ public class DashboardController extends Controller {
 
     @FXML
     private void onAbout() {
-        Display.show(Route.ABOUT);
+        display.show(Route.ABOUT);
     }
 
     @FXML
     private void onMetrics() {
-       // Display.show(Route.METRICS);
+       // display.show(Route.METRICS);
     }
 
     @FXML

@@ -1,4 +1,4 @@
-package io.jacobking.quickticket.gui.data;
+package io.jacobking.quickticket.gui;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.TableView;
@@ -31,8 +31,7 @@ public class Data {
     }
 
     public <T> Optional<T> mapIndex(final int index, final Class<T> clazz) {
-        final int length = objects.length;
-        if (index > length - 1 || index < 0)
+        if (index > objects.length - 1)
             return Optional.empty();
 
         final T mapped = getMappedObject(objects[index], clazz);

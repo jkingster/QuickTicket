@@ -5,12 +5,11 @@ import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.Controller;
-import io.jacobking.quickticket.gui.data.Data;
+import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
-import io.jacobking.quickticket.gui.Display;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.utility.IconLoader;
 import io.jacobking.quickticket.tables.pojos.Comment;
@@ -100,7 +99,7 @@ public class TicketController extends Controller {
                     return;
                 }
 
-                final TicketCategoryModel model = category.getModel(integer);
+                final TicketCategoryModel model = bridgeContext.getCategory().getModel(integer);
                 if (model == null) {
                     setGraphic(null);
                     return;
@@ -127,7 +126,7 @@ public class TicketController extends Controller {
                     setText(null);
                     return;
                 }
-                final EmployeeModel model = employee.getModel(integer);
+                final EmployeeModel model = bridgeContext.getEmployee().getModel(integer);
                 if (model == null) {
                     setText(null);
                     return;
@@ -151,7 +150,7 @@ public class TicketController extends Controller {
 
 
 
-        ticketTable.setItems(ticket.getObservableList());
+        //ticketTable.setItems(bridgeContext.getTicket().getObservableList());
 
         createdColumn.setComparator(LocalDateTime::compareTo);
         createdColumn.setSortType(TableColumn.SortType.DESCENDING);
@@ -182,7 +181,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        Display.show(Route.VIEWER, Data.of(ticketModel, ticketTable, lastViewed));
+        display.show(Route.VIEWER, Data.of(ticketModel, ticketTable, lastViewed));
     }
 
     private void handleIndicatorColumn() {
@@ -252,7 +251,7 @@ public class TicketController extends Controller {
     }
 
     @FXML private void onCreate() {
-        Display.show(Route.TICKET_CREATOR, Data.of(this));
+        display.show(Route.TICKET_CREATOR, Data.of(this));
     }
 
     @FXML private void onResolve() {
@@ -264,7 +263,7 @@ public class TicketController extends Controller {
         final StatusType originalStatus = ticketModel.statusProperty().getValue();
         ticketModel.statusProperty().setValue(StatusType.RESOLVED);
 
-        if (ticket.update(ticketModel, originalStatus)) {
+        if (bridgeContext.getTicket().update(ticketModel, originalStatus)) {
             promptNotifyEmployeeAlert(ticketModel);
         }
     }
@@ -303,7 +302,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        comment.createModel(new Comment()
+        bridgeContext.getComment().createModel(new Comment()
                 .setTicketId(ticket.getId())
                 .setPost(commentText)
                 .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
@@ -314,7 +313,7 @@ public class TicketController extends Controller {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
         if (ticketModel == null)
             return null;
-        return employee.getModel(ticketModel.getEmployeeId());
+        return bridgeContext.getEmployee().getModel(ticketModel.getEmployeeId());
     }
 
     @FXML private void onReopen() {
@@ -326,7 +325,7 @@ public class TicketController extends Controller {
 
         final StatusType originalStatus = ticketModel.statusProperty().getValue();
         ticketModel.statusProperty().setValue(StatusType.OPEN);
-        if (ticket.update(ticketModel, originalStatus)) {
+        if (bridgeContext.getTicket().update(ticketModel, originalStatus)) {
             Announcements.get().showInfo("Success", "Ticket re-opened successfully.");
             ticketTable.refresh();
         }
@@ -337,7 +336,7 @@ public class TicketController extends Controller {
     }
 
     @FXML private void onOpenLastViewed() {
-        Display.show(Route.VIEWER, Data.of(lastViewed.getValue(), ticketTable, lastViewed));
+        display.show(Route.VIEWER, Data.of(lastViewed.getValue(), ticketTable, lastViewed));
     }
 
 
@@ -356,7 +355,7 @@ public class TicketController extends Controller {
     }
 
     private void removeTicket(final TicketModel ticketModel) {
-        ticket.remove(ticketModel.getId());
+        bridgeContext.getTicket().remove(ticketModel.getId());
         final TicketModel lastViewedModel = lastViewed.getValue();
         if (lastViewedModel != null) {
             final int ticketId = ticketModel.getId();
@@ -373,7 +372,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        Display.show(Route.VIEWER, Data.of(ticketModel, ticketTable, lastViewed));
+        display.show(Route.VIEWER, Data.of(ticketModel, ticketTable, lastViewed));
     }
 
     private void onEmail(final TicketModel ticketModel) {
@@ -388,7 +387,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        final EmployeeModel model = employee.getModel(ticketModel.getEmployeeId());
+        final EmployeeModel model = bridgeContext.getEmployee().getModel(ticketModel.getEmployeeId());
         if (model == null) {
             Announcements.get().showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
             return;
@@ -474,7 +473,7 @@ public class TicketController extends Controller {
         activePaneMap.remove(pane);
         removePaneHighlight(pane);
         if (activePaneMap.isEmpty()) {
-            ticketTable.setItems(ticket.getObservableList());
+            ticketTable.setItems(bridgeContext.getTicket().getObservableList());
             ticketTable.refresh();
             return;
         }
@@ -483,7 +482,7 @@ public class TicketController extends Controller {
     }
 
     private ObservableList<TicketModel> getListByStatus(final StatusType type) {
-        return ticket.getListByStatus(type);
+        return bridgeContext.getTicket().getListByStatus(type);
     }
 
     private void highlightPane(final Pane pane) {
@@ -497,7 +496,7 @@ public class TicketController extends Controller {
 
     public void setTicketTable() {
         if (activePaneMap.isEmpty()) {
-            ticketTable.setItems(ticket.getObservableList());
+            ticketTable.setItems(bridgeContext.getTicket().getObservableList());
             ticketTable.refresh();
             return;
         }
@@ -525,7 +524,7 @@ public class TicketController extends Controller {
     }
 
     private VBox getCategoryNode() {
-        final SearchableComboBox<TicketCategoryModel> comboBox = new SearchableComboBox<>(category.getObservableList());
+        final SearchableComboBox<TicketCategoryModel> comboBox = new SearchableComboBox<>(bridgeContext.getCategory().getObservableList());
         configureComboBox(comboBox);
 
         comboBox.setMinWidth(180);
@@ -542,7 +541,7 @@ public class TicketController extends Controller {
         final HBox hBox = new HBox(5.0);
         final Button newButton = new Button();
         newButton.setGraphic(IconLoader.createDefault(FontAwesome.Glyph.PLUS_SQUARE));
-        newButton.setOnAction(event -> Display.show(Route.CATEGORY_CREATOR));
+        newButton.setOnAction(event -> display.show(Route.CATEGORY_CREATOR));
         newButton.disableProperty().bind(comboBox.getSelectionModel().selectedItemProperty().isNotNull());
 
         final Button editButton = new Button();
@@ -550,7 +549,7 @@ public class TicketController extends Controller {
         editButton.disableProperty().bind(comboBox
                 .getSelectionModel()
                 .selectedItemProperty()
-                .isEqualTo(category.getModel(0))
+                .isEqualTo(bridgeContext.getCategory().getModel(0))
         );
 
         editButton.setOnAction(event -> {
@@ -559,7 +558,7 @@ public class TicketController extends Controller {
                 Announcements.get().showError("Failure.", "Could not edit category.", "Please select one!");
                 return;
             }
-            Display.show(Route.CATEGORY_CREATOR, Data.of(selected));
+            display.show(Route.CATEGORY_CREATOR, Data.of(selected));
         });
 
         final Button deleteButton = new Button();
@@ -567,7 +566,7 @@ public class TicketController extends Controller {
         deleteButton.disableProperty().bind(comboBox
                 .getSelectionModel()
                 .selectedItemProperty()
-                .isEqualTo(category.getModel(0))
+                .isEqualTo(bridgeContext.getCategory().getModel(0))
         );
 
         deleteButton.setOnAction(event -> {
@@ -604,7 +603,7 @@ public class TicketController extends Controller {
     }
 
     private void deleteCategory(final TicketCategoryModel model) {
-        category.remove(model.getId());
+        bridgeContext.getCompany().remove(model.getId());
     }
 
     private void configureComboBox(final SearchableComboBox<TicketCategoryModel> comboBox) {

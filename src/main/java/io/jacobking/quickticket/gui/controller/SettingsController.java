@@ -53,7 +53,7 @@ public class SettingsController extends Controller {
         });
 
         alertNameColumn.setCellValueFactory(data -> data.getValue().alertNameProperty());
-        alertTable.setItems(alerts.getObservableList());
+        alertTable.setItems(bridgeContext.getAlerts().getObservableList());
     }
 
     @FXML private void onUpdateAlerts() {
@@ -67,8 +67,8 @@ public class SettingsController extends Controller {
 
     private void updateAlerts() {
         final ObservableList<AlertModel> failedUpdates = FXCollections.observableArrayList();
-        alerts.getObservableList().forEach(model -> {
-            if (!alerts.update(model)) {
+        bridgeContext.getAlerts().getObservableList().forEach(model -> {
+            if (!bridgeContext.getAlerts().update(model)) {
                 failedUpdates.add(model);
             }
         });
@@ -83,7 +83,7 @@ public class SettingsController extends Controller {
 
     private void handleParentState(final int modelId, final CheckBox checkBox, final AlertModel model) {
         checkBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            alerts.getObservableList().forEach(targetModel -> {
+            bridgeContext.getAlerts().getObservableList().forEach(targetModel -> {
                 final int parentId = targetModel.getAlertParentId();
                 if (parentId == modelId) {
                     targetModel.setDisabledState(isSelected);

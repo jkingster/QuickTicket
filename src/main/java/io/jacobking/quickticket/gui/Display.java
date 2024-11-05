@@ -1,61 +1,37 @@
 package io.jacobking.quickticket.gui;
 
 
-import io.jacobking.quickticket.gui.alert.Announcements;
-import io.jacobking.quickticket.gui.data.Data;
-
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Display {
-    private static Display display;
 
     private static final String             SCREEN_PACKAGE = "io.jacobking.quickticket.gui.screen.%sScreen";
     private final        Map<Route, Screen> screens        = new HashMap<>();
 
-    private Display() {
+    public Display() {
         loadScreens();
     }
 
-    public static synchronized  Display getInstance() {
-        if (display == null) {
-            display = new Display();
-        }
-        return display;
-    }
-
-    public static void show(final Route route, final Data data) {
-        getInstance().showRoute(route, data);
-    }
-
-    public static void show(final Route route) {
+    public void show(final Route route) {
         show(route, Data.empty());
     }
 
-    public static void close(final Route route) {
-        getInstance().closeRoute(route);
-    }
-
-    public void showRoute(final Route route, final Data data) {
+    public void show(final Route route, final Data data) {
         final Screen screen = screens.get(route);
         if (screen == null) {
-            final RuntimeException exception = new RuntimeException("Failed to load screen: " + route.getName());
-            Announcements.get().showException("Failed to load screen.", exception.fillInStackTrace());
             return;
         }
         screen.display(data);
     }
 
-    public void closeRoute(final Route route) {
+    public void close(final Route route) {
         final Screen screen = screens.get(route);
-        if (screen == null)
+        if (screen == null) {
             return;
+        }
         screen.close();
-    }
-
-    public void closeAllRoutes() {
-        screens.values().forEach(Screen::close);
     }
 
     private void loadScreens() {
@@ -63,6 +39,7 @@ public class Display {
             loadScreen(route);
         }
     }
+
 
     private void loadScreen(final Route route) {
         screens.computeIfAbsent(route, (target) -> {

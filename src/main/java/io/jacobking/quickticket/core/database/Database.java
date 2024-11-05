@@ -1,7 +1,5 @@
 package io.jacobking.quickticket.core.database;
 
-import io.jacobking.quickticket.bridge.BridgeContext;
-import io.jacobking.quickticket.core.config.FlywayConfig;
 import io.jacobking.quickticket.core.config.SystemConfig;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.utility.Logs;
@@ -16,25 +14,16 @@ public class Database {
             "It is recommended you manually create a backup internally before proceeding.";
 
     private final SystemConfig    systemConfig;
-    private final FlywayConfig    flywayConfig;
     private final SQLiteConnector sqLiteConnector;
     private final RepoCrud        repoCrud;
-    private       BridgeContext   bridgeContext;
 
 
-    public Database(final SystemConfig systemConfig, final FlywayConfig flywayConfig) {
+    public Database(final SystemConfig systemConfig) {
         Logs.info("Database Initialized.");
         this.systemConfig = systemConfig;
-        this.flywayConfig = flywayConfig;
         this.sqLiteConnector = new SQLiteConnector(systemConfig);
         final JOOQConnector jooqConnector = new JOOQConnector(sqLiteConnector);
         this.repoCrud = new RepoCrud(jooqConnector.getContext());
-    }
-
-    public void initializeBridgeContext() {
-        if (this.bridgeContext != null)
-            return;
-        this.bridgeContext = new BridgeContext(this);
     }
 
     public RepoCrud call() {
@@ -61,7 +50,7 @@ public class Database {
             return;
         }
 
-        final FlywayMigrator flywayMigrator = new FlywayMigrator(flywayConfig);
+        final FlywayMigrator flywayMigrator = new FlywayMigrator(systemConfig);
         if (!flywayMigrator.isPendingMigration()) {
             Logs.info("There are no pending migrations!");
             return;
@@ -84,9 +73,6 @@ public class Database {
 
     }
 
-    public BridgeContext getBridgeContext() {
-        return bridgeContext;
-    }
 
     public boolean hasConnection() {
         return sqLiteConnector.hasConnection();

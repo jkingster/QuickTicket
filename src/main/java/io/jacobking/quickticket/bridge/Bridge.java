@@ -6,11 +6,9 @@ import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.Model;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.util.Callback;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -23,14 +21,6 @@ public abstract class Bridge<E extends Entity, V extends Model<E>> {
     public Bridge(final Database database, final RepoType repoType) {
         this.crud = database.call();
         this.observableList = FXCollections.observableArrayList();
-        this.repoType = repoType;
-        loadEntities();
-        removalListener();
-    }
-
-    public Bridge(final Database database, final RepoType repoType, final Callback<V, Observable[]> callback) {
-        this.crud = database.call();
-        this.observableList = FXCollections.observableArrayList(callback);
         this.repoType = repoType;
         loadEntities();
         removalListener();

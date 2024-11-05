@@ -13,8 +13,6 @@ import javafx.collections.transformation.FilteredList;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import static io.jacobking.quickticket.Tables.TICKET;
-
 public class TicketBridge extends Bridge<Ticket, TicketModel> {
 
     private final Map<StatusType, ObservableList<TicketModel>> ticketMap;
@@ -45,15 +43,6 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
     @Override
     public TicketModel convertEntity(Ticket entity) {
         return new TicketModel(entity);
-    }
-
-    public TicketModel getLastViewed() {
-        final Ticket ticket = crud.getContext()
-                .selectFrom(TICKET)
-                .orderBy(TICKET.LAST_OPENED_TIMESTAMP.desc())
-                .limit(1)
-                .fetchOneInto(Ticket.class);
-        return ticket == null ? null : new TicketModel(ticket);
     }
 
     @Override public TicketModel createModel(Ticket entity) {

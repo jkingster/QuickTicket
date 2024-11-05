@@ -2,22 +2,17 @@ package io.jacobking.quickticket.gui;
 
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.QuickTicket;
-import io.jacobking.quickticket.core.utility.Logs;
-import io.jacobking.quickticket.gui.alert.builder.NotificationBuilder;
-import io.jacobking.quickticket.gui.data.Data;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public class Screen {
 
-    private static final String     TITLE = "QuickTicket";
+    private static final String TITLE = "QuickTicket";
+
     private final        Route      route;
     private final        Modality   modality;
     private              FXMLLoader loader;
@@ -36,7 +31,7 @@ public class Screen {
     }
 
     public void display(final Data data) {
-        configure();
+        configure(data);
         show();
     }
 
@@ -46,10 +41,15 @@ public class Screen {
         }
     }
 
-    public void initializeController() {
+    public void initializeController(final Data data) {
         if (this.controller != null) {
+            if (QuickTicket.getInstance().isReady()) {
+                controller.controllerInitialization();
+            }
             setController(controller);
+            controller.setData(data);
         }
+
     }
 
     public void setController(final Controller controller) {
@@ -62,19 +62,12 @@ public class Screen {
         loader.setController(controller);
     }
 
-    private void configure() {
-        initializeController();
+    private void configure(final Data data) {
+        initializeController(data);
         initializeScene();
 
         if (scene != null) {
             initializeStageDefaults();
-            if (this.route != Route.DASHBOARD) {
-                scene.setOnKeyPressed(event -> {
-                    if (event.getCode() == KeyCode.ESCAPE) {
-                        Display.close(route);
-                    }
-                });
-            }
         }
     }
 
@@ -96,36 +89,15 @@ public class Screen {
         this.stage = new Stage();
         stage.initModality(modality);
         stage.setTitle(TITLE);
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.getScene().getStylesheets().add(0, NotificationBuilder.getStylesheet());
-        if (this.route == Route.DASHBOARD) {
-            stage.setOnCloseRequest(event -> QuickTicket.getInstance().shutdown());
-        }
-
-        final Image imageIcon = getIconImage();
-        if (imageIcon != null) {
-            stage.getIcons().add(getIconImage());
-        }
-
         stage.centerOnScreen();
+        stage.setResizable(false);
+        stage.setScene(scene);
     }
 
     private FXMLLoader setAndGetLoader() {
         final String path = route.getPath();
         this.loader = new FXMLLoader(App.class.getResource(path));
         return loader;
-    }
-
-    private Image getIconImage() {
-        try (final InputStream stream = App.class.getResourceAsStream("icons/quickticket-icon.png")) {
-            if (stream != null) {
-                return new Image(stream);
-            }
-        } catch (IOException e) {
-            Logs.warn(e.getMessage());
-        }
-        return null;
     }
 
 
