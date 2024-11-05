@@ -21,8 +21,7 @@ public class TicketModel extends Model<Ticket> implements Serializable {
     private final IntegerProperty               employeeProperty    = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDateTime> createdProperty     = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDateTime> lastViewedTimestamp = new SimpleObjectProperty<>();
-    private final ObjectProperty<LocalDate>     resolveBy           = new SimpleObjectProperty<>();
-    private final IntegerProperty categoryProperty = new SimpleIntegerProperty();
+    private final IntegerProperty               categoryProperty    = new SimpleIntegerProperty();
 
     public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, LocalDate resolveBy, int categoryId) {
         super(id);
@@ -32,7 +31,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
         this.employeeProperty.setValue(employeeId);
         this.createdProperty.setValue(created);
         this.lastViewedTimestamp.setValue(lastViewedTimestamp);
-        this.resolveBy.setValue(resolveBy);
         this.categoryProperty.setValue(categoryId);
     }
 
@@ -45,7 +43,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
                 ticket.getEmployeeId(), // need to update from user -> employee eventually.
                 ticket.getCreatedOn(),
                 ticket.getLastOpenedTimestamp(),
-                ticket.getResolvedBy(),
                 ticket.getCategoryId()
         );
     }
@@ -98,13 +95,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
         return lastViewedTimestamp.getValue();
     }
 
-    public LocalDate getResolveBy() {
-        return resolveBy.get();
-    }
-
-    public ObjectProperty<LocalDate> resolveByProperty() {
-        return resolveBy;
-    }
 
     public int getCategory() {
         return categoryProperty.get();
@@ -114,18 +104,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
         return categoryProperty;
     }
 
-    @Override public String toString() {
-        return "TicketModel{" +
-                "titleProperty=" + titleProperty +
-                ", statusProperty=" + statusProperty +
-                ", priorityProperty=" + priorityProperty +
-                ", employeeProperty=" + employeeProperty +
-                ", createdProperty=" + createdProperty +
-                ", lastViewedTimestamp=" + lastViewedTimestamp +
-                ", resolveBy=" + resolveBy +
-                ", categoryProperty=" + categoryProperty +
-                '}';
-    }
 
     @Override
     public Ticket toEntity() {
@@ -137,7 +115,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
                 getCreation(),
                 getEmployeeId(),
                 getLastViewedTimestamp(),
-                getResolveBy(),
                 getCategory()
         );
     }

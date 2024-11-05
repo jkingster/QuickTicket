@@ -5,7 +5,6 @@ import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.controller.Controller;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.impl.EmployeeModel;
-import io.jacobking.quickticket.gui.model.impl.InventoryLogModel;
 import io.jacobking.quickticket.gui.model.impl.InventoryModel;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import io.jacobking.quickticket.tables.pojos.Inventory;

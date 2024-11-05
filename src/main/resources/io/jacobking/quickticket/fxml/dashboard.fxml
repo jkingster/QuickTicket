@@ -44,7 +44,7 @@
                 </Tab>
                 <Tab text="Settings">
                     <content>
-                        <fx:include source="new-settings.fxml" />
+                        <fx:include source="settings.fxml" />
                     </content>
                 </Tab>
                 <Tab fx:id="developerTab" closable="false" disable="true" style="visibility: hidden;" text="Developer" />
