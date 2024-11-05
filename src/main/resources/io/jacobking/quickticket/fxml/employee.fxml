@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1060.0" prefWidth="1920.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.EmployeeController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.EmployeeController">
    <children>
-      <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="14.0" prefHeight="106.0" prefWidth="1895.0" spacing="10.0">
+      <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="14.0" prefHeight="106.0" prefWidth="1176.0" spacing="10.0">
          <children>
             <Pane prefHeight="106.0" prefWidth="825.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
@@ -50,13 +50,13 @@
             </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label layoutX="20.0" layoutY="14.0" styleClass="card-header" text="Company Manager" />
+                  <Label layoutX="6.0" layoutY="8.0" prefHeight="27.0" prefWidth="165.0" styleClass="card-header" text="Company Manager" />
                   <Button layoutX="52.0" layoutY="61.0" mnemonicParsing="false" onAction="#onCompanyManager" prefHeight="25.0" prefWidth="96.0" text="Open" />
                </children>
             </Pane>
             <Pane prefHeight="100.0" prefWidth="204.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Label layoutX="9.0" layoutY="14.0" styleClass="card-header" text="Department Manager" />
+                  <Label layoutX="-1.0" layoutY="9.0" styleClass="card-header" text="Department Manager" />
                   <Button layoutX="52.0" layoutY="61.0" mnemonicParsing="false" onAction="#onDepartmentManager" prefHeight="25.0" prefWidth="96.0" text="Open" />
                </children>
             </Pane>
@@ -112,24 +112,24 @@
                   </VBox>
                </children>
             </Pane>
-            <Pane prefHeight="223.0" prefWidth="730.0" styleClass="card" stylesheets="@../css/core/card.css">
+            <Pane prefHeight="223.0" prefWidth="655.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label layoutX="14.0" layoutY="8.0" styleClass="card-header" text="Misc. Info" />
-                  <TextArea fx:id="infoTextArea" layoutX="10.0" layoutY="35.0" prefHeight="181.0" prefWidth="709.0" promptText="Miscellaneous information about employee." stylesheets="@../css/core/text-area.css" wrapText="true" />
-                  <Button fx:id="updateInfoButton" layoutX="661.0" layoutY="4.0" mnemonicParsing="false" onAction="#onUpdateInfo" text="Update" />
+                  <TextArea fx:id="infoTextArea" layoutX="10.0" layoutY="35.0" prefHeight="181.0" prefWidth="633.0" promptText="Miscellaneous information about employee." stylesheets="@../css/core/text-area.css" wrapText="true" />
+                  <Button fx:id="updateInfoButton" layoutX="583.0" layoutY="6.0" mnemonicParsing="false" onAction="#onUpdateInfo" text="Update" />
                </children>
             </Pane>
          </children>
       </HBox>
-      <TableView fx:id="ticketTable" layoutX="14.0" layoutY="408.0" prefHeight="647.0" prefWidth="1895.0" stylesheets="@../css/core/table.css">
+      <TableView fx:id="ticketTable" layoutX="14.0" layoutY="408.0" prefHeight="325.0" prefWidth="1150.0" stylesheets="@../css/core/table.css">
         <columns>
           <TableColumn fx:id="actionsColumn" prefWidth="283.0" text="Actions" />
           <TableColumn fx:id="ticketIdColumn" prefWidth="68.0" text="Ticket ID" />
-            <TableColumn fx:id="titleColumn" prefWidth="700.0" text="Title" />
-            <TableColumn fx:id="createdOnColumn" minWidth="0.0" prefWidth="204.0" text="Created On" />
+            <TableColumn fx:id="titleColumn" maxWidth="500.0" minWidth="500.0" prefWidth="500.0" text="Title" />
+            <TableColumn fx:id="createdOnColumn" minWidth="200.0" prefWidth="204.0" text="Created On" />
         </columns>
       </TableView>
-      <Pane layoutX="14.0" layoutY="361.0" prefHeight="35.0" prefWidth="1895.0" styleClass="card" stylesheets="@../css/core/card.css">
+      <Pane layoutX="14.0" layoutY="361.0" prefHeight="35.0" prefWidth="1176.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
             <Label layoutX="10.0" layoutY="4.0" styleClass="card-header" text="Tickets" />
          </children>

@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.model.impl;
 
 
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -10,7 +10,7 @@ import javafx.beans.property.StringProperty;
 
 import java.time.LocalDateTime;
 
-public class CommentModel extends ViewModel<Comment> {
+public class CommentModel extends Model<Comment> {
 
 
     private final int                           ticketId;

@@ -1,11 +1,11 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import io.jacobking.quickticket.tables.pojos.LinkedTicket;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class LinkedTicketModel extends ViewModel<LinkedTicket> {
+public class LinkedTicketModel extends Model<LinkedTicket> {
 
     private final IntegerProperty ticketIdProperty       = new SimpleIntegerProperty();
     private final IntegerProperty linkedTicketIdProperty = new SimpleIntegerProperty();

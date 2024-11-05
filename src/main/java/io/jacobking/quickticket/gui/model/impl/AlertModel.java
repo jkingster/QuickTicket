@@ -1,10 +1,10 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import io.jacobking.quickticket.tables.pojos.Alerts;
 import javafx.beans.property.*;
 
-public class AlertModel extends ViewModel<Alerts> {
+public class AlertModel extends Model<Alerts> {
 
     private final StringProperty  alertName  = new SimpleStringProperty();
     private final BooleanProperty alertState = new SimpleBooleanProperty();

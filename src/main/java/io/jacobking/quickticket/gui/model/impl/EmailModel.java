@@ -1,13 +1,13 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import io.jacobking.quickticket.tables.pojos.EmailInterface;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class EmailModel extends ViewModel<EmailInterface> {
+public class EmailModel extends Model<EmailInterface> {
 
     private static final String DEFAULT_PORT = "25";
 

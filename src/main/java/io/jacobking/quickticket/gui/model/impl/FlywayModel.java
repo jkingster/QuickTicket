@@ -1,13 +1,13 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import io.jacobking.quickticket.tables.pojos.FlywaySchemaHistory;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class FlywayModel extends ViewModel<FlywaySchemaHistory> {
+public class FlywayModel extends Model<FlywaySchemaHistory> {
 
     private final IntegerProperty installedRank = new SimpleIntegerProperty();
     private final StringProperty  version       = new SimpleStringProperty();

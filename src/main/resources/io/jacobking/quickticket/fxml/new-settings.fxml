@@ -3,17 +3,11 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import org.controlsfx.control.SearchableComboBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.impl.SettingsController">
    <stylesheets>
@@ -46,174 +40,8 @@
                   </AnchorPane>
               </content>
             </TitledPane>
-            <TitledPane animated="false" collapsible="false" prefHeight="347.0" prefWidth="301.0" stylesheets="@../css/core/title-pane.css" text="Ticket Interface">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="237.0" prefWidth="299.0">
-                     <children>
-                        <VBox layoutX="9.0" layoutY="14.0" prefHeight="200.0" prefWidth="281.0" spacing="10.0">
-                           <children>
-                              <SearchableComboBox promptText="Default Ticket Category" stylesheets="@../css/core/combo-box.css" />
-                              <TextField id="te" promptText="Default Category Name" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
-                              <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="280.0" text="Open Ticket Automatically After Creation" textFill="WHITE">
-                                 <font>
-                                    <Font name="System Bold" size="13.0" />
-                                 </font>
-                              </CheckBox>
-                              <SearchableComboBox promptText="Default Ticket Priority" stylesheets="@../css/core/combo-box.css" />
-                              <SearchableComboBox promptText="Default Ticket Status" stylesheets="@../css/core/combo-box.css" />
-                              <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="280.0" text="Enable Ticket Encryption" textFill="WHITE">
-                                 <font>
-                                    <Font name="System Bold" size="13.0" />
-                                 </font>
-                              </CheckBox>
-                              <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="280.0" text="Allow Ticket Locking" textFill="WHITE">
-                                 <font>
-                                    <Font name="System Bold" size="13.0" />
-                                 </font>
-                              </CheckBox>
-                           </children>
-                        </VBox>
-                        <HBox alignment="CENTER_RIGHT" layoutX="1.0" layoutY="282.0" prefHeight="32.0" prefWidth="301.0" spacing="5.0">
-                           <children>
-                              <Button mnemonicParsing="false" text="Update" />
-                           </children>
-                           <padding>
-                              <Insets right="10.0" />
-                           </padding>
-                        </HBox>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" collapsible="false" prefHeight="347.0" prefWidth="301.0" stylesheets="@../css/core/title-pane.css" text="QuickTicket Startup">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="237.0" prefWidth="299.0">
-                     <children>
-                        <VBox layoutX="9.0" layoutY="14.0" prefHeight="200.0" prefWidth="281.0" spacing="10.0">
-                           <children>
-                              <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="280.0" text="Unresolved Ticket(s) Alert" textFill="WHITE">
-                                 <font>
-                                    <Font name="System Bold" size="13.0" />
-                                 </font>
-                              </CheckBox>
-                              <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="280.0" text="Open Last Ticket Viewed" textFill="WHITE">
-                                 <font>
-                                    <Font name="System Bold" size="13.0" />
-                                 </font>
-                              </CheckBox>
-                           </children>
-                        </VBox>
-                        <HBox alignment="CENTER_RIGHT" layoutX="1.0" layoutY="282.0" prefHeight="32.0" prefWidth="301.0" spacing="5.0">
-                           <children>
-                              <Button mnemonicParsing="false" text="Update" />
-                           </children>
-                           <padding>
-                              <Insets right="10.0" />
-                           </padding>
-                        </HBox>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </TitledPane>
-            <TitledPane animated="false" collapsible="false" prefHeight="347.0" prefWidth="301.0" stylesheets="@../css/core/title-pane.css" text="Email Interface">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="237.0" prefWidth="299.0">
-                     <children>
-                        <VBox layoutX="9.0" layoutY="14.0" prefHeight="263.0" prefWidth="281.0" spacing="10.0">
-                           <children>
-                              <HBox prefHeight="29.0" prefWidth="281.0" spacing="5.0">
-                                 <children>
-                                    <TextField prefHeight="25.0" prefWidth="236.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" text="Host" />
-                                    <TextField prefHeight="25.0" prefWidth="46.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" text="Port" />
-                                 </children>
-                              </HBox>
-                              <CheckBox mnemonicParsing="false" text="Requires Authentication" textFill="WHITE">
-                                 <font>
-                                    <Font size="13.0" />
-                                 </font>
-                              </CheckBox>
-                              <TextField disable="true" prefHeight="25.0" prefWidth="278.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" text="Username" />
-                              <TextField disable="true" prefHeight="25.0" prefWidth="278.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" text="Password" />
-                              <TextField prefHeight="25.0" prefWidth="278.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" text="From Address (Example: quickticket@domain.com)" />
-                              <TextField prefHeight="25.0" prefWidth="278.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" text="BCC Address" />
-                              <SearchableComboBox promptText="START TLS or OVER SSL/TLS" stylesheets="@../css/core/combo-box.css" />
-                              <CheckBox mnemonicParsing="false" text="Enable Email Debugging" textFill="WHITE">
-                                 <font>
-                                    <Font size="13.0" />
-                                 </font>
-                              </CheckBox>
-                           </children>
-                        </VBox>
-                        <HBox alignment="CENTER_RIGHT" layoutX="1.0" layoutY="282.0" prefHeight="32.0" prefWidth="301.0" spacing="5.0">
-                           <children>
-                              <Button mnemonicParsing="false" styleClass="button-success" text="Test" />
-                              <Button mnemonicParsing="false" text="Update" />
-                           </children>
-                           <padding>
-                              <Insets right="10.0" />
-                           </padding>
-                        </HBox>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </TitledPane>
          </children>
       </HBox>
-      <HBox alignment="CENTER_LEFT" layoutX="11.0" layoutY="364.0" prefHeight="364.0" prefWidth="1259.0" spacing="15.0">
-         <children>
-            <TitledPane animated="false" collapsible="false" prefHeight="347.0" prefWidth="301.0" stylesheets="@../css/core/title-pane.css" text="Security">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="237.0" prefWidth="299.0">
-                     <children>
-                        <VBox layoutX="9.0" layoutY="14.0" prefHeight="263.0" prefWidth="281.0" spacing="10.0">
-                           <children>
-                              <CheckBox mnemonicParsing="false" text="Require Login On Startup" textFill="WHITE">
-                                 <font>
-                                    <Font size="13.0" />
-                                 </font>
-                              </CheckBox>
-                              <TextField disable="true" prefHeight="25.0" prefWidth="278.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" text="Password" />
-                              <TextField disable="true" prefHeight="25.0" prefWidth="278.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" text="Confirm Password" />
-                              <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="281.0" spacing="5.0">
-                                 <children>
-                                    <Label text="Last Volid Login:" textFill="WHITE">
-                                       <font>
-                                          <Font name="System Bold" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="undefined" textFill="#ff3238">
-                                       <font>
-                                          <Font name="System Bold" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="281.0" spacing="5.0">
-                                 <children>
-                                    <Label prefHeight="20.0" prefWidth="111.0" text="Login Attempts:" textFill="WHITE">
-                                       <font>
-                                          <Font name="System Bold" size="14.0" />
-                                       </font>
-                                    </Label>
-                                    <TextField disable="true" prefHeight="25.0" prefWidth="23.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" text="0" />
-                                 </children>
-                              </HBox>
-                           </children>
-                        </VBox>
-                        <HBox alignment="CENTER_RIGHT" layoutX="1.0" layoutY="282.0" prefHeight="32.0" prefWidth="301.0" spacing="5.0">
-                           <children>
-                              <Button mnemonicParsing="false" styleClass="button-warning" text="Unlock" />
-                              <Button mnemonicParsing="false" text="Update" />
-                           </children>
-                           <padding>
-                              <Insets right="10.0" />
-                           </padding>
-                        </HBox>
-                     </children>
-                  </AnchorPane>
-               </content>
-            </TitledPane>
-         </children>
-      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="11.0" layoutY="364.0" prefHeight="364.0" prefWidth="1259.0" spacing="15.0" />
    </children>
 </AnchorPane>

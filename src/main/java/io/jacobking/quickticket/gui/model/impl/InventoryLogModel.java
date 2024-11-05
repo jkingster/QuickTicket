@@ -1,13 +1,13 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import io.jacobking.quickticket.tables.pojos.InventoryLog;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class InventoryLogModel extends ViewModel<InventoryLog> {
+public class InventoryLogModel extends Model<InventoryLog> {
 
     private final IntegerProperty assetId     = new SimpleIntegerProperty();
     private final IntegerProperty countAtTime = new SimpleIntegerProperty();

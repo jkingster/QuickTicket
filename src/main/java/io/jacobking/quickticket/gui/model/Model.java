@@ -3,11 +3,11 @@ package io.jacobking.quickticket.gui.model;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public abstract class ViewModel<E> {
+public abstract class Model<E> {
 
     private final IntegerProperty idProperty = new SimpleIntegerProperty();
 
-    public ViewModel(final int id) {
+    public Model(final int id) {
         this.idProperty.setValue(id);
     }
 

@@ -4,7 +4,7 @@ import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.Entity;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.database.repository.RepoType;
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
@@ -15,7 +15,7 @@ import javafx.util.Callback;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
+public abstract class Bridge<E extends Entity, V extends Model<E>> {
     private final   ObservableList<V> observableList;
     private final   RepoType          repoType;
     protected final RepoCrud          crud;

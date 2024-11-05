@@ -99,9 +99,9 @@ public class Screen {
         stage.initModality(modality);
         stage.setTitle(TITLE);
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.getScene().getStylesheets().add(0, NotificationBuilder.getStylesheet());
         if (this.route == Route.DASHBOARD) {
-            stage.setMaximized(true);
             stage.setOnCloseRequest(event -> QuickTicket.getInstance().shutdown());
         }
 

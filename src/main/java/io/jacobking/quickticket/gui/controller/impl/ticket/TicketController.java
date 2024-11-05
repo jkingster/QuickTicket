@@ -62,12 +62,10 @@ public class TicketController extends Controller {
     @FXML private TableColumn<TicketModel, PriorityType>  priorityColumn;
     @FXML private TableColumn<TicketModel, Integer>       employeeColumn;
     @FXML private TableColumn<TicketModel, LocalDateTime> createdColumn;
-    @FXML private TableColumn<TicketModel, LocalDate>     resolveByColumn;
     @FXML private Label                                   openLabel;
     @FXML private Label                                   activeLabel;
     @FXML private Label                                   pausedLabel;
     @FXML private Label                                   resolvedLabel;
-    @FXML private Button                                  lastViewButton;
 
     @FXML private Pane openPane;
     @FXML private Pane activePane;
@@ -153,35 +151,7 @@ public class TicketController extends Controller {
             }
         });
 
-        resolveByColumn.setCellValueFactory(data -> data.getValue().resolveByProperty());
-        resolveByColumn.setCellFactory(data -> new TableCell<>() {
-            @Override protected void updateItem(LocalDate localDate, boolean b) {
-                super.updateItem(localDate, b);
-                if (localDate == null || b) {
-                    setStyle("-fx-text-fill: #5DADD5;");
-                    setText("Not available.");
-                    return;
-                }
 
-                final TicketModel ticketModel = getTableRow().getItem();
-                final boolean isResolved = StatusType.of(ticketModel.getStatus()) == StatusType.RESOLVED;
-                if (!isResolved) {
-                    final LocalDate now = LocalDate.now();
-                    if (now.isAfter(localDate)) {
-                        setStyle("-fx-text-fill: RED;");
-                    } else if (!now.isBefore(localDate.minusDays(3))) {
-                        setStyle("-fx-text-fill: YELLOW;");
-                    } else {
-                        setStyle("-fx-text-fill: GREEN");
-                    }
-                } else {
-                    setStyle("-fx-text-fill: #5DADD5;");
-                }
-
-
-                setText(DateUtil.formatDate(localDate.toString()));
-            }
-        });
 
         ticketTable.setItems(ticket.getObservableList());
 
@@ -191,12 +161,7 @@ public class TicketController extends Controller {
         ticketTable.getSortOrder().add(createdColumn);
         ticketTable.sort();
 
-        final TicketModel lastViewedModel = ticket.getLastViewed();
-        if (lastViewedModel != null) {
-            lastViewed.setValue(lastViewedModel);
-        }
 
-        lastViewButton.disableProperty().bind(lastViewed.isNull());
         handleDoubleClick();
     }
 

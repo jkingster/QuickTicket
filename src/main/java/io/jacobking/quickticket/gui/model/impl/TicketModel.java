@@ -2,7 +2,7 @@ package io.jacobking.quickticket.gui.model.impl;
 
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import io.jacobking.quickticket.tables.pojos.Ticket;
 import javafx.beans.property.*;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class TicketModel extends ViewModel<Ticket> implements Serializable {
+public class TicketModel extends Model<Ticket> implements Serializable {
 
     @Serial private static final long serialVersionUID = 1L;
 

@@ -1,13 +1,13 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class EmployeeModel extends ViewModel<Employee> {
+public class EmployeeModel extends Model<Employee> {
 
     private final StringProperty  firstNameProperty     = new SimpleStringProperty();
     private final StringProperty  lastNameProperty      = new SimpleStringProperty();

@@ -1,12 +1,12 @@
 package io.jacobking.quickticket.gui.model.impl;
 
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.model.Model;
 import io.jacobking.quickticket.tables.pojos.TicketCategories;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 
-public class TicketCategoryModel extends ViewModel<TicketCategories> {
+public class TicketCategoryModel extends Model<TicketCategories> {
 
     private final StringProperty nameProperty        = new SimpleStringProperty();
     private final StringProperty colorProperty       = new SimpleStringProperty();
