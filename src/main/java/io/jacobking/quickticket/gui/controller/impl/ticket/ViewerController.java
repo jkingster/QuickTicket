@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -13,7 +12,6 @@ import io.jacobking.quickticket.gui.screen.Display;
 import io.jacobking.quickticket.gui.screen.Route;
 import io.jacobking.quickticket.gui.utility.FALoader;
 import io.jacobking.quickticket.tables.pojos.Comment;
-import io.jacobking.quickticket.tables.pojos.LinkedTicket;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
@@ -58,7 +56,6 @@ public class ViewerController extends Controller {
     @FXML private TextField categoryField;
 
     @FXML private ListView<CommentModel>      commentList;
-    @FXML private ListView<LinkedTicketModel> linkedTicketList;
 
     @FXML private Button priorityButton;
     @FXML private Button statusButton;
@@ -167,42 +164,7 @@ public class ViewerController extends Controller {
         refreshTable();
     }
 
-    private void configureTicketLinks() {
-        linkedTicketList.setCellFactory(data -> new ListCell<>() {
-            @Override protected void updateItem(LinkedTicketModel linkedTicketModel, boolean b) {
-                super.updateItem(linkedTicketModel, b);
-                if (linkedTicketModel == null || b) {
-                    setGraphic(null);
-                    return;
-                }
 
-                final int targetTicketId = linkedTicketModel.getLinkedTicketIdProperty();
-                final TicketModel targetTicket = ticket.getModel(targetTicketId);
-                if (targetTicket == null) {
-                    setGraphic(null);
-                    return;
-                }
-
-                final Button open = new Button();
-                open.setOnAction(event -> openTicket(targetTicket));
-                open.setGraphic(FALoader.createDefault(FontAwesome.Glyph.FOLDER_OPEN));
-
-                final Label label = new Label(String.format("Ticket ID: %d", targetTicket.getId()));
-
-                final HBox hBox = new HBox(5.0);
-                hBox.setAlignment(Pos.CENTER_LEFT);
-                hBox.getChildren().addAll(open, label);
-
-                final Tooltip tooltip = new Tooltip(targetTicket.getTitle());
-                tooltip.setShowDelay(Duration.ZERO);
-                Tooltip.install(hBox, tooltip);
-
-                setGraphic(hBox);
-            }
-        });
-
-        linkedTicketList.setItems(linkedTicket.getLinkedTickets(viewedTicket.getId()));
-    }
 
     private void openTicket(final TicketModel ticketModel) {
         Display.show(Route.VIEWER, DataRelay.of(ticketModel, ticketTable));
@@ -214,53 +176,6 @@ public class ViewerController extends Controller {
         }
     }
 
-    @FXML private void onLinkTicket() {
-        final ObservableList<TicketModel> ticketList = ticket.getObservableListByFilter(pm -> pm.getId() != viewedTicket.getId());
-        setPopOver("Link Ticket", linkTicketButton, ticketList, ((popOver, ticketModelSearchableComboBox) -> {
-            final TicketModel selectedTicket = ticketModelSearchableComboBox.getSelectionModel().getSelectedItem();
-            if (selectedTicket == null)
-                return;
-
-            final LinkedTicket newLinkedTicket = new LinkedTicket()
-                    .setTicketId(viewedTicket.getId())
-                    .setLinkedId(selectedTicket.getId());
-
-            final LinkedTicketModel newModel = linkedTicket.createModel(newLinkedTicket);
-            if (newModel != null) {
-                ticketModelSearchableComboBox.getSelectionModel().clearSelection();
-                popOver.hide();
-                linkedTicketList.refresh();
-            }
-        }), cell -> {
-            final TicketModel item = cell.getItem();
-            cell.setGraphic(new Label(String.format("Ticket ID: %d | %s", item.getId(), item.getTitle())));
-        });
-    }
-
-    @FXML private void onRemoveTicket() {
-        final LinkedTicketModel linkedTicketModel = linkedTicketList.getSelectionModel().getSelectedItem();
-        if (linkedTicketModel == null) {
-            Announcements.get().showError("Failure", "Could not remove linked ticket.", "Please select one and try again.");
-            return;
-        }
-
-        final int linkedTicketId = linkedTicketModel.getId();
-        Announcements.get().showConfirmation(() -> removeLinkedTicket(linkedTicketId),
-                "Are you sure you want to remove this linked ticket?",
-                "This action cannot be undone."
-        ).ifPresent(type -> {
-            if (type == ButtonType.YES) {
-                removeLinkedTicket(linkedTicketId);
-            }
-        });
-    }
-
-    private void removeLinkedTicket(final int linkedTicketId) {
-        Platform.runLater(() -> {
-            linkedTicket.remove(linkedTicketId);
-            linkedTicketList.refresh();
-        });
-    }
 
     private void initializeRelay() {
         dataRelay.mapFirst(TicketModel.class).ifPresent(model -> {
@@ -280,7 +195,6 @@ public class ViewerController extends Controller {
 
     private void handleTicket(final TicketModel ticketModel) {
         initializeFields(ticketModel);
-        configureTicketLinks();
         loadComments(ticketModel);
     }
 
@@ -290,14 +204,6 @@ public class ViewerController extends Controller {
 
         final String createdOn = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation());
         createdOnField.setText(createdOn);
-
-        final LocalDate resolveDate = ticketModel.getResolveBy();
-        final String resolveBy = (resolveDate == null)
-                                 ? "No resolve by date."
-                                 : String.format("Resolve by: %s", DateUtil.formatDate(resolveDate.toString()));
-        resolveByField.setText(resolveBy);
-
-        handleDate(resolveDate);
 
         final EmployeeModel employeeModel = employee.getModel(ticketModel.getEmployeeId());
         final String employeeName = (employeeModel == null) ? "No employee." : employeeModel.getFullName();
@@ -392,7 +298,6 @@ public class ViewerController extends Controller {
             return;
         }
 
-        notifyEmployee(viewedTicket, employeeEmail, resolvingComment, employee);
     }
 
     private void postEmptyResolvingComment(final TicketModel viewedTicket) {
@@ -403,19 +308,7 @@ public class ViewerController extends Controller {
         postComment(ticketModel, String.format("[SYSTEM]: %s", comment));
     }
 
-    private void notifyEmployee(final TicketModel viewedTicket, final String email, final String resolvingComment, final EmployeeModel employeeModel) {
-        new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
-                .format(
-                        viewedTicket.getId(),
-                        viewedTicket.getTitle(),
-                        DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, viewedTicket.getCreation()),
-                        employeeModel.getFullName(),
-                        resolvingComment
-                )
-                .email(emailConfig)
-                .setSubject(getSubject(viewedTicket))
-                .sendEmail();
-    }
+
 
     private String getSubject(final TicketModel ticketModel) {
         return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());
@@ -600,7 +493,6 @@ public class ViewerController extends Controller {
                 return;
             }
 
-            viewedTicket.resolveByProperty().setValue(localDate);
             if (ticket.update(viewedTicket)) {
                 refreshTable();
                 resolveByField.setText(String.format("Resolve by: %s", DateUtil.formatDate(localDate.toString())));

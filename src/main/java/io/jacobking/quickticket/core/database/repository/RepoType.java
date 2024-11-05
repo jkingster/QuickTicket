@@ -8,15 +8,10 @@ public enum RepoType {
     TICKET(new TicketRepository()),
     COMMENT(new CommentRepository()),
     EMPLOYEE(new EmployeeRepository()),
-    EMAIL(new EmailInterfaceRepository()),
     CATEGORY(new CategoryRepository()),
     COMPANY(new CompanyRepository()),
     DEPARTMENT(new DepartmentRepository()),
-    ALERT(new AlertRepository()),
-    FLYWAY(new FlywayRepository()),
-    INVENTORY(new InventoryRepository()),
-    LINKED_TICKET(new LinkedTicketRepository()),
-    INVENTORY_LOG(new InventoryLogRepository());
+    ALERT(new AlertRepository());
 
     private final Repository<? extends Entity> repository;
 

@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -157,11 +156,6 @@ public class TicketCreatorController extends Controller {
 
         final String creation = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation());
         final String initialComment = commentField.getText().isEmpty() ? "No initial comment provided." : commentField.getText();
-        new EmailBuilder(email, EmailBuilder.EmailType.NEW_TICKET)
-                .format(model.getFullName(), ticketModel.getId(), ticketModel.getTitle(), creation, model.getFullName(), initialComment)
-                .email(emailConfig)
-                .setSubject(getSubject(ticketModel))
-                .sendEmail();
     }
 
     private String getSubject(final TicketModel ticketModel) {

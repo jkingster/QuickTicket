@@ -23,7 +23,7 @@ public class TicketModel extends Model<Ticket> implements Serializable {
     private final ObjectProperty<LocalDateTime> lastViewedTimestamp = new SimpleObjectProperty<>();
     private final IntegerProperty               categoryProperty    = new SimpleIntegerProperty();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, LocalDate resolveBy, int categoryId) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, int categoryId) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);

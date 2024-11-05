@@ -6,7 +6,6 @@ public enum Route {
     TICKET_CREATOR("TicketCreator"),
     ABOUT("About"),
     CHANGELOG("Changelog"),
-    CONFIGURATION("Configuration"),
     DEPARTMENT("Department"),
     COMPANY("Company"),
     WELCOME("Welcome"),

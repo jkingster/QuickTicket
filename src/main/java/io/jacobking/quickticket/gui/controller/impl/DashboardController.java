@@ -44,12 +44,6 @@ public class DashboardController extends Controller {
         }
     }
 
-
-    @FXML
-    private void onConfiguration() {
-        Display.show(Route.CONFIGURATION);
-    }
-
     @FXML
     private void onAbout() {
         Display.show(Route.ABOUT);

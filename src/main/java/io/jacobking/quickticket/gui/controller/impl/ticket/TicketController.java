@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.gui.controller.impl.ticket;
 
-import io.jacobking.quickticket.core.email.EmailBuilder;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -278,31 +277,12 @@ public class TicketController extends Controller {
                     final String comment = pair.getRight();
                     if (type == ButtonType.YES) {
                         postComment(viewedTicket, comment);
-                        processNotificationEmail(viewedTicket, comment);
                     } else if (type == ButtonType.NO) {
                         postComment(viewedTicket, comment);
                     } else if (type == ButtonType.CANCEL) {
                         postFailureComment(viewedTicket, "Notification not sent and resolving comment unknown.");
                     }
                 });
-    }
-
-    private void processNotificationEmail(final TicketModel viewedTicket, final String resolvingComment) {
-        final EmployeeModel employee = getEmployee();
-        if (employee == null) {
-            Announcements.get().showError("Failed to retrieve record.", "Employee could not be fetched from database.", "Please attach an employee.");
-            postFailureComment(viewedTicket, "Could not retrieve employee record.");
-            return;
-        }
-
-        final String employeeEmail = employee.getEmail();
-        if (employeeEmail.isEmpty()) {
-            Announcements.get().showError("Failed to retrieve e-mail.", "Could not notify employee.", "PLease attach an e-mail to employees' record.");
-            postFailureComment(viewedTicket, "Could not retrieve employee e-mail.");
-            return;
-        }
-
-        notifyEmployee(viewedTicket, employeeEmail, resolvingComment, employee);
     }
 
     private void postEmptyResolvingComment(final TicketModel viewedTicket) {
@@ -313,19 +293,6 @@ public class TicketController extends Controller {
         postComment(ticketModel, comment);
     }
 
-    private void notifyEmployee(final TicketModel viewedTicket, final String email, final String resolvingComment, final EmployeeModel employeeModel) {
-        new EmailBuilder(email, EmailBuilder.EmailType.RESOLVED)
-                .format(
-                        viewedTicket.getId(),
-                        viewedTicket.getTitle(),
-                        DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, viewedTicket.getCreation()),
-                        employeeModel.getFullName(),
-                        resolvingComment
-                )
-                .email(emailConfig)
-                .setSubject(getSubject(viewedTicket))
-                .sendEmail();
-    }
 
     private String getSubject(final TicketModel ticketModel) {
         return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());

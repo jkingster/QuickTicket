@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.core.database.repository;
 
 import io.jacobking.quickticket.core.database.repository.impl.*;
-import io.jacobking.quickticket.gui.controller.impl.InventoryController;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 
@@ -61,15 +60,10 @@ public class RepoCrud {
                 case TICKET -> (Repository<? extends Entity>) new TicketRepository();
                 case ALERT -> (Repository<? extends Entity>) new AlertRepository();
                 case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
-                case INVENTORY -> (Repository<? extends Entity>) new InventoryRepository();
                 case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
-                case EMAIL -> (Repository<? extends Entity>) new EmailInterfaceRepository();
                 case COMPANY -> (Repository<? extends Entity>) new CompanyRepository();
                 case DEPARTMENT -> (Repository<? extends Entity>) new DepartmentRepository();
-                case FLYWAY -> (Repository<? extends Entity>) new FlywayRepository();
-                case LINKED_TICKET -> (Repository<? extends Entity>) new LinkedTicketRepository();
                 case CATEGORY -> (Repository<? extends Entity>) new CategoryRepository();
-                case INVENTORY_LOG -> (Repository<? extends Entity>) new InventoryLogRepository();
             });
         }
     }

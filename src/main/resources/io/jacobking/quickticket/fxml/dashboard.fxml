@@ -20,7 +20,6 @@
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
-                                <MenuItem mnemonicParsing="false" onAction="#onConfiguration" text="Database" />
                                 <SeparatorMenuItem mnemonicParsing="false" />
                                 <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
                             </items>

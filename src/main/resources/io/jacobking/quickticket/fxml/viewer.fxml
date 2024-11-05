@@ -73,9 +73,6 @@
             <Button fx:id="deleteButton1" disable="true" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onDeleteComment" prefHeight="25.0" prefWidth="64.0" stylesheets="@../css/core/button.css" text="Format" />
          </children>
       </HBox>
-      <ListView fx:id="linkedTicketList" layoutX="924.0" layoutY="8.0" prefHeight="331.0" prefWidth="204.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
-      <Button fx:id="linkTicketButton" layoutX="928.0" layoutY="344.0" mnemonicParsing="false" onAction="#onLinkTicket" prefHeight="25.0" prefWidth="132.0" stylesheets="@../css/core/button.css" text="Link Ticket" />
-      <Button fx:id="removeTicketButton" layoutX="1066.0" layoutY="344.0" mnemonicParsing="false" onAction="#onRemoveTicket" stylesheets="@../css/core/button.css" text="Remove" />
    </children>
    <stylesheets>
       <URL value="@../css/core/base.css" />
