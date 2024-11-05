@@ -4,7 +4,7 @@ import io.jacobking.quickticket.bridge.Bridge;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.core.type.StatusType;
-import io.jacobking.quickticket.gui.model.impl.TicketModel;
+import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.tables.pojos.Ticket;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

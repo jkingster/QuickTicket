@@ -4,7 +4,7 @@ import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.Entity;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.database.repository.RepoType;
-import io.jacobking.quickticket.gui.model.Model;
+import io.jacobking.quickticket.gui.Model;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;

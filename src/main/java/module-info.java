@@ -31,10 +31,8 @@ module io.jacobking.quickticket {
     opens io.jacobking.quickticket.tables.pojos to org.jooq;
     exports io.jacobking.quickticket.tables.pojos;
 
-    opens io.jacobking.quickticket.gui.controller.impl.ticket to javafx.fxml;
-    exports io.jacobking.quickticket.gui.controller.impl.ticket;
+    opens io.jacobking.quickticket.gui.controller to javafx.fxml;
+    exports io.jacobking.quickticket.gui.controller;
 
-    opens io.jacobking.quickticket.gui.controller.impl to javafx.fxml;
-    exports io.jacobking.quickticket.gui.controller.impl;
 
 }

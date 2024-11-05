@@ -4,7 +4,7 @@ import io.jacobking.quickticket.bridge.Bridge;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.alert.Announcements;
-import io.jacobking.quickticket.gui.model.impl.CommentModel;
+import io.jacobking.quickticket.gui.model.CommentModel;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;

@@ -5,8 +5,8 @@ import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.alert.Announcements;
-import io.jacobking.quickticket.gui.screen.Display;
-import io.jacobking.quickticket.gui.screen.Route;
+import io.jacobking.quickticket.gui.Display;
+import io.jacobking.quickticket.gui.Route;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
