@@ -19,7 +19,7 @@ public class FXUtility {
         try {
             return loader.load();
         } catch (IOException e) {
-            throw new RuntimeException(Logs.exception(e));
+            throw new RuntimeException();
         }
     }
 }

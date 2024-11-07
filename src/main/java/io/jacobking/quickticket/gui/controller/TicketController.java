@@ -36,6 +36,8 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
+import org.kordamp.ikonli.material2.Material2AL;
+import org.kordamp.ikonli.material2.Material2MZ;
 
 import java.awt.*;
 import java.io.IOException;
@@ -69,13 +71,14 @@ public class TicketController extends Controller {
     @FXML private Pane pausedPane;
     @FXML private Pane resolvedPane;
 
+    @FXML private HBox   actionBox;
     @FXML private Button createButton;
     @FXML private Button categoriesButton;
-
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
         configureLabels();
+        configureActionBox();
 
         openPane.setUserData(StatusType.OPEN);
         activePane.setUserData(StatusType.ACTIVE);
@@ -87,8 +90,12 @@ public class TicketController extends Controller {
         pausedPane.setOnMousePressed(this::togglePane);
         resolvedPane.setOnMousePressed(this::togglePane);
 
-        createButton.setOnAction(event -> onCreate());
-        categoriesButton.setOnAction(event -> onCategories());
+    }
+
+    private void configureActionBox() {
+
+        createButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.OPEN_IN_NEW));
+        categoriesButton.setGraphic(IconLoader.getMaterialIcon(Material2AL.CATEGORY));
     }
 
 
@@ -520,8 +527,8 @@ public class TicketController extends Controller {
                 .setArrowOrientation(PopOver.ArrowLocation.BOTTOM_RIGHT)
                 .setTitle("Ticket Categories")
                 .useDefaultSettings()
-                .setContent(getCategoryNode())
-                .setOwner(categoriesButton);
+                .setContent(getCategoryNode());
+        //  .setOwner(categoriesButton);
         popOverBuilder.show();
     }
 

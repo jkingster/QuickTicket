@@ -12,6 +12,10 @@ module io.jacobking.quickticket {
     requires org.slf4j;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
+    requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.ikonli.core;
+    requires org.kordamp.ikonli.material2;
+    requires org.kordamp.ikonli.materialdesign;
     requires flyway.core;
     requires ch.qos.logback.classic;
     requires ch.qos.logback.core;
@@ -25,8 +29,6 @@ module io.jacobking.quickticket {
 
     opens io.jacobking.quickticket.tables.records to org.jooq;
     exports io.jacobking.quickticket.tables.records;
-
-
 
     opens io.jacobking.quickticket.tables.pojos to org.jooq;
     exports io.jacobking.quickticket.tables.pojos;
