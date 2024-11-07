@@ -8,7 +8,7 @@ import javafx.stage.Modality;
 
 public class ViewerScreen extends Screen {
     public ViewerScreen() {
-        super(Route.VIEWER, Modality.APPLICATION_MODAL);
+        super(Route.VIEWER, Modality.APPLICATION_MODAL, new ViewerController());
     }
 
 }

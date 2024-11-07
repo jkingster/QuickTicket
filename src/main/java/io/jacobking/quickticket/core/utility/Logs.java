@@ -28,4 +28,9 @@ public class Logs {
     public static void debug(final String message, final Object... objects) {
         getInstance().logger.debug(message, objects);
     }
+
+    public static String exception(final Exception e) {
+        getInstance().logger.error(e.getMessage());
+        return e.getMessage();
+    }
 }

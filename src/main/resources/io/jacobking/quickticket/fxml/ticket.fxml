@@ -8,20 +8,20 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" styleClass="body" stylesheets="@../css/screen/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.TicketController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" styleClass="body" stylesheets="@../css/screen/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER" layoutX="-75.0" layoutY="14.0" prefHeight="82.0" prefWidth="1200.0" spacing="25.0">
          <children>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
-                  <Button layoutX="38.0" layoutY="41.0" mnemonicParsing="false" onAction="#onCreate" prefHeight="25.0" prefWidth="85.0" text="Create" />
+                  <Button fx:id="createButton" layoutX="38.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="85.0" text="Create" />
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Ticket" textAlignment="CENTER" />
                </children>
             </Pane>
             <Pane prefHeight="82.0" prefWidth="160.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="6.0" prefHeight="35.0" prefWidth="141.0" styleClass="card-header" text="Categories" textAlignment="CENTER" />
-                  <Button fx:id="categoriesButton" layoutX="35.0" layoutY="43.0" mnemonicParsing="false" onAction="#onCategories" prefHeight="25.0" prefWidth="77.0" text="Categories" />
+                  <Button fx:id="categoriesButton" layoutX="42.0" layoutY="41.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="77.0" text="Categories" />
                </children>
             </Pane>
             <Pane fx:id="openPane" prefHeight="82.0" prefWidth="141.0" styleClass="hover-card" stylesheets="@../css/core/card.css">

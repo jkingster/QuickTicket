@@ -34,16 +34,16 @@
         <TabPane fx:id="tabPane" layoutY="32.0" prefHeight="1048.0" prefWidth="1920.0" stylesheets="@../css/core/tab-pane.css" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab text="Ticket">
-                    <fx:include source="ticket.fxml" />
+                    <fx:include fx:id="ticketPane" source="ticket.fxml" />
                 </Tab>
                 <Tab text="Employee">
                     <content>
-                        <fx:include source="employee.fxml" />
+                        <fx:include fx:id="employeePane" source="employee.fxml" />
                     </content>
                 </Tab>
                 <Tab text="Settings">
                     <content>
-                        <fx:include source="settings.fxml" />
+                        <fx:include fx:id="settingsPane" source="settings.fxml" />
                     </content>
                 </Tab>
                 <Tab fx:id="developerTab" closable="false" disable="true" style="visibility: hidden;" text="Developer" />

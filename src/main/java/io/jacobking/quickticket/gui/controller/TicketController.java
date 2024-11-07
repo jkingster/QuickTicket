@@ -3,14 +3,14 @@ package io.jacobking.quickticket.gui.controller;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.Data;
+import io.jacobking.quickticket.gui.Route;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
-import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.utility.IconLoader;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.beans.property.ObjectProperty;
@@ -69,6 +69,9 @@ public class TicketController extends Controller {
     @FXML private Pane pausedPane;
     @FXML private Pane resolvedPane;
 
+    @FXML private Button createButton;
+    @FXML private Button categoriesButton;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
@@ -84,6 +87,8 @@ public class TicketController extends Controller {
         pausedPane.setOnMousePressed(this::togglePane);
         resolvedPane.setOnMousePressed(this::togglePane);
 
+        createButton.setOnAction(event -> onCreate());
+        categoriesButton.setOnAction(event -> onCategories());
     }
 
 
@@ -149,9 +154,7 @@ public class TicketController extends Controller {
         });
 
 
-
-        //ticketTable.setItems(bridgeContext.getTicket().getObservableList());
-
+        ticketTable.setItems(bridgeContext.getTicket().getObservableList());
         createdColumn.setComparator(LocalDateTime::compareTo);
         createdColumn.setSortType(TableColumn.SortType.DESCENDING);
         ticketTable.getSortOrder().clear();
@@ -511,7 +514,6 @@ public class TicketController extends Controller {
         ticketTable.refresh();
     }
 
-    @FXML private Button categoriesButton;
 
     @FXML private void onCategories() {
         final PopOverBuilder popOverBuilder = new PopOverBuilder()

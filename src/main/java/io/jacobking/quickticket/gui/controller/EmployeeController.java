@@ -1,14 +1,14 @@
 package io.jacobking.quickticket.gui.controller;
 
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.Data;
+import io.jacobking.quickticket.gui.Route;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.model.CompanyModel;
 import io.jacobking.quickticket.gui.model.DepartmentModel;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
-import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.utility.IconLoader;
 import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.SimpleStringProperty;
@@ -51,6 +51,9 @@ public class EmployeeController extends Controller {
     @FXML private Button createButton;
     @FXML private Button updateButton;
     @FXML private Button deleteButton;
+    @FXML private Button resetButton;
+    @FXML private Button companyButton;
+    @FXML private Button departmentButton;
     @FXML private Button updateInfoButton;
 
     @FXML private TextArea infoTextArea;
@@ -159,6 +162,13 @@ public class EmployeeController extends Controller {
         updateButton.disableProperty().bind(createButton.disabledProperty().not());
         deleteButton.disableProperty().bind(createButton.disabledProperty().not());
         updateInfoButton.disableProperty().bind(createButton.disabledProperty().not());
+
+        createButton.setOnAction(event -> onCreate());
+        deleteButton.setOnAction(event -> onDelete());
+        updateButton.setOnAction(event -> onUpdate());
+        resetButton.setOnAction(event -> onReset());
+        companyButton.setOnAction(event -> onCompanyManager());
+        departmentButton.setOnAction(event -> onDepartmentManager());
     }
 
     private void populateFields(final EmployeeModel employeeModel) {

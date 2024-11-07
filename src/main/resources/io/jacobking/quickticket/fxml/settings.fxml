@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.SettingsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="758.0" prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <stylesheets>
       <URL value="@../css/screen/ticket.css" />
       <URL value="@../css/core/card.css" />
@@ -30,7 +30,7 @@
                         </TableView>
                         <HBox alignment="CENTER_RIGHT" layoutX="-1.0" layoutY="281.0" prefHeight="32.0" prefWidth="301.0" spacing="5.0">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#onUpdateAlerts" text="Update" />
+                              <Button fx:id="updateAlertButton" mnemonicParsing="false" text="Update" />
                            </children>
                            <padding>
                               <Insets right="10.0" />

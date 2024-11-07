@@ -1,7 +1,7 @@
 package io.jacobking.quickticket.gui.controller;
 
-import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.Controller;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.model.AlertModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,9 +16,13 @@ public class SettingsController extends Controller {
     @FXML private TableView<AlertModel>           alertTable;
     @FXML private TableColumn<AlertModel, Void>   checkColumn;
     @FXML private TableColumn<AlertModel, String> alertNameColumn;
+    @FXML private Button                          updateAlertButton;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureAlertTable();
+
+        updateAlertButton.setOnAction(event -> onUpdateAlerts());
     }
 
     private void configureAlertTable() {

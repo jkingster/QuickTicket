@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.jacobking.quickticket.gui.controller.EmployeeController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="14.0" prefHeight="106.0" prefWidth="1176.0" spacing="10.0">
          <children>
@@ -32,14 +32,14 @@
                      <children>
                         <HBox prefHeight="30.0" prefWidth="125.0" spacing="5.0">
                            <children>
-                              <Button fx:id="createButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCreate" prefWidth="58.0" styleClass="button-success" text="Create" />
-                              <Button maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onReset" prefWidth="58.0" text="Reset" />
+                              <Button fx:id="createButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="58.0" styleClass="button-success" text="Create" />
+                              <Button fx:id="resetButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="58.0" text="Reset" />
                            </children>
                         </HBox>
                         <HBox prefHeight="28.0" prefWidth="125.0" spacing="5.0">
                            <children>
-                              <Button fx:id="updateButton" mnemonicParsing="false" onAction="#onUpdate" styleClass="button-success" text="Update" />
-                              <Button fx:id="deleteButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onDelete" prefWidth="58.0" styleClass="button-warning" text="Delete" />
+                              <Button fx:id="updateButton" mnemonicParsing="false" styleClass="button-success" text="Update" />
+                              <Button fx:id="deleteButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="58.0" styleClass="button-warning" text="Delete" />
                            </children>
                         </HBox>
                      </children>
@@ -51,13 +51,13 @@
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label layoutX="6.0" layoutY="8.0" prefHeight="27.0" prefWidth="165.0" styleClass="card-header" text="Company Manager" />
-                  <Button layoutX="52.0" layoutY="61.0" mnemonicParsing="false" onAction="#onCompanyManager" prefHeight="25.0" prefWidth="96.0" text="Open" />
+                  <Button fx:id="companyButton" layoutX="52.0" layoutY="61.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="96.0" text="Open" />
                </children>
             </Pane>
             <Pane prefHeight="100.0" prefWidth="204.0" styleClass="card" stylesheets="@../css/core/card.css">
                <children>
                   <Label layoutX="-1.0" layoutY="9.0" styleClass="card-header" text="Department Manager" />
-                  <Button layoutX="52.0" layoutY="61.0" mnemonicParsing="false" onAction="#onDepartmentManager" prefHeight="25.0" prefWidth="96.0" text="Open" />
+                  <Button fx:id="departmentButton" layoutX="52.0" layoutY="61.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="96.0" text="Open" />
                </children>
             </Pane>
          </children>
@@ -92,7 +92,7 @@
                            <children>
                               <Label prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="E-mail:" />
                               <TextField fx:id="emailField" prefHeight="25.0" prefWidth="284.0" promptText="john@doe.com" styleClass="text-field" />
-                              <Button fx:id="emailButton" mnemonicParsing="false" onAction="#onEmail" prefHeight="25.0" prefWidth="36.0" />
+                              <Button fx:id="emailButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="36.0" />
                            </children>
                         </HBox>
                         <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="506.0" spacing="10.0">
@@ -116,7 +116,7 @@
                <children>
                   <Label layoutX="14.0" layoutY="8.0" styleClass="card-header" text="Misc. Info" />
                   <TextArea fx:id="infoTextArea" layoutX="10.0" layoutY="35.0" prefHeight="181.0" prefWidth="633.0" promptText="Miscellaneous information about employee." stylesheets="@../css/core/text-area.css" wrapText="true" />
-                  <Button fx:id="updateInfoButton" layoutX="583.0" layoutY="6.0" mnemonicParsing="false" onAction="#onUpdateInfo" text="Update" />
+                  <Button fx:id="updateInfoButton" layoutX="583.0" layoutY="6.0" mnemonicParsing="false" text="Update" />
                </children>
             </Pane>
          </children>

@@ -49,7 +49,6 @@ public class Screen {
             setController(controller);
             controller.setData(data);
         }
-
     }
 
     public void setController(final Controller controller) {
