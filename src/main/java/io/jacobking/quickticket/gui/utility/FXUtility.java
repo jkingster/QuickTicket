@@ -1,8 +1,8 @@
 package io.jacobking.quickticket.gui.utility;
 
 import io.jacobking.quickticket.App;
-import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.Controller;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -19,7 +19,7 @@ public class FXUtility {
         try {
             return loader.load();
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e.fillInStackTrace());
         }
     }
 }

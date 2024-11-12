@@ -24,6 +24,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -38,6 +39,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.kordamp.ikonli.material2.Material2AL;
 import org.kordamp.ikonli.material2.Material2MZ;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 import java.awt.*;
 import java.io.IOException;
@@ -71,9 +73,14 @@ public class TicketController extends Controller {
     @FXML private Pane pausedPane;
     @FXML private Pane resolvedPane;
 
-    @FXML private HBox   actionBox;
-    @FXML private Button createButton;
-    @FXML private Button categoriesButton;
+    @FXML private HBox      actionBox;
+    @FXML private Button    createButton;
+    @FXML private Button    openButton;
+    @FXML private Button    deleteButton;
+    @FXML private Button    searchButton;
+    @FXML private Button    categoriesButton;
+    @FXML private Button    resetButton;
+    @FXML private TextField searchField;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureTable();
@@ -93,9 +100,59 @@ public class TicketController extends Controller {
     }
 
     private void configureActionBox() {
-
         createButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.OPEN_IN_NEW));
+        createButton.setOnAction(event -> onCreate());
+
+        openButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.PREVIEW));
+        openButton.setOnAction(event -> {
+            final TicketModel model = getSelectedTicket();
+            if (model == null) {
+                Announcements.get().showError("Could not open ticket.", "No ticket was selected.");
+                return;
+            }
+            openTicket(model);
+        });
+
+        deleteButton.setGraphic(IconLoader.getMaterialIcon(Material2AL.DELETE_FOREVER));
+        deleteButton.setOnAction(event -> {
+            final TicketModel model = getSelectedTicket();
+            if (model == null) {
+                Announcements.get().showError("Could not delete ticket.", "No ticket was selected.");
+                return;
+            }
+            onDelete(model);
+        });
+
         categoriesButton.setGraphic(IconLoader.getMaterialIcon(Material2AL.CATEGORY));
+        categoriesButton.setOnAction(event -> onCategories());
+
+        searchButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.SEARCH));
+        searchButton.setOnAction(event -> {
+            final String searchText = searchField.getText();
+            if (searchText.isEmpty()) {
+                Announcements.get().showError("Error", "Could not search for ticket. No text was provided.");
+                return;
+            }
+
+            onSearch(searchText);
+        });
+
+        resetButton.setGraphic(IconLoader.getMaterialIcon(Material2AL.CLEAR));
+        resetButton.setOnAction(event -> onReset());
+    }
+
+    private void onSearch(final String text) {
+
+    }
+
+    private void onReset() {
+        ticketTable.getSelectionModel().clearSelection();
+        searchField.clear();
+    }
+
+
+    private TicketModel getSelectedTicket() {
+        return ticketTable.getSelectionModel().getSelectedItem();
     }
 
 
@@ -527,8 +584,8 @@ public class TicketController extends Controller {
                 .setArrowOrientation(PopOver.ArrowLocation.BOTTOM_RIGHT)
                 .setTitle("Ticket Categories")
                 .useDefaultSettings()
-                .setContent(getCategoryNode());
-        //  .setOwner(categoriesButton);
+                .setContent(getCategoryNode())
+                .setOwner(categoriesButton);
         popOverBuilder.show();
     }
 

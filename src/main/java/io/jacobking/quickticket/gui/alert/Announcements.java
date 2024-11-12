@@ -15,6 +15,11 @@ import java.util.Optional;
 
 public class Announcements {
 
+    /**
+     * TODO: Rework the implementation of this class. Being in a global state I'm not fond of.
+     *       Additionally the "announcement" should be encapsulated by a type (ALERT, NOTIFICATION, OVERRIDE?)
+     */
+
     private static Announcements instance = null;
 
     private Map<String, AlertModel> alertMap;

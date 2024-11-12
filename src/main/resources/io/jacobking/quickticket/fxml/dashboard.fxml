@@ -13,11 +13,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1600.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <AnchorPane prefHeight="21.0" prefWidth="1200.0">
+        <AnchorPane prefHeight="25.0" prefWidth="1400.0">
             <children>
-                <MenuBar prefHeight="25.0" prefWidth="1200.0">
+                <MenuBar prefHeight="25.0" prefWidth="1600.0">
                     <menus>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
@@ -64,7 +64,7 @@
                 </VBox>
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="contentPane" layoutX="217.0" layoutY="25.0" prefHeight="775.0" prefWidth="985.0" styleClass="content-pane">
+        <AnchorPane fx:id="contentPane" layoutX="217.0" layoutY="25.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="775.0" prefWidth="1384.0" styleClass="content-pane">
             <fx:include fx:id="ticketContent" source="ticket.fxml" visible="false" />
             <fx:include fx:id="employeeContent" source="employee.fxml" visible="false" />
             <fx:include fx:id="settingsContent" source="settings.fxml" visible="false" />
