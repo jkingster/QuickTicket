@@ -1,102 +1,111 @@
 package io.jacobking.quickticket.gui.controller;
 
+
 import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.model.AlertModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class SettingsController extends Controller {
 
-    @FXML private TableView<AlertModel>           alertTable;
-    @FXML private TableColumn<AlertModel, Void>   checkColumn;
-    @FXML private TableColumn<AlertModel, String> alertNameColumn;
-    @FXML private Button                          updateAlertButton;
+    @FXML private TableView<AlertModel>            alertTable;
+    @FXML private TableColumn<AlertModel, Boolean> checkColumn;
+    @FXML private TableColumn<AlertModel, String>  alertNameColumn;
+    @FXML private Button                           updateAlertButton;
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Set up cell value factories
+        alertNameColumn.setCellValueFactory(data -> data.getValue().alertNameProperty());
+        checkColumn.setCellValueFactory(data -> data.getValue().alertStateProperty());
 
-    @Override public void initialize(URL url, ResourceBundle resourceBundle) {
-        configureAlertTable();
+        // Set up CheckBox in the checkColumn
+        checkColumn.setCellFactory(createCheckBoxCellFactory());
+
+        // Load data into the TableView
+        alertTable.setItems(bridgeContext.getAlerts().getObservableList());
+
+        // Configure listener for parent alerts
+        configureParentListener();
 
         updateAlertButton.setOnAction(event -> onUpdateAlerts());
     }
 
-    private void configureAlertTable() {
-        checkColumn.setCellFactory(data -> new TableCell<>() {
-            @Override protected void updateItem(Void unused, boolean b) {
-                super.updateItem(unused, b);
-                if (b) {
-                    setGraphic(null);
-                    return;
-                }
+    private Callback<TableColumn<AlertModel, Boolean>, TableCell<AlertModel, Boolean>> createCheckBoxCellFactory() {
+        return column -> new TableCell<>() {
+            private final CheckBox checkBox = new CheckBox();
 
-                final AlertModel model = getTableRow().getItem();
-                if (model == null) {
-                    setGraphic(null);
-                    return;
-                }
-
-                final CheckBox checkBox = new CheckBox();
-                checkBox.setSelected(model.getAlertState());
-                checkBox.disableProperty().bind(model.disabledStateProperty());
-
-                final int modelId = model.getId();
-                final boolean isParentModel = (modelId == 1) || (modelId == 2);
-                if (isParentModel) {
-                    handleParentState(modelId, checkBox, model);
-                }
-
-                checkBox.selectedProperty().bindBidirectional(model.alertStateProperty());
-
-                setGraphic(checkBox);
-            }
-        });
-
-        alertNameColumn.setCellValueFactory(data -> data.getValue().alertNameProperty());
-        alertTable.setItems(bridgeContext.getAlerts().getObservableList());
-    }
-
-    @FXML private void onUpdateAlerts() {
-        Announcements.get().showConfirmation(this::updateAlerts, "Confirmation", "Are you sure you want to update alerts and notifications?", "Original settings cannot be recovered.")
-                .ifPresent(type -> {
-                    if (type == ButtonType.YES) {
-                        updateAlerts();
+            {
+                checkBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+                    AlertModel alertModel = getTableRow().getItem();
+                    if (alertModel != null) {
+                        alertModel.alertStateProperty().setValue(isSelected);
                     }
                 });
+            }
+
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                AlertModel alertModel = getTableRow().getItem();
+                if (alertModel != null) {
+                    // Set checkbox state
+                    checkBox.setSelected(alertModel.alertStateProperty().get());
+
+                    // Bind disable state for child checkboxes to the parent's alert state
+                    if (alertModel.getAlertParentId() != 0) { // It's a child alert
+                        alertTable.getItems().stream()
+                                .filter(parent -> parent.getId() == alertModel.getAlertParentId())
+                                .findFirst()
+                                .ifPresent(parentAlert -> checkBox.disableProperty().bind(parentAlert.alertStateProperty()));
+                    }
+
+                    setGraphic(checkBox);
+                }
+            }
+        };
     }
 
-    private void updateAlerts() {
-        final ObservableList<AlertModel> failedUpdates = FXCollections.observableArrayList();
-        bridgeContext.getAlerts().getObservableList().forEach(model -> {
-            if (!bridgeContext.getAlerts().update(model)) {
-                failedUpdates.add(model);
+
+    private void configureParentListener() {
+        alertTable.getItems().forEach(alert -> {
+            if (alert.getAlertParentId() == 0) { // It's a parent alert
+                alert.alertStateProperty().addListener((obs, wasEnabled, isEnabled) -> {
+                    alertTable.getItems().stream()
+                            .filter(childAlert -> childAlert.getAlertParentId() == alert.getId())
+                            .forEach(childAlert -> {
+                                childAlert.alertStateProperty().setValue(!isEnabled && childAlert.alertStateProperty().get());
+                            });
+                });
             }
         });
+    }
 
-        if (!failedUpdates.isEmpty()) {
-            Announcements.get().showWarning("Could not update alerts.", "Total failed: " + failedUpdates.size());
+    private void onUpdateAlerts() {
+        int failureCounter = 0;
+        for (final AlertModel alertModel : alertTable.getItems()) {
+            if (!bridgeContext.getAlerts().update(alertModel)) {
+                System.out.println("?");
+                failureCounter++;
+            }
+        }
+
+        if (failureCounter >= 1) {
+            Announcements.get().showError("Error", "Could not update an alert model.");
             return;
         }
 
-        Announcements.get().showInfo("Success", "Alerts & notifications updated.");
-    }
-
-    private void handleParentState(final int modelId, final CheckBox checkBox, final AlertModel model) {
-        checkBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
-            bridgeContext.getAlerts().getObservableList().forEach(targetModel -> {
-                final int parentId = targetModel.getAlertParentId();
-                if (parentId == modelId) {
-                    targetModel.setDisabledState(isSelected);
-                    targetModel.setAlertState(false);
-                }
-            });
-
-            alertTable.refresh(); // Refresh the table after processing all the models
-        });
+        Announcements.get().showConfirm("Success", "Alerts & notifications updated successfully.");
     }
 
 }

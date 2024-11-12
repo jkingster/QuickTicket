@@ -6,17 +6,15 @@ import javafx.beans.property.*;
 
 public class AlertModel extends Model<Alerts> {
 
-    private final StringProperty  alertName  = new SimpleStringProperty();
-    private final BooleanProperty alertState = new SimpleBooleanProperty();
+    private final StringProperty  alertName     = new SimpleStringProperty();
+    private final BooleanProperty alertState    = new SimpleBooleanProperty();
     private final IntegerProperty alertParentId = new SimpleIntegerProperty();
-    private final BooleanProperty disabledState = new SimpleBooleanProperty();
 
     public AlertModel(int id, String alertName, boolean alertState, int parentId) {
         super(id);
         this.alertName.setValue(alertName);
         this.alertState.setValue(alertState);
         this.alertParentId.setValue(parentId);
-        this.disabledState.setValue(false);
     }
 
     public AlertModel(final Alerts alerts) {
@@ -66,18 +64,6 @@ public class AlertModel extends Model<Alerts> {
 
     public void setAlertParentId(int alertParentId) {
         this.alertParentId.set(alertParentId);
-    }
-
-    public boolean isDisabledState() {
-        return disabledState.get();
-    }
-
-    public BooleanProperty disabledStateProperty() {
-        return disabledState;
-    }
-
-    public void setDisabledState(boolean disabledState) {
-        this.disabledState.set(disabledState);
     }
 
     @Override public Alerts toEntity() {
