@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
+import org.kordamp.ikonli.material2.Material2AL;
 import org.kordamp.ikonli.material2.Material2MZ;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
@@ -37,6 +38,13 @@ public class DashboardController extends Controller {
     @FXML private Label settingsIconLabel;
     @FXML private Label settingsDisplayLabel;
 
+    @FXML private HBox exitBox;
+    @FXML private Label exitIconLabel;
+    @FXML private Label exitDisplayLabel;
+
+    @FXML private HBox organizationBox;
+    @FXML private Label organizationIconLabel;
+    @FXML private Label organizationDisplayLabel;
 
     @FXML private AnchorPane ticketContent;
     @FXML private AnchorPane employeeContent;
@@ -55,8 +63,14 @@ public class DashboardController extends Controller {
         final DashboardTab employeeTab = new DashboardTab("Employee", employeeBox, employeeIconLabel, employeeDisplayLabel, employeeContent);
         employeeTab.setIcon(IconLoader.getMaterialIcon(Material2MZ.PERSON));
 
+        final DashboardTab organizationTab = new DashboardTab("Organization", organizationBox, organizationIconLabel, organizationDisplayLabel, null);
+        organizationTab.setIcon(IconLoader.getMaterialIcon(Material2AL.BUSINESS));
+
         final DashboardTab settingsTab = new DashboardTab("Settings", settingsBox, settingsIconLabel, settingsDisplayLabel, settingsContent);
         settingsTab.setIcon(IconLoader.getMaterialIcon(Material2MZ.SETTINGS));
+
+        final DashboardTab exitTab = new DashboardTab("Exit", exitBox, exitIconLabel, exitDisplayLabel, null);
+        exitTab.setIcon(IconLoader.getMaterialIcon(Material2AL.EXIT_TO_APP));
 
         this.activeTab = ticketTab;
         activeTab.activate();
@@ -65,6 +79,7 @@ public class DashboardController extends Controller {
         ticketBox.setOnMousePressed(event -> handleTabChange(ticketTab));
         employeeBox.setOnMousePressed(event -> handleTabChange(employeeTab));
         settingsBox.setOnMousePressed(event -> handleTabChange(settingsTab));
+        exitBox.setOnMousePressed(event -> onExit());
     }
 
     private void handleTabChange(final DashboardTab tab) {

@@ -105,6 +105,10 @@ public abstract class Bridge<E extends Entity, V extends Model<E>> {
         return getObservableList().filtered(filter);
     }
 
+    public V getFirst() {
+        return getObservableList().get(0);
+    }
+
     public List<E> getOriginalEntities() {
         return crud.getAll(repoType);
     }

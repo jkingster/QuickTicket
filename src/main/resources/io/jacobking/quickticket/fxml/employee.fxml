@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
@@ -10,134 +12,120 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0" prefWidth="1384.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="14.0" prefHeight="106.0" prefWidth="1176.0" spacing="10.0">
-         <children>
-            <Pane prefHeight="106.0" prefWidth="825.0" styleClass="card" stylesheets="@../css/core/card.css">
-               <children>
-                  <Label layoutX="14.0" layoutY="7.0" styleClass="card-header" text="Lookup Employee" />
-                  <VBox alignment="CENTER" layoutX="192.0" layoutY="12.0" prefHeight="82.0" prefWidth="151.0" spacing="5.0">
-                     <children>
-                        <SearchableComboBox fx:id="companyComboBox" prefHeight="25.0" prefWidth="167.0" promptText="Company" stylesheets="@../css/core/combo-box.css" />
-                        <SearchableComboBox fx:id="departmentComboBox" prefHeight="25.0" prefWidth="167.0" promptText="Department" stylesheets="@../css/core/combo-box.css" />
-                        <SearchableComboBox fx:id="employeeComboBox" prefHeight="25.0" prefWidth="167.0" promptText="Employee" stylesheets="@../css/core/combo-box.css" />
-                     </children>
-                  </VBox>
-                  <VBox alignment="CENTER" layoutX="25.0" layoutY="28.0" prefHeight="82.0" prefWidth="129.0">
-                     <children>
-                        <HBox prefHeight="30.0" prefWidth="125.0" spacing="5.0">
-                           <children>
-                              <Button fx:id="createButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="58.0" styleClass="button-success" text="Create" />
-                              <Button fx:id="resetButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="58.0" text="Reset" />
-                           </children>
-                        </HBox>
-                        <HBox prefHeight="28.0" prefWidth="125.0" spacing="5.0">
-                           <children>
-                              <Button fx:id="updateButton" mnemonicParsing="false" styleClass="button-success" text="Update" />
-                              <Button fx:id="deleteButton" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="58.0" styleClass="button-warning" text="Delete" />
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-                  <Separator layoutX="352.0" layoutY="9.0" orientation="VERTICAL" prefHeight="91.0" prefWidth="7.0" />
-                  <HBox alignment="CENTER_LEFT" layoutX="367.0" layoutY="34.0" prefHeight="53.0" prefWidth="451.0" />
-               </children>
-            </Pane>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
-               <children>
-                  <Label layoutX="6.0" layoutY="8.0" prefHeight="27.0" prefWidth="165.0" styleClass="card-header" text="Company Manager" />
-                  <Button fx:id="companyButton" layoutX="52.0" layoutY="61.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="96.0" text="Open" />
-               </children>
-            </Pane>
-            <Pane prefHeight="100.0" prefWidth="204.0" styleClass="card" stylesheets="@../css/core/card.css">
-               <children>
-                  <Label layoutX="-1.0" layoutY="9.0" styleClass="card-header" text="Department Manager" />
-                  <Button fx:id="departmentButton" layoutX="52.0" layoutY="61.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="96.0" text="Open" />
-               </children>
-            </Pane>
-         </children>
-      </HBox>
-      <HBox layoutX="13.0" layoutY="127.0" prefHeight="223.0" prefWidth="1895.0" spacing="10.0">
-         <children>
-            <Pane prefHeight="217.0" prefWidth="513.0" styleClass="card" stylesheets="@../css/core/card.css">
-               <children>
-                  <VBox layoutX="13.0" layoutY="9.0" prefHeight="210.0" prefWidth="487.0">
-                     <children>
-                        <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="539.0" spacing="10.0">
-                           <children>
-                              <Label prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Employee Name:" />
-                              <TextField fx:id="firstNameField" promptText="First Name" styleClass="text-field" />
-                              <TextField fx:id="lastNameField" promptText="Last Name" />
-                           </children>
-                        </HBox>
-                        <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="484.0" spacing="10.0">
-                           <children>
-                              <Label prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Organization:" />
-                              <SearchableComboBox fx:id="orgCompanyCheckBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="159.0" promptText="Company" stylesheets="@../css/core/combo-box.css" />
-                              <SearchableComboBox fx:id="orgDepartmentCheckBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="159.0" promptText="Department" stylesheets="@../css/core/combo-box.css" />
-                           </children>
-                        </HBox>
-                        <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="484.0" spacing="10.0">
-                           <children>
-                              <Label prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Title:" />
-                              <TextField fx:id="titleField" prefHeight="25.0" prefWidth="330.0" styleClass="text-field" />
-                           </children>
-                        </HBox>
-                        <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="506.0" spacing="10.0">
-                           <children>
-                              <Label prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="E-mail:" />
-                              <TextField fx:id="emailField" prefHeight="25.0" prefWidth="284.0" promptText="john@doe.com" styleClass="text-field" />
-                              <Button fx:id="emailButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="36.0" />
-                           </children>
-                        </HBox>
-                        <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="506.0" spacing="10.0">
-                           <children>
-                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Work Phone:" />
-                              <TextField fx:id="workPhoneField" prefHeight="25.0" prefWidth="421.0" promptText="(123)-456-3222" styleClass="text-field" />
-                              <TextField fx:id="workPhoneExtensionField" prefHeight="25.0" prefWidth="251.0" promptText="x3205" styleClass="text-field" />
-                           </children>
-                        </HBox>
-                        <HBox minHeight="-Infinity" prefHeight="35.0" prefWidth="506.0" spacing="10.0">
-                           <children>
-                              <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="146.0" styleClass="card-header" text="Mobile Phone:" />
-                              <TextField fx:id="mobilePhoneField" prefHeight="25.0" prefWidth="421.0" promptText="(123)-456-3222" styleClass="text-field" />
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </Pane>
-            <Pane prefHeight="223.0" prefWidth="655.0" styleClass="card" stylesheets="@../css/core/card.css">
-               <children>
-                  <Label layoutX="14.0" layoutY="8.0" styleClass="card-header" text="Misc. Info" />
-                  <TextArea fx:id="infoTextArea" layoutX="10.0" layoutY="35.0" prefHeight="181.0" prefWidth="633.0" promptText="Miscellaneous information about employee." stylesheets="@../css/core/text-area.css" wrapText="true" />
-                  <Button fx:id="updateInfoButton" layoutX="583.0" layoutY="6.0" mnemonicParsing="false" text="Update" />
-               </children>
-            </Pane>
-         </children>
-      </HBox>
-      <TableView fx:id="ticketTable" layoutX="14.0" layoutY="408.0" prefHeight="325.0" prefWidth="1150.0" stylesheets="@../css/core/table.css">
-        <columns>
-          <TableColumn fx:id="actionsColumn" prefWidth="283.0" text="Actions" />
-          <TableColumn fx:id="ticketIdColumn" prefWidth="68.0" text="Ticket ID" />
-            <TableColumn fx:id="titleColumn" maxWidth="500.0" minWidth="500.0" prefWidth="500.0" text="Title" />
-            <TableColumn fx:id="createdOnColumn" minWidth="200.0" prefWidth="204.0" text="Created On" />
-        </columns>
-      </TableView>
-      <Pane layoutX="14.0" layoutY="361.0" prefHeight="35.0" prefWidth="1176.0" styleClass="card" stylesheets="@../css/core/card.css">
-         <children>
-            <Label layoutX="10.0" layoutY="4.0" styleClass="card-header" text="Tickets" />
-         </children>
-      </Pane>
-   </children>
+<AnchorPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0" prefWidth="1384.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <stylesheets>
       <URL value="@../css/core/base.css" />
       <URL value="@../css/core/button.css" />
       <URL value="@../css/screen/employee.css" />
    </stylesheets>
+   <children>
+      <Label alignment="CENTER" prefHeight="62.0" prefWidth="163.0" styleClass="content-header" text="Employee" textAlignment="CENTER" textFill="WHITE" />
+      <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="109.0" prefHeight="37.0" prefWidth="717.0" spacing="3.5" styleClass="card" stylesheets="@../css/core/card.css">
+         <children>
+            <Button fx:id="createButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" />
+            <Button fx:id="deleteButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" styleClass="button-warning" />
+            <Button fx:id="updateButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" styleClass="button-success" />
+            <Button fx:id="resetButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" />
+            <Separator maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.2" orientation="VERTICAL" prefHeight="30.0" />
+            <SearchableComboBox fx:id="companyFilter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Company Filter" stylesheets="@../css/core/combo-box.css" />
+            <SearchableComboBox fx:id="departmentFilter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Department Filter" stylesheets="@../css/core/combo-box.css" />
+            <SearchableComboBox fx:id="employeeSelector" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Select Employee" stylesheets="@../css/core/combo-box.css" />
+         </children>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </HBox>
+      <AnchorPane layoutX="14.0" layoutY="155.0" prefHeight="613.0" prefWidth="717.0" styleClass="card" stylesheets="@../css/core/card.css">
+         <children>
+            <VBox alignment="TOP_CENTER" layoutX="12.0" layoutY="39.0" prefHeight="258.0" prefWidth="360.0" spacing="2.5">
+               <children>
+                  <VBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="683.0" spacing="5.0">
+                     <children>
+                        <Label styleClass="form-label" text="Full Name" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="2.5">
+                           <children>
+                              <Label fx:id="personLabel" alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="28.0" textAlignment="RIGHT" />
+                              <TextField fx:id="firstNameField" promptText="First Name" />
+                              <TextField fx:id="lastNameField" prefHeight="25.0" prefWidth="162.0" promptText="Last Name" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="683.0" spacing="5.0">
+                     <children>
+                        <Label styleClass="form-label" text="E-mail" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="2.5">
+                           <children>
+                              <Label fx:id="emailLabel" alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="28.0" textAlignment="RIGHT" />
+                              <TextField fx:id="emailField" prefHeight="25.0" prefWidth="295.0" promptText="john@doe.com" />
+                              <Button fx:id="emailButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="30.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="683.0" spacing="5.0">
+                     <children>
+                        <Label styleClass="form-label" text="Phone Number(s)" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="2.5">
+                           <children>
+                              <Label fx:id="workPhoneLabel" alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="28.0" textAlignment="RIGHT" />
+                              <TextField fx:id="workPhoneField" prefHeight="25.0" prefWidth="264.0" promptText="Work Phone" />
+                              <TextField fx:id="workPhoneExtensionField" prefHeight="25.0" prefWidth="59.0" promptText="#" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="2.5">
+                           <children>
+                              <Label fx:id="cellPhoneLabel" alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="28.0" textAlignment="RIGHT" />
+                              <TextField fx:id="cellPhoneField" prefHeight="25.0" prefWidth="327.0" promptText="Cell/Home Phone" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="683.0" spacing="5.0">
+                     <children>
+                        <Label styleClass="form-label" text="Title" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="2.5">
+                           <children>
+                              <Label fx:id="titleLabel" alignment="CENTER_RIGHT" prefHeight="33.0" prefWidth="28.0" textAlignment="RIGHT" />
+                              <TextField fx:id="titleField" prefHeight="25.0" prefWidth="327.0" promptText="Title" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <TextArea fx:id="commentsArea" layoutX="12.0" layoutY="335.0" prefHeight="272.0" prefWidth="695.0" stylesheets="@../css/core/text-area.css" />
+            <Button layoutX="12.0" layoutY="304.0" mnemonicParsing="false" text="Update" />
+            <Label layoutX="11.0" layoutY="4.0" styleClass="form-label" text="Information" />
+            <VBox layoutX="397.0" layoutY="24.0" prefHeight="258.0" prefWidth="176.0" spacing="5.0">
+               <children>
+                  <Label styleClass="form-label" text="Miscellaneous" />
+                  <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="133.0" stylesheets="@../css/core/checkbox.css" text="Disable Employee" textFill="WHITE" />
+                  <CheckBox mnemonicParsing="false" prefHeight="18.0" prefWidth="180.0" stylesheets="@../css/core/checkbox.css" text="Prevent Accidental Deletion" textFill="WHITE" />
+                  <Label styleClass="form-label" text="Organization " />
+                  <SearchableComboBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Company" stylesheets="@../css/core/combo-box.css" />
+                  <SearchableComboBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Department" stylesheets="@../css/core/combo-box.css" />
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <TableView layoutX="748.0" layoutY="109.0" prefHeight="657.0" prefWidth="616.0" stylesheets="@../css/core/table.css">
+        <columns>
+          <TableColumn prefWidth="73.0" resizable="false" />
+          <TableColumn prefWidth="221.0" resizable="false" text="Title" />
+            <TableColumn maxWidth="95.0" minWidth="-Infinity" prefWidth="85.0" resizable="false" text="Status" />
+            <TableColumn maxWidth="95.0" minWidth="-Infinity" prefWidth="66.0" resizable="false" text="Priority" />
+            <TableColumn maxWidth="170.0" minWidth="-Infinity" prefWidth="170.0" resizable="false" text="Date" />
+        </columns>
+      </TableView>
+      <Label layoutX="815.0" layoutY="82.0" text="Attached Tickets" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+   </children>
 </AnchorPane>

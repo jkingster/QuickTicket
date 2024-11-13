@@ -160,6 +160,14 @@ public class EmployeeModel extends Model<Employee> {
         this.miscInfoProperty.set(miscInfoProperty);
     }
 
+    public String getEmailProperty() {
+        return emailProperty.get();
+    }
+
+    public StringProperty emailProperty() {
+        return emailProperty;
+    }
+
     @Override
     public String toString() {
         return getFullName();

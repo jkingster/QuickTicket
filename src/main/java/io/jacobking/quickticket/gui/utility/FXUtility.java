@@ -2,9 +2,14 @@ package io.jacobking.quickticket.gui.utility;
 
 import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.gui.Controller;
-import io.jacobking.quickticket.gui.alert.Announcements;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import org.controlsfx.control.SearchableComboBox;
 
 import java.io.IOException;
 
@@ -20,6 +25,24 @@ public class FXUtility {
             return loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e.fillInStackTrace());
+        }
+    }
+
+    public static void resetFields(final Parent root) {
+        for (final Node node : root.getChildrenUnmodifiable()) {
+            if (node instanceof TextField) {
+                ((TextField) node).clear();
+            } else if (node instanceof ComboBox<?>) {
+                ((ComboBox<?>) node).getSelectionModel().clearSelection();
+            } else if (node instanceof ToggleButton) {
+                ((ToggleButton) node).setSelected(!((ToggleButton) node).isSelected());
+            } else if (node instanceof CheckBox) {
+                ((CheckBox) node).setSelected(!((CheckBox) node).isSelected());
+            } else if (node instanceof SearchableComboBox<?>) {
+                ((SearchableComboBox<?>) node).getSelectionModel().clearSelection();
+            } else if (node instanceof Parent) {
+                resetFields((Parent) node);
+            }
         }
     }
 }

@@ -45,21 +45,33 @@
                         <HBox fx:id="ticketBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="2.0">
                             <children>
                                 <Label fx:id="ticketIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
-                                <Label fx:id="ticketDisplayLabel" prefHeight="33.0" prefWidth="100.0" styleClass="tab-labels" text="Tickets" />
+                                <Label fx:id="ticketDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Tickets" />
                             </children>
                         </HBox>
                         <HBox fx:id="employeeBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
                             <children>
                                 <Label fx:id="employeeIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
-                                <Label fx:id="employeeDisplayLabel" prefHeight="33.0" prefWidth="100.0" styleClass="tab-labels" text="Employees" />
+                                <Label fx:id="employeeDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Employees" />
                             </children>
                         </HBox>
+                  <HBox fx:id="organizationBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
+                     <children>
+                        <Label fx:id="organizationIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
+                        <Label fx:id="organizationDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Organization" />
+                     </children>
+                  </HBox>
                         <HBox fx:id="settingsBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
                             <children>
                                 <Label fx:id="settingsIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
-                                <Label fx:id="settingsDisplayLabel" prefHeight="33.0" prefWidth="100.0" styleClass="tab-labels" text="Settings" />
+                                <Label fx:id="settingsDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Settings" />
                             </children>
                         </HBox>
+                  <HBox fx:id="exitBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
+                     <children>
+                        <Label fx:id="exitIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
+                        <Label fx:id="exitDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Exit" />
+                     </children>
+                  </HBox>
                     </children>
                 </VBox>
             </children>
