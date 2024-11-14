@@ -4,6 +4,7 @@ package io.jacobking.quickticket.core;
 import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.Announcements;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 
 public class InstanceLock {
@@ -40,17 +41,18 @@ public class InstanceLock {
 
     public void checkLock() {
         if (FileIO.fileExists(FileIO.TARGET_LOCK, true)) {
+            final ButtonType deleteLock = new ButtonType("Delete Lock", ButtonBar.ButtonData.YES);
+            final ButtonType exit = new ButtonType("Exit", ButtonBar.ButtonData.NO);
+
             Announcements.get().showWarningConfirmation(
-                    "Failed to launch quick ticket.",
-                    "Another instance is already running!",
-                    "Please close it out and try again. To force-delete the file, click the apply button." +
-                            " Otherwise click no to ignore. Clicking apply can cause potential instability!",
-                    ButtonType.APPLY, ButtonType.NO
-            ).ifPresent(type -> {
-                if (type == ButtonType.APPLY) {
-                    attemptToDeleteAndStart();
-                }
-            });
+                            "Failed to launch",
+                            "Instance Lock Found",
+                            "Another instance is already running. To continue, delete the lock.", deleteLock, exit)
+                    .ifPresent(type -> {
+                        if (type == deleteLock) {
+                            attemptToDeleteAndStart();
+                        }
+                    });
             return;
         }
 
