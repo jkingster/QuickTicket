@@ -5,10 +5,7 @@ import io.jacobking.quickticket.gui.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import org.controlsfx.control.SearchableComboBox;
 
 import java.io.IOException;
@@ -40,6 +37,8 @@ public class FXUtility {
                 ((CheckBox) node).setSelected(!((CheckBox) node).isSelected());
             } else if (node instanceof SearchableComboBox<?>) {
                 ((SearchableComboBox<?>) node).getSelectionModel().clearSelection();
+            } else if (node instanceof TextArea) {
+                ((TextArea) node).clear();
             } else if (node instanceof Parent) {
                 resetFields((Parent) node);
             }

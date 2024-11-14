@@ -53,13 +53,15 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
         return model;
     }
 
-    @Override public void remove(int id) {
+    @Override public boolean remove(int id) {
         final TicketModel model = super.getModel(id);
         if (model != null) {
             super.remove(id);
             final StatusType type = model.statusProperty().getValue();
             getListByStatus(type).remove(model);
+            return true;
         }
+        return false;
     }
 
     public boolean update(final TicketModel model, final StatusType originalStatus) {

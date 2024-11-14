@@ -12,10 +12,7 @@ import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 import org.controlsfx.control.SearchableComboBox;
@@ -56,12 +53,17 @@ public class EmployeeController extends Controller {
     @FXML private Label cellPhoneLabel;
     @FXML private Label titleLabel;
 
+    @FXML private SearchableComboBox<CompanyModel>    employeeCompany;
+    @FXML private SearchableComboBox<DepartmentModel> employeeDepartment;
+
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureButtons();
         configureCompanyFilter();
         configureDepartmentFilter();
         configureEmployeeSelector();
         configureLabels();
+        configureEmployeeCompanyBox();
+        configureEmployeeDepartmentBox();
     }
 
     private void configureButtons() {
@@ -175,6 +177,18 @@ public class EmployeeController extends Controller {
         workPhoneExtensionField.setText(String.valueOf(employeeModel.getWorkExtensionProperty()));
         titleField.setText(employeeModel.getTitle());
         commentsArea.setText(employeeModel.getMiscInfoProperty());
+
+        final CompanyModel foundCompany = bridgeContext.getCompany().
+                getModel(employeeModel.getCompanyIdProperty());
+        if (foundCompany != null) {
+            employeeCompany.getSelectionModel().select(foundCompany);
+        }
+
+        final DepartmentModel foundDepartment = bridgeContext.getDepartment()
+                .getModel(employeeModel.getDepartmentIdProperty());
+        if (foundDepartment != null) {
+            employeeDepartment.getSelectionModel().select(foundDepartment);
+        }
     }
 
     private void onCreateEmployee() {
@@ -196,14 +210,48 @@ public class EmployeeController extends Controller {
         }
 
         Announcements.get().showConfirm("Success", "Employee created successfully.");
+        employeeSelector.getSelectionModel().select(newEmployee);
     }
 
     private void onDeleteEmployee() {
+        if (getSelectedEmployee() == null) {
+            Announcements.get().showError("Error", "Could not delete employee.", "No employee selected.");
+            return;
+        }
 
+        Announcements.get().showConfirmation(this::processEmployeeDeletion,
+                        "Confirmation", "Please confirm you want to delete this employee.")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        processEmployeeDeletion();
+                    }
+                });
+    }
+
+    private void processEmployeeDeletion() {
+        final boolean removed = bridgeContext.getEmployee().remove(getSelectedEmployee().getId());
+        if (!removed) {
+            Announcements.get().showError("Error", "Could not delete employee.", "No employee selected.");
+            return;
+        }
+
+        FXUtility.resetFields(parent);
+        Announcements.get().showConfirm("Success", "Employee deleted.");
     }
 
     private void onUpdateEmployee() {
+        final EmployeeModel updated = getUpdatedEmployee();
+        if (updated == null) {
+            Announcements.get().showError("Error", "Could not update employee.", "Try again.");
+            return;
+        }
 
+        if (!bridgeContext.getEmployee().update(updated)) {
+            Announcements.get().showError("Error", "Could not update employee.", "Try again.");
+            return;
+        }
+
+        Announcements.get().showConfirm("Success", "Employee successfully updated.");
     }
 
     private void onOpenEmail() {
@@ -223,6 +271,44 @@ public class EmployeeController extends Controller {
         titleLabel.setGraphic(IconLoader.getMaterialIcon(Material2MZ.PERM_IDENTITY));
     }
 
+    private void configureEmployeeCompanyBox() {
+        employeeCompany.setItems(bridgeContext.getCompany().getObservableList());
+        employeeCompany.setConverter(new StringConverter<CompanyModel>() {
+            @Override public String toString(CompanyModel companyModel) {
+                return (companyModel == null) ? "Unknown" : companyModel.getName();
+            }
+
+            @Override public CompanyModel fromString(String s) {
+                return null;
+            }
+        });
+
+        employeeCompany.getSelectionModel().selectedItemProperty().addListener((observable, oldCompany, newCompany) -> {
+            if (newCompany == null) {
+                return;
+            }
+
+            final int companyId = newCompany.getId();
+            if (companyId == 0) {
+                employeeDepartment.setItems(bridgeContext.getDepartment().getObservableList());
+                return;
+            }
+            employeeDepartment.setItems(bridgeContext.getDepartment().getObservableListByFilter(__ -> __.getCompanyId() == companyId));
+        });
+    }
+
+    private void configureEmployeeDepartmentBox() {
+        employeeDepartment.setConverter(new StringConverter<DepartmentModel>() {
+            @Override public String toString(DepartmentModel departmentModel) {
+                return (departmentModel == null) ? "Unknown" : departmentModel.getName();
+            }
+
+            @Override public DepartmentModel fromString(String s) {
+                return null;
+            }
+        });
+    }
+
     // Utilities
     private EmployeeModel getSelectedEmployee() {
         return employeeSelector.getSelectionModel().getSelectedItem();
@@ -237,12 +323,12 @@ public class EmployeeController extends Controller {
     }
 
     private int getDepartmentId() {
-        final DepartmentModel selected = departmentFilter.getSelectionModel().getSelectedItem();
+        final DepartmentModel selected = employeeDepartment.getSelectionModel().getSelectedItem();
         return (selected == null) ? 0 : selected.getId();
     }
 
     private int getCompanyId() {
-        final CompanyModel selected = companyFilter.getSelectionModel().getSelectedItem();
+        final CompanyModel selected = employeeCompany.getSelectionModel().getSelectedItem();
         return (selected == null) ? 0 : selected.getId();
     }
 
@@ -270,6 +356,24 @@ public class EmployeeController extends Controller {
                 .setWorkExtension(0)
                 .setMobilePhone(getCellPhone())
                 .setComments(commentsArea.getText());
+    }
+
+    private EmployeeModel getUpdatedEmployee() {
+        final EmployeeModel selected = getSelectedEmployee();
+        if (selected != null) {
+            selected.setFirstName(firstNameField.getText());
+            selected.setLastName(lastNameField.getText());
+            selected.setTitle(getTitle());
+            selected.setEmail(getEmail());
+            selected.setDepartmentIdProperty(getDepartmentId());
+            selected.setCompanyIdProperty(getCompanyId());
+            selected.setWorkPhoneProperty(getWorkPhone());
+            selected.setWorkExtensionProperty(0);
+            selected.setMobilePhoneProperty(getCellPhone());
+            selected.setMiscInfoProperty(commentsArea.getText());
+            return selected;
+        }
+        return null;
     }
 
 }

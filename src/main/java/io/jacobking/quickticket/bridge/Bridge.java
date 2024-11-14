@@ -81,11 +81,12 @@ public abstract class Bridge<E extends Entity, V extends Model<E>> {
         return crud.update(repoType, model.toEntity());
     }
 
-    public void remove(final int id) {
+    public boolean remove(final int id) {
         if (!contains(id))
-            return;
+            return false;
 
-        Platform.runLater(() -> observableList.removeIf(predicate -> predicate.getId() == id));
+        return observableList.removeIf(__ -> __.getId() == id);
+       //  Platform.runLater(() -> observableList.removeIf(predicate -> predicate.getId() == id));
     }
 
     public boolean contains(final int id) {
