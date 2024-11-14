@@ -5,10 +5,11 @@ import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.Data;
+import io.jacobking.quickticket.gui.Route;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
-import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import io.jacobking.quickticket.tables.pojos.Ticket;
 import javafx.collections.FXCollections;
@@ -97,6 +98,17 @@ public class TicketCreatorController extends Controller {
                     return;
                 }
                 setText(employeeModel.getFullName());
+            }
+        });
+
+        employeeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldEmployee, newEmployee) -> {
+            if (newEmployee == null) {
+                return;
+            }
+
+            if (newEmployee.isIsDisabled()) {
+                Announcements.get().showError("Error", "Employee is disabled.", "New tickets cannot be assigned to this employee. Re-activate them first.");
+                employeeComboBox.getSelectionModel().clearSelection();
             }
         });
     }

@@ -2,26 +2,27 @@ package io.jacobking.quickticket.gui.model;
 
 import io.jacobking.quickticket.gui.Model;
 import io.jacobking.quickticket.tables.pojos.Employee;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 public class EmployeeModel extends Model<Employee> {
 
-    private final StringProperty  firstNameProperty     = new SimpleStringProperty();
-    private final StringProperty  lastNameProperty      = new SimpleStringProperty();
-    private final StringProperty  emailProperty         = new SimpleStringProperty();
-    private final StringProperty  titleProperty         = new SimpleStringProperty();
-    private final IntegerProperty companyIdProperty     = new SimpleIntegerProperty();
-    private final IntegerProperty departmentIdProperty  = new SimpleIntegerProperty();
-    private final StringProperty  workPhoneProperty     = new SimpleStringProperty();
-    private final IntegerProperty workExtensionProperty = new SimpleIntegerProperty();
-    private final StringProperty  mobilePhoneProperty   = new SimpleStringProperty();
-    private final StringProperty  miscInfoProperty = new SimpleStringProperty();
+    private final StringProperty  firstNameProperty         = new SimpleStringProperty();
+    private final StringProperty  lastNameProperty          = new SimpleStringProperty();
+    private final StringProperty  emailProperty             = new SimpleStringProperty();
+    private final StringProperty  titleProperty             = new SimpleStringProperty();
+    private final IntegerProperty companyIdProperty         = new SimpleIntegerProperty();
+    private final IntegerProperty departmentIdProperty      = new SimpleIntegerProperty();
+    private final StringProperty  workPhoneProperty         = new SimpleStringProperty();
+    private final IntegerProperty workExtensionProperty     = new SimpleIntegerProperty();
+    private final StringProperty  mobilePhoneProperty       = new SimpleStringProperty();
+    private final StringProperty  miscInfoProperty          = new SimpleStringProperty();
+    private final BooleanProperty preventAccidentalDeletion = new SimpleBooleanProperty();
+    private final BooleanProperty isDisabled                = new SimpleBooleanProperty();
+
 
     public EmployeeModel(int id, String firstName, String lastName, String email, String title, int companyId, int departmentId,
-                         String workPhone, int workExtension, String mobilePhone, String miscInfo) {
+                         String workPhone, int workExtension, String mobilePhone, String miscInfo,
+                         boolean preventAccidentalDeletion, boolean isDisabled) {
         super(id);
         this.firstNameProperty.setValue(firstName);
         this.lastNameProperty.setValue(lastName);
@@ -33,6 +34,8 @@ public class EmployeeModel extends Model<Employee> {
         this.workExtensionProperty.setValue(workExtension);
         this.mobilePhoneProperty.setValue(mobilePhone);
         this.miscInfoProperty.setValue(miscInfo);
+        this.preventAccidentalDeletion.setValue(preventAccidentalDeletion);
+        this.isDisabled.setValue(isDisabled);
     }
 
     public EmployeeModel(Employee employee) {
@@ -47,7 +50,9 @@ public class EmployeeModel extends Model<Employee> {
                 employee.getWorkPhone(),
                 employee.getWorkExtension(),
                 employee.getMobilePhone(),
-                employee.getComments()
+                employee.getComments(),
+                employee.getPreventAccidentalDeletion(),
+                employee.getIsDisabled()
         );
     }
 
@@ -168,6 +173,30 @@ public class EmployeeModel extends Model<Employee> {
         return emailProperty;
     }
 
+    public boolean isPreventAccidentalDeletion() {
+        return preventAccidentalDeletion.get();
+    }
+
+    public BooleanProperty preventAccidentalDeletionProperty() {
+        return preventAccidentalDeletion;
+    }
+
+    public void setPreventAccidentalDeletion(boolean preventAccidentalDeletion) {
+        this.preventAccidentalDeletion.set(preventAccidentalDeletion);
+    }
+
+    public boolean isIsDisabled() {
+        return isDisabled.get();
+    }
+
+    public BooleanProperty isDisabledProperty() {
+        return isDisabled;
+    }
+
+    public void setIsDisabled(boolean isDisabled) {
+        this.isDisabled.set(isDisabled);
+    }
+
     @Override
     public String toString() {
         return getFullName();
@@ -186,6 +215,8 @@ public class EmployeeModel extends Model<Employee> {
                 .setWorkPhone(getWorkPhoneProperty())
                 .setMobilePhone(getMobilePhoneProperty())
                 .setComments(getMiscInfoProperty())
-                .setWorkExtension(getWorkExtensionProperty());
+                .setWorkExtension(getWorkExtensionProperty())
+                .setPreventAccidentalDeletion(isPreventAccidentalDeletion())
+                .setIsDisabled(isIsDisabled());
     }
 }

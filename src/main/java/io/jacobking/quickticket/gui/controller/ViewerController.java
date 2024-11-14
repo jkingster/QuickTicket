@@ -45,7 +45,6 @@ public class ViewerController extends Controller {
 
     private TableView<TicketModel> ticketTable;
     private TicketModel            viewedTicket;
-    private ObjectProperty<TicketModel> lastViewedTicket;
 
     @FXML private TextField priorityField;
     @FXML private TextField statusField;
@@ -187,11 +186,6 @@ public class ViewerController extends Controller {
         final Optional<TableView<TicketModel>> mappedTable = data.mapTable(1);
         mappedTable.ifPresent(table -> this.ticketTable = table);
 
-        final Optional<ObjectProperty<TicketModel>> mappedObject = data.mapObjectProperty(2);
-        mappedObject.ifPresent(last -> {
-            this.lastViewedTicket = last;
-            lastViewedTicket.setValue(viewedTicket);
-        });
     }
 
     private void handleTicket(final TicketModel ticketModel) {

@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import org.controlsfx.control.SearchableComboBox;
 
 import java.io.IOException;
 
@@ -25,7 +24,7 @@ public class FXUtility {
         }
     }
 
-    public static void resetFields(final Parent root) {
+    public static void resetFields(final Parent root, final Node... otherFields) {
         for (final Node node : root.getChildrenUnmodifiable()) {
             if (node instanceof TextField) {
                 ((TextField) node).clear();
@@ -35,8 +34,6 @@ public class FXUtility {
                 ((ToggleButton) node).setSelected(!((ToggleButton) node).isSelected());
             } else if (node instanceof CheckBox) {
                 ((CheckBox) node).setSelected(!((CheckBox) node).isSelected());
-            } else if (node instanceof SearchableComboBox<?>) {
-                ((SearchableComboBox<?>) node).getSelectionModel().clearSelection();
             } else if (node instanceof TextArea) {
                 ((TextArea) node).clear();
             } else if (node instanceof Parent) {

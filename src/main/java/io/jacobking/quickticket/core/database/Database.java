@@ -24,6 +24,10 @@ public class Database {
         this.sqLiteConnector = new SQLiteConnector(systemConfig);
         final JOOQConnector jooqConnector = new JOOQConnector(sqLiteConnector);
         this.repoCrud = new RepoCrud(jooqConnector.getContext());
+
+        if (sqLiteConnector.hasConnection()) {
+            checkForMigration();
+        }
     }
 
     public RepoCrud call() {
@@ -39,6 +43,8 @@ public class Database {
     }
 
     public void checkForMigration() {
+        Logs.debug("is this called (migrate?)");
+
         if (sqLiteConnector.getConnection() == null) {
             Announcements.get().showErrorOverride("Failed to establish sqlite connector.", "Please report this.");
             return;
@@ -68,6 +74,8 @@ public class Database {
             Logs.warn("Target path is not of database file type or does not exist.");
             return;
         }
+        Logs.debug("is this called (migrate?)");
+
 
         flywayMigrator.migrate();
 

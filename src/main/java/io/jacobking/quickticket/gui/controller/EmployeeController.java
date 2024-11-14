@@ -1,23 +1,34 @@
 package io.jacobking.quickticket.gui.controller;
 
+import io.jacobking.quickticket.core.type.PriorityType;
+import io.jacobking.quickticket.core.type.StatusType;
+import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.core.utility.MiscUtil;
 import io.jacobking.quickticket.gui.Controller;
+import io.jacobking.quickticket.gui.Data;
+import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.model.CompanyModel;
 import io.jacobking.quickticket.gui.model.DepartmentModel;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
+import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.gui.utility.FXUtility;
 import io.jacobking.quickticket.gui.utility.IconLoader;
 import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import org.controlsfx.control.SearchableComboBox;
+import org.controlsfx.glyphfont.FontAwesome;
 import org.kordamp.ikonli.material2.Material2AL;
 import org.kordamp.ikonli.material2.Material2MZ;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -52,9 +63,20 @@ public class EmployeeController extends Controller {
     @FXML private Label workPhoneLabel;
     @FXML private Label cellPhoneLabel;
     @FXML private Label titleLabel;
+    @FXML private Label totalTicketCountLabel;
 
     @FXML private SearchableComboBox<CompanyModel>    employeeCompany;
     @FXML private SearchableComboBox<DepartmentModel> employeeDepartment;
+
+    @FXML private CheckBox disableEmployeeCheckBox;
+    @FXML private CheckBox accidentDeletionCheckBox;
+
+    @FXML private TableView<TicketModel>                 ticketTable;
+    @FXML private TableColumn<TicketModel, Void>         actionColumn;
+    @FXML private TableColumn<TicketModel, String>       titleColumn;
+    @FXML private TableColumn<TicketModel, StatusType>   statusColumn;
+    @FXML private TableColumn<TicketModel, PriorityType> priorityColumn;
+    @FXML private TableColumn<TicketModel, String>       dateColumn;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         configureButtons();
@@ -64,6 +86,8 @@ public class EmployeeController extends Controller {
         configureLabels();
         configureEmployeeCompanyBox();
         configureEmployeeDepartmentBox();
+        configureDisabledCheckBox();
+        configureTicketTable();
     }
 
     private void configureButtons() {
@@ -73,8 +97,7 @@ public class EmployeeController extends Controller {
         resetButton.setGraphic(IconLoader.getMaterialIcon(Material2AL.CLEAR_ALL));
         emailButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.SEND));
 
-        final ReadOnlyObjectProperty<EmployeeModel> employeeSelectorProperty
-                = employeeSelector.getSelectionModel().selectedItemProperty();
+        final ReadOnlyObjectProperty<EmployeeModel> employeeSelectorProperty = employeeSelector.getSelectionModel().selectedItemProperty();
         createButton.disableProperty().bind(employeeSelectorProperty.isNotNull());
         deleteButton.disableProperty().bind(createButton.disabledProperty().not());
         updateButton.disableProperty().bind(createButton.disabledProperty().not());
@@ -82,7 +105,12 @@ public class EmployeeController extends Controller {
         createButton.setOnAction(event -> onCreateEmployee());
         deleteButton.setOnAction(event -> onDeleteEmployee());
         updateButton.setOnAction(event -> onUpdateEmployee());
-        resetButton.setOnAction(event -> FXUtility.resetFields(parent));
+        resetButton.setOnAction(event -> {
+            ticketTable.setItems(null);
+            totalTicketCountLabel.setText("0");
+            FXUtility.resetFields(parent);
+            employeeSelector.setItems(FXCollections.emptyObservableList());
+        });
         emailButton.setOnAction(event -> onOpenEmail());
     }
 
@@ -151,8 +179,7 @@ public class EmployeeController extends Controller {
             }
 
             employeeSelector.setItems(bridgeContext.getEmployee().getObservableListByFilter(employee -> {
-                return (employee.getCompanyIdProperty() == currentCompanyId)
-                        && (employee.getDepartmentIdProperty() == departmentId);
+                return (employee.getCompanyIdProperty() == currentCompanyId) && (employee.getDepartmentIdProperty() == departmentId);
             }));
         });
 
@@ -178,17 +205,25 @@ public class EmployeeController extends Controller {
         titleField.setText(employeeModel.getTitle());
         commentsArea.setText(employeeModel.getMiscInfoProperty());
 
-        final CompanyModel foundCompany = bridgeContext.getCompany().
-                getModel(employeeModel.getCompanyIdProperty());
+        final CompanyModel foundCompany = bridgeContext.getCompany().getModel(employeeModel.getCompanyIdProperty());
         if (foundCompany != null) {
             employeeCompany.getSelectionModel().select(foundCompany);
         }
 
-        final DepartmentModel foundDepartment = bridgeContext.getDepartment()
-                .getModel(employeeModel.getDepartmentIdProperty());
+        final DepartmentModel foundDepartment = bridgeContext.getDepartment().getModel(employeeModel.getDepartmentIdProperty());
         if (foundDepartment != null) {
             employeeDepartment.getSelectionModel().select(foundDepartment);
         }
+
+        accidentDeletionCheckBox.setSelected(employeeModel.isPreventAccidentalDeletion());
+        disableEmployeeCheckBox.setSelected(employeeModel.isIsDisabled());
+
+        final var tickets = bridgeContext.getTicket().getObservableListByFilter(__ -> {
+            return __.getEmployeeId() == employeeModel.getId();
+        });
+
+        totalTicketCountLabel.setText(tickets.size() + "");
+        ticketTable.setItems(tickets);
     }
 
     private void onCreateEmployee() {
@@ -219,13 +254,17 @@ public class EmployeeController extends Controller {
             return;
         }
 
-        Announcements.get().showConfirmation(this::processEmployeeDeletion,
-                        "Confirmation", "Please confirm you want to delete this employee.")
-                .ifPresent(type -> {
-                    if (type == ButtonType.YES) {
-                        processEmployeeDeletion();
-                    }
-                });
+        final boolean isProtected = getSelectedEmployee().isPreventAccidentalDeletion();
+        if (isProtected) {
+            Announcements.get().showError("Error", "Action Prohibited", "This employee is protected from deletion.");
+            return;
+        }
+
+        Announcements.get().showConfirmation(this::processEmployeeDeletion, "Confirmation", "Please confirm you want to delete this employee.").ifPresent(type -> {
+            if (type == ButtonType.YES) {
+                processEmployeeDeletion();
+            }
+        });
     }
 
     private void processEmployeeDeletion() {
@@ -236,6 +275,8 @@ public class EmployeeController extends Controller {
         }
 
         FXUtility.resetFields(parent);
+        totalTicketCountLabel.setText("0");
+        ticketTable.setItems(null);
         Announcements.get().showConfirm("Success", "Employee deleted.");
     }
 
@@ -309,6 +350,148 @@ public class EmployeeController extends Controller {
         });
     }
 
+    private void configureDisabledCheckBox() {
+        disableEmployeeCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            firstNameField.setDisable(newValue);
+            lastNameField.setDisable(newValue);
+            emailField.setDisable(newValue);
+            titleField.setDisable(newValue);
+            commentsArea.setDisable(newValue);
+            employeeCompany.setDisable(newValue);
+            employeeDepartment.setDisable(newValue);
+            cellPhoneField.setDisable(newValue);
+            workPhoneField.setDisable(newValue);
+            workPhoneExtensionField.setDisable(newValue);
+
+            if (getSelectedEmployee() != null) {
+                getSelectedEmployee().setIsDisabled(newValue);
+            }
+        });
+    }
+
+    private void configureTicketTable() {
+        configureActionColumn();
+        configureTitleColumn();
+        configureStatusColumn();
+        configurePriorityColumn();
+        configureDateColumn();
+    }
+
+    private void configureActionColumn() {
+        actionColumn.setCellFactory(data -> new TableCell<>() {
+
+            private final HBox box = new HBox(2.5);
+
+            {
+                final Button open = new Button();
+                open.setGraphic(IconLoader.getMaterialIcon(MaterialDesign.MDI_TICKET_CONFIRMATION));
+                open.setOnAction(event -> onOpenTicket(getTableRow().getItem()));
+                open.setTooltip(new Tooltip("Open Ticket"));
+
+                final Button unlink = new Button();
+                unlink.setGraphic(IconLoader.createDefault(FontAwesome.Glyph.UNLINK));
+                unlink.setOnAction(event -> onUnlinkTicket(getTableRow().getItem()));
+                unlink.setTooltip(new Tooltip("Unlink Ticket from Employee"));
+
+                box.setAlignment(Pos.CENTER);
+                box.getChildren().addAll(open, unlink);
+            }
+
+            private void onOpenTicket(final TicketModel ticketModel) {
+                if (ticketModel == null) {
+                    return;
+                }
+                display.show(Route.VIEWER, Data.of(ticketModel, ticketTable));
+            }
+
+            private void onUnlinkTicket(final TicketModel ticketModel) {
+                final EmployeeModel employee = getSelectedEmployee();
+                if (employee == null) {
+                    return;
+                }
+
+                ticketModel.employeeProperty().setValue(0);
+                if (!bridgeContext.getTicket().update(ticketModel)) {
+                    Announcements.get().showError("Error", "Failed to unlink employee.", "Please try again.");
+                    return;
+                }
+
+                Announcements.get().showConfirm("Success", "Employee unlinked from ticket.");
+                ticketTable.setItems(bridgeContext.getTicket().getObservableListByFilter(__ -> {
+                    return __.getEmployeeId() == employee.getId(); // Have to reaggrate list because it's filtered, refreshing does nothing.
+                }));
+            }
+
+            @Override protected void updateItem(Void object, boolean empty) {
+                super.updateItem(object, empty);
+                if (empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                setGraphic(box);
+            }
+        });
+    }
+
+    private void configureTitleColumn() {
+        titleColumn.setCellValueFactory(data -> data.getValue().titleProperty());
+    }
+
+    private void configureStatusColumn() {
+        statusColumn.setCellValueFactory(data -> data.getValue().statusProperty());
+        statusColumn.setCellFactory(data -> new TableCell<>() {
+            @Override protected void updateItem(StatusType statusType, boolean empty) {
+                super.updateItem(statusType, empty);
+                if (statusType == null || empty) {
+                    setText(null);
+                    return;
+                }
+
+                switch (statusType) {
+                    case OPEN -> setStyle("-fx-text-fill: #3498DB;");
+                    case RESOLVED -> setStyle("-fx-text-fill: #5DADD5;");
+                    case ACTIVE -> setStyle("-fx-text-fill: #FF5733;");
+                    case PAUSED -> setStyle("-fx-text-fill: #FFC300;");
+                    default -> setStyle("-fx-text-fill: white");
+                }
+
+                setText(statusType.name());
+            }
+        });
+    }
+
+    private void configurePriorityColumn() {
+        priorityColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
+        priorityColumn.setCellFactory(data -> new TableCell<>() {
+            @Override protected void updateItem(PriorityType priorityType, boolean empty) {
+                super.updateItem(priorityType, empty);
+                if (priorityType == null || empty) {
+                    setText(null);
+                    return;
+                }
+
+                switch (priorityType) {
+                    case LOW -> setStyle("-fx-text-fill: GREEN;");
+                    case MEDIUM -> setStyle("-fx-text-fill: YELLOW;");
+                    case HIGH -> setStyle("-fx-text-fill: ORANGE;");
+                    default -> setStyle("-fx-text-fill: white;");
+                }
+
+                setText(priorityType.name());
+            }
+        });
+    }
+
+    private void configureDateColumn() {
+        dateColumn.setCellValueFactory(data -> new SimpleStringProperty(
+                DateUtil.formatDateTime(
+                        DateUtil.DateFormat.DATE_TIME_ONE,
+                        data.getValue().getCreation()
+                )
+        ));
+    }
+
     // Utilities
     private EmployeeModel getSelectedEmployee() {
         return employeeSelector.getSelectionModel().getSelectedItem();
@@ -355,7 +538,17 @@ public class EmployeeController extends Controller {
                 .setWorkPhone(getWorkPhone())
                 .setWorkExtension(0)
                 .setMobilePhone(getCellPhone())
-                .setComments(commentsArea.getText());
+                .setComments(commentsArea.getText())
+                .setIsDisabled(isDisabled())
+                .setPreventAccidentalDeletion(preventAccidentalDeletion());
+    }
+
+    private boolean preventAccidentalDeletion() {
+        return accidentDeletionCheckBox.isSelected();
+    }
+
+    private boolean isDisabled() {
+        return disableEmployeeCheckBox.isSelected();
     }
 
     private EmployeeModel getUpdatedEmployee() {
@@ -371,6 +564,8 @@ public class EmployeeController extends Controller {
             selected.setWorkExtensionProperty(0);
             selected.setMobilePhoneProperty(getCellPhone());
             selected.setMiscInfoProperty(commentsArea.getText());
+            selected.setPreventAccidentalDeletion(preventAccidentalDeletion());
+            selected.setIsDisabled(isDisabled());
             return selected;
         }
         return null;

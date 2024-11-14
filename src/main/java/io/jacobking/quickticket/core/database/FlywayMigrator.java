@@ -2,6 +2,7 @@ package io.jacobking.quickticket.core.database;
 
 import io.jacobking.quickticket.core.QuickTicket;
 import io.jacobking.quickticket.core.config.SystemConfig;
+import io.jacobking.quickticket.core.utility.Logs;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;

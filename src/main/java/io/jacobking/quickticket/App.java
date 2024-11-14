@@ -26,8 +26,6 @@ public class App extends Application {
             throw new RuntimeException("FATAL: Could not establish database connection.");
         }
 
-        database.checkForMigration();
-
         final BridgeContext bridgeContext = quickTicket.getBridgeContext();
         Announcements.get().establishSettings(bridgeContext);
 

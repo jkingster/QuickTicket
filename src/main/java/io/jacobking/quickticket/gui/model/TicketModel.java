@@ -14,13 +14,13 @@ public class TicketModel extends Model<Ticket> implements Serializable {
 
     @Serial private static final long serialVersionUID = 1L;
 
-    private final StringProperty                titleProperty       = new SimpleStringProperty();
-    private final ObjectProperty<StatusType>    statusProperty      = new SimpleObjectProperty<>();
-    private final ObjectProperty<PriorityType>  priorityProperty    = new SimpleObjectProperty<>();
-    private final IntegerProperty               employeeProperty    = new SimpleIntegerProperty();
-    private final ObjectProperty<LocalDateTime> createdProperty     = new SimpleObjectProperty<>();
-    private final ObjectProperty<LocalDateTime> lastViewedTimestamp = new SimpleObjectProperty<>();
-    private final IntegerProperty               categoryProperty    = new SimpleIntegerProperty();
+    private final StringProperty                titleProperty             = new SimpleStringProperty();
+    private final ObjectProperty<StatusType>    statusProperty            = new SimpleObjectProperty<>();
+    private final ObjectProperty<PriorityType>  priorityProperty          = new SimpleObjectProperty<>();
+    private final IntegerProperty               employeeProperty          = new SimpleIntegerProperty();
+    private final ObjectProperty<LocalDateTime> createdProperty           = new SimpleObjectProperty<>();
+    private final ObjectProperty<LocalDateTime> lastViewedTimestamp       = new SimpleObjectProperty<>();
+    private final IntegerProperty               categoryProperty          = new SimpleIntegerProperty();
 
     public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, int categoryId) {
         super(id);
