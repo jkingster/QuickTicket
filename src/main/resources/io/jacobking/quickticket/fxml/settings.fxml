@@ -40,6 +40,29 @@
                   </AnchorPane>
               </content>
             </TitledPane>
+            <TitledPane animated="false" collapsible="false" prefHeight="347.0" prefWidth="460.0" stylesheets="@../css/core/title-pane.css" text="Modules">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="237.0" prefWidth="299.0">
+                     <children>
+                        <TableView fx:id="moduleTable" prefHeight="276.0" prefWidth="460.0" stylesheets="@../css/core/table-two.css">
+                           <columns>
+                              <TableColumn fx:id="moduleCheckColumn" prefWidth="40.0" />
+                              <TableColumn fx:id="moduleNameColumn" maxWidth="128.0" minWidth="-Infinity" prefWidth="128.0" text="Name" />
+                              <TableColumn fx:id="moduleDescriptionColumn" maxWidth="419.0" minWidth="-Infinity" prefWidth="291.0" text="Description" />
+                           </columns>
+                        </TableView>
+                        <HBox alignment="CENTER_RIGHT" layoutX="3.0" layoutY="283.0" prefHeight="32.0" prefWidth="454.0" spacing="5.0">
+                           <children>
+                              <Button fx:id="updateModuleButton" mnemonicParsing="false" text="Update" />
+                           </children>
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </TitledPane>
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" layoutX="11.0" layoutY="364.0" prefHeight="364.0" prefWidth="1259.0" spacing="15.0" />

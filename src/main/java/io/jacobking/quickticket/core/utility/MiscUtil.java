@@ -1,6 +1,5 @@
 package io.jacobking.quickticket.core.utility;
 
-import io.jacobking.quickticket.core.utility.Checks;
 import io.jacobking.quickticket.gui.alert.Announcements;
 
 import java.awt.*;

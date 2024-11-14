@@ -1,5 +1,7 @@
 package io.jacobking.quickticket.core.database.repository;
 
+import io.jacobking.quickticket.bridge.impl.LinkBridge;
+import io.jacobking.quickticket.bridge.impl.ModuleBridge;
 import io.jacobking.quickticket.core.database.repository.impl.*;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -57,13 +59,15 @@ public class RepoCrud {
     private void loadRepositories() {
         for (RepoType value : RepoType.values()) {
             repositoryMap.computeIfAbsent(value, type -> switch (type) {
-                case TICKET -> (Repository<? extends Entity>) new TicketRepository();
-                case ALERT -> (Repository<? extends Entity>) new AlertRepository();
-                case COMMENT -> (Repository<? extends Entity>) new CommentRepository();
-                case EMPLOYEE -> (Repository<? extends Entity>) new EmployeeRepository();
-                case COMPANY -> (Repository<? extends Entity>) new CompanyRepository();
-                case DEPARTMENT -> (Repository<? extends Entity>) new DepartmentRepository();
-                case CATEGORY -> (Repository<? extends Entity>) new CategoryRepository();
+                case TICKET -> (Repository<?>) new TicketRepository();
+                case ALERT -> (Repository<?>) new AlertRepository();
+                case COMMENT -> (Repository<?>) new CommentRepository();
+                case EMPLOYEE -> (Repository<?>) new EmployeeRepository();
+                case COMPANY -> (Repository<?>) new CompanyRepository();
+                case DEPARTMENT -> (Repository<?>) new DepartmentRepository();
+                case CATEGORY -> (Repository<?>) new CategoryRepository();
+                case TICKET_LINK -> (Repository<?>) new LinkRepository();
+                case MODULE -> (Repository<?>) new ModuleRepository();
             });
         }
     }

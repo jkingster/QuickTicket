@@ -4,6 +4,7 @@ package io.jacobking.quickticket.gui.controller;
 import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.model.AlertModel;
+import io.jacobking.quickticket.gui.model.ModuleModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Callback;
@@ -18,21 +19,24 @@ public class SettingsController extends Controller {
     @FXML private TableColumn<AlertModel, String>  alertNameColumn;
     @FXML private Button                           updateAlertButton;
 
+    @FXML private TableView<ModuleModel>            moduleTable;
+    @FXML private TableColumn<ModuleModel, Boolean> moduleCheckColumn;
+    @FXML private TableColumn<ModuleModel, String>  moduleNameColumn;
+    @FXML private TableColumn<ModuleModel, String>  moduleDescriptionColumn;
+    @FXML private Button                            updateModuleButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Set up cell value factories
+        configureAlerts();
+        configureModules();
+    }
+
+    private void configureAlerts() {
         alertNameColumn.setCellValueFactory(data -> data.getValue().alertNameProperty());
         checkColumn.setCellValueFactory(data -> data.getValue().alertStateProperty());
-
-        // Set up CheckBox in the checkColumn
         checkColumn.setCellFactory(createCheckBoxCellFactory());
-
-        // Load data into the TableView
         alertTable.setItems(bridgeContext.getAlerts().getObservableList());
-
-        // Configure listener for parent alerts
         configureParentListener();
-
         updateAlertButton.setOnAction(event -> onUpdateAlerts());
     }
 
@@ -106,6 +110,65 @@ public class SettingsController extends Controller {
         }
 
         Announcements.get().showConfirm("Success", "Alerts & notifications updated successfully.");
+    }
+
+    private void configureModules() {
+        moduleTable.setItems(bridgeContext.getModule().getObservableList());
+        moduleCheckColumn.setCellValueFactory(data -> data.getValue().stateProperty());
+        moduleNameColumn.setCellValueFactory(data -> data.getValue().nameProperty());
+        moduleDescriptionColumn.setCellValueFactory(data -> data.getValue().descriptionProperty());
+
+        moduleCheckColumn.setCellFactory(data -> {
+            return new TableCell<>() {
+                private final CheckBox checkBox = new CheckBox();
+
+                {
+                    checkBox.selectedProperty().addListener((observable, oldState, newState) -> {
+                        if (newState == null) {
+                            return;
+                        }
+
+                        final ModuleModel moduleModel = getTableRow().getItem();
+                        if (moduleModel != null) {
+                            moduleModel.stateProperty().setValue(newState);
+                        }
+                    });
+                }
+
+                @Override protected void updateItem(Boolean state, boolean empty) {
+                    super.updateItem(state, empty);
+                    if (state == null || empty) {
+                        setGraphic(null);
+                        return;
+                    }
+
+                    final ModuleModel model = getTableRow().getItem();
+                    if (model != null) {
+                        checkBox.setSelected(getTableRow().getItem().isEnabled());
+                    }
+
+                    setGraphic(checkBox);
+                }
+            };
+        });
+
+        updateModuleButton.setOnAction(event -> onUpdateModules());
+    }
+
+    private void onUpdateModules() {
+        int moduleUpdateCounter = 0;
+        for (final ModuleModel module : moduleTable.getItems()) {
+            if (!bridgeContext.getModule().update(module)) {
+                moduleUpdateCounter++;
+            }
+        }
+
+        if (moduleUpdateCounter >= 1) {
+            Announcements.get().showError("Error", "Failed to update module(s).", "Please try again.");
+            return;
+        }
+
+        Announcements.get().showConfirm("Success", "Module(s) states updated.");
     }
 
 }
