@@ -139,7 +139,6 @@ public class TicketCreatorController extends Controller {
                 .setEmployeeId(employeeModel == null ? 0 : employeeModel.getId()));
 
         insertInitialComment(newTicket);
-        sendInitialEmail(newTicket);
         display.close(Route.TICKET_CREATOR);
 
         if (openCheckBox.isSelected()) {
@@ -156,22 +155,6 @@ public class TicketCreatorController extends Controller {
         return selected == null ? 0 : selected.getId();
     }
 
-    private void sendInitialEmail(final TicketModel ticketModel) {
-        if (!emailCheckBox.isSelected()) return;
-
-        final EmployeeModel model = employeeComboBox.getSelectionModel().getSelectedItem();
-        if (model == null) return;
-
-        final String email = model.getEmail();
-        if (email.isEmpty()) return;
-
-        final String creation = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation());
-        final String initialComment = commentField.getText().isEmpty() ? "No initial comment provided." : commentField.getText();
-    }
-
-    private String getSubject(final TicketModel ticketModel) {
-        return String.format("Your support ticket has been created. | Ticket ID: %s", ticketModel.getId());
-    }
 
     private void insertInitialComment(final TicketModel ticketModel) {
         final String initialComment = commentField.getText();

@@ -26,7 +26,6 @@
             <SearchableComboBox fx:id="categoryComboBox" prefHeight="25.0" prefWidth="240.0" promptText="Category" stylesheets="@../css/core/combo-box.css" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                <children>
-                  <CheckBox fx:id="emailCheckBox" mnemonicParsing="false" text="Send notification e-mail" textFill="WHITE" />
                   <CheckBox fx:id="openCheckBox" mnemonicParsing="false" text="Open ticket after creation" textFill="WHITE" />
                </children>
             </HBox>
