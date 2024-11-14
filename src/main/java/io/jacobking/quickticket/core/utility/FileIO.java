@@ -38,6 +38,7 @@ public class FileIO {
         createDirectory("migrations");
         createDirectory("backup");
         createDirectory("logs");
+        createDirectory("attachments");
     }
 
     public static boolean createFile(final String path) {

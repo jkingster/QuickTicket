@@ -30,12 +30,24 @@ public class Data {
         return mapped == null ? Optional.empty() : Optional.of(mapped);
     }
 
-    public <T> Optional<T> mapIndex(final int index, final Class<T> clazz) {
+    public <T> Optional<T> optMapIndex(final int index, final Class<T> clazz) {
         if (index > objects.length - 1)
             return Optional.empty();
 
         final T mapped = getMappedObject(objects[index], clazz);
         return mapped == null ? Optional.empty() : Optional.of(mapped);
+    }
+
+    public <T> T mapIndex(final int index, final Class<T> clazz) {
+        if (index > objects.length - 1)
+            return null;
+        return getMappedObject(objects[index], clazz);
+    }
+
+    public <T> TableView<T> mapTable(final int index) {
+        if (index > objects.length - 1)
+            return null;
+        return getMappedObject(objects[index], TableView.class);
     }
 
     public <T> Optional<ObjectProperty<T>> mapObjectProperty(final int index) {
@@ -47,7 +59,7 @@ public class Data {
         return mapped == null ? Optional.empty() : Optional.of(mapped);
     }
 
-    public <T> Optional<TableView<T>> mapTable(final int index) {
+    public <T> Optional<TableView<T>> optMapTable(final int index) {
         if (index < 0 || index > objects.length - 1)
             return Optional.empty();
 

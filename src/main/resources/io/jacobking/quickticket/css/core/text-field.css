@@ -19,3 +19,10 @@
     -fx-text-fill: -fx-typography;
     -fx-font-weight: bolder;
 }
+
+.offset-text-field-label {
+    -fx-background-color: derive(-fx-primary, -10%);
+    -fx-text-fill: -fx-typography;
+    -fx-font-weight: bolder;
+    -fx-cursor: none;
+}

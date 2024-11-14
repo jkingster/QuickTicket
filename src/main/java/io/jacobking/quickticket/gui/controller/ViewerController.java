@@ -3,551 +3,143 @@ package io.jacobking.quickticket.gui.controller;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
-import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.Controller;
-import io.jacobking.quickticket.gui.Data;
-import io.jacobking.quickticket.gui.misc.PopOverBuilder;
-import io.jacobking.quickticket.gui.model.CommentModel;
+import io.jacobking.quickticket.gui.Route;
+import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
-import io.jacobking.quickticket.gui.Route;
-import io.jacobking.quickticket.gui.utility.IconLoader;
-import io.jacobking.quickticket.tables.pojos.Comment;
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import org.controlsfx.control.PopOver;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.util.StringConverter;
 import org.controlsfx.control.SearchableComboBox;
-import org.controlsfx.glyphfont.FontAwesome;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class ViewerController extends Controller {
 
+    private TicketModel            ticket;
     private TableView<TicketModel> ticketTable;
-    private TicketModel            viewedTicket;
 
-    @FXML private TextField priorityField;
-    @FXML private TextField statusField;
-    @FXML private TextField titleField;
-    @FXML private TextField createdOnField;
-    @FXML private TextField resolveByField;
-    @FXML private TextField employeeField;
-    @FXML private TextField commentField;
-    @FXML private TextField categoryField;
+    @FXML private TextField                               ticketIdField;
+    @FXML private TextField                               titleField;
+    @FXML private SearchableComboBox<StatusType>          statusBox;
+    @FXML private SearchableComboBox<PriorityType>        priorityBox;
+    @FXML private TextField                               employeeField;
+    @FXML private SearchableComboBox<TicketCategoryModel> categoryBox;
+    @FXML private TextField                               createdField;
 
-    @FXML private ListView<CommentModel> commentList;
-
-    @FXML private Button priorityButton;
-    @FXML private Button statusButton;
-    @FXML private Button userButton;
-    @FXML private Button titleButton;
-    @FXML private Button resolveByButton;
-    @FXML private Button postButton;
-    @FXML private Button deleteButton;
-    @FXML private Button linkTicketButton;
-    @FXML private Button removeTicketButton;
-    @FXML private Button categoryButton;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
-        configureCommentList();
-        configureCommentButtons();
-        initializeRelay();
+        this.ticket = data.mapIndex(0, TicketModel.class);
+        this.ticketTable = data.mapTable(1);
+
+        if (ticket == null) {
+            display.close(Route.VIEWER);
+            return;
+        }
+
+        configureStatusBox();
+        configurePriorityBox();
+        configureCategoryBox();
+        populateFields();
     }
 
-    private void configureCommentList() {
-        commentList.setCellFactory(data -> new ListCell<>() {
-            @Override protected void updateItem(CommentModel commentModel, boolean b) {
-                super.updateItem(commentModel, b);
-                if (commentModel == null || b) {
-                    setGraphic(null);
-                    return;
-                }
+    private void configureStatusBox() {
+        statusBox.setItems(FXCollections.observableArrayList(StatusType.values()));
+        statusBox.setConverter(new StringConverter<StatusType>() {
+            @Override public String toString(StatusType statusType) {
+                return (statusType == null) ? "Unknown" : statusType.name();
+            }
 
-                final String commentDate = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, commentModel.getPostedOn());
-                final String comment = commentModel.getPost();
-
-                final VBox vBox = new VBox(2.5);
-                VBox.setVgrow(vBox, Priority.ALWAYS);
-
-                final Label dateLabel = new Label(commentDate);
-                dateLabel.setStyle("-fx-font-weight: bolder; -fx-font-size: 1.10em;");
-
-                final int offset = 30;
-                final Text commentText = new Text(comment);
-                commentText.setFill(Color.WHITE);
-                commentText.setWrappingWidth(
-                        commentList.getWidth() - dateLabel.getBoundsInLocal().getWidth() - offset
-                );
-
-                vBox.getChildren().addAll(dateLabel, commentText);
-                setGraphic(vBox);
+            @Override public StatusType fromString(String s) {
+                return null;
             }
         });
     }
 
-    private void configureCommentButtons() {
-        postButton.setGraphic(IconLoader.createDefault(FontAwesome.Glyph.SEND_ALT));
-        deleteButton.setGraphic(IconLoader.createDefault(FontAwesome.Glyph.CLOSE));
+    private void configurePriorityBox() {
+        priorityBox.setItems(FXCollections.observableArrayList(PriorityType.values()));
+        priorityBox.setConverter(new StringConverter<PriorityType>() {
+            @Override public String toString(PriorityType priorityType) {
+                return (priorityType == null) ? "Unknown" : priorityType.name();
+            }
 
-        postButton.disableProperty().bind(commentField.textProperty().isEmpty());
-        deleteButton.disableProperty().bind(commentList.getSelectionModel().selectedItemProperty().isNull());
-
-        commentField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                final String comment = commentField.getText();
-                if (comment.isEmpty())
-                    return;
-
-                postComment(viewedTicket, comment);
-                commentField.clear();
-                scrollToComment();
+            @Override public PriorityType fromString(String s) {
+                return null;
             }
         });
     }
 
-    private void updatePriorityColor(final PriorityType type) {
-        switch (type) {
-            case LOW -> {
-                priorityField.setStyle("-fx-text-fill: GREEN;");
-                priorityField.setText("LOW");
+    private void configureCategoryBox() {
+        categoryBox.setItems(bridgeContext.getCategory().getObservableList());
+        categoryBox.setConverter(new StringConverter<TicketCategoryModel>() {
+            @Override public String toString(TicketCategoryModel ticketCategoryModel) {
+                return (ticketCategoryModel == null) ? "Unknown" : ticketCategoryModel.getNameProperty();
             }
-            case MEDIUM -> {
-                priorityField.setStyle("-fx-text-fill: YELLOW;");
-                priorityField.setText("MEDIUM");
-            }
-            case HIGH -> {
-                priorityField.setStyle("-fx-text-fill: ORANGE;");
-                priorityField.setText("HIGH");
-            }
-        }
-    }
 
-    private void updateStatusColor(final StatusType type) {
-        switch (type) {
-            case ACTIVE -> {
-                statusField.setStyle("-fx-text-fill: #FF5733");
-                statusField.setText("ACTIVE");
-            }
-            case RESOLVED -> {
-                statusField.setStyle("-fx-text-fill: #5DADD5;");
-                statusField.setText("RESOLVED");
-            }
-            case OPEN -> {
-                statusField.setStyle("-fx-text-fill: #3498DB;");
-                statusField.setText("OPEN");
-            }
-            case PAUSED -> {
-                statusField.setStyle("-fx-text-fill: #FFC300");
-                statusField.setText("PAUSED");
-            }
-        }
-        refreshTable();
-    }
-
-
-
-    private void openTicket(final TicketModel ticketModel) {
-        display.show(Route.VIEWER, Data.of(ticketModel, ticketTable));
-    }
-
-    private void refreshTable() {
-        if (ticketTable != null) {
-            ticketTable.refresh();
-        }
-    }
-
-
-    private void initializeRelay() {
-        data.mapFirst(TicketModel.class).ifPresent(model -> {
-            this.viewedTicket = model;
-            handleTicket(model);
-        });
-
-        final Optional<TableView<TicketModel>> mappedTable = data.mapTable(1);
-        mappedTable.ifPresent(table -> this.ticketTable = table);
-
-    }
-
-    private void handleTicket(final TicketModel ticketModel) {
-        initializeFields(ticketModel);
-        loadComments(ticketModel);
-    }
-
-    private void initializeFields(final TicketModel ticketModel) {
-        final String title = ticketModel.getTitle();
-        titleField.setText(title);
-
-        final String createdOn = DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, ticketModel.getCreation());
-        createdOnField.setText(createdOn);
-
-        final EmployeeModel employeeModel = bridgeContext.getEmployee().getModel(ticketModel.getEmployeeId());
-        final String employeeName = (employeeModel == null) ? "No employee." : employeeModel.getFullName();
-        employeeField.setText(employeeName);
-
-        final TicketCategoryModel categoryModel = bridgeContext.getCategory().getModel(ticketModel.getCategory());
-        handleCategory(categoryModel);
-
-        handlePriority(ticketModel.priorityProperty());
-        handleStatus(ticketModel.statusProperty());
-    }
-
-    private void handleDate(final LocalDate localDate) {
-        if (localDate == null)
-            return;
-
-        final LocalDate now = LocalDate.now();
-        final long difference = ChronoUnit.DAYS.between(now, localDate);
-
-        if (now.isEqual(localDate)) {
-            resolveByField.setStyle("-fx-text-fill: RED;");
-        } else if (Math.abs(difference) <= 5) {
-            resolveByField.setStyle("-fx-text-fill: YELLOW;");
-        }
-    }
-
-    private void handlePriority(final ObjectProperty<PriorityType> priority) {
-        priorityField.setText(priority.getValue().name());
-        updatePriorityColor(priority.getValue());
-    }
-
-    private void handleStatus(final ObjectProperty<StatusType> status) {
-        statusField.setText(status.getValue().name());
-        updateStatusColor(status.getValue());
-    }
-
-    private void handleCategory(final TicketCategoryModel categoryModel) {
-        if (categoryModel == null) {
-            categoryField.setText("Undefined");
-            return;
-        }
-
-        final String name = categoryModel.getNameProperty();
-        categoryField.setText(name);
-
-        categoryField.setStyle("-fx-text-fill: " + categoryModel.getColorAsRGB() + ";");
-    }
-
-    private void loadComments(final TicketModel ticketModel) {
-        final ObservableList<CommentModel> commentsList = bridgeContext.getComment().getCommentsByTicketId(ticketModel.getId());
-        commentList.setItems(commentsList.sorted(Comparator.comparing(CommentModel::getPostedOn)));
-    }
-
-    @FXML private void onQuickResolve() {
-        final StatusType originalStatus = viewedTicket.statusProperty().getValue();
-        viewedTicket.statusProperty().setValue(StatusType.RESOLVED);
-        updateStatusColor(StatusType.RESOLVED);
-
-        if (bridgeContext.getTicket().update(viewedTicket, originalStatus)) {
-            promptNotifyEmployeeAlert(viewedTicket);
-        }
-    }
-
-    private void promptNotifyEmployeeAlert(final TicketModel viewedTicket) {
-        Announcements.get().showInput("This ticket has been marked resolved.", "Would you like to notify the employee? Please provide any closing comments.")
-                .ifPresent(pair -> {
-                    final ButtonType type = pair.getLeft();
-                    final String comment = pair.getRight();
-                    if (type == ButtonType.YES) {
-                        postComment(viewedTicket, comment);
-                        processNotificationEmail(viewedTicket, comment);
-                    } else if (type == ButtonType.NO) {
-                        postComment(viewedTicket, comment);
-                    } else if (type == ButtonType.CANCEL) {
-                        postFailureComment(viewedTicket, "Notification not sent and resolving comment unknown.");
-                    }
-                });
-    }
-
-    private void processNotificationEmail(final TicketModel viewedTicket, final String resolvingComment) {
-        final EmployeeModel employee = getEmployee();
-        if (employee == null) {
-            Announcements.get().showError("Failed to retrieve record.", "Employee could not be fetched from database.", "Please attach an employee.");
-            postFailureComment(viewedTicket, "Could not retrieve employee record.");
-            return;
-        }
-
-        final String employeeEmail = employee.getEmail();
-        if (employeeEmail.isEmpty()) {
-            Announcements.get().showError("Failed to retrieve e-mail.", "Could not notify employee.", "PLease attach an e-mail to employees' record.");
-            postFailureComment(viewedTicket, "Could not retrieve employee e-mail.");
-            return;
-        }
-
-    }
-
-    private void postEmptyResolvingComment(final TicketModel viewedTicket) {
-        postComment(viewedTicket, "No resolving comment.");
-    }
-
-    private void postFailureComment(final TicketModel ticketModel, final String comment) {
-        postComment(ticketModel, String.format("[SYSTEM]: %s", comment));
-    }
-
-    private void postComment(final TicketModel ticket, final String commentText) {
-        if (commentText.isEmpty()) {
-            postEmptyResolvingComment(ticket);
-            return;
-        }
-
-        bridgeContext.getComment().createModel(new Comment()
-                .setTicketId(ticket.getId())
-                .setPost(commentText)
-                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
-        );
-    }
-
-    private EmployeeModel getEmployee() {
-        return bridgeContext.getEmployee().getModel(viewedTicket.getEmployeeId());
-    }
-
-    @FXML private void onDeleteTicket() {
-        Announcements.get().showConfirmation(() -> deleteTicket(viewedTicket.getId()),
-                "Are you sure you want to delete this ticket?", "It cannot be recovered. All associated comments will be purged."
-        ).ifPresent(type -> {
-            if (type == ButtonType.YES) {
-                deleteTicket(viewedTicket.getId());
+            @Override public TicketCategoryModel fromString(String s) {
+                return null;
             }
         });
     }
 
-    private void deleteTicket(final int ticketId) {
-        bridgeContext.getComment().removeCommentsByTicketId(ticketId);
-        bridgeContext.getTicket().remove(ticketId);
-        refreshTable();
-        display.close(Route.VIEWER);
+    private void populateFields() {
+        ticketIdField.setText(ticket.getId() + "");
+        titleField.setText(ticket.getTitle());
+        statusBox.getSelectionModel().select(StatusType.of(ticket.getStatus()));
+        priorityBox.getSelectionModel().select(PriorityType.of(ticket.getPriority()));
+
+        final EmployeeModel employee = bridgeContext.getEmployee().getModel(ticket.getEmployeeId());
+        if (employee != null) {
+            employeeField.setText(employee.getFullName());
+            employeeField.setId(employee.getId() + "");
+        }
+
+        final TicketCategoryModel category = bridgeContext.getCategory().getModel(ticket.getCategory());
+        if (category != null) {
+            categoryBox.getSelectionModel().select(category);
+        }
+
+        createdField.setText(DateUtil.formatDateTime(
+                DateUtil.DateFormat.DATE_TIME_ONE,
+                ticket.getCreation()
+        ));
     }
 
-    @FXML private void onPostComment() {
-        final String commentText = commentField.getText();
-        final CommentModel newComment = bridgeContext.getComment().createModel(new Comment()
-                .setTicketId(viewedTicket.getId())
-                .setPost(commentText)
-                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
-        );
-
-        if (newComment == null) {
-            Announcements.get().showError("Failure", "Failed to post comment.", "Please try again.");
+    @FXML private void onUpdateTicket() {
+        final String title = titleField.getText();
+        if (title == null || title.isEmpty()) {
+            Announcements.get().showError("Error", "Could not update ticket.", "Ticket title required.");
             return;
         }
 
-        scrollToComment();
-        commentField.clear();
+
     }
 
-    private void scrollToComment() {
-        final int targetIndex = commentList.getItems().size() - 1;
-        Platform.runLater(() -> commentList.scrollTo(targetIndex));
-    }
-
-    @FXML private void onDeleteComment() {
-        final CommentModel selectedComment = commentList.getSelectionModel().getSelectedItem();
-        if (selectedComment != null) {
-            Announcements.get().showConfirmation(() -> deleteComment(selectedComment),
-                            "Are you sure you want to delete this comment?",
-                            "It cannot be recovered."
-                    )
-                    .ifPresent(type -> {
-                        if (type == ButtonType.YES) {
-                            deleteComment(selectedComment);
-                        }
-                    });
+    // Utilities
+    private int getEmployeeId() {
+        final int currentId = Integer.parseInt(employeeField.getId());
+        if (currentId == ticket.getEmployeeId()) {
+            return ticket.getEmployeeId();
         }
+        return currentId;
     }
 
-    private void deleteComment(final CommentModel commentModel) {
-        bridgeContext.getComment().remove(commentModel.getId());
+    private int getCategoryId() {
+        final TicketCategoryModel category = categoryBox.getValue();
+        return (category == null) ? 0 : category.getId();
     }
 
-    @FXML private void onUpdatePriority() {
-        setPopOver("Update Priority", priorityButton, FXCollections.observableArrayList(PriorityType.values()), (popOver, comboBox) -> {
-            final PriorityType newPriority = comboBox.getSelectionModel().getSelectedItem();
-            viewedTicket.priorityProperty().setValue(newPriority);
-
-            if (bridgeContext.getTicket().update(viewedTicket)) {
-                updatePriorityColor(newPriority);
-                popOver.hide();
-                refreshTable();
-            }
-        }, null);
+    private TicketModel getUpdatedTicket() {
+        ticket.titleProperty().setValue(titleField.getText());
+        ticket.statusProperty().setValue(statusBox.getValue());
+        ticket.priorityProperty().setValue(priorityBox.getValue());
+        ticket.employeeProperty().setValue(getEmployeeId());
+        ticket.categoryProperty().setValue(getCategoryId());
+        return ticket;
     }
-
-    @FXML private void onUpdateStatus() {
-        setPopOver("Update Status", statusButton, FXCollections.observableArrayList(StatusType.values()), ((popOver, comboBox) -> {
-            final StatusType originalStatus = viewedTicket.statusProperty().getValue();
-            final StatusType newStatus = comboBox.getSelectionModel().getSelectedItem();
-
-            viewedTicket.statusProperty().setValue(newStatus);
-            if (bridgeContext.getTicket().update(viewedTicket, originalStatus)) {
-                updateStatusColor(newStatus);
-                popOver.hide();
-              refreshTable();
-            }
-        }), null);
-    }
-
-    @FXML private void onUpdateUser() {
-        setPopOver("Update User", userButton, bridgeContext.getEmployee().getObservableList(), ((popOver, comboBox) -> {
-            final EmployeeModel newEmployee = comboBox.getSelectionModel().getSelectedItem();
-            viewedTicket.employeeProperty().setValue(newEmployee.getId());
-
-            if (bridgeContext.getTicket().update(viewedTicket)) {
-                updateEmployee(newEmployee);
-                popOver.hide();
-              refreshTable();
-            }
-        }), null);
-    }
-
-    @FXML private void onUpdateTitle() {
-        final Button update = new Button();
-        update.setGraphic(IconLoader.createDefault(FontAwesome.Glyph.CHECK_SQUARE));
-
-        final TextField inputTitleField = new TextField();
-
-        final HBox hBox = new HBox(5.0);
-        hBox.setPrefWidth(200.0);
-        hBox.setPadding(new Insets(10));
-        hBox.getChildren().addAll(inputTitleField, update);
-        hBox.setAlignment(Pos.CENTER);
-
-        final PopOverBuilder popOverBuilder = new PopOverBuilder()
-                .setOwner(titleButton)
-                .useDefaultSettings()
-                .setTitle("Update Title")
-                .setContent(hBox);
-
-        update.setOnAction(event -> {
-            final String newTitle = inputTitleField.getText();
-            if (newTitle.isEmpty()) {
-                Announcements.get().showError("Failed.", "Could not update ticket title.", "Empty title field.");
-                return;
-            }
-
-            viewedTicket.titleProperty().setValue(newTitle);
-            if (bridgeContext.getTicket().update(viewedTicket)) {
-                titleField.setText(newTitle);
-                inputTitleField.clear();
-                popOverBuilder.get().hide();
-                refreshTable();
-            }
-        });
-
-        popOverBuilder.show();
-    }
-
-    @FXML private void onResolveBy() {
-        final Button update = new Button();
-        update.setGraphic(IconLoader.createDefault(FontAwesome.Glyph.CHECK_SQUARE));
-
-        final DatePicker datePicker = new DatePicker();
-
-
-        final HBox hBox = new HBox(5.0);
-        hBox.setPrefWidth(200.0);
-        hBox.setPadding(new Insets(10));
-        hBox.getChildren().addAll(datePicker, update);
-        hBox.setAlignment(Pos.CENTER);
-
-        final PopOverBuilder popOverBuilder = new PopOverBuilder()
-                .setOwner(resolveByButton)
-                .useDefaultSettings()
-                .setTitle("Update Resolve By Date")
-                .setContent(hBox);
-
-        update.setOnAction(event -> {
-            final LocalDate localDate = datePicker.getValue();
-            final LocalDate now = LocalDate.now();
-            if (localDate.isBefore(now)) {
-                Announcements.get().showError("Failed to update.", "The resolve-by date cannot be in the past.", "Please try again.");
-                return;
-            }
-
-            if (bridgeContext.getTicket().update(viewedTicket)) {
-                refreshTable();
-                resolveByField.setText(String.format("Resolve by: %s", DateUtil.formatDate(localDate.toString())));
-                popOverBuilder.get().hide();
-            }
-        });
-
-        popOverBuilder.show();
-    }
-
-    @FXML private void onUpdateCategory() {
-        setPopOver("Update Category", categoryButton, bridgeContext.getCategory().getObservableList(), ((popOver, comboBox) -> {
-            final TicketCategoryModel newCategory = comboBox.getSelectionModel().getSelectedItem();
-            if (newCategory == null) {
-                Announcements.get().showError("Failure", "Could not update ticket category.", "Please select one and try again.");
-                return;
-            }
-
-            viewedTicket.categoryProperty().setValue(newCategory.getId());
-            if (bridgeContext.getTicket().update(viewedTicket)) {
-                handleCategory(newCategory);
-                popOver.hide();
-            }
-        }), null);
-    }
-
-
-    private void updateEmployee(final EmployeeModel employeeModel) {
-        employeeField.setText(employeeModel.getFullName());
-        refreshTable();
-    }
-
-    private <T> void setPopOver(final String title, final Button owner, final ObservableList<T> observableList, final BiConsumer<PopOver, SearchableComboBox<T>> biConsumer, final Consumer<ListCell<T>> cellFactoryConsumer) {
-        final SearchableComboBox<T> comboBox = new SearchableComboBox<>(observableList);
-        final Button update = new Button();
-        update.setGraphic(IconLoader.createDefault(FontAwesome.Glyph.CHECK_SQUARE));
-
-        final HBox hBox = new HBox(5.0);
-        hBox.setPrefWidth(200.0);
-        hBox.setPadding(new Insets(10));
-        hBox.getChildren().addAll(comboBox, update);
-        hBox.setAlignment(Pos.CENTER);
-
-        if (cellFactoryConsumer != null) {
-            comboBox.setCellFactory(data -> new ListCell<>() {
-                @Override protected void updateItem(T t, boolean b) {
-                    super.updateItem(t, b);
-                    if (t == null || b) {
-                        setGraphic(null);
-                        return;
-                    }
-                    cellFactoryConsumer.accept(this);
-                }
-            });
-        }
-
-        final PopOverBuilder popOverBuilder = new PopOverBuilder()
-                .setOwner(owner)
-                .setTitle(title)
-                .useDefaultSettings()
-                .setContent(hBox)
-                .setArrowOrientation(PopOver.ArrowLocation.BOTTOM_RIGHT);
-
-        update.setOnAction(event -> biConsumer.accept(popOverBuilder.get(), comboBox));
-        popOverBuilder.show();
-    }
-
-
 }

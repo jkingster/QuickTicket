@@ -46,14 +46,8 @@ public class TicketCreatorController extends Controller {
     }
 
     private void setDataRelay() {
-        if (data == null) {
-            return;
-        }
-
-        data.mapIndex(0, TicketController.class).ifPresent(controller -> {
-            this.ticketController = controller;
-            this.ticketTable = ticketController.getTicketTable();
-        });
+        this.ticketController = data.mapIndex(0, TicketController.class);
+        this.ticketTable = ticketController.getTicketTable();
     }
 
     private void configureStatusComboBox() {
