@@ -130,7 +130,7 @@ public abstract class Bridge<E, V extends Model<E>> {
         return bridgeContext;
     }
 
-    private void removalListener() {
+    public void removalListener() {
         observableList.addListener((ListChangeListener<? super V>) change -> {
             while (change.next()) {
                 if (change.wasRemoved()) {

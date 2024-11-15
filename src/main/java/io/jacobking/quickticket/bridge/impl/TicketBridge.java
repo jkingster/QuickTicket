@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.bridge.impl;
 
 import io.jacobking.quickticket.bridge.Bridge;
-import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.core.type.StatusType;
@@ -18,12 +17,10 @@ import java.util.function.Predicate;
 public class TicketBridge extends Bridge<Ticket, TicketModel> {
 
     private final Map<StatusType, ObservableList<TicketModel>> ticketMap;
-    private final BridgeContext                                bridgeContext;
 
-    public TicketBridge(final Database database, final BridgeContext bridgeContext) {
+    public TicketBridge(final Database database) {
         super(database, RepoType.TICKET);
         this.ticketMap = FXCollections.observableHashMap();
-        this.bridgeContext = bridgeContext;
 
         ticketMap.put(StatusType.OPEN, FXCollections.observableArrayList(
                 getObservableList().filtered(tm -> tm.statusProperty().get() == StatusType.OPEN)
@@ -87,18 +84,18 @@ public class TicketBridge extends Bridge<Ticket, TicketModel> {
     }
 
     private void configureRemovalListener() {
-        getObservableList().addListener(new ListChangeListener<TicketModel>() {
-            @Override public void onChanged(Change<? extends TicketModel> change) {
-                while (change.next()) {
-                    if (change.wasRemoved()) {
-                        final var subList = change.getRemoved();
-                        for (final TicketModel model : subList) {
-                            bridgeContext.getTicketEmployees().remove(model.getId());
-                        }
-                    }
-                }
-            }
-        });
+//        getObservableList().addListener(new ListChangeListener<TicketModel>() {
+//            @Override public void onChanged(Change<? extends TicketModel> change) {
+//                while (change.next()) {
+//                    if (change.wasRemoved()) {
+//                        final var subList = change.getRemoved();
+//                        for (final TicketModel model : subList) {
+//                            bridgeContext.getTicketEmployee().remove(model.getId());
+//                        }
+//                    }
+//                }
+//            }
+//        });
     }
 }
 

@@ -1,11 +1,11 @@
 package io.jacobking.quickticket.gui.model;
 
 import io.jacobking.quickticket.gui.Model;
-import io.jacobking.quickticket.tables.pojos.TicketEmployees;
+import io.jacobking.quickticket.tables.pojos.TicketEmployee;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class TicketEmployeeModel extends Model<TicketEmployees> {
+public class TicketEmployeeModel extends Model<TicketEmployee> {
 
     private final IntegerProperty ticketId   = new SimpleIntegerProperty();
     private final IntegerProperty employeeId = new SimpleIntegerProperty();
@@ -16,11 +16,11 @@ public class TicketEmployeeModel extends Model<TicketEmployees> {
         this.employeeId.setValue(employeeId);
     }
 
-    public TicketEmployeeModel(TicketEmployees ticketEmployees) {
+    public TicketEmployeeModel(TicketEmployee ticketEmployee) {
         this(
-                -1,
-                ticketEmployees.getTicketId(),
-                ticketEmployees.getEmployeeId()
+                ticketEmployee.getId(),
+                ticketEmployee.getTicketId(),
+                ticketEmployee.getEmployeeId()
         );
     }
 
@@ -48,8 +48,9 @@ public class TicketEmployeeModel extends Model<TicketEmployees> {
         this.employeeId.set(employeeId);
     }
 
-    @Override public TicketEmployees toEntity() {
-        return new TicketEmployees()
+    @Override public TicketEmployee toEntity() {
+        return new TicketEmployee()
+                .setId(getId())
                 .setTicketId(getTicketId())
                 .setEmployeeId(getEmployeeId());
     }

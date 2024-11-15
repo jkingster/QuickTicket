@@ -14,19 +14,19 @@ public class BridgeContext {
     private final CategoryBridge       category;
     private final LinkBridge           ticketLink;
     private final ModuleBridge         module;
-    private final TicketEmployeeBridge ticketEmployees;
+    private final TicketEmployeeBridge TicketEmployee;
 
     public BridgeContext(final Database database) {
         this.company = new CompanyBridge(database);
         this.department = new DepartmentBridge(database);
         this.employee = new EmployeeBridge(database);
-        this.ticket = new TicketBridge(database, this);
+        this.ticket = new TicketBridge(database);
         this.comment = new CommentBridge(database);
         this.alerts = new AlertBridge(database);
         this.category = new CategoryBridge(database);
         this.ticketLink = new LinkBridge(database);
         this.module = new ModuleBridge(database);
-        this.ticketEmployees = new TicketEmployeeBridge(database, this);
+        this.TicketEmployee = new TicketEmployeeBridge(database);
     }
 
     public CompanyBridge getCompany() {
@@ -67,7 +67,7 @@ public class BridgeContext {
         return module;
     }
 
-    public TicketEmployeeBridge getTicketEmployees() {
-        return ticketEmployees;
+    public TicketEmployeeBridge getTicketEmployee() {
+        return TicketEmployee;
     }
 }

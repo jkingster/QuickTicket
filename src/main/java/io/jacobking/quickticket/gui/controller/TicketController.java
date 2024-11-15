@@ -10,6 +10,7 @@ import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
+import io.jacobking.quickticket.gui.model.TicketEmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.gui.utility.IconLoader;
 import io.jacobking.quickticket.tables.pojos.Comment;
@@ -39,7 +40,6 @@ import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.kordamp.ikonli.material2.Material2AL;
 import org.kordamp.ikonli.material2.Material2MZ;
-import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 import java.awt.*;
 import java.io.IOException;
@@ -47,7 +47,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class TicketController extends Controller {
     private final ObjectProperty<TicketModel> lastViewed = new SimpleObjectProperty<>();
@@ -61,7 +63,7 @@ public class TicketController extends Controller {
     @FXML private TableColumn<TicketModel, String>        titleColumn;
     @FXML private TableColumn<TicketModel, StatusType>    statusColumn;
     @FXML private TableColumn<TicketModel, PriorityType>  priorityColumn;
-    @FXML private TableColumn<TicketModel, Integer>       employeeColumn;
+    @FXML private TableColumn<TicketModel, Void>          employeeColumn;
     @FXML private TableColumn<TicketModel, LocalDateTime> createdColumn;
     @FXML private Label                                   openLabel;
     @FXML private Label                                   activeLabel;
@@ -187,22 +189,41 @@ public class TicketController extends Controller {
         statusColumn.setSortable(false);
         priorityColumn.setCellValueFactory(data -> data.getValue().priorityProperty());
         priorityColumn.setSortable(false);
-        employeeColumn.setCellValueFactory(data -> data.getValue().employeeProperty().asObject());
+
+
         employeeColumn.setCellFactory(data -> new TableCell<>() {
-            @Override protected void updateItem(Integer integer, boolean b) {
-                super.updateItem(integer, b);
-                if (integer == null || b) {
+            @Override protected void updateItem(Void unused, boolean empty) {
+                super.updateItem(unused, empty);
+                if (empty) {
                     setText(null);
                     return;
                 }
-                final EmployeeModel model = bridgeContext.getEmployee().getModel(integer);
-                if (model == null) {
-                    setText(null);
+
+                final TicketModel ticketModel = getTableRow().getItem();
+                if (ticketModel == null) {
+                    setText("Unknown");
                     return;
                 }
-                setText(model.getFullName());
+
+                final int ticketId = ticketModel.getId();
+                final var filteredList = bridgeContext.getTicketEmployee().getEmployeesForTicket(ticketId);
+                if (filteredList.isEmpty()) {
+                    setText("Unknown");
+                    return;
+                }
+
+                final String joinedNames = filteredList.stream()
+                        .map(TicketEmployeeModel::getEmployeeId)
+                        .map(employeeId -> bridgeContext.getEmployee().getModel(employeeId))
+                        .map(EmployeeModel::getFullName)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.joining(", "));
+
+                setText(joinedNames);
             }
         });
+
+
         employeeColumn.setSortable(false);
         createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
         createdColumn.setCellFactory(data -> new TableCell<>() {
@@ -376,12 +397,12 @@ public class TicketController extends Controller {
         );
     }
 
-    private EmployeeModel getEmployee() {
-        final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
-        if (ticketModel == null)
-            return null;
-        return bridgeContext.getEmployee().getModel(ticketModel.getEmployeeId());
-    }
+//    private EmployeeModel getEmployee() {
+//        final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
+//        if (ticketModel == null)
+//            return null;
+//        return bridgeContext.getEmployee().getModel(ticketModel.getEmployeeId());
+//    }
 
     @FXML private void onReopen() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
@@ -454,19 +475,19 @@ public class TicketController extends Controller {
             return;
         }
 
-        final EmployeeModel model = bridgeContext.getEmployee().getModel(ticketModel.getEmployeeId());
-        if (model == null) {
-            Announcements.get().showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
-            return;
-        }
+//        final EmployeeModel model = bridgeContext.getEmployee().getModel(ticketModel.getEmployeeId());
+//        if (model == null) {
+//            Announcements.get().showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
+//            return;
+//        }
 
-        final String employeeEmail = model.getEmail();
-        if (employeeEmail.isEmpty()) {
-            Announcements.get().showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
-            return;
-        }
+//        final String employeeEmail = model.getEmail();
+//        if (employeeEmail.isEmpty()) {
+//            Announcements.get().showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
+//            return;
+//        }
 
-        attemptToOpenEmailApp(desktop, employeeEmail, ticketModel);
+        //attemptToOpenEmailApp(desktop, employeeEmail, ticketModel);
     }
 
     private void attemptToOpenEmailApp(final Desktop desktop, final String email, final TicketModel ticketModel) {

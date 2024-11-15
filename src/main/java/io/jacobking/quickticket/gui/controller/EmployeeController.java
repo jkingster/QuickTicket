@@ -18,7 +18,6 @@ import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -219,17 +218,13 @@ public class EmployeeController extends Controller {
         accidentDeletionCheckBox.setSelected(employeeModel.isPreventAccidentalDeletion());
         disableEmployeeCheckBox.setSelected(employeeModel.isIsDisabled());
 
-        final var tickets = bridgeContext.getTicket().getObservableListByFilter(__ -> {
-            return __.getEmployeeId() == employeeModel.getId();
-        });
+        final var tickets = bridgeContext.getTicketEmployee()
+                .getTicketsForEmployee(employeeModel.getId());
 
         totalTicketCountLabel.setText(tickets.size() + "");
         ticketTable.setItems(tickets);
     }
 
-    private ObservableList<TicketModel> getTicketsForEmployee(final int employeeId) {
-
-    }
 
     private void onCreateEmployee() {
         if (getSelectedEmployee() != null) {
@@ -415,16 +410,14 @@ public class EmployeeController extends Controller {
                     return;
                 }
 
-                ticketModel.employeeProperty().setValue(0);
+                final boolean removed = bridgeContext.getTicketEmployee().removeByEmployeeId(employee.getId());
                 if (!bridgeContext.getTicket().update(ticketModel)) {
                     Announcements.get().showError("Error", "Failed to unlink employee.", "Please try again.");
                     return;
                 }
 
                 Announcements.get().showConfirm("Success", "Employee unlinked from ticket.");
-                ticketTable.setItems(bridgeContext.getTicket().getObservableListByFilter(__ -> {
-                    return __.getEmployeeId() == employee.getId(); // Have to reaggrate list because it's filtered, refreshing does nothing.
-                }));
+                ticketTable.setItems(bridgeContext.getTicketEmployee().getTicketsForEmployee(employee.getId()));
             }
 
             @Override protected void updateItem(Void object, boolean empty) {

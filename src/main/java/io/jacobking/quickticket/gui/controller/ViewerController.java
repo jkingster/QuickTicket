@@ -93,11 +93,11 @@ public class ViewerController extends Controller {
         statusBox.getSelectionModel().select(StatusType.of(ticket.getStatus()));
         priorityBox.getSelectionModel().select(PriorityType.of(ticket.getPriority()));
 
-        final EmployeeModel employee = bridgeContext.getEmployee().getModel(ticket.getEmployeeId());
-        if (employee != null) {
-            employeeField.setText(employee.getFullName());
-            employeeField.setId(employee.getId() + "");
-        }
+//        final EmployeeModel employee = bridgeContext.getEmployee().getModel(ticket.getEmployeeId());
+//        if (employee != null) {
+//            employeeField.setText(employee.getFullName());
+//            employeeField.setId(employee.getId() + "");
+//        }
 
         final TicketCategoryModel category = bridgeContext.getCategory().getModel(ticket.getCategory());
         if (category != null) {
@@ -121,13 +121,13 @@ public class ViewerController extends Controller {
     }
 
     // Utilities
-    private int getEmployeeId() {
-        final int currentId = Integer.parseInt(employeeField.getId());
-        if (currentId == ticket.getEmployeeId()) {
-            return ticket.getEmployeeId();
-        }
-        return currentId;
-    }
+//    private int getEmployeeId() {
+//        final int currentId = Integer.parseInt(employeeField.getId());
+//        if (currentId == ticket.getEmployeeId()) {
+//            return ticket.getEmployeeId();
+//        }
+//        return currentId;
+//    }
 
     private int getCategoryId() {
         final TicketCategoryModel category = categoryBox.getValue();
@@ -138,7 +138,7 @@ public class ViewerController extends Controller {
         ticket.titleProperty().setValue(titleField.getText());
         ticket.statusProperty().setValue(statusBox.getValue());
         ticket.priorityProperty().setValue(priorityBox.getValue());
-        ticket.employeeProperty().setValue(getEmployeeId());
+        //ticket.employeeProperty().setValue(getEmployeeId());
         ticket.categoryProperty().setValue(getCategoryId());
         return ticket;
     }
