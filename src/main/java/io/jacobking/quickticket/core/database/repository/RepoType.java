@@ -10,5 +10,6 @@ public enum RepoType {
     DEPARTMENT,
     ALERT,
     TICKET_LINK,
-    MODULE
+    MODULE,
+    TICKET_EMPLOYEES
 }

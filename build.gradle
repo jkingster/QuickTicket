@@ -133,32 +133,3 @@ jooq {
     }
 }
 
-task postProcessGeneratedPojos {
-    dependsOn generateJooq
-
-    doLast {
-        // Get the directory where POJOs are generated
-        def pojosDir = file("${generatedSourcesDir}/io/jacobking/quickticket/tables/pojos")
-
-        // Iterate through each generated file
-        pojosDir.eachFile { generatedFile ->
-            // Read the contents of the file
-            def content = generatedFile.text
-
-            // Append extends your base class
-            // Append extends your base class and import statement
-            content = content.replaceAll('public class (\\w+)\\b', 'import io.jacobking.quickticket.core.database.repository.Entity;\n\npublic class $1 extends Entity')
-
-            // Remove @SuppressWarnings annotation
-            content = content.replaceAll('@SuppressWarnings\\(\\{.*?\\}\\)', '')
-
-            // Write the modified content back to the file
-            generatedFile.write(content)
-
-            // Write the modified content back to the file
-        }
-    }
-}
-
-// Make the compileJava task depend on postProcessGeneratedPojos
-compileJava.dependsOn(postProcessGeneratedPojos)

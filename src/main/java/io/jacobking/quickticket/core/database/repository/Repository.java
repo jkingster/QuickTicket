@@ -5,7 +5,7 @@ import org.jooq.DSLContext;
 
 import java.util.List;
 
-public interface Repository<T extends Entity> {
+public interface Repository<T> {
     int SUCCESS = 1;
 
     T getById(final DSLContext context, final int id);

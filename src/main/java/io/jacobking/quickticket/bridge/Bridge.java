@@ -1,7 +1,6 @@
 package io.jacobking.quickticket.bridge;
 
 import io.jacobking.quickticket.core.database.Database;
-import io.jacobking.quickticket.core.database.repository.Entity;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.Model;
@@ -13,18 +12,31 @@ import javafx.collections.ObservableList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class Bridge<E extends Entity, V extends Model<E>> {
+public abstract class Bridge<E, V extends Model<E>> {
     private final   ObservableList<V> observableList;
     private final   RepoType          repoType;
+    private final   BridgeContext     bridgeContext;
     protected final RepoCrud          crud;
+
+
+    public Bridge(final Database database, final RepoType repoType, final BridgeContext bridgeContext) {
+        this.crud = database.call();
+        this.observableList = FXCollections.observableArrayList();
+        this.repoType = repoType;
+        this.bridgeContext = bridgeContext;
+        loadEntities();
+        removalListener();
+    }
 
     public Bridge(final Database database, final RepoType repoType) {
         this.crud = database.call();
         this.observableList = FXCollections.observableArrayList();
         this.repoType = repoType;
+        this.bridgeContext = null;
         loadEntities();
         removalListener();
     }
+
 
     protected void loadEntities() {
         final List<E> entities = crud.getAll(repoType);
@@ -86,7 +98,7 @@ public abstract class Bridge<E extends Entity, V extends Model<E>> {
             return false;
 
         return observableList.removeIf(__ -> __.getId() == id);
-       //  Platform.runLater(() -> observableList.removeIf(predicate -> predicate.getId() == id));
+        //  Platform.runLater(() -> observableList.removeIf(predicate -> predicate.getId() == id));
     }
 
     public boolean contains(final int id) {
@@ -112,6 +124,10 @@ public abstract class Bridge<E extends Entity, V extends Model<E>> {
 
     public List<E> getOriginalEntities() {
         return crud.getAll(repoType);
+    }
+
+    public BridgeContext getBridgeContext() {
+        return bridgeContext;
     }
 
     private void removalListener() {

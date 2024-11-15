@@ -129,8 +129,7 @@ public class TicketCreatorController extends Controller {
                 .setCreatedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
                 .setPriority(getPriority())
                 .setStatus(getStatus())
-                .setCategoryId(getCategoryId())
-                .setEmployeeId(employeeModel == null ? 0 : employeeModel.getId()));
+                .setCategoryId(getCategoryId()));
 
         insertInitialComment(newTicket);
         display.close(Route.TICKET_CREATOR);

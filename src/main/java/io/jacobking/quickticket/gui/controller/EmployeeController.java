@@ -18,6 +18,7 @@ import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -224,6 +225,10 @@ public class EmployeeController extends Controller {
 
         totalTicketCountLabel.setText(tickets.size() + "");
         ticketTable.setItems(tickets);
+    }
+
+    private ObservableList<TicketModel> getTicketsForEmployee(final int employeeId) {
+
     }
 
     private void onCreateEmployee() {

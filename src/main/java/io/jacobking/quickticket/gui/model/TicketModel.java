@@ -17,17 +17,15 @@ public class TicketModel extends Model<Ticket> implements Serializable {
     private final StringProperty                titleProperty             = new SimpleStringProperty();
     private final ObjectProperty<StatusType>    statusProperty            = new SimpleObjectProperty<>();
     private final ObjectProperty<PriorityType>  priorityProperty          = new SimpleObjectProperty<>();
-    private final IntegerProperty               employeeProperty          = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDateTime> createdProperty           = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDateTime> lastViewedTimestamp       = new SimpleObjectProperty<>();
     private final IntegerProperty               categoryProperty          = new SimpleIntegerProperty();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, int employeeId, LocalDateTime created, LocalDateTime lastViewedTimestamp, int categoryId) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, LocalDateTime created, LocalDateTime lastViewedTimestamp, int categoryId) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
         this.priorityProperty.setValue(priorityType);
-        this.employeeProperty.setValue(employeeId);
         this.createdProperty.setValue(created);
         this.lastViewedTimestamp.setValue(lastViewedTimestamp);
         this.categoryProperty.setValue(categoryId);
@@ -38,8 +36,7 @@ public class TicketModel extends Model<Ticket> implements Serializable {
                 ticket.getId(),
                 ticket.getTitle(),
                 StatusType.of(ticket.getStatus()),
-                PriorityType.of(ticket.getPriority()),
-                ticket.getEmployeeId(), // need to update from user -> employee eventually.
+                PriorityType.of(ticket.getPriority()),// need to update from user -> employee eventually.
                 ticket.getCreatedOn(),
                 ticket.getLastOpenedTimestamp(),
                 ticket.getCategoryId()
@@ -66,9 +63,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
         return priorityProperty;
     }
 
-    public IntegerProperty employeeProperty() {
-        return employeeProperty;
-    }
 
     public ObjectProperty<LocalDateTime> createdProperty() {
         return createdProperty;
@@ -82,9 +76,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
         return priorityProperty.getValue().name();
     }
 
-    public int getEmployeeId() {
-        return employeeProperty.getValue();
-    }
 
     public ObjectProperty<LocalDateTime> lastViewedProperty() {
         return lastViewedTimestamp;
@@ -112,7 +103,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
                 getStatus(),
                 getPriority(),
                 getCreation(),
-                getEmployeeId(),
                 getLastViewedTimestamp(),
                 getCategory()
         );

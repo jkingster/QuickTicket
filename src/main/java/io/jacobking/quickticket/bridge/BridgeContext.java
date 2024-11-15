@@ -5,26 +5,28 @@ import io.jacobking.quickticket.core.database.Database;
 
 public class BridgeContext {
 
-    private final CompanyBridge    company;
-    private final DepartmentBridge department;
-    private final EmployeeBridge   employee;
-    private final AlertBridge      alerts;
-    private final TicketBridge     ticket;
-    private final CommentBridge    comment;
-    private final CategoryBridge   category;
-    private final LinkBridge       ticketLink;
-    private final ModuleBridge module;
+    private final CompanyBridge        company;
+    private final DepartmentBridge     department;
+    private final EmployeeBridge       employee;
+    private final AlertBridge          alerts;
+    private final TicketBridge         ticket;
+    private final CommentBridge        comment;
+    private final CategoryBridge       category;
+    private final LinkBridge           ticketLink;
+    private final ModuleBridge         module;
+    private final TicketEmployeeBridge ticketEmployees;
 
     public BridgeContext(final Database database) {
         this.company = new CompanyBridge(database);
         this.department = new DepartmentBridge(database);
         this.employee = new EmployeeBridge(database);
-        this.ticket = new TicketBridge(database);
+        this.ticket = new TicketBridge(database, this);
         this.comment = new CommentBridge(database);
         this.alerts = new AlertBridge(database);
         this.category = new CategoryBridge(database);
         this.ticketLink = new LinkBridge(database);
         this.module = new ModuleBridge(database);
+        this.ticketEmployees = new TicketEmployeeBridge(database, this);
     }
 
     public CompanyBridge getCompany() {
@@ -63,5 +65,9 @@ public class BridgeContext {
 
     public ModuleBridge getModule() {
         return module;
+    }
+
+    public TicketEmployeeBridge getTicketEmployees() {
+        return ticketEmployees;
     }
 }
