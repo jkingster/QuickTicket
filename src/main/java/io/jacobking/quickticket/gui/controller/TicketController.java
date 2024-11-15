@@ -223,7 +223,6 @@ public class TicketController extends Controller {
             }
         });
 
-
         employeeColumn.setSortable(false);
         createdColumn.setCellValueFactory(data -> data.getValue().createdProperty());
         createdColumn.setCellFactory(data -> new TableCell<>() {
@@ -339,7 +338,7 @@ public class TicketController extends Controller {
     }
 
     @FXML private void onCreate() {
-        display.show(Route.TICKET_CREATOR, Data.of(this));
+        display.show(Route.TICKET_CREATOR, Data.of(ticketTable, this));
     }
 
     @FXML private void onResolve() {
@@ -601,13 +600,13 @@ public class TicketController extends Controller {
 
 
     @FXML private void onCategories() {
-        final PopOverBuilder popOverBuilder = new PopOverBuilder()
-                .setArrowOrientation(PopOver.ArrowLocation.BOTTOM_RIGHT)
-                .setTitle("Ticket Categories")
-                .useDefaultSettings()
-                .setContent(getCategoryNode())
-                .setOwner(categoriesButton);
-        popOverBuilder.show();
+//        final PopOverBuilder popOverBuilder = new PopOverBuilder()
+//                .setArrowOrientation(PopOver.ArrowLocation.BOTTOM_RIGHT)
+//                .setTitle("Ticket Categories")
+//                .useDefaultSettings()
+//                .setContent(getCategoryNode())
+//                .setOwner(categoriesButton);
+//        popOverBuilder.show();
     }
 
     private VBox getCategoryNode() {

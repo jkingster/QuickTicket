@@ -7,71 +7,86 @@ import javafx.scene.Parent;
 import org.controlsfx.control.PopOver;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
 public class PopOverBuilder {
 
-    private static final int DEFAULT_OFFSET = 10;
+    private final static List<String> STYLESHEETS_EXTERNAL_FORM = new ArrayList<>();
+
+    static {
+        for (final String resource : Arrays.asList("checkbox.css", "combo-box.css", "button.css", "text-field.css", "check-list-view.css")) {
+            final String converted = String.format("css/core/%s", resource);
+            final URL url = App.class.getResource(converted);
+            if (url == null) {
+                continue;
+            }
+
+            final String externalForm = url.toExternalForm();
+            STYLESHEETS_EXTERNAL_FORM.add(externalForm);
+        }
+    }
 
     private final PopOver popOver;
 
-    private Parent owner;
-
-    public PopOverBuilder() {
+    private PopOverBuilder() {
         this.popOver = new PopOver();
-        initializeStyle();
+
+        popOver.getRoot()
+                .getStylesheets()
+                .addAll(STYLESHEETS_EXTERNAL_FORM);
     }
 
-    public void show() {
-        if (owner == null) {
-            throw new UnsupportedOperationException("PopOver owner is not set!");
-        }
-        popOver.show(owner, DEFAULT_OFFSET);
-    }
-
-    public PopOverBuilder useDefaultSettings() {
-        popOver.setDetachable(false);
-        popOver.setAnimated(true);
-        popOver.setHeaderAlwaysVisible(true);
-        return this;
-    }
-
-    public PopOverBuilder setOwner(final Parent parent) {
-        this.owner = parent;
-        return this;
+    public static PopOverBuilder build() {
+        return new PopOverBuilder();
     }
 
     public PopOverBuilder setTitle(final String title) {
-        Checks.notEmpty(title, "PopOver Title");
-        popOver.setTitle(title);
+        this.popOver.setTitle(title);
         return this;
     }
 
-    public PopOverBuilder setArrowOrientation(final PopOver.ArrowLocation arrowOrientation) {
-        Checks.notNull(arrowOrientation, "Arrow Orientation");
-        popOver.setArrowLocation(arrowOrientation);
+    public PopOverBuilder setHeight(final double height) {
+        this.popOver.setMinHeight(0);
+        this.popOver.setMaxHeight(0);
+        this.popOver.setPrefHeight(0);
         return this;
     }
 
-    public PopOver get() {
-        return popOver;
-    }
-
-    public PopOverBuilder setContent(final Node node) {
-        Checks.notNull(node, "PopOver Content Node");
-        popOver.setContentNode(node);
+    public PopOverBuilder setContent(final Node content) {
+        this.popOver.setContentNode(content);
         return this;
     }
 
-    public void hide() {
-        popOver.hide();
+    public PopOverBuilder setAnimated(final boolean animated) {
+        this.popOver.setAnimated(animated);
+        return this;
     }
 
-    private void initializeStyle() {
-        final URL stylesheet = App.class.getResource("css/core/pop-over.css");
-        if (stylesheet == null)
-            return;
-
-        final String externalForm = stylesheet.toExternalForm();
-        popOver.getRoot().getStylesheets().add(externalForm);
+    public PopOverBuilder setArrowLocation(final PopOver.ArrowLocation arrowLocation) {
+        this.popOver.setArrowLocation(arrowLocation);
+        return this;
     }
+
+    public PopOverBuilder setDetachable(final boolean detachable) {
+        this.popOver.setDetachable(detachable);
+        return this;
+    }
+
+    public PopOverBuilder setDetached(final boolean detached) {
+        this.popOver.setDetached(detached);
+        return this;
+    }
+
+    public PopOverBuilder process(final Function<Void, Node> process) {
+        final Node processedNode = process.apply(null);
+        return setContent(processedNode);
+    }
+
+    public void show(final Node owner, final int offset) {
+        this.popOver.show(owner, offset);
+    }
+
 }

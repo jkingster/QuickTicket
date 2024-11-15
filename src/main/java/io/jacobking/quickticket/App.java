@@ -7,7 +7,10 @@ import io.jacobking.quickticket.core.utility.FileIO;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import javafx.application.Application;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.stage.Stage;
+import org.controlsfx.control.SearchableComboBox;
 
 public class App extends Application {
 
@@ -25,6 +28,8 @@ public class App extends Application {
         if (!database.hasConnection()) {
             throw new RuntimeException("FATAL: Could not establish database connection.");
         }
+
+
 
         final BridgeContext bridgeContext = quickTicket.getBridgeContext();
         Announcements.get().establishSettings(bridgeContext);
