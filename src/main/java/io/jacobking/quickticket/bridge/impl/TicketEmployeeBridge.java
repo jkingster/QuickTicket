@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.bridge.impl;
 
 import io.jacobking.quickticket.bridge.Bridge;
+import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.model.TicketEmployeeModel;
@@ -17,8 +18,11 @@ import static io.jacobking.quickticket.Tables.TICKET_EMPLOYEE;
 
 public class TicketEmployeeBridge extends Bridge<TicketEmployee, TicketEmployeeModel> {
 
-    public TicketEmployeeBridge(Database database) {
+    private final BridgeContext context;
+
+    public TicketEmployeeBridge(Database database, BridgeContext bridgeContext) {
         super(database, RepoType.TICKET_EMPLOYEES);
+        this.context = bridgeContext;
     }
 
     public FilteredList<TicketEmployeeModel> getEmployeesForTicket(final int ticketId) {
@@ -34,7 +38,7 @@ public class TicketEmployeeBridge extends Bridge<TicketEmployee, TicketEmployeeM
                 crud.getAll(RepoType.TICKET_EMPLOYEES, TICKET_EMPLOYEE.EMPLOYEE_ID.eq(employeeId))
                         .stream()
                         .map(ticketEmployee -> (TicketEmployee) ticketEmployee)
-                        .map(employee -> getBridgeContext().getTicket().getModel(employee.getTicketId()))
+                        .map(employee -> context.getTicket().getModel(employee.getTicketId()))
                         .filter(Objects::nonNull)
                         .toList()
         );

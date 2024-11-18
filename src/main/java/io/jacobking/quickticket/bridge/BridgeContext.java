@@ -26,7 +26,7 @@ public class BridgeContext {
         this.category = new CategoryBridge(database);
         this.ticketLink = new LinkBridge(database);
         this.module = new ModuleBridge(database);
-        this.TicketEmployee = new TicketEmployeeBridge(database);
+        this.TicketEmployee = new TicketEmployeeBridge(database, this);
     }
 
     public CompanyBridge getCompany() {

@@ -8,10 +8,7 @@ import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
-import io.jacobking.quickticket.gui.model.CommentModel;
-import io.jacobking.quickticket.gui.model.EmployeeModel;
-import io.jacobking.quickticket.gui.model.TicketCategoryModel;
-import io.jacobking.quickticket.gui.model.TicketModel;
+import io.jacobking.quickticket.gui.model.*;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import io.jacobking.quickticket.tables.pojos.Ticket;
 import io.jacobking.quickticket.tables.pojos.TicketEmployee;
@@ -19,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.StringConverter;
 import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.PopOver;
@@ -29,10 +27,10 @@ import java.util.ResourceBundle;
 
 public class TicketCreatorController extends Controller {
 
-    private final ObservableList<EmployeeModel> selectedEmployees = FXCollections.observableArrayList();
 
-    private TableView<TicketModel> ticketTable;
-    private TicketController       ticketController;
+    private TableView<TicketModel>       ticketTable;
+    private TicketController             ticketController;
+    private CheckListView<EmployeeModel> checkListView;
 
     @FXML private ComboBox<StatusType>                    statusTypeComboBox;
     @FXML private ComboBox<PriorityType>                  priorityTypeComboBox;
@@ -47,6 +45,7 @@ public class TicketCreatorController extends Controller {
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         this.ticketTable = data.mapTable(0);
         this.ticketController = data.mapIndex(1, TicketController.class);
+        this.checkListView = getEmployeeCheckListView(bridgeContext.getEmployee().getObservableList());
 
         configureStatusBox();
         configurePriorityBox();
@@ -105,14 +104,10 @@ public class TicketCreatorController extends Controller {
                 return;
             }
 
-            if (selectedEmployees.contains(newEmployee))
-                return;
-
+            checkListView.getCheckModel().check(newEmployee);
             if (oldEmployee != null) {
-                selectedEmployees.remove(oldEmployee);
+                checkListView.getCheckModel().clearCheck(oldEmployee);
             }
-
-            selectedEmployees.add(newEmployee);
         });
     }
 
@@ -160,13 +155,25 @@ public class TicketCreatorController extends Controller {
     }
 
     private void handleEmployees(final int ticketId) {
-        for (final EmployeeModel employee : selectedEmployees) {
-            final int employeeId = employee.getId();
-            bridgeContext.getTicketEmployee().createModel(new TicketEmployee()
-                    .setTicketId(ticketId)
-                    .setEmployeeId(employeeId)
-            );
+        final ObservableList<EmployeeModel> checkedModels = checkListView.getCheckModel().getCheckedItems();
+        if (!checkedModels.isEmpty()) {
+            for (final EmployeeModel model : checkedModels) {
+                createTicketEmployeeModel(ticketId, model.getId());
+            }
+            return;
         }
+
+        final EmployeeModel selectedEmployee = employeeComboBox.getValue();
+        if (selectedEmployee != null) {
+            createTicketEmployeeModel(ticketId, selectedEmployee.getId());
+        }
+    }
+
+    private void createTicketEmployeeModel(final int ticketId, final int employeeId) {
+        bridgeContext.getTicketEmployee().createModel(new TicketEmployee()
+                .setTicketId(ticketId)
+                .setEmployeeId(employeeId)
+        );
     }
 
     private void handlePostProcessing(final TicketModel ticket) {
@@ -183,16 +190,41 @@ public class TicketCreatorController extends Controller {
     }
 
     @FXML private void onSelectMultipleEmployees() {
+        if (bridgeContext.getEmployee().getObservableList().isEmpty()) {
+            return;
+        }
+
         PopOverBuilder.build()
-                .setDetached(false)
-                .setDetachable(false)
+                .setDetached(true)
                 .setTitle("Assign Multiple Employees..")
                 .setAnimated(true)
+                .setHideOnEscape(true)
                 .setArrowLocation(PopOver.ArrowLocation.LEFT_CENTER)
-                .process(process -> {
-                    final CheckListView<EmployeeModel> employeeCheckListView = new CheckListView<>(bridgeContext.getEmployee().getObservableList());
-                    return employeeCheckListView;
-                }).show(assignMoreButton, 10);
+                .process(process -> checkListView)
+                .show(assignMoreButton, 10);
+    }
+
+    private CheckListView<EmployeeModel> getEmployeeCheckListView(final ObservableList<EmployeeModel> employeeList) {
+        final CheckListView<EmployeeModel> checkListView = new CheckListView<>();
+        checkListView.setItems(employeeList);
+
+        checkListView.setCellFactory(data -> new CheckBoxListCell<>(checkListView::getItemBooleanProperty) {
+            @Override public void updateItem(EmployeeModel employeeModel, boolean empty) {
+                super.updateItem(employeeModel, empty);
+                if (employeeModel == null || empty) {
+                    setText("");
+                    return;
+                }
+
+                final int companyId = employeeModel.getCompanyIdProperty();
+                final CompanyModel company = bridgeContext.getCompany().getModel(companyId);
+                final String companyName = (company == null) ? "Unknown" : company.getName();
+
+                final String employeeName = employeeModel.getFullName();
+                setText(String.format("%s (Company: %s)", employeeName, companyName));
+            }
+        });
+        return checkListView;
     }
 
     @FXML private void onReset() {
@@ -206,7 +238,6 @@ public class TicketCreatorController extends Controller {
                 .setPriority(getPriority())
                 .setCategoryId(getCategoryId())
                 .setCreatedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
-                .setLastOpenedTimestamp(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
         );
     }
 

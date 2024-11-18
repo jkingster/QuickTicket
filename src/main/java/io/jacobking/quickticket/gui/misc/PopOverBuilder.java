@@ -85,6 +85,11 @@ public class PopOverBuilder {
         return setContent(processedNode);
     }
 
+    public PopOverBuilder setHideOnEscape(final boolean state) {
+        this.popOver.setHideOnEscape(state);
+        return this;
+    }
+
     public void show(final Node owner, final int offset) {
         this.popOver.show(owner, offset);
     }

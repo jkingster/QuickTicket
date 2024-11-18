@@ -18,16 +18,14 @@ public class TicketModel extends Model<Ticket> implements Serializable {
     private final ObjectProperty<StatusType>    statusProperty            = new SimpleObjectProperty<>();
     private final ObjectProperty<PriorityType>  priorityProperty          = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDateTime> createdProperty           = new SimpleObjectProperty<>();
-    private final ObjectProperty<LocalDateTime> lastViewedTimestamp       = new SimpleObjectProperty<>();
     private final IntegerProperty               categoryProperty          = new SimpleIntegerProperty();
 
-    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, LocalDateTime created, LocalDateTime lastViewedTimestamp, int categoryId) {
+    public TicketModel(int id, String title, StatusType statusType, PriorityType priorityType, LocalDateTime created, int categoryId) {
         super(id);
         this.titleProperty.setValue(title);
         this.statusProperty.setValue(statusType);
         this.priorityProperty.setValue(priorityType);
         this.createdProperty.setValue(created);
-        this.lastViewedTimestamp.setValue(lastViewedTimestamp);
         this.categoryProperty.setValue(categoryId);
     }
 
@@ -38,7 +36,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
                 StatusType.of(ticket.getStatus()),
                 PriorityType.of(ticket.getPriority()),// need to update from user -> employee eventually.
                 ticket.getCreatedOn(),
-                ticket.getLastOpenedTimestamp(),
                 ticket.getCategoryId()
         );
     }
@@ -77,15 +74,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
     }
 
 
-    public ObjectProperty<LocalDateTime> lastViewedProperty() {
-        return lastViewedTimestamp;
-    }
-
-    public LocalDateTime getLastViewedTimestamp() {
-        return lastViewedTimestamp.getValue();
-    }
-
-
     public int getCategory() {
         return categoryProperty.get();
     }
@@ -103,7 +91,6 @@ public class TicketModel extends Model<Ticket> implements Serializable {
                 getStatus(),
                 getPriority(),
                 getCreation(),
-                getLastViewedTimestamp(),
                 getCategory()
         );
     }

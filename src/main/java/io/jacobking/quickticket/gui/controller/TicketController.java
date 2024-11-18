@@ -443,13 +443,7 @@ public class TicketController extends Controller {
 
     private void removeTicket(final TicketModel ticketModel) {
         bridgeContext.getTicket().remove(ticketModel.getId());
-        final TicketModel lastViewedModel = lastViewed.getValue();
-        if (lastViewedModel != null) {
-            final int ticketId = ticketModel.getId();
-            if (ticketId == lastViewedModel.getId()) {
-                lastViewed.setValue(null);
-            }
-        }
+
         setTicketTable();
     }
 
@@ -459,7 +453,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        display.show(Route.VIEWER, Data.of(ticketModel, ticketTable, lastViewed));
+        display.show(Route.VIEWER, Data.of(ticketModel, ticketTable ));
     }
 
     private void onEmail(final TicketModel ticketModel) {
@@ -479,14 +473,14 @@ public class TicketController extends Controller {
 //            Announcements.get().showError("Failed to open mail.", "There is no employee attached to this ticket.", "Please set an employee and try again.");
 //            return;
 //        }
-
+//
 //        final String employeeEmail = model.getEmail();
 //        if (employeeEmail.isEmpty()) {
 //            Announcements.get().showError("Failed to open mail.", "There is no e-mail to this employee.", "Please set an e-mail and try again.");
 //            return;
 //        }
-
-        //attemptToOpenEmailApp(desktop, employeeEmail, ticketModel);
+//
+//        attemptToOpenEmailApp(desktop, employeeEmail, ticketModel);
     }
 
     private void attemptToOpenEmailApp(final Desktop desktop, final String email, final TicketModel ticketModel) {
