@@ -62,13 +62,13 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">
                      <children>
-                        <TextField alignment="CENTER" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="71.0" styleClass="offset-text-field-label" stylesheets="@../css/core/text-field.css" text="Employee">
+                        <TextField alignment="CENTER" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="84.0" styleClass="offset-text-field-label" stylesheets="@../css/core/text-field.css" text="Employee(s)">
                            <cursor>
                               <Cursor fx:constant="NONE" />
                            </cursor>
                         </TextField>
-                        <TextField fx:id="employeeField" editable="false" prefHeight="25.0" prefWidth="231.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
-                        <Button mnemonicParsing="false" text="Find Employee" />
+                        <TextField fx:id="employeeField" editable="false" prefHeight="25.0" prefWidth="205.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
+                        <Button mnemonicParsing="false" onAction="#onFindEmployees" text="Find Employee(s)" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">

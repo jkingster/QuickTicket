@@ -24,7 +24,7 @@ public class FXUtility {
         }
     }
 
-    public static void resetFields(final Parent root, final Node... otherFields) {
+    public static void resetFields(final Parent root, final String... ignoreNodeIds) {
         for (final Node node : root.getChildrenUnmodifiable()) {
             if (node instanceof TextField) {
                 ((TextField) node).clear();
@@ -33,7 +33,7 @@ public class FXUtility {
             } else if (node instanceof ToggleButton) {
                 ((ToggleButton) node).setSelected(!((ToggleButton) node).isSelected());
             } else if (node instanceof CheckBox) {
-                ((CheckBox) node).setSelected(!((CheckBox) node).isSelected());
+                ((CheckBox) node).setSelected(false);
             } else if (node instanceof TextArea) {
                 ((TextArea) node).clear();
             } else if (node instanceof Parent) {
@@ -41,4 +41,5 @@ public class FXUtility {
             }
         }
     }
+
 }

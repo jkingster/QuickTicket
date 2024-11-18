@@ -4,6 +4,7 @@ import io.jacobking.quickticket.bridge.Bridge;
 import io.jacobking.quickticket.bridge.BridgeContext;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
+import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketEmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.tables.pojos.TicketEmployee;
@@ -41,6 +42,16 @@ public class TicketEmployeeBridge extends Bridge<TicketEmployee, TicketEmployeeM
                         .map(employee -> context.getTicket().getModel(employee.getTicketId()))
                         .filter(Objects::nonNull)
                         .toList()
+        );
+    }
+
+    public ObservableList<EmployeeModel> getEmployeeModelsForTicket(final int ticketId) {
+        return FXCollections.observableArrayList(getEmployeesForTicket(ticketId)
+                .stream()
+                .map(TicketEmployeeModel::getEmployeeId)
+                .map(id -> context.getEmployee().getModel(id))
+                .filter(Objects::nonNull)
+                .toList()
         );
     }
 

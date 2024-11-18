@@ -6,10 +6,12 @@ import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
+import io.jacobking.quickticket.gui.custom.CompanySearchBox;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -18,6 +20,7 @@ import org.controlsfx.control.SearchableComboBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class ViewerController extends Controller {
 
@@ -93,12 +96,6 @@ public class ViewerController extends Controller {
         statusBox.getSelectionModel().select(StatusType.of(ticket.getStatus()));
         priorityBox.getSelectionModel().select(PriorityType.of(ticket.getPriority()));
 
-//        final EmployeeModel employee = bridgeContext.getEmployee().getModel(ticket.getEmployeeId());
-//        if (employee != null) {
-//            employeeField.setText(employee.getFullName());
-//            employeeField.setId(employee.getId() + "");
-//        }
-
         final TicketCategoryModel category = bridgeContext.getCategory().getModel(ticket.getCategory());
         if (category != null) {
             categoryBox.getSelectionModel().select(category);
@@ -108,6 +105,22 @@ public class ViewerController extends Controller {
                 DateUtil.DateFormat.DATE_TIME_ONE,
                 ticket.getCreation()
         ));
+
+        findAttachedEmployees();
+    }
+
+    private void findAttachedEmployees() {
+        final ObservableList<EmployeeModel> attachedEmployees = bridgeContext.getTicketEmployee()
+                .getEmployeeModelsForTicket(ticket.getId());
+
+        if (attachedEmployees.isEmpty())
+            return;
+
+        final String employees = attachedEmployees.stream()
+                .map(EmployeeModel::getFullName)
+                .collect(Collectors.joining(", "));
+
+        employeeField.setText(employees);
     }
 
     @FXML private void onUpdateTicket() {
@@ -120,14 +133,12 @@ public class ViewerController extends Controller {
 
     }
 
+    @FXML private void onFindEmployees() {
+        final CompanySearchBox companySearchBox = new CompanySearchBox(bridgeContext.getCompany().getObservableList());
+    }
+
     // Utilities
-//    private int getEmployeeId() {
-//        final int currentId = Integer.parseInt(employeeField.getId());
-//        if (currentId == ticket.getEmployeeId()) {
-//            return ticket.getEmployeeId();
-//        }
-//        return currentId;
-//    }
+
 
     private int getCategoryId() {
         final TicketCategoryModel category = categoryBox.getValue();
@@ -138,7 +149,6 @@ public class ViewerController extends Controller {
         ticket.titleProperty().setValue(titleField.getText());
         ticket.statusProperty().setValue(statusBox.getValue());
         ticket.priorityProperty().setValue(priorityBox.getValue());
-        //ticket.employeeProperty().setValue(getEmployeeId());
         ticket.categoryProperty().setValue(getCategoryId());
         return ticket;
     }

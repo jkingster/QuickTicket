@@ -1,13 +1,13 @@
 package io.jacobking.quickticket.gui.model;
 
-import io.jacobking.quickticket.gui.Model;
+import io.jacobking.quickticket.gui.NameModel;
 import io.jacobking.quickticket.tables.pojos.Department;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class DepartmentModel extends Model<Department> {
+public class DepartmentModel extends NameModel<Department> {
 
     private final IntegerProperty companyId   = new SimpleIntegerProperty();
     private final StringProperty  name        = new SimpleStringProperty();
@@ -44,6 +44,7 @@ public class DepartmentModel extends Model<Department> {
         this.companyId.set(companyId);
     }
 
+    @Override
     public String getName() {
         return name.get();
     }

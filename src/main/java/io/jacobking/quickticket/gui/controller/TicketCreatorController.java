@@ -7,6 +7,7 @@ import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
+import io.jacobking.quickticket.gui.custom.EmployeeCheckBoxListView;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.*;
 import io.jacobking.quickticket.tables.pojos.Comment;
@@ -30,7 +31,7 @@ public class TicketCreatorController extends Controller {
 
     private TableView<TicketModel>       ticketTable;
     private TicketController             ticketController;
-    private CheckListView<EmployeeModel> checkListView;
+    private EmployeeCheckBoxListView checkListView;
 
     @FXML private ComboBox<StatusType>                    statusTypeComboBox;
     @FXML private ComboBox<PriorityType>                  priorityTypeComboBox;
@@ -45,7 +46,7 @@ public class TicketCreatorController extends Controller {
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         this.ticketTable = data.mapTable(0);
         this.ticketController = data.mapIndex(1, TicketController.class);
-        this.checkListView = getEmployeeCheckListView(bridgeContext.getEmployee().getObservableList());
+        this.checkListView = new EmployeeCheckBoxListView(bridgeContext);
 
         configureStatusBox();
         configurePriorityBox();
@@ -57,7 +58,7 @@ public class TicketCreatorController extends Controller {
 
     private void configureStatusBox() {
         statusTypeComboBox.setItems(FXCollections.observableArrayList(StatusType.values()));
-        statusTypeComboBox.setConverter(new StringConverter<StatusType>() {
+        statusTypeComboBox.setConverter(new StringConverter<>() {
             @Override public String toString(StatusType statusType) {
                 return (statusType == null) ? "Unknown" : statusType.name();
             }
@@ -204,28 +205,6 @@ public class TicketCreatorController extends Controller {
                 .show(assignMoreButton, 10);
     }
 
-    private CheckListView<EmployeeModel> getEmployeeCheckListView(final ObservableList<EmployeeModel> employeeList) {
-        final CheckListView<EmployeeModel> checkListView = new CheckListView<>();
-        checkListView.setItems(employeeList);
-
-        checkListView.setCellFactory(data -> new CheckBoxListCell<>(checkListView::getItemBooleanProperty) {
-            @Override public void updateItem(EmployeeModel employeeModel, boolean empty) {
-                super.updateItem(employeeModel, empty);
-                if (employeeModel == null || empty) {
-                    setText("");
-                    return;
-                }
-
-                final int companyId = employeeModel.getCompanyIdProperty();
-                final CompanyModel company = bridgeContext.getCompany().getModel(companyId);
-                final String companyName = (company == null) ? "Unknown" : company.getName();
-
-                final String employeeName = employeeModel.getFullName();
-                setText(String.format("%s (Company: %s)", employeeName, companyName));
-            }
-        });
-        return checkListView;
-    }
 
     @FXML private void onReset() {
     }

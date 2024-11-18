@@ -31,15 +31,15 @@
             <Button fx:id="updateButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" styleClass="button-success" />
             <Button fx:id="resetButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" />
             <Separator maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.2" orientation="VERTICAL" prefHeight="30.0" />
-            <SearchableComboBox fx:id="companyFilter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Company Filter" stylesheets="@../css/core/combo-box.css" />
-            <SearchableComboBox fx:id="departmentFilter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Department Filter" stylesheets="@../css/core/combo-box.css" />
+            <SearchableComboBox id="COMPANY_FILTER" fx:id="companyFilter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Company Filter" stylesheets="@../css/core/combo-box.css" />
+            <SearchableComboBox id="DEPARTMENT_FILTER" fx:id="departmentFilter" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Department Filter" stylesheets="@../css/core/combo-box.css" />
             <SearchableComboBox fx:id="employeeSelector" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" promptText="Select Employee" stylesheets="@../css/core/combo-box.css" />
          </children>
          <padding>
             <Insets left="10.0" />
          </padding>
       </HBox>
-      <AnchorPane layoutX="14.0" layoutY="162.0" prefHeight="613.0" prefWidth="717.0" styleClass="card" stylesheets="@../css/core/card.css">
+      <AnchorPane fx:id="informationParent" layoutX="14.0" layoutY="162.0" prefHeight="613.0" prefWidth="717.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
             <VBox alignment="TOP_CENTER" layoutX="12.0" layoutY="39.0" prefHeight="258.0" prefWidth="360.0" spacing="2.5">
                <children>
