@@ -8,23 +8,26 @@ import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
+import io.jacobking.quickticket.gui.model.CommentModel;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.gui.utility.IconLoader;
+import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.SearchableComboBox;
+import org.kordamp.ikonli.material2.Material2AL;
 import org.kordamp.ikonli.material2.Material2MZ;
 
 import java.net.URL;
@@ -46,6 +49,9 @@ public class ViewerController extends Controller {
     @FXML private Button                                  findEmployeeButton;
     @FXML private Button                                  deleteEmployeeButton;
 
+    @FXML private TextArea               commentArea;
+    @FXML private Button                 submitCommentButton;
+    @FXML private ListView<CommentModel> commentList;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         this.ticket = data.mapIndex(0, TicketModel.class);
@@ -60,11 +66,12 @@ public class ViewerController extends Controller {
         configurePriorityBox();
         populateFields();
         configureButtons();
+        configureComments();
     }
 
     private void configureStatusBox() {
         statusBox.setItems(FXCollections.observableArrayList(StatusType.values()));
-        statusBox.setConverter(new StringConverter<StatusType>() {
+        statusBox.setConverter(new StringConverter<>() {
             @Override public String toString(StatusType statusType) {
                 return (statusType == null) ? "Unknown" : statusType.name();
             }
@@ -111,6 +118,8 @@ public class ViewerController extends Controller {
     private void configureButtons() {
         findEmployeeButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.PERSON_ADD));
         deleteEmployeeButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.PERSON_REMOVE));
+        submitCommentButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.MODE_COMMENT));
+        submitCommentButton.disableProperty().bind(commentArea.textProperty().isEmpty());
     }
 
     private void findAttachedEmployees() {
@@ -198,8 +207,78 @@ public class ViewerController extends Controller {
         employeeField.setText(employees);
     }
 
-    // Utilities
 
+    private void configureComments() {
+        commentList.setItems(bridgeContext.getComment().getCommentsByTicketId(ticket.getId()));
+        commentList.setCellFactory(data -> new ListCell<>() {
+            @Override protected void updateItem(CommentModel commentModel, boolean empty) {
+                super.updateItem(commentModel, empty);
+                if (commentModel == null || empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                final VBox container = new VBox(5);
+                final HBox topBox = new HBox(2.5);
+                final Label trashLabel = new Label();
+                trashLabel.setGraphic(IconLoader.getMaterialIcon(Material2AL.DELETE_FOREVER));
+                trashLabel.setOnMousePressed(event -> deleteComment(commentModel));
+                final Label dateLabel = new Label(DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, commentModel.getPostedOn()));
+                topBox.getChildren().addAll(trashLabel, dateLabel);
+
+                final Text comment = new Text(commentModel.getPost());
+                container.getChildren().addAll(topBox, comment);
+
+                setGraphic(container);
+            }
+        });
+    }
+
+
+    private void insertComment(final CommentModel commentModel) {
+
+    }
+
+    private void handleCommentDeletion(final CommentModel commentModel) {
+        Announcements.get().showConfirmation(() -> deleteComment(commentModel),
+                        "Are you sure you want to delete this comment?", "It cannot be recovered.")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        deleteComment(commentModel);
+                    }
+                });
+    }
+
+    private void deleteComment(final CommentModel commentModel) {
+        if (!bridgeContext.getComment().remove(commentModel.getId())) {
+            Announcements.get().showError("Error", "Failed to delete comment.", "Try again.");
+            return;
+        }
+
+        Announcements.get().showConfirm("Success", "Comment deleted.");
+        final String nodeId = String.format("%s:%s", commentModel.getTicketId(), commentModel.getId());
+    }
+
+    @FXML private void onSubmitComment() {
+        final String comment = commentArea.getText();
+
+        final CommentModel newComment = bridgeContext.getComment()
+                .createModel(new Comment()
+                        .setTicketId(ticket.getId())
+                        .setPost(comment)
+                        .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
+                );
+
+        if (newComment == null) {
+            Announcements.get().showError("Error", "Could not post comment.", "Please try again.");
+            return;
+        }
+
+        insertComment(newComment);
+        commentArea.clear();
+    }
+
+    // Utilities
 
     private int getCategoryId() {
         final TicketCategoryModel category = categoryBox.getValue();

@@ -1,0 +1,10 @@
+@import url("base.css");
+
+.list-view {
+    -fx-background-color: derive(-fx-primary, 25%);
+}
+
+.list-view .list-cell {
+    -fx-background-color: -fx-primary;
+}
+
