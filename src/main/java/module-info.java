@@ -36,5 +36,7 @@ module io.jacobking.quickticket {
     opens io.jacobking.quickticket.gui.controller to javafx.fxml;
     exports io.jacobking.quickticket.gui.controller;
 
+    opens io.jacobking.quickticket.gui.custom to javafx.fxml;
+    exports io.jacobking.quickticket.gui.custom;
 
 }

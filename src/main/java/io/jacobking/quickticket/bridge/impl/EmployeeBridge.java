@@ -5,6 +5,7 @@ import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.tables.pojos.Employee;
+import javafx.collections.ObservableList;
 
 public class EmployeeBridge extends Bridge<Employee, EmployeeModel> {
     public EmployeeBridge(final Database database) {
@@ -14,5 +15,10 @@ public class EmployeeBridge extends Bridge<Employee, EmployeeModel> {
     @Override
     public EmployeeModel convertEntity(Employee entity) {
         return new EmployeeModel(entity);
+    }
+
+    public ObservableList<EmployeeModel> getListByOrganization(final int companyId, final int departmentId) {
+        return getObservableListByFilter(employeeModel -> employeeModel.getCompanyIdProperty() == companyId
+                && employeeModel.getDepartmentIdProperty() == departmentId);
     }
 }

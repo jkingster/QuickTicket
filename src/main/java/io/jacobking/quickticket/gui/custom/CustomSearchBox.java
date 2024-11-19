@@ -1,16 +1,13 @@
 package io.jacobking.quickticket.gui.custom;
 
 import io.jacobking.quickticket.gui.NameModel;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.util.StringConverter;
 import org.controlsfx.control.SearchableComboBox;
 
 public class CustomSearchBox<T extends NameModel<?>> extends SearchableComboBox<T> {
 
-    public CustomSearchBox(ObservableList<T> items) {
-        super(items);
-
+    public CustomSearchBox() {
         setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
@@ -23,9 +20,9 @@ public class CustomSearchBox<T extends NameModel<?>> extends SearchableComboBox<
             }
         });
 
-        setConverter(new StringConverter<T>() {
-            @Override public String toString(T t) {
-                return (t == null) ? "Unknown" : t.getName();
+        setConverter(new StringConverter<>() {
+            @Override public String toString(T item) {
+                return (item == null) ? "Unknown" : item.getName();
             }
 
             @Override public T fromString(String s) {
@@ -33,4 +30,5 @@ public class CustomSearchBox<T extends NameModel<?>> extends SearchableComboBox<
             }
         });
     }
+
 }

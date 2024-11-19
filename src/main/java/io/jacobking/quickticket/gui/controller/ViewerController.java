@@ -4,19 +4,28 @@ import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
 import io.jacobking.quickticket.gui.Controller;
+import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
-import io.jacobking.quickticket.gui.custom.CompanySearchBox;
+import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
+import io.jacobking.quickticket.gui.utility.IconLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.SearchableComboBox;
+import org.kordamp.ikonli.material2.Material2MZ;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,6 +43,8 @@ public class ViewerController extends Controller {
     @FXML private TextField                               employeeField;
     @FXML private SearchableComboBox<TicketCategoryModel> categoryBox;
     @FXML private TextField                               createdField;
+    @FXML private Button                                  findEmployeeButton;
+    @FXML private Button                                  deleteEmployeeButton;
 
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -47,8 +58,8 @@ public class ViewerController extends Controller {
 
         configureStatusBox();
         configurePriorityBox();
-        configureCategoryBox();
         populateFields();
+        configureButtons();
     }
 
     private void configureStatusBox() {
@@ -77,18 +88,6 @@ public class ViewerController extends Controller {
         });
     }
 
-    private void configureCategoryBox() {
-        categoryBox.setItems(bridgeContext.getCategory().getObservableList());
-        categoryBox.setConverter(new StringConverter<TicketCategoryModel>() {
-            @Override public String toString(TicketCategoryModel ticketCategoryModel) {
-                return (ticketCategoryModel == null) ? "Unknown" : ticketCategoryModel.getNameProperty();
-            }
-
-            @Override public TicketCategoryModel fromString(String s) {
-                return null;
-            }
-        });
-    }
 
     private void populateFields() {
         ticketIdField.setText(ticket.getId() + "");
@@ -107,6 +106,11 @@ public class ViewerController extends Controller {
         ));
 
         findAttachedEmployees();
+    }
+
+    private void configureButtons() {
+        findEmployeeButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.PERSON_ADD));
+        deleteEmployeeButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.PERSON_REMOVE));
     }
 
     private void findAttachedEmployees() {
@@ -134,7 +138,64 @@ public class ViewerController extends Controller {
     }
 
     @FXML private void onFindEmployees() {
-        final CompanySearchBox companySearchBox = new CompanySearchBox(bridgeContext.getCompany().getObservableList());
+        display.show(Route.FIND_EMPLOYEE, Data.of(ticket, employeeField));
+    }
+
+    @FXML private void onDeleteEmployees() {
+        PopOverBuilder.build()
+                .setTitle("Remove Employees")
+                .setDetached(true)
+                .setAnimated(true)
+                .process(this::getDeleteBox)
+                .show(deleteEmployeeButton, 10);
+    }
+
+    private static final int NTH_MODIFIER = 50, BASE_HEIGHT = 15, INSET = 10;
+
+    private Pane getDeleteBox(PopOverBuilder popOver) {
+        final ObservableList<EmployeeModel> employeeList = bridgeContext.getTicketEmployee()
+                .getEmployeeModelsForTicket(ticket.getId());
+
+        final Pane pane = new Pane();
+        pane.setPadding(new Insets(INSET, 0, INSET, 0));
+
+        final VBox vBox = new VBox(5.0);
+        vBox.setAlignment(Pos.CENTER);
+
+        final double calculatedHeight = (NTH_MODIFIER * employeeList.size()) + BASE_HEIGHT;
+        vBox.setPrefHeight(calculatedHeight);
+
+        final CheckListView<EmployeeModel> checkListView = getCheckListView(employeeList);
+
+        final Button delete = new Button("Delete");
+        delete.setOnAction(event -> deleteEmployeeFromTicket(popOver, ticket.getId(), checkListView));
+
+        vBox.getChildren().addAll(checkListView, delete);
+        pane.getChildren().add(vBox);
+        return pane;
+    }
+
+    private CheckListView<EmployeeModel> getCheckListView(final ObservableList<EmployeeModel> employeeModels) {
+        return new CheckListView<>(employeeModels);
+    }
+
+    private void deleteEmployeeFromTicket(PopOverBuilder popOver, final int ticketId, final CheckListView<EmployeeModel> listView) {
+        for (final EmployeeModel remove : listView.getCheckModel().getCheckedItems()) {
+            final int employeeId = remove.getId();
+            bridgeContext.getTicketEmployee().removeByTicketAndEmployeeId(ticketId, employeeId);
+        }
+
+        popOver.hide();
+        resetEmployeeField();
+    }
+
+    private void resetEmployeeField() {
+        final String employees = bridgeContext.getTicketEmployee().getEmployeeModelsForTicket(ticket.getId())
+                .stream()
+                .map(EmployeeModel::getFullName)
+                .collect(Collectors.joining(", "));
+
+        employeeField.setText(employees);
     }
 
     // Utilities

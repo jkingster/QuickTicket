@@ -48,12 +48,6 @@ public class PopOverBuilder {
         return this;
     }
 
-    public PopOverBuilder setHeight(final double height) {
-        this.popOver.setMinHeight(0);
-        this.popOver.setMaxHeight(0);
-        this.popOver.setPrefHeight(0);
-        return this;
-    }
 
     public PopOverBuilder setContent(final Node content) {
         this.popOver.setContentNode(content);
@@ -80,8 +74,8 @@ public class PopOverBuilder {
         return this;
     }
 
-    public PopOverBuilder process(final Function<Void, Node> process) {
-        final Node processedNode = process.apply(null);
+    public PopOverBuilder process(final Function<PopOverBuilder, Node> process) {
+        final Node processedNode = process.apply(this);
         return setContent(processedNode);
     }
 
@@ -94,4 +88,7 @@ public class PopOverBuilder {
         this.popOver.show(owner, offset);
     }
 
+    public void hide() {
+        this.popOver.hide();
+    }
 }

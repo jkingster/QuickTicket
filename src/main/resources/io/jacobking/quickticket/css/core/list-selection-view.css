@@ -1,0 +1,14 @@
+@import url("base.css");
+
+.list-selection-view .label {
+    -fx-text-fill: white;
+}
+
+.list-selection-view .list-view {
+    -fx-background-color: derive(-fx-primary, 25%);
+}
+
+.list-selection-view .button {
+    -fx-background-color: derive(-fx-offset-blue, 50%);
+    -fx-text-fill: white;
+}

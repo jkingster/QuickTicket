@@ -34,6 +34,11 @@ public class TicketEmployeeBridge extends Bridge<TicketEmployee, TicketEmployeeM
         return getObservableList().removeIf(__ -> __.getEmployeeId() == employeeId);
     }
 
+    public boolean removeByTicketAndEmployeeId(final int ticketId, final int employeeId) {
+        return getObservableList().removeIf(__ -> __.getTicketId() == ticketId
+                && __.getEmployeeId() == employeeId);
+    }
+
     public ObservableList<TicketModel> getTicketsForEmployee(final int employeeId) {
         return FXCollections.observableArrayList(
                 crud.getAll(RepoType.TICKET_EMPLOYEES, TICKET_EMPLOYEE.EMPLOYEE_ID.eq(employeeId))
@@ -55,6 +60,12 @@ public class TicketEmployeeBridge extends Bridge<TicketEmployee, TicketEmployeeM
         );
     }
 
+    public boolean isEmployeeAssignedToTicket(final int ticketId, final int employeeId) {
+        return getObservableList()
+                .stream()
+                .anyMatch(model -> model.getTicketId() == ticketId
+                        && model.getEmployeeId() == employeeId);
+    }
 
     @Override public TicketEmployeeModel convertEntity(TicketEmployee entity) {
         return new TicketEmployeeModel(entity);

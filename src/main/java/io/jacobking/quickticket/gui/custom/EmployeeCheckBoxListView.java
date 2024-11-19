@@ -27,4 +27,5 @@ public class EmployeeCheckBoxListView extends CheckListView<EmployeeModel> {
             }
         });
     }
+
 }

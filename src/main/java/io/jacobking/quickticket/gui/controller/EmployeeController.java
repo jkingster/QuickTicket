@@ -136,12 +136,16 @@ public class EmployeeController extends Controller {
 
             final int companyId = newCompany.getId();
             if (companyId == 0) {
-                departmentFilter.setItems(FXCollections.observableArrayList(bridgeContext.getDepartment().getFirst()));
+                departmentFilter.setItems(FXCollections.observableArrayList(
+                        bridgeContext.getDepartment().getObservableListByFilter(dm -> dm.getId() == 0)
+                ));
                 departmentFilter.getSelectionModel().selectFirst();
+                departmentFilter.setDisable(true);
                 return;
             }
 
             departmentFilter.setItems(bridgeContext.getDepartment().getObservableListByFilter(model -> {
+                departmentFilter.setDisable(false);
                 return model.getCompanyId() == companyId;
             }));
         });
@@ -168,13 +172,6 @@ public class EmployeeController extends Controller {
             final int departmentId = newDepartment.getId();
             if (currentCompanyId == 0 && departmentId == 0) {
                 employeeSelector.setItems(bridgeContext.getEmployee().getObservableList());
-                return;
-            }
-
-            if (departmentId == 0) {
-                employeeSelector.setItems(bridgeContext.getEmployee().getObservableListByFilter(employee -> {
-                    return (employee.getCompanyIdProperty() == currentCompanyId);
-                }));
                 return;
             }
 

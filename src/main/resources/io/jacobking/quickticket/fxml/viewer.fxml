@@ -67,8 +67,9 @@
                               <Cursor fx:constant="NONE" />
                            </cursor>
                         </TextField>
-                        <TextField fx:id="employeeField" editable="false" prefHeight="25.0" prefWidth="205.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
-                        <Button mnemonicParsing="false" onAction="#onFindEmployees" text="Find Employee(s)" />
+                        <TextField fx:id="employeeField" editable="false" prefHeight="25.0" prefWidth="250.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
+                        <Button fx:id="findEmployeeButton" mnemonicParsing="false" onAction="#onFindEmployees" />
+                        <Button fx:id="deleteEmployeeButton" mnemonicParsing="false" onAction="#onDeleteEmployees" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">
