@@ -1,5 +1,6 @@
 package io.jacobking.quickticket.gui.controller;
 
+import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
@@ -20,9 +21,11 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import org.controlsfx.control.CheckListView;
@@ -31,6 +34,7 @@ import org.kordamp.ikonli.material2.Material2AL;
 import org.kordamp.ikonli.material2.Material2MZ;
 
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -209,34 +213,46 @@ public class ViewerController extends Controller {
 
 
     private void configureComments() {
-        commentList.setItems(bridgeContext.getComment().getCommentsByTicketId(ticket.getId()));
+        final URL url = App.class.getResource("css/core/comment-list-view.css");
+        if (url != null) {
+            commentList.getStylesheets().add(url.toExternalForm());
+            commentList.getStyleClass().add("comment-list");
+        }
+
+        final int ticketId = ticket.getId();
+        final ObservableList<CommentModel> orderedComments = bridgeContext.getComment()
+                .getCommentsByTicketId(ticketId)
+                .sorted(Comparator.comparing(CommentModel::getPostedOn));
+
+        commentList.setItems(orderedComments);
+        commentList.scrollTo(commentList.getItems().size() - 1);
         commentList.setCellFactory(data -> new ListCell<>() {
             @Override protected void updateItem(CommentModel commentModel, boolean empty) {
                 super.updateItem(commentModel, empty);
                 if (commentModel == null || empty) {
                     setGraphic(null);
+                    setStyle("-fx-background-color: transparent;");
                     return;
                 }
 
+                setStyle("");
                 final VBox container = new VBox(5);
                 final HBox topBox = new HBox(2.5);
                 final Label trashLabel = new Label();
                 trashLabel.setGraphic(IconLoader.getMaterialIcon(Material2AL.DELETE_FOREVER));
-                trashLabel.setOnMousePressed(event -> deleteComment(commentModel));
+                trashLabel.setOnMousePressed(event -> handleCommentDeletion(commentModel));
                 final Label dateLabel = new Label(DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, commentModel.getPostedOn()));
                 topBox.getChildren().addAll(trashLabel, dateLabel);
 
                 final Text comment = new Text(commentModel.getPost());
+                comment.setFill(Color.WHITE);
+                comment.setWrappingWidth(575);
                 container.getChildren().addAll(topBox, comment);
+
 
                 setGraphic(container);
             }
         });
-    }
-
-
-    private void insertComment(final CommentModel commentModel) {
-
     }
 
     private void handleCommentDeletion(final CommentModel commentModel) {
@@ -256,7 +272,6 @@ public class ViewerController extends Controller {
         }
 
         Announcements.get().showConfirm("Success", "Comment deleted.");
-        final String nodeId = String.format("%s:%s", commentModel.getTicketId(), commentModel.getId());
     }
 
     @FXML private void onSubmitComment() {
@@ -274,7 +289,7 @@ public class ViewerController extends Controller {
             return;
         }
 
-        insertComment(newComment);
+        commentList.scrollTo(commentList.getItems().size() - 1);
         commentArea.clear();
     }
 

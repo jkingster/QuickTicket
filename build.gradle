@@ -133,3 +133,29 @@ jooq {
     }
 }
 
+tasks.named("generateJooq") {
+    finalizedBy compressSqlFiles
+}
+
+tasks.register('compressSqlFiles', Zip) {
+    // Define the path to the output zip file
+    def zipFile = file("src/main/resources/io/jacobking/quickticket/sql/scripts.zip")
+
+    // Delete the existing zip file if it exists
+    doFirst {
+        if (zipFile.exists()) {
+            zipFile.delete()
+        }
+    }
+
+    // Define the source directory containing the .sql files
+    from 'src/main/resources/io/jacobking/quickticket/sql'
+
+    // Only include .sql files
+    include '**/*.sql'
+
+    // Specify the output zip file name and directory
+    destinationDirectory = zipFile.parentFile
+    archiveFileName = zipFile.name
+}
+

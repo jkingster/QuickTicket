@@ -118,11 +118,11 @@
             <ListView layoutX="7.0" layoutY="52.0" prefHeight="142.0" prefWidth="423.0" styleClass="attachment-list-view" stylesheets="@../css/core/list.css" />
          </children>
       </AnchorPane>
-      <TextArea fx:id="commentArea" layoutX="461.0" layoutY="422.0" prefHeight="200.0" prefWidth="660.0" stylesheets="@../css/core/text-area.css" />
+      <TextArea fx:id="commentArea" layoutX="461.0" layoutY="422.0" prefHeight="200.0" prefWidth="660.0" stylesheets="@../css/core/text-area.css" wrapText="true" />
       <Button fx:id="submitCommentButton" layoutX="1077.0" layoutY="590.0" mnemonicParsing="false" onAction="#onSubmitComment" prefHeight="25.0" prefWidth="36.0" />
       <Pane layoutX="461.0" layoutY="5.0" prefHeight="406.0" prefWidth="660.0" styleClass="card" stylesheets="@../css/core/card.css">
          <children>
-            <ListView fx:id="commentList" layoutX="12.0" layoutY="12.0" prefHeight="383.0" prefWidth="637.0" stylesheets="@../css/core/list-view.css" />
+            <ListView fx:id="commentList" layoutX="12.0" layoutY="12.0" prefHeight="383.0" prefWidth="637.0" styleClass="comment-list" stylesheets="@../css/core/comment-list-view.css" />
          </children>
       </Pane>
    </children>
