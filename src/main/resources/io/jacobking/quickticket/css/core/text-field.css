@@ -18,6 +18,7 @@
     -fx-background-color: -fx-offset-blue;
     -fx-text-fill: -fx-typography;
     -fx-font-weight: bolder;
+    -fx-prompt-text-fill: -fx-typography;
 }
 
 .offset-text-field-label {

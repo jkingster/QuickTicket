@@ -1,6 +1,7 @@
 package io.jacobking.quickticket.gui;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 
 import java.util.Arrays;
@@ -30,13 +31,6 @@ public class Data {
         return mapped == null ? Optional.empty() : Optional.of(mapped);
     }
 
-    public <T> Optional<T> optMapIndex(final int index, final Class<T> clazz) {
-        if (index > objects.length - 1)
-            return Optional.empty();
-
-        final T mapped = getMappedObject(objects[index], clazz);
-        return mapped == null ? Optional.empty() : Optional.of(mapped);
-    }
 
     public <T> T mapIndex(final int index, final Class<T> clazz) {
         if (index > objects.length - 1)
@@ -50,23 +44,11 @@ public class Data {
         return getMappedObject(objects[index], TableView.class);
     }
 
-    public <T> Optional<ObjectProperty<T>> mapObjectProperty(final int index) {
-        final int length = objects.length;
-        if (index > length - 1 || index < 0)
-            return Optional.empty();
-
-        final ObjectProperty<T> mapped = getMappedObject(objects[index], ObjectProperty.class);
-        return mapped == null ? Optional.empty() : Optional.of(mapped);
+    public <T> ListView<T> mapList(final int index) {
+        if (index > objects.length - 1)
+            return null;
+        return getMappedObject(objects[index], ListView.class);
     }
-
-    public <T> Optional<TableView<T>> optMapTable(final int index) {
-        if (index < 0 || index > objects.length - 1)
-            return Optional.empty();
-
-        final TableView<T> mappedObject = getMappedObject(objects[index], TableView.class);
-        return Optional.ofNullable(mappedObject);
-    }
-
 
     private <T> T getMappedObject(final Object object, final Class<T> clazz) {
         if (clazz.isInstance(object))

@@ -12,12 +12,14 @@ public class LinkModel extends Model<TicketLink> {
     private final IntegerProperty ticketId    = new SimpleIntegerProperty();
     private final StringProperty  link        = new SimpleStringProperty();
     private final StringProperty  description = new SimpleStringProperty();
+    private final StringProperty  extension   = new SimpleStringProperty();
 
-    public LinkModel(int id, int ticketId, String link, String description) {
+    public LinkModel(int id, int ticketId, String link, String extension, String description) {
         super(id);
         this.ticketId.setValue(ticketId);
         this.link.setValue(link);
         this.description.setValue(description);
+        this.extension.setValue(extension);
     }
 
     public LinkModel(final TicketLink link) {
@@ -25,7 +27,8 @@ public class LinkModel extends Model<TicketLink> {
                 link.getId(),
                 link.getTicketId(),
                 link.getLink(),
-                link.getDescription()
+                link.getDescription(),
+                link.getExtension()
         );
     }
 
@@ -54,7 +57,7 @@ public class LinkModel extends Model<TicketLink> {
     }
 
     public String getDescription() {
-        return description.get();
+        return description.get() == null ? "No description provided." : description.get();
     }
 
     public StringProperty descriptionProperty() {
@@ -65,11 +68,25 @@ public class LinkModel extends Model<TicketLink> {
         this.description.set(description);
     }
 
+    public String getExtension() {
+        return extension.get();
+    }
+
+    public StringProperty extensionProperty() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension.set(extension);
+    }
+
     @Override public TicketLink toEntity() {
+        System.out.println(getDescription());
         return new TicketLink()
                 .setId(getId())
                 .setTicketId(getTicketId())
                 .setLink(getLink())
-                .setDescription(getDescription());
+                .setDescription(getDescription())
+                .setExtension(getExtension());
     }
 }

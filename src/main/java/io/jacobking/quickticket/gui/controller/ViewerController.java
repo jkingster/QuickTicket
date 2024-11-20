@@ -9,10 +9,7 @@ import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
-import io.jacobking.quickticket.gui.model.CommentModel;
-import io.jacobking.quickticket.gui.model.EmployeeModel;
-import io.jacobking.quickticket.gui.model.TicketCategoryModel;
-import io.jacobking.quickticket.gui.model.TicketModel;
+import io.jacobking.quickticket.gui.model.*;
 import io.jacobking.quickticket.gui.utility.IconLoader;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.collections.FXCollections;
@@ -21,9 +18,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -32,6 +29,7 @@ import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.SearchableComboBox;
 import org.kordamp.ikonli.material2.Material2AL;
 import org.kordamp.ikonli.material2.Material2MZ;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 import java.net.URL;
 import java.util.Comparator;
@@ -40,9 +38,9 @@ import java.util.stream.Collectors;
 
 public class ViewerController extends Controller {
 
-    private TicketModel            ticket;
-    private TableView<TicketModel> ticketTable;
-
+    private static final int NTH_MODIFIER = 50, BASE_HEIGHT = 15, INSET = 10;
+    private       TicketModel                             ticket;
+    private       TableView<TicketModel>                  ticketTable;
     @FXML private TextField                               ticketIdField;
     @FXML private TextField                               titleField;
     @FXML private SearchableComboBox<StatusType>          statusBox;
@@ -52,10 +50,14 @@ public class ViewerController extends Controller {
     @FXML private TextField                               createdField;
     @FXML private Button                                  findEmployeeButton;
     @FXML private Button                                  deleteEmployeeButton;
+    @FXML private TextArea                                commentArea;
+    @FXML private Button                                  submitCommentButton;
+    @FXML private ListView<CommentModel>                  commentList;
 
-    @FXML private TextArea               commentArea;
-    @FXML private Button                 submitCommentButton;
-    @FXML private ListView<CommentModel> commentList;
+    @FXML private ListView<LinkModel> attachmentList;
+    @FXML private Button              addURLButton;
+    @FXML private Button              addDocButton;
+
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         this.ticket = data.mapIndex(0, TicketModel.class);
@@ -71,6 +73,7 @@ public class ViewerController extends Controller {
         populateFields();
         configureButtons();
         configureComments();
+        configureAttachmentList();
     }
 
     private void configureStatusBox() {
@@ -99,7 +102,6 @@ public class ViewerController extends Controller {
         });
     }
 
-
     private void populateFields() {
         ticketIdField.setText(ticket.getId() + "");
         titleField.setText(ticket.getTitle());
@@ -124,6 +126,52 @@ public class ViewerController extends Controller {
         deleteEmployeeButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.PERSON_REMOVE));
         submitCommentButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.MODE_COMMENT));
         submitCommentButton.disableProperty().bind(commentArea.textProperty().isEmpty());
+
+        addURLButton.setGraphic(IconLoader.getMaterialIcon(MaterialDesign.MDI_LINK));
+        addDocButton.setGraphic(IconLoader.getMaterialIcon(Material2AL.ATTACH_FILE));
+    }
+
+    private void configureComments() {
+        final URL url = App.class.getResource("css/core/comment-list-view.css");
+        if (url != null) {
+            commentList.getStylesheets().add(url.toExternalForm());
+            commentList.getStyleClass().add("comment-list");
+        }
+
+        final int ticketId = ticket.getId();
+        final ObservableList<CommentModel> orderedComments = bridgeContext.getComment()
+                .getCommentsByTicketId(ticketId)
+                .sorted(Comparator.comparing(CommentModel::getPostedOn));
+
+        commentList.setItems(orderedComments);
+        commentList.scrollTo(commentList.getItems().size() - 1);
+        commentList.setCellFactory(data -> new ListCell<>() {
+            @Override protected void updateItem(CommentModel commentModel, boolean empty) {
+                super.updateItem(commentModel, empty);
+                if (commentModel == null || empty) {
+                    setGraphic(null);
+                    setStyle("-fx-background-color: transparent;");
+                    return;
+                }
+
+                setStyle("");
+                final VBox container = new VBox(5);
+                final HBox topBox = new HBox(2.5);
+                final Label trashLabel = new Label();
+                trashLabel.setGraphic(IconLoader.getMaterialIcon(Material2AL.DELETE_FOREVER));
+                trashLabel.setOnMousePressed(event -> handleCommentDeletion(commentModel));
+                final Label dateLabel = new Label(DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, commentModel.getPostedOn()));
+                topBox.getChildren().addAll(trashLabel, dateLabel);
+
+                final Text comment = new Text(commentModel.getPost());
+                comment.setFill(Color.WHITE);
+                comment.setWrappingWidth(575);
+                container.getChildren().addAll(topBox, comment);
+
+
+                setGraphic(container);
+            }
+        });
     }
 
     private void findAttachedEmployees() {
@@ -138,6 +186,61 @@ public class ViewerController extends Controller {
                 .collect(Collectors.joining(", "));
 
         employeeField.setText(employees);
+    }
+
+    private void handleCommentDeletion(final CommentModel commentModel) {
+        Announcements.get().showConfirmation(() -> deleteComment(commentModel),
+                        "Are you sure you want to delete this comment?", "It cannot be recovered.")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        deleteComment(commentModel);
+                    }
+                });
+    }
+
+    private void deleteComment(final CommentModel commentModel) {
+        if (!bridgeContext.getComment().remove(commentModel.getId())) {
+            Announcements.get().showError("Error", "Failed to delete comment.", "Try again.");
+            return;
+        }
+
+        Announcements.get().showConfirm("Success", "Comment deleted.");
+    }
+
+    private void configureAttachmentList() {
+        final int ticketId = ticket.getId();
+        attachmentList.setItems(bridgeContext.getTicketLink().getLinksForTicket(ticketId));
+        attachmentList.setCellFactory(data -> new ListCell<>() {
+            @Override protected void updateItem(LinkModel linkModel, boolean empty) {
+                super.updateItem(linkModel, empty);
+                if (linkModel == null || empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                final HBox box = new HBox(2.5);
+                box.setAlignment(Pos.CENTER_LEFT);
+                final Button open = new Button();
+                open.setGraphic(IconLoader.getMaterialIcon(Material2MZ.OPEN_IN_BROWSER));
+                open.setOnAction(event -> openLink(linkModel));
+                open.setMaxWidth(Region.USE_PREF_SIZE);
+                open.setTooltip(new Tooltip(linkModel.getLink()));
+
+
+                final String description = linkModel.getDescription();
+                final Label descriptionLabel = new Label(description);
+                descriptionLabel.setStyle("-fx-font-weight: bolder; -fx-text-fill: white;");
+
+                box.getChildren().addAll(open, descriptionLabel);
+
+                setGraphic(box);
+            }
+        });
+
+    }
+
+    private void openLink(final LinkModel linkModel) {
+
     }
 
     @FXML private void onUpdateTicket() {
@@ -162,8 +265,6 @@ public class ViewerController extends Controller {
                 .process(this::getDeleteBox)
                 .show(deleteEmployeeButton, 10);
     }
-
-    private static final int NTH_MODIFIER = 50, BASE_HEIGHT = 15, INSET = 10;
 
     private Pane getDeleteBox(PopOverBuilder popOver) {
         final ObservableList<EmployeeModel> employeeList = bridgeContext.getTicketEmployee()
@@ -211,69 +312,6 @@ public class ViewerController extends Controller {
         employeeField.setText(employees);
     }
 
-
-    private void configureComments() {
-        final URL url = App.class.getResource("css/core/comment-list-view.css");
-        if (url != null) {
-            commentList.getStylesheets().add(url.toExternalForm());
-            commentList.getStyleClass().add("comment-list");
-        }
-
-        final int ticketId = ticket.getId();
-        final ObservableList<CommentModel> orderedComments = bridgeContext.getComment()
-                .getCommentsByTicketId(ticketId)
-                .sorted(Comparator.comparing(CommentModel::getPostedOn));
-
-        commentList.setItems(orderedComments);
-        commentList.scrollTo(commentList.getItems().size() - 1);
-        commentList.setCellFactory(data -> new ListCell<>() {
-            @Override protected void updateItem(CommentModel commentModel, boolean empty) {
-                super.updateItem(commentModel, empty);
-                if (commentModel == null || empty) {
-                    setGraphic(null);
-                    setStyle("-fx-background-color: transparent;");
-                    return;
-                }
-
-                setStyle("");
-                final VBox container = new VBox(5);
-                final HBox topBox = new HBox(2.5);
-                final Label trashLabel = new Label();
-                trashLabel.setGraphic(IconLoader.getMaterialIcon(Material2AL.DELETE_FOREVER));
-                trashLabel.setOnMousePressed(event -> handleCommentDeletion(commentModel));
-                final Label dateLabel = new Label(DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, commentModel.getPostedOn()));
-                topBox.getChildren().addAll(trashLabel, dateLabel);
-
-                final Text comment = new Text(commentModel.getPost());
-                comment.setFill(Color.WHITE);
-                comment.setWrappingWidth(575);
-                container.getChildren().addAll(topBox, comment);
-
-
-                setGraphic(container);
-            }
-        });
-    }
-
-    private void handleCommentDeletion(final CommentModel commentModel) {
-        Announcements.get().showConfirmation(() -> deleteComment(commentModel),
-                        "Are you sure you want to delete this comment?", "It cannot be recovered.")
-                .ifPresent(type -> {
-                    if (type == ButtonType.YES) {
-                        deleteComment(commentModel);
-                    }
-                });
-    }
-
-    private void deleteComment(final CommentModel commentModel) {
-        if (!bridgeContext.getComment().remove(commentModel.getId())) {
-            Announcements.get().showError("Error", "Failed to delete comment.", "Try again.");
-            return;
-        }
-
-        Announcements.get().showConfirm("Success", "Comment deleted.");
-    }
-
     @FXML private void onSubmitComment() {
         final String comment = commentArea.getText();
 
@@ -293,12 +331,15 @@ public class ViewerController extends Controller {
         commentArea.clear();
     }
 
-    // Utilities
-
-    private int getCategoryId() {
-        final TicketCategoryModel category = categoryBox.getValue();
-        return (category == null) ? 0 : category.getId();
+    @FXML private void onAddUrl() {
+        display.show(Route.ADD_URL, Data.of(ticket, attachmentList));
     }
+
+    @FXML private void onAddDocument() {
+
+    }
+
+    // Utilities
 
     private TicketModel getUpdatedTicket() {
         ticket.titleProperty().setValue(titleField.getText());
@@ -306,5 +347,10 @@ public class ViewerController extends Controller {
         ticket.priorityProperty().setValue(priorityBox.getValue());
         ticket.categoryProperty().setValue(getCategoryId());
         return ticket;
+    }
+
+    private int getCategoryId() {
+        final TicketCategoryModel category = categoryBox.getValue();
+        return (category == null) ? 0 : category.getId();
     }
 }

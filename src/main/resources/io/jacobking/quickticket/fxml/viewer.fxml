@@ -111,11 +111,11 @@
          <children>
             <HBox alignment="CENTER_LEFT" layoutX="7.0" layoutY="14.0" prefHeight="31.0" prefWidth="423.0" spacing="3.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="34.0" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="34.0" />
+                  <Button fx:id="addURLButton" mnemonicParsing="false" onAction="#onAddUrl" prefHeight="25.0" prefWidth="34.0" />
+                  <Button fx:id="addDocButton" mnemonicParsing="false" onAction="#onAddDocument" prefHeight="25.0" prefWidth="34.0" />
                </children>
             </HBox>
-            <ListView layoutX="7.0" layoutY="52.0" prefHeight="142.0" prefWidth="423.0" styleClass="attachment-list-view" stylesheets="@../css/core/list.css" />
+            <ListView fx:id="attachmentList" layoutX="7.0" layoutY="52.0" prefHeight="142.0" prefWidth="423.0" styleClass="attachment-list-view" stylesheets="@../css/core/list.css" />
          </children>
       </AnchorPane>
       <TextArea fx:id="commentArea" layoutX="461.0" layoutY="422.0" prefHeight="200.0" prefWidth="660.0" stylesheets="@../css/core/text-area.css" wrapText="true" />

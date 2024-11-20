@@ -10,7 +10,8 @@ public enum Route {
     COMPANY("Company"),
     WELCOME("Welcome"),
     CATEGORY_CREATOR("CategoryCreator"),
-    FIND_EMPLOYEE("FindEmployee");
+    FIND_EMPLOYEE("FindEmployee"),
+    ADD_URL("AddURL");
 
 
     private static final Route[] VALUES    = values();
