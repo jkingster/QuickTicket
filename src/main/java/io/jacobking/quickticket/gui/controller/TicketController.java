@@ -13,7 +13,6 @@ import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketEmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.gui.utility.IconLoader;
-import io.jacobking.quickticket.tables.pojos.Comment;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -324,9 +323,6 @@ public class TicketController extends Controller {
         addListener(resolvedLabel, getListByStatus(StatusType.RESOLVED));
     }
 
-    public TableView<TicketModel> getTicketTable() {
-        return ticketTable;
-    }
 
     private void addListener(final Label label, final ObservableList<TicketModel> targetList) {
         targetList.addListener((ListChangeListener<? super TicketModel>) change -> {
@@ -341,67 +337,11 @@ public class TicketController extends Controller {
         display.show(Route.TICKET_CREATOR, Data.of(ticketTable, this));
     }
 
-    @FXML private void onResolve() {
-        final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
-        if (ticketModel == null) {
-            Announcements.get().showError("Failed to resolve ticket.", "No ticket was selected.", "Please try again after selecting a ticket.");
-            return;
-        }
-        final StatusType originalStatus = ticketModel.statusProperty().getValue();
-        ticketModel.statusProperty().setValue(StatusType.RESOLVED);
-
-        if (bridgeContext.getTicket().update(ticketModel, originalStatus)) {
-            promptNotifyEmployeeAlert(ticketModel);
-        }
-    }
-
-    private void promptNotifyEmployeeAlert(final TicketModel viewedTicket) {
-        Announcements.get().showInput("This ticket has been marked resolved.", "Would you like to notify the employee? Please provide any closing comments.")
-                .ifPresent(pair -> {
-                    final ButtonType type = pair.getLeft();
-                    final String comment = pair.getRight();
-                    if (type == ButtonType.YES) {
-                        postComment(viewedTicket, comment);
-                    } else if (type == ButtonType.NO) {
-                        postComment(viewedTicket, comment);
-                    } else if (type == ButtonType.CANCEL) {
-                        postFailureComment(viewedTicket, "Notification not sent and resolving comment unknown.");
-                    }
-                });
-    }
-
-    private void postEmptyResolvingComment(final TicketModel viewedTicket) {
-        postComment(viewedTicket, "No resolving comment.");
-    }
-
-    private void postFailureComment(final TicketModel ticketModel, final String comment) {
-        postComment(ticketModel, comment);
-    }
-
 
     private String getSubject(final TicketModel ticketModel) {
         return String.format("Your support ticket has been resolved. | Ticket ID: %s", ticketModel.getId());
     }
 
-    private void postComment(final TicketModel ticket, final String commentText) {
-        if (commentText.isEmpty()) {
-            postEmptyResolvingComment(ticket);
-            return;
-        }
-
-        bridgeContext.getComment().createModel(new Comment()
-                .setTicketId(ticket.getId())
-                .setPost(commentText)
-                .setPostedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
-        );
-    }
-
-//    private EmployeeModel getEmployee() {
-//        final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
-//        if (ticketModel == null)
-//            return null;
-//        return bridgeContext.getEmployee().getModel(ticketModel.getEmployeeId());
-//    }
 
     @FXML private void onReopen() {
         final TicketModel ticketModel = ticketTable.getSelectionModel().getSelectedItem();
@@ -453,7 +393,7 @@ public class TicketController extends Controller {
             return;
         }
 
-        display.show(Route.VIEWER, Data.of(ticketModel, ticketTable ));
+        display.show(Route.VIEWER, Data.of(ticketModel, ticketTable));
     }
 
     private void onEmail(final TicketModel ticketModel) {
@@ -601,6 +541,14 @@ public class TicketController extends Controller {
 //                .setContent(getCategoryNode())
 //                .setOwner(categoriesButton);
 //        popOverBuilder.show();
+
+        PopOverBuilder.build()
+                .setAnimated(true)
+                .setDetached(true)
+                .setArrowLocation(PopOver.ArrowLocation.BOTTOM_LEFT)
+                .setTitle("Categories")
+                .process(node -> getCategoryNode())
+                .show(categoriesButton, 10);
     }
 
     private VBox getCategoryNode() {

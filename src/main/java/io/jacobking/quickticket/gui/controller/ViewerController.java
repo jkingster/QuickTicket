@@ -250,7 +250,13 @@ public class ViewerController extends Controller {
             return;
         }
 
+        final TicketModel updated = getUpdatedTicket();
+        if (!bridgeContext.getTicket().update(updated, updated.statusProperty().get())) {
+            Announcements.get().showError("Error", "Could not update ticket.", "Try again.");
+            return;
+        }
 
+        Announcements.get().showConfirm("Success", "Ticket Updated!");
     }
 
     @FXML private void onFindEmployees() {
