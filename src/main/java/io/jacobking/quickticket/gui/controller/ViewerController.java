@@ -4,6 +4,7 @@ import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.DateUtil;
+import io.jacobking.quickticket.core.utility.MiscUtil;
 import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.Route;
@@ -240,7 +241,8 @@ public class ViewerController extends Controller {
     }
 
     private void openLink(final LinkModel linkModel) {
-
+        final String url = linkModel.getLink();
+        MiscUtil.openLink(url);
     }
 
     @FXML private void onUpdateTicket() {

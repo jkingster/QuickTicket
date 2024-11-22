@@ -20,6 +20,8 @@ module io.jacobking.quickticket {
     requires ch.qos.logback.classic;
     requires ch.qos.logback.core;
     requires zip4j;
+    requires org.apache.httpcomponents.client5.httpclient5;
+    requires org.apache.httpcomponents.core5.httpcore5;
 
     opens io.jacobking.quickticket to javafx.fxml;
     exports io.jacobking.quickticket;

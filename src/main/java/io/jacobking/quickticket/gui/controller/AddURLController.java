@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import org.apache.hc.core5.net.URIBuilder;
 
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -74,7 +75,13 @@ public class AddURLController extends Controller {
             Announcements.get().showWarning("Warning", "Unsecure Link", "http is an unsecure protocol. Consider using http(s)!");
         }
 
-        final LinkModel newLink = getNewLink();
+        final String processedUrl = getProcessedUrl();
+        if (processedUrl == null) {
+            Announcements.get().showError("Error", "URL Processing Failure", "Could not properly encode link...");
+            return;
+        }
+
+        final LinkModel newLink = getNewLink(processedUrl);
         if (newLink == null) {
             Announcements.get().showError("Error", "Failed to create URL attachment.", "Please try again.");
             return;
@@ -97,13 +104,26 @@ public class AddURLController extends Controller {
 
     // Utilities
 
-    private LinkModel getNewLink() {
+    private LinkModel getNewLink(final String processedUrl) {
         return bridgeContext.getTicketLink().createModel(new TicketLink()
-                .setLink(urlField.getText())
+                .setLink(processedUrl)
                 .setTicketId(ticket.getId())
                 .setExtension(null)
                 .setCreatedOn(DateUtil.formatDateTime(DateUtil.DateFormat.DATE_TIME_ONE, LocalDateTime.now()))
                 .setDescription(descriptionArea.getText())
         );
+    }
+
+    private String getProcessedUrl() {
+        try {
+            final String url = urlField.getText();
+            final String sanitized = url.replaceAll("\\{", "%7B")
+                    .replaceAll("}", "%7D")
+                    .replaceAll("\\|", "%7C");
+            final URIBuilder uriBuilder = new URIBuilder(sanitized);
+            return uriBuilder.build().toString();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

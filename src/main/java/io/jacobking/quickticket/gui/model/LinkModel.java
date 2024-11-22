@@ -14,7 +14,7 @@ public class LinkModel extends Model<TicketLink> {
     private final StringProperty  description = new SimpleStringProperty();
     private final StringProperty  extension   = new SimpleStringProperty();
 
-    public LinkModel(int id, int ticketId, String link, String extension, String description) {
+    public LinkModel(int id, int ticketId, String link, String description, String extension) {
         super(id);
         this.ticketId.setValue(ticketId);
         this.link.setValue(link);
