@@ -534,14 +534,6 @@ public class TicketController extends Controller {
 
 
     @FXML private void onCategories() {
-//        final PopOverBuilder popOverBuilder = new PopOverBuilder()
-//                .setArrowOrientation(PopOver.ArrowLocation.BOTTOM_RIGHT)
-//                .setTitle("Ticket Categories")
-//                .useDefaultSettings()
-//                .setContent(getCategoryNode())
-//                .setOwner(categoriesButton);
-//        popOverBuilder.show();
-
         PopOverBuilder.build()
                 .setAnimated(true)
                 .setDetached(true)
