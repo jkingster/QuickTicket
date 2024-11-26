@@ -148,7 +148,10 @@ public class FindEmployeeController extends Controller {
             Announcements.get().showError("Error", "Could not add employee.", "One or more employees could not be attached to the ticket.");
         }
 
-        resetEmployeeField(createdList);
+        if (employeeField != null) {
+            resetEmployeeField(createdList);
+        }
+
         display.close(Route.FIND_EMPLOYEE);
     }
 

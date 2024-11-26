@@ -17,9 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.StringConverter;
-import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
 
@@ -33,9 +31,9 @@ public class TicketCreatorController extends Controller {
     private TicketController             ticketController;
     private EmployeeCheckBoxListView checkListView;
 
-    @FXML private ComboBox<StatusType>                    statusTypeComboBox;
-    @FXML private ComboBox<PriorityType>                  priorityTypeComboBox;
-    @FXML private TextField                               titleField;
+    @FXML private ComboBox<StatusType>   statusTypeComboBox;
+    @FXML private ComboBox<PriorityType> priorityTypeComboBox;
+    @FXML private TextField              titleField;
     @FXML private TextArea                                commentArea;
     @FXML private SearchableComboBox<EmployeeModel>       employeeComboBox;
     @FXML private SearchableComboBox<TicketCategoryModel> categoryComboBox;
@@ -184,7 +182,6 @@ public class TicketCreatorController extends Controller {
             return;
         }
 
-        ticketController.setTicketTable();
         display.close(Route.TICKET_CREATOR);
         ticketTable.refresh();
         ticketTable.scrollTo(0);

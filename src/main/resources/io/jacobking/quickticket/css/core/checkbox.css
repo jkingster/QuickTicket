@@ -5,6 +5,7 @@
     -fx-border-color: -fx-offset-blue;
 }
 
+
 .check-box:selected .mark {
     -fx-background-color: -fx-typography;
 }

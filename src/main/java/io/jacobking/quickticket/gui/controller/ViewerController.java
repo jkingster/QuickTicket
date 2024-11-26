@@ -44,9 +44,9 @@ public class ViewerController extends Controller {
     private       TableView<TicketModel>                  ticketTable;
     @FXML private TextField                               ticketIdField;
     @FXML private TextField                               titleField;
-    @FXML private SearchableComboBox<StatusType>          statusBox;
-    @FXML private SearchableComboBox<PriorityType>        priorityBox;
-    @FXML private TextField                               employeeField;
+    @FXML private SearchableComboBox<StatusType>   statusBox;
+    @FXML private SearchableComboBox<PriorityType> priorityBox;
+    @FXML private TextField                        employeeField;
     @FXML private SearchableComboBox<TicketCategoryModel> categoryBox;
     @FXML private TextField                               createdField;
     @FXML private Button                                  findEmployeeButton;
@@ -253,7 +253,7 @@ public class ViewerController extends Controller {
         }
 
         final TicketModel updated = getUpdatedTicket();
-        if (!bridgeContext.getTicket().update(updated, updated.statusProperty().get())) {
+        if (!bridgeContext.getTicket().update(updated)) {
             Announcements.get().showError("Error", "Could not update ticket.", "Try again.");
             return;
         }

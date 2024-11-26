@@ -39,6 +39,14 @@ public class IconLoader {
         return getMaterialIcon(icon, DEFAULT_ICON_COLOR, DEFAULT_ICON_SIZE);
     }
 
+    public static FontIcon getMaterialIcon(final Ikon icon, final Color color) {
+        return getMaterialIcon(icon, color, DEFAULT_ICON_SIZE);
+    }
+
+    public static FontIcon getMaterialIcon(final Ikon icon, final int size) {
+        return getMaterialIcon(icon, DEFAULT_ICON_COLOR, size);
+    }
+
     public static FontIcon getMaterialIcon(final FontIcon fontIcon) {
         fontIcon.setIconColor(DEFAULT_ICON_COLOR);
         fontIcon.setIconSize(DEFAULT_ICON_SIZE);
