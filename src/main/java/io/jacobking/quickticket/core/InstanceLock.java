@@ -45,7 +45,7 @@ public class InstanceLock {
             final ButtonType exit = new ButtonType("Exit", ButtonBar.ButtonData.NO);
 
             Announcements.get().showWarningConfirmation(
-                            "Failed to launch",
+                            "Warning",
                             "Instance Lock Found",
                             "Another instance is already running. To continue, delete the lock.", deleteLock, exit)
                     .ifPresent(type -> {
