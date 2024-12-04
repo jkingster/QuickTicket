@@ -232,7 +232,6 @@ public class ViewerController extends Controller {
                 open.setMaxWidth(Region.USE_PREF_SIZE);
                 open.setTooltip(new Tooltip(linkModel.getLink()));
 
-
                 final String description = linkModel.getDescription();
                 final Label descriptionLabel = new Label(description);
                 descriptionLabel.setStyle("-fx-font-weight: bolder; -fx-text-fill: white;");
