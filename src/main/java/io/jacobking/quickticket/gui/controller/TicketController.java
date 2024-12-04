@@ -68,6 +68,17 @@ public class TicketController extends Controller {
 
     private void configureTable() {
         ticketTable.setItems(ticketBridge.getObservableList());
+        ticketTable.setOnMouseClicked(event -> {
+            final int clickCount = event.getClickCount();
+            if (clickCount != 2) {
+                return;
+            }
+
+            final TicketModel clickedTicket = ticketTable.getSelectionModel().getSelectedItem();
+            if (clickedTicket != null) {
+                display.show(Route.VIEWER, Data.of(clickedTicket, ticketTable));
+            }
+        });
 
         configureIndicatorColumn();
         configureActionsColumn();

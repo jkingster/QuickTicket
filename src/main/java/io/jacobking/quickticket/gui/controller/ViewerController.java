@@ -39,14 +39,19 @@ import java.util.stream.Collectors;
 
 public class ViewerController extends Controller {
 
+    /**
+     * TODO:
+     *  * Fix bug when adding more employees. Seems to be an going on with that (>3 or more).
+     */
+
     private static final int NTH_MODIFIER = 50, BASE_HEIGHT = 15, INSET = 10;
     private       TicketModel                             ticket;
     private       TableView<TicketModel>                  ticketTable;
     @FXML private TextField                               ticketIdField;
     @FXML private TextField                               titleField;
-    @FXML private SearchableComboBox<StatusType>   statusBox;
-    @FXML private SearchableComboBox<PriorityType> priorityBox;
-    @FXML private TextField                        employeeField;
+    @FXML private SearchableComboBox<StatusType>          statusBox;
+    @FXML private SearchableComboBox<PriorityType>        priorityBox;
+    @FXML private TextField                               employeeField;
     @FXML private SearchableComboBox<TicketCategoryModel> categoryBox;
     @FXML private TextField                               createdField;
     @FXML private Button                                  findEmployeeButton;

@@ -9,7 +9,10 @@ import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
 import io.jacobking.quickticket.gui.custom.EmployeeCheckBoxListView;
 import io.jacobking.quickticket.gui.misc.PopOverBuilder;
-import io.jacobking.quickticket.gui.model.*;
+import io.jacobking.quickticket.gui.model.CommentModel;
+import io.jacobking.quickticket.gui.model.EmployeeModel;
+import io.jacobking.quickticket.gui.model.TicketCategoryModel;
+import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.tables.pojos.Comment;
 import io.jacobking.quickticket.tables.pojos.Ticket;
 import io.jacobking.quickticket.tables.pojos.TicketEmployee;
@@ -27,13 +30,13 @@ import java.util.ResourceBundle;
 public class TicketCreatorController extends Controller {
 
 
-    private TableView<TicketModel>       ticketTable;
-    private TicketController             ticketController;
+    private TableView<TicketModel>   ticketTable;
+    private TicketController         ticketController;
     private EmployeeCheckBoxListView checkListView;
 
-    @FXML private ComboBox<StatusType>   statusTypeComboBox;
-    @FXML private ComboBox<PriorityType> priorityTypeComboBox;
-    @FXML private TextField              titleField;
+    @FXML private ComboBox<StatusType>                    statusTypeComboBox;
+    @FXML private ComboBox<PriorityType>                  priorityTypeComboBox;
+    @FXML private TextField                               titleField;
     @FXML private TextArea                                commentArea;
     @FXML private SearchableComboBox<EmployeeModel>       employeeComboBox;
     @FXML private SearchableComboBox<TicketCategoryModel> categoryComboBox;
@@ -129,7 +132,14 @@ public class TicketCreatorController extends Controller {
     }
 
     @FXML private void onCreate() {
-        final TicketModel newTicket = getNewTicket();
+        final TicketModel newTicket = bridgeContext.getTicket().createModel(new Ticket()
+                .setTitle(titleField.getText())
+                .setStatus(getStatus())
+                .setPriority(getPriority())
+                .setCategoryId(getCategoryId())
+                .setCreatedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
+        );
+
         if (newTicket == null) {
             Announcements.get().showError("Error", "Could not create ticket.", "Try again.");
             return;
@@ -204,17 +214,6 @@ public class TicketCreatorController extends Controller {
 
 
     @FXML private void onReset() {
-    }
-
-    // Utilities
-    private TicketModel getNewTicket() {
-        return bridgeContext.getTicket().createModel(new Ticket()
-                .setTitle(titleField.getText())
-                .setStatus(getStatus())
-                .setPriority(getPriority())
-                .setCategoryId(getCategoryId())
-                .setCreatedOn(DateUtil.nowAsLocalDateTime(DateUtil.DateFormat.DATE_TIME_ONE))
-        );
     }
 
     private CommentModel getNewComment(final int ticketId, final String comment) {
