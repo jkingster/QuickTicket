@@ -364,7 +364,27 @@ public class TicketController extends Controller {
     }
 
     private void onDeleteTicket(final TicketModel ticketModel) {
+        if (ticketModel == null) {
+            Announcements.get().showError("Error", "Could not delete ticket.", "Ticket not found.");
+            return;
+        }
 
+        Announcements.get().showConfirmation(() -> deleteTicket(ticketModel),
+                        "Are you sure you want to delete this ticket?", "It cannot be recovered.")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        deleteTicket(ticketModel);
+                    }
+                });
+    }
+
+    private void deleteTicket(final TicketModel ticketModel) {
+        final boolean deleted = bridgeContext.getTicket().remove(ticketModel.getId());
+        if (!deleted) {
+            Announcements.get().showError("Error", "Could not delete ticket.", "Please try again.");
+        } else {
+            Announcements.get().showConfirm("Success", "Ticket deleted.");
+        }
     }
 
     private void onUpdateTicket(final TicketModel ticketModel) {
