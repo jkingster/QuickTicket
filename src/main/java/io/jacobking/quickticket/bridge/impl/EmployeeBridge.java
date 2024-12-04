@@ -7,6 +7,8 @@ import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.tables.pojos.Employee;
 import javafx.collections.ObservableList;
 
+import java.util.Comparator;
+
 public class EmployeeBridge extends Bridge<Employee, EmployeeModel> {
     public EmployeeBridge(final Database database) {
         super(database, RepoType.EMPLOYEE);
@@ -15,6 +17,10 @@ public class EmployeeBridge extends Bridge<Employee, EmployeeModel> {
     @Override
     public EmployeeModel convertEntity(Employee entity) {
         return new EmployeeModel(entity);
+    }
+
+    @Override public ObservableList<EmployeeModel> getObservableList() {
+        return super.getObservableList().sorted(Comparator.comparing(EmployeeModel::getFullName));
     }
 
     public ObservableList<EmployeeModel> getListByOrganization(final int companyId, final int departmentId) {
