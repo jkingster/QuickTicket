@@ -9,7 +9,8 @@ public enum StatusType implements Serializable {
     OPEN,
     ACTIVE,
     PAUSED,
-    RESOLVED;
+    RESOLVED,
+    UNDEFINED;
 
     public static StatusType of(final String target) {
         for (final StatusType type : values()) {

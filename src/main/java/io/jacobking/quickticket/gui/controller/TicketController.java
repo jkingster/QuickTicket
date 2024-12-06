@@ -14,6 +14,7 @@ import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.gui.utility.IconLoader;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -62,7 +63,7 @@ public class TicketController extends Controller {
         this.ticketBridge = bridgeContext.getTicket();
 
         configureTable();
-        configurePanes();
+        configurePanesAndLabels();
         configureButtons();
     }
 
@@ -215,6 +216,8 @@ public class TicketController extends Controller {
                 final SearchableComboBox<PriorityType> priorityComboBox = new SearchableComboBox<>(PriorityType.asObservableList());
                 configurePriorityBox(priorityComboBox);
                 configurePriorityBoxListener(ticket, priorityComboBox);
+                priorityComboBox.setOnAction(event -> ticketTable.getSelectionModel().select(ticket));
+
 
                 priorityComboBox.getSelectionModel().select(priorityType);
                 setGraphic(priorityComboBox);
@@ -239,6 +242,9 @@ public class TicketController extends Controller {
             // TODO: Will eventually need to handle more cases when we add the filters back.
             private void configurePriorityBoxListener(final TicketModel ticketModel, SearchableComboBox<PriorityType> priorityComboBox) {
                 priorityComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldPriority, newPriority) -> {
+                    if (getTableRow() == null || !getTableRow().isSelected())
+                        return;
+
                     if (newPriority == null) {
                         return;
                     }
@@ -248,7 +254,7 @@ public class TicketController extends Controller {
                     }
 
                     ticketModel.priorityProperty().setValue(newPriority);
-                    onUpdateTicket(ticketModel);
+                    onUpdateTicket(ticketModel, StatusType.UNDEFINED);
                 });
             }
         });
@@ -273,6 +279,8 @@ public class TicketController extends Controller {
                 final SearchableComboBox<StatusType> statusComboBox = new SearchableComboBox<>(StatusType.asObservableList());
                 configureStatusBox(statusComboBox);
                 configureStatusBoxListener(ticket, statusComboBox);
+                statusComboBox.setOnAction(event -> ticketTable.getSelectionModel().select(ticket));
+
 
                 statusComboBox.getSelectionModel().select(statusType);
                 setGraphic(statusComboBox);
@@ -294,9 +302,14 @@ public class TicketController extends Controller {
                 statusComboBox.setMaxHeight(25);
             }
 
+
             // TODO: Will eventually need to handle more cases when we add the filters back.
             private void configureStatusBoxListener(final TicketModel ticketModel, final SearchableComboBox<StatusType> statusComboBox) {
                 statusComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldStatus, newStatus) -> {
+                    if (getTableRow() == null || !getTableRow().isSelected()) {
+                        return;
+                    }
+
                     if (newStatus == null) {
                         return;
                     }
@@ -305,11 +318,12 @@ public class TicketController extends Controller {
                         return;
                     }
 
-
                     ticketModel.statusProperty().setValue(newStatus);
-                    onUpdateTicket(ticketModel);
+                    onUpdateTicket(ticketModel, oldStatus);
                 });
             }
+
+
         });
     }
 
@@ -350,7 +364,29 @@ public class TicketController extends Controller {
         ));
     }
 
-    private void configurePanes() {
+    private void configurePanesAndLabels() {
+        final var openList = bridgeContext.getTicket().getListByStatus(StatusType.OPEN);
+        initializeFilteredList(openList, openLabel);
+
+        final var activeList = bridgeContext.getTicket().getListByStatus(StatusType.ACTIVE);
+        initializeFilteredList(activeList, activeLabel);
+
+        final var pausedList = bridgeContext.getTicket().getListByStatus(StatusType.PAUSED);
+        initializeFilteredList(pausedList, pausedLabel);
+
+        final var resolvedList = bridgeContext.getTicket().getListByStatus(StatusType.RESOLVED);
+        initializeFilteredList(resolvedList, resolvedLabel);
+    }
+
+    private void initializeFilteredList(final ObservableList<TicketModel> listByStatus, final Label countLabel) {
+        countLabel.setText(listByStatus.size() + "");
+
+        listByStatus.addListener((ListChangeListener<? super TicketModel>) change -> {
+            while (change.next()) {
+                final String filteredListSize = String.valueOf(listByStatus.size());
+                countLabel.setText(filteredListSize);
+            }
+        });
     }
 
     private void configureButtons() {
@@ -398,13 +434,13 @@ public class TicketController extends Controller {
         }
     }
 
-    private void onUpdateTicket(final TicketModel ticketModel) {
+    private void onUpdateTicket(final TicketModel ticketModel, final StatusType originalStatus) {
         if (ticketModel == null) {
             Announcements.get().showError("Error", "Could not update ticket.", "Ticket not found.");
             return;
         }
 
-        if (!ticketBridge.update(ticketModel)) {
+        if (!ticketBridge.update(ticketModel, originalStatus)) {
             Announcements.get().showError("Error", "Could not update ticket.", "Update failed.");
         }
     }

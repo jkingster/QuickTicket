@@ -13,11 +13,12 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class Bridge<E, V extends Model<E>> {
+    protected static final int DEFAULT_INDEX = 0;
+
     private final   ObservableList<V> observableList;
     private final   RepoType          repoType;
     private final   BridgeContext     bridgeContext;
     protected final RepoCrud          crud;
-
 
     public Bridge(final Database database, final RepoType repoType, final BridgeContext bridgeContext) {
         this.crud = database.call();
@@ -36,7 +37,6 @@ public abstract class Bridge<E, V extends Model<E>> {
         loadEntities();
         removalListener();
     }
-
 
     protected void loadEntities() {
         final List<E> entities = crud.getAll(repoType);

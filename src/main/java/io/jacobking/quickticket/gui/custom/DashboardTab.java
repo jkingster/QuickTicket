@@ -13,14 +13,12 @@ public class DashboardTab {
     private static final String DASH_TAB_INACTIVE = "tab-labels";
 
     private final String     title;
-    private final HBox       tab;
     private final Label      icon;
     private final Label      text;
     private final AnchorPane content;
 
     public DashboardTab(String title, HBox tab, Label icon, Label text, final AnchorPane content) {
         this.title = title;
-        this.tab = tab;
         this.icon = icon;
         this.text = text;
         this.content = content;
