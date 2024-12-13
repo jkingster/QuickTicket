@@ -5,6 +5,7 @@ import io.jacobking.quickticket.core.type.PriorityType;
 import io.jacobking.quickticket.core.type.StatusType;
 import io.jacobking.quickticket.core.utility.CSSStyler;
 import io.jacobking.quickticket.core.utility.DateUtil;
+import io.jacobking.quickticket.core.utility.MiscUtil;
 import io.jacobking.quickticket.gui.Controller;
 import io.jacobking.quickticket.gui.Data;
 import io.jacobking.quickticket.gui.Route;
@@ -28,6 +29,7 @@ import org.kordamp.ikonli.material2.Material2MZ;
 
 import java.net.URL;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -159,7 +161,29 @@ public class TicketController extends Controller {
             }
 
             private void onEmail(final TicketModel ticketModel) {
+                final int ticketId = ticketModel.getId();
+                final ObservableList<EmployeeModel> attachedEmployees = bridgeContext.getTicketEmployee()
+                        .getEmployeeModelsForTicket(ticketId);
 
+                if (attachedEmployees.isEmpty()) {
+                    Announcements.get().showError("Error", "Could not e-mail employee(s).", "There are none attached.");
+                    return;
+                }
+
+                final String emailChain = attachedEmployees.stream()
+                        .map(EmployeeModel::getEmail)
+                        .filter(Objects::nonNull)
+                        .filter(email -> !email.isEmpty())
+                        .collect(Collectors.joining(";"));
+
+                if (emailChain.isEmpty()) {
+                    Announcements.get().showError("Error", "Could not e-mail employee(s).", "There were no e-mails attached.");
+                    return;
+                }
+
+                final String ticketTitle = ticketModel.getTitle().replaceAll("\\s+", "%20");
+                final String emailLink = String.format("mailto:%s?subject=%s", emailChain, ticketTitle);
+                MiscUtil.openLink(emailLink);
             }
         });
     }
@@ -201,6 +225,17 @@ public class TicketController extends Controller {
         priorityColumn.setCellFactory(data -> new TableCell<>() {
             final SearchableComboBox<PriorityType> priorityComboBox = new SearchableComboBox<>(PriorityType.asObservableList());
 
+            {
+                priorityComboBox.setOnAction(event -> {
+                    if (getTableRow() != null) {
+                        final TicketModel ticket = getTableRow().getItem();
+                        if (ticket != null) {
+                            ticketTable.getSelectionModel().select(ticket);
+                        }
+                    }
+                });
+            }
+
             @Override protected void updateItem(PriorityType priorityType, boolean empty) {
                 super.updateItem(priorityType, empty);
                 if (priorityType == null || empty) {
@@ -213,12 +248,8 @@ public class TicketController extends Controller {
                     setGraphic(null);
                     return;
                 }
-
                 configurePriorityBox(priorityComboBox);
-                configurePriorityBoxListener(ticket, priorityComboBox);
-                priorityComboBox.setOnAction(event -> ticketTable.getSelectionModel().select(ticket));
-
-
+                configurePriorityBoxListener(priorityComboBox);
                 priorityComboBox.getSelectionModel().select(priorityType);
                 setGraphic(priorityComboBox);
             }
@@ -240,7 +271,7 @@ public class TicketController extends Controller {
             }
 
             // TODO: Will eventually need to handle more cases when we add the filters back.
-            private void configurePriorityBoxListener(final TicketModel ticketModel, SearchableComboBox<PriorityType> priorityComboBox) {
+            private void configurePriorityBoxListener(SearchableComboBox<PriorityType> priorityComboBox) {
                 priorityComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldPriority, newPriority) -> {
                     if (getTableRow() == null || !getTableRow().isSelected())
                         return;
@@ -253,8 +284,11 @@ public class TicketController extends Controller {
                         return;
                     }
 
-                    ticketModel.priorityProperty().setValue(newPriority);
-                    onUpdateTicket(ticketModel);
+                    final TicketModel ticket = getTableRow().getItem();
+                    if (ticket != null) {
+                        ticket.priorityProperty().setValue(newPriority);
+                        onUpdateTicket(ticket);
+                    }
                 });
             }
         });
@@ -264,6 +298,15 @@ public class TicketController extends Controller {
         statusColumn.setCellValueFactory(data -> data.getValue().statusProperty());
         statusColumn.setCellFactory(data -> new TableCell<>() {
             final SearchableComboBox<StatusType> statusComboBox = new SearchableComboBox<>(StatusType.asObservableList());
+
+            {
+                if (getTableRow() != null) {
+                    final TicketModel ticket = getTableRow().getItem();
+                    if (ticket != null) {
+                        ticketTable.getSelectionModel().select(ticket);
+                    }
+                }
+            }
 
             @Override protected void updateItem(StatusType statusType, boolean empty) {
                 super.updateItem(statusType, empty);
@@ -279,8 +322,7 @@ public class TicketController extends Controller {
                 }
 
                 configureStatusBox(statusComboBox);
-                configureStatusBoxListener(ticket, statusComboBox);
-                statusComboBox.setOnAction(event -> ticketTable.getSelectionModel().select(ticket));
+                configureStatusBoxListener(statusComboBox);
 
                 statusComboBox.getSelectionModel().select(statusType);
                 setGraphic(statusComboBox);
@@ -304,7 +346,7 @@ public class TicketController extends Controller {
 
 
             // TODO: Will eventually need to handle more cases when we add the filters back.
-            private void configureStatusBoxListener(final TicketModel ticketModel, final SearchableComboBox<StatusType> statusComboBox) {
+            private void configureStatusBoxListener(final SearchableComboBox<StatusType> statusComboBox) {
                 statusComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldStatus, newStatus) -> {
                     if (getTableRow() == null || !getTableRow().isSelected()) {
                         return;
@@ -318,9 +360,12 @@ public class TicketController extends Controller {
                         return;
                     }
 
-                    ticketModel.oldStatusProperty().setValue(oldStatus);
-                    ticketModel.statusProperty().setValue(newStatus);
-                    onUpdateTicket(ticketModel);
+                    final TicketModel ticket = getTableRow().getItem();
+                    if (ticket != null) {
+                        ticket.oldStatusProperty().setValue(oldStatus);
+                        ticket.statusProperty().setValue(newStatus);
+                        onUpdateTicket(ticket);
+                    }
                 });
             }
 
