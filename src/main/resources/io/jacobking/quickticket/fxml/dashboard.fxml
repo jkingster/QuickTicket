@@ -60,6 +60,12 @@
                         <Label fx:id="organizationDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Organization" />
                      </children>
                   </HBox>
+                  <HBox fx:id="inventoryBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
+                     <children>
+                        <Label fx:id="inventoryIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
+                        <Label fx:id="inventoryDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Inventory" />
+                     </children>
+                  </HBox>
                         <HBox fx:id="settingsBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
                             <children>
                                 <Label fx:id="settingsIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />

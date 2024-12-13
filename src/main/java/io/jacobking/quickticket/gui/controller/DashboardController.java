@@ -46,6 +46,10 @@ public class DashboardController extends Controller {
     @FXML private Label organizationIconLabel;
     @FXML private Label organizationDisplayLabel;
 
+    @FXML private HBox inventoryBox;
+    @FXML private Label inventoryIconLabel;
+    @FXML private Label inventoryDisplayLabel;
+
     @FXML private AnchorPane ticketContent;
     @FXML private AnchorPane employeeContent;
     @FXML private AnchorPane settingsContent;
@@ -65,6 +69,9 @@ public class DashboardController extends Controller {
 
         final DashboardTab organizationTab = new DashboardTab("Organization", organizationBox, organizationIconLabel, organizationDisplayLabel, null);
         organizationTab.setIcon(IconLoader.getMaterialIcon(Material2AL.BUSINESS));
+
+        final DashboardTab inventoryTab = new DashboardTab("Inventory", inventoryBox, inventoryIconLabel, inventoryDisplayLabel, null);
+        inventoryTab.setIcon(IconLoader.getMaterialIcon(Material2AL.DEVICES));
 
         final DashboardTab settingsTab = new DashboardTab("Settings", settingsBox, settingsIconLabel, settingsDisplayLabel, settingsContent);
         settingsTab.setIcon(IconLoader.getMaterialIcon(Material2MZ.SETTINGS));
