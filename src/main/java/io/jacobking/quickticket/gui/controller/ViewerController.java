@@ -80,6 +80,7 @@ public class ViewerController extends Controller {
         configureButtons();
         configureComments();
         configureAttachmentList();
+        configureCategoryBox();
     }
 
     private void configureStatusBox() {
@@ -90,6 +91,19 @@ public class ViewerController extends Controller {
             }
 
             @Override public StatusType fromString(String s) {
+                return null;
+            }
+        });
+    }
+
+    private void configureCategoryBox() {
+        categoryBox.setItems(bridgeContext.getCategory().getObservableList());
+        categoryBox.setConverter(new StringConverter<TicketCategoryModel>() {
+            @Override public String toString(TicketCategoryModel ticketCategoryModel) {
+                return (ticketCategoryModel == null) ? "Unknown" : ticketCategoryModel.getNameProperty();
+            }
+
+            @Override public TicketCategoryModel fromString(String s) {
                 return null;
             }
         });

@@ -80,8 +80,7 @@
                               <Cursor fx:constant="NONE" />
                            </cursor>
                         </TextField>
-                        <SearchableComboBox fx:id="categoryBox" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="235.0" stylesheets="@../css/core/combo-box.css" />
-                        <Button mnemonicParsing="false" text="New Category" />
+                        <SearchableComboBox fx:id="categoryBox" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="332.0" stylesheets="@../css/core/combo-box.css" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">
