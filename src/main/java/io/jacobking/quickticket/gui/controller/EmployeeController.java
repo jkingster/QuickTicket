@@ -298,6 +298,7 @@ public class EmployeeController extends Controller {
         totalTicketCountLabel.setText("0");
         ticketTable.setItems(null);
         Announcements.get().showConfirm("Success", "Employee deleted.");
+        employeeSelector.getSelectionModel().clearSelection();
     }
 
     private void onUpdateEmployee() {

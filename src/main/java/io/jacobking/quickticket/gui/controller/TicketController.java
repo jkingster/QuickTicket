@@ -14,6 +14,7 @@ import io.jacobking.quickticket.gui.model.EmployeeModel;
 import io.jacobking.quickticket.gui.model.TicketCategoryModel;
 import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.gui.utility.IconLoader;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -66,6 +67,7 @@ public class TicketController extends Controller {
 
         configureTable();
         configureButtons();
+        configureTicketPanels();
     }
 
     private void configureTable() {
@@ -468,5 +470,12 @@ public class TicketController extends Controller {
 
     private void onOpenCategories() {
 
+    }
+
+    private void configureTicketPanels() {
+        openLabel.textProperty().bind(Bindings.size(ticketBridge.getOpenTickets()).asString());
+        activeLabel.textProperty().bind(Bindings.size(ticketBridge.getActiveTickets()).asString());
+        resolvedLabel.textProperty().bind(Bindings.size(ticketBridge.getResolvedTickets()).asString());
+        pausedLabel.textProperty().bind(Bindings.size(ticketBridge.getPausedTickets()).asString());
     }
 }
