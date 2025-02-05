@@ -9,3 +9,21 @@
 .text-field:hover {
     -fx-cursor: hand;
 }
+
+.text-field .color-picker-label {
+    -fx-text-fill: -fx-typography;
+}
+
+.offset-text-field {
+    -fx-background-color: -fx-offset-blue;
+    -fx-text-fill: -fx-typography;
+    -fx-font-weight: bolder;
+    -fx-prompt-text-fill: -fx-typography;
+}
+
+.offset-text-field-label {
+    -fx-background-color: derive(-fx-primary, -10%);
+    -fx-text-fill: -fx-typography;
+    -fx-font-weight: bolder;
+    -fx-cursor: none;
+}

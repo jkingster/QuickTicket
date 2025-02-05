@@ -1,6 +1,11 @@
 package io.jacobking.quickticket.core.type;
 
-public enum PriorityType {
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.io.Serializable;
+
+public enum PriorityType implements Serializable {
     LOW, MEDIUM, HIGH;
 
     public static PriorityType of(final String target) {
@@ -10,5 +15,9 @@ public enum PriorityType {
                 return type;
         }
         return null;
+    }
+
+    public static ObservableList<PriorityType> asObservableList() {
+        return FXCollections.observableArrayList(values());
     }
 }

@@ -34,11 +34,11 @@ public class FileIO {
         }
 
         createFile("database.db");
-        createFile("flyway.properties");
         createFile("system.properties");
         createDirectory("migrations");
         createDirectory("backup");
         createDirectory("logs");
+        createDirectory("attachments");
     }
 
     public static boolean createFile(final String path) {

@@ -10,3 +10,15 @@
 .text-field:hover {
     -fx-cursor: hand;
 }
+
+.form-header {
+    -fx-text-fill: -fx-offset-blue;
+    -fx-font-weight: bolder;
+    -fx-font-size: 1.25em;
+}
+
+.form-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bolder;
+    -fx-font-size: 1.15em;
+}

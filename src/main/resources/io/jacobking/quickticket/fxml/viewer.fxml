@@ -1,85 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.SearchableComboBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="800.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <ListView fx:id="commentList" layoutX="38.0" layoutY="83.0" prefHeight="311.0" prefWidth="724.0" styleClass="ticket-list-view" stylesheets="@../css/core/list.css" />
-      <HBox layoutX="38.0" layoutY="405.0" prefHeight="26.0" prefWidth="724.0" spacing="5.0">
-         <children>
-            <TextField fx:id="commentField" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="562.0" />
-            <Button fx:id="postButton" mnemonicParsing="false" onAction="#onPost" prefHeight="26.0" styleClass="button-primary" text="Post" />
-            <Button mnemonicParsing="false" onAction="#onDeleteComment" styleClass="button-primary" text="Delete Comment" />
-         </children>
-      </HBox>
-      <TextField fx:id="titleField" editable="false" layoutX="38.0" layoutY="14.0" prefHeight="26.0" prefWidth="503.0" promptText="Undefined" />
-      <TextField fx:id="creationField" editable="false" layoutX="265.0" layoutY="47.0" prefHeight="26.0" prefWidth="158.0" promptText="Undefined" />
-      <VBox layoutX="38.0" layoutY="437.0" prefHeight="53.0" prefWidth="545.0" spacing="5.0">
-         <children>
-            <HBox prefHeight="36.0" prefWidth="545.0" spacing="5.0">
-               <children>
-                  <Button fx:id="priorityButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdatePriority" prefHeight="26.0" styleClass="button-primary" text="Update Priority" />
-                  <Button fx:id="statusButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateStatus" prefHeight="26.0" styleClass="button-primary" text="Update Status" />
-                  <Button fx:id="updateUserButton" minWidth="105.0" mnemonicParsing="false" onAction="#onUpdateUser" prefHeight="26.0" styleClass="button-primary" text="Update User" />
-                  <Button fx:id="resolvedButton" minWidth="105.0" mnemonicParsing="false" onAction="#onMarkResolved" prefHeight="26.0" styleClass="button-primary" text="Mark Resolved" />
-                  <Button minWidth="105.0" mnemonicParsing="false" onAction="#onDelete" prefHeight="26.0" styleClass="button-warning" text="Delete" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="545.0" spacing="5.0" />
-         </children>
-      </VBox>
-      <TextField fx:id="employeeField" editable="false" layoutX="38.0" layoutY="47.0" prefHeight="26.0" prefWidth="217.0" promptText="Undefined" />
-      <Pane layoutX="562.0" layoutY="14.0" prefHeight="26.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
-         <children>
-            <Label fx:id="statusLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="127.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-            <Label fx:id="statusLabel1" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Priority:">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-         </children></Pane>
-      <Pane layoutX="562.0" layoutY="47.0" prefHeight="26.0" prefWidth="200.0" styleClass="card" stylesheets="@../css/core/card.css">
-         <children>
-            <Label fx:id="priorityLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="127.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-            <Label fx:id="statusLabel11" contentDisplay="CENTER" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="62.0" styleClass="card-text" text="Status:" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-         </children></Pane>
-      <Pane layoutX="428.0" layoutY="47.0" prefHeight="26.0" prefWidth="112.0" styleClass="card" stylesheets="@../css/core/card.css">
-         <children>
-            <Label fx:id="statusLabel111" contentDisplay="CENTER" layoutX="7.0" layoutY="5.0" prefHeight="17.0" prefWidth="99.0" styleClass="card-text" text="Comments:" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-            <Label fx:id="totalCommentsLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="77.0" layoutY="5.0" prefHeight="17.0" prefWidth="24.0" styleClass="card-text" text="Undefined" textAlignment="RIGHT">
-               <font>
-                  <Font size="13.0" />
-               </font>
-            </Label>
-         </children></Pane>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="636.0" prefWidth="1133.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <stylesheets>
       <URL value="@../css/core/base.css" />
-      <URL value="@../css/screen/viewer.css" />
+      <URL value="@../css/core/button.css" />
    </stylesheets>
+   <children>
+      <AnchorPane layoutX="14.0" layoutY="5.0" prefHeight="406.0" prefWidth="437.0" styleClass="card" stylesheets="@../css/core/card.css">
+         <children>
+            <VBox alignment="TOP_CENTER" layoutY="108.0" prefHeight="206.0" prefWidth="437.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">
+                     <children>
+                        <TextField alignment="CENTER" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="71.0" styleClass="offset-text-field-label" stylesheets="@../css/core/text-field.css" text="Ticket ID">
+                           <cursor>
+                              <Cursor fx:constant="NONE" />
+                           </cursor>
+                        </TextField>
+                        <TextField fx:id="ticketIdField" editable="false" prefHeight="25.0" prefWidth="334.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">
+                     <children>
+                        <TextField alignment="CENTER" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="71.0" styleClass="offset-text-field-label" stylesheets="@../css/core/text-field.css" text="Title">
+                           <cursor>
+                              <Cursor fx:constant="NONE" />
+                           </cursor>
+                        </TextField>
+                        <TextField fx:id="titleField" prefHeight="25.0" prefWidth="334.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">
+                     <children>
+                        <TextField alignment="CENTER" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="71.0" styleClass="offset-text-field-label" stylesheets="@../css/core/text-field.css" text="Status">
+                           <cursor>
+                              <Cursor fx:constant="NONE" />
+                           </cursor>
+                        </TextField>
+                        <SearchableComboBox fx:id="statusBox" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="116.0" stylesheets="@../css/core/combo-box.css" />
+                        <TextField alignment="CENTER" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="71.0" styleClass="offset-text-field-label" stylesheets="@../css/core/text-field.css" text="Priority">
+                           <cursor>
+                              <Cursor fx:constant="NONE" />
+                           </cursor>
+                        </TextField>
+                        <SearchableComboBox fx:id="priorityBox" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="140.0" stylesheets="@../css/core/combo-box.css" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">
+                     <children>
+                        <TextField alignment="CENTER" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="84.0" styleClass="offset-text-field-label" stylesheets="@../css/core/text-field.css" text="Employee(s)">
+                           <cursor>
+                              <Cursor fx:constant="NONE" />
+                           </cursor>
+                        </TextField>
+                        <TextField fx:id="employeeField" editable="false" prefHeight="25.0" prefWidth="250.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
+                        <Button fx:id="findEmployeeButton" mnemonicParsing="false" onAction="#onFindEmployees" />
+                        <Button fx:id="deleteEmployeeButton" mnemonicParsing="false" onAction="#onDeleteEmployees" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">
+                     <children>
+                        <TextField alignment="CENTER" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="71.0" styleClass="offset-text-field-label" stylesheets="@../css/core/text-field.css" text="Category">
+                           <cursor>
+                              <Cursor fx:constant="NONE" />
+                           </cursor>
+                        </TextField>
+                        <SearchableComboBox fx:id="categoryBox" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="332.0" stylesheets="@../css/core/combo-box.css" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="31.0" prefWidth="437.0" spacing="2.5">
+                     <children>
+                        <TextField alignment="CENTER" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="81.0" styleClass="offset-text-field-label" stylesheets="@../css/core/text-field.css" text="Created On">
+                           <cursor>
+                              <Cursor fx:constant="NONE" />
+                           </cursor>
+                        </TextField>
+                        <TextField fx:id="createdField" editable="false" prefHeight="25.0" prefWidth="324.0" styleClass="offset-text-field" stylesheets="@../css/core/text-field.css" />
+                     </children>
+                  </HBox>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </VBox>
+            <Button layoutX="365.0" layoutY="367.0" mnemonicParsing="false" onAction="#onUpdateTicket" text="Update" />
+            <Label layoutX="22.0" layoutY="24.0" text="Viewer" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="42.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="14.0" layoutY="422.0" prefHeight="200.0" prefWidth="437.0" styleClass="card" stylesheets="@../css/core/card.css">
+         <children>
+            <HBox alignment="CENTER_LEFT" layoutX="7.0" layoutY="14.0" prefHeight="31.0" prefWidth="423.0" spacing="3.0">
+               <children>
+                  <Button fx:id="addURLButton" mnemonicParsing="false" onAction="#onAddUrl" prefHeight="25.0" prefWidth="34.0" />
+                  <Button fx:id="addDocButton" mnemonicParsing="false" onAction="#onAddDocument" prefHeight="25.0" prefWidth="34.0" />
+               </children>
+            </HBox>
+            <ListView fx:id="attachmentList" layoutX="7.0" layoutY="52.0" prefHeight="142.0" prefWidth="423.0" styleClass="attachment-list-view" stylesheets="@../css/core/list.css" />
+         </children>
+      </AnchorPane>
+      <TextArea fx:id="commentArea" layoutX="461.0" layoutY="422.0" prefHeight="200.0" prefWidth="660.0" stylesheets="@../css/core/text-area.css" wrapText="true" />
+      <Button fx:id="submitCommentButton" layoutX="1077.0" layoutY="590.0" mnemonicParsing="false" onAction="#onSubmitComment" prefHeight="25.0" prefWidth="36.0" />
+      <Pane layoutX="461.0" layoutY="5.0" prefHeight="406.0" prefWidth="660.0" styleClass="card" stylesheets="@../css/core/card.css">
+         <children>
+            <ListView fx:id="commentList" layoutX="12.0" layoutY="12.0" prefHeight="383.0" prefWidth="637.0" styleClass="comment-list" stylesheets="@../css/core/comment-list-view.css" />
+         </children>
+      </Pane>
+   </children>
 </AnchorPane>

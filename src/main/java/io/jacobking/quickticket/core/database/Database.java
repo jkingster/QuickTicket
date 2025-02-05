@@ -1,38 +1,34 @@
 package io.jacobking.quickticket.core.database;
 
-import io.jacobking.quickticket.bridge.BridgeContext;
-import io.jacobking.quickticket.core.config.FlywayConfig;
 import io.jacobking.quickticket.core.config.SystemConfig;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.utility.Logs;
-import io.jacobking.quickticket.gui.alert.Alerts;
-import javafx.scene.control.ButtonType;
+import io.jacobking.quickticket.gui.alert.Announcements;
 
+import java.io.File;
 import java.sql.SQLException;
 
 public class Database {
 
+    private static final String WARNING_MESSAGE = "There are pending database migrations, and a routine backup measure failed. " +
+            "It is recommended you manually create a backup internally before proceeding.";
+
     private final SystemConfig    systemConfig;
-    private final FlywayConfig    flywayConfig;
     private final SQLiteConnector sqLiteConnector;
     private final RepoCrud        repoCrud;
-    private final BridgeContext   bridgeContext;
 
-    private final boolean isConfigured;
 
-    public Database(final SystemConfig systemConfig, final FlywayConfig flywayConfig) {
+    public Database(final SystemConfig systemConfig) {
         Logs.info("Database Initialized.");
         this.systemConfig = systemConfig;
-        this.flywayConfig = flywayConfig;
         this.sqLiteConnector = new SQLiteConnector(systemConfig);
-        this.isConfigured = sqLiteConnector.hasConnection();
-        checkForMigration();
-
         final JOOQConnector jooqConnector = new JOOQConnector(sqLiteConnector);
         this.repoCrud = new RepoCrud(jooqConnector.getContext());
-        this.bridgeContext = new BridgeContext(this);
-    }
 
+        if (sqLiteConnector.hasConnection()) {
+            checkForMigration();
+        }
+    }
 
     public RepoCrud call() {
         return repoCrud;
@@ -46,9 +42,11 @@ public class Database {
         }
     }
 
-    private void checkForMigration() {
+    public void checkForMigration() {
+        Logs.debug("is this called (migrate?)");
+
         if (sqLiteConnector.getConnection() == null) {
-            Alerts.showErrorOverride("Failed to establish sqlite connector.", "Please report this.");
+            Announcements.get().showErrorOverride("Failed to establish sqlite connector.", "Please report this.");
             return;
         }
 
@@ -58,40 +56,34 @@ public class Database {
             return;
         }
 
-        final FlywayMigrator flywayMigrator = FlywayMigrator.init(flywayConfig);
+        final FlywayMigrator flywayMigrator = new FlywayMigrator(systemConfig);
         if (!flywayMigrator.isPendingMigration()) {
             Logs.info("There are no pending migrations!");
             return;
         }
 
-        final String url = systemConfig.getProperty("database_url");
-        final boolean success = new DatabaseBackup(url)
-                .setDestination()
-                .buildBackup()
-                .isSuccessful();
-
-        if (success) {
+        if (systemConfig.parseBoolean("first_launch")) {
             flywayMigrator.migrate();
             return;
         }
 
-        Logs.warn("Failed to create backup pre-migration!");
-        Alerts.showWarningConfirmation(
-                "Database backup failed. Respond cautiously.",
-                "There are pending database migrations. Would you like to proceed? You can manually create a backup before proceeding."
-        ).ifPresent(type -> {
-            if (type == ButtonType.YES) {
-                flywayMigrator.migrate();
-            }
-        });
+
+        final String url = systemConfig.getProperty("database_url");
+        final File databaseFile = new File(url);
+        if (!databaseFile.exists() || !databaseFile.isFile()) {
+            Logs.warn("Target path is not of database file type or does not exist.");
+            return;
+        }
+        Logs.debug("is this called (migrate?)");
+
+
+        flywayMigrator.migrate();
 
     }
 
-    public BridgeContext getBridgeContext() {
-        return bridgeContext;
+
+    public boolean hasConnection() {
+        return sqLiteConnector.hasConnection();
     }
 
-    public boolean isConfigured() {
-        return isConfigured;
-    }
 }

@@ -19,3 +19,17 @@
 .ticket-list-view .list-cell:selected {
     -fx-background-color: -fx-primary;
 }
+
+.attachment-list-view {
+    -fx-background-color: -fx-primary;
+}
+
+.attachment-list-view .list-cell {
+    -fx-background-color: -fx-primary;
+}
+
+
+.ticket-list-view .list-cell:selected {
+    -fx-background-color: none;
+}
+

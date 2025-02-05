@@ -6,39 +6,37 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class DatabaseBackup {
 
-    private static final String BACKUP_PATH        = FileIO.getPath("backup");
-    private static final String BACKUP_NAME_FORMAT = BACKUP_PATH + File.separator + "%s-backup-%s.db";
+    private final File source;
+    private final File destination;
 
-    private final File    source;
-    private       File    destination;
-    private       boolean successful;
-
-    public DatabaseBackup(final String databaseUrl) {
-        this.source = new File(databaseUrl);
+    public DatabaseBackup(final File source) {
+        this.source = source;
+        this.destination = new File(getBackupName(source.getName().replace(".db", "").toUpperCase()));
     }
 
-    public DatabaseBackup setDestination() {
-        this.destination = new File(BACKUP_NAME_FORMAT.formatted(
-                source.getName().replaceAll(".db", ""),
-                DateUtil.nowAsString(DateUtil.DateFormat.DATE_TIME_TWO)
-        ));
-        return this;
-    }
-
-    public DatabaseBackup buildBackup() {
+    public boolean backup() {
+        final Path sourcePath = Paths.get(source.getPath());
+        final Path destinationPath = Paths.get(destination.getPath());
         try {
-            FileUtils.copyFile(source, destination);
-            this.successful = true;
+            Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            final long sourceSize = FileUtils.sizeOf(source);
+            final long destinationSize = FileUtils.sizeOf(destination);
+            return sourceSize == destinationSize;
         } catch (IOException e) {
-            this.successful = false;
+            throw new RuntimeException(e);
         }
-        return this;
     }
 
-    public boolean isSuccessful() {
-        return successful;
+    private String getBackupName(final String fileName) {
+        return String.format("%s\\DB-%s-BACKUP_%s.db",
+                FileIO.getPath("backup"), fileName, DateUtil.nowAsString(DateUtil.DateFormat.DATE_TIME_TWO));
     }
+
 }

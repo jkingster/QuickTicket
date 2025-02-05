@@ -1,37 +1,39 @@
 package io.jacobking.quickticket.bridge;
 
 import io.jacobking.quickticket.core.database.Database;
-import io.jacobking.quickticket.core.database.repository.Entity;
 import io.jacobking.quickticket.core.database.repository.RepoCrud;
 import io.jacobking.quickticket.core.database.repository.RepoType;
-import io.jacobking.quickticket.gui.model.ViewModel;
+import io.jacobking.quickticket.gui.Model;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.util.Callback;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
+public abstract class Bridge<E, V extends Model<E>> {
+    protected static final int DEFAULT_INDEX = 0;
+
     private final   ObservableList<V> observableList;
     private final   RepoType          repoType;
+    private final   BridgeContext     bridgeContext;
     protected final RepoCrud          crud;
+
+    public Bridge(final Database database, final RepoType repoType, final BridgeContext bridgeContext) {
+        this.crud = database.call();
+        this.observableList = FXCollections.observableArrayList();
+        this.repoType = repoType;
+        this.bridgeContext = bridgeContext;
+        loadEntities();
+        removalListener();
+    }
 
     public Bridge(final Database database, final RepoType repoType) {
         this.crud = database.call();
         this.observableList = FXCollections.observableArrayList();
         this.repoType = repoType;
-        loadEntities();
-        removalListener();
-    }
-
-    public Bridge(final Database database, final RepoType repoType, final Callback<V, Observable[]> callback) {
-        this.crud = database.call();
-        this.observableList = FXCollections.observableArrayList(callback);
-        this.repoType = repoType;
+        this.bridgeContext = null;
         loadEntities();
         removalListener();
     }
@@ -91,13 +93,12 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
         return crud.update(repoType, model.toEntity());
     }
 
-    public void remove(final int id) {
+    public boolean remove(final int id) {
         if (!contains(id))
-            return;
+            return false;
 
-        Platform.runLater(() -> {
-            observableList.removeIf(filter -> filter.getId() == id);
-        });
+        return observableList.removeIf(__ -> __.getId() == id);
+        //  Platform.runLater(() -> observableList.removeIf(predicate -> predicate.getId() == id));
     }
 
     public boolean contains(final int id) {
@@ -117,7 +118,19 @@ public abstract class Bridge<E extends Entity, V extends ViewModel<E>> {
         return getObservableList().filtered(filter);
     }
 
-    private void removalListener() {
+    public V getFirst() {
+        return getObservableList().get(0);
+    }
+
+    public List<E> getOriginalEntities() {
+        return crud.getAll(repoType);
+    }
+
+    public BridgeContext getBridgeContext() {
+        return bridgeContext;
+    }
+
+    public void removalListener() {
         observableList.addListener((ListChangeListener<? super V>) change -> {
             while (change.next()) {
                 if (change.wasRemoved()) {

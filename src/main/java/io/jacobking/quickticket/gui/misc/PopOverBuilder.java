@@ -1,72 +1,94 @@
 package io.jacobking.quickticket.gui.misc;
 
+import io.jacobking.quickticket.App;
 import io.jacobking.quickticket.core.utility.Checks;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import org.controlsfx.control.PopOver;
 
-import java.util.function.Consumer;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
 public class PopOverBuilder {
 
-    private static final int    DEFAULT_OFFSET = 10;
-    private static final String DEFAULT_STYLE  = "-fx-background-color: #282B36;";
+    private final static List<String> STYLESHEETS_EXTERNAL_FORM = new ArrayList<>();
+
+    static {
+        for (final String resource : Arrays.asList("checkbox.css", "combo-box.css", "button.css", "text-field.css", "check-list-view.css")) {
+            final String converted = String.format("css/core/%s", resource);
+            final URL url = App.class.getResource(converted);
+            if (url == null) {
+                continue;
+            }
+
+            final String externalForm = url.toExternalForm();
+            STYLESHEETS_EXTERNAL_FORM.add(externalForm);
+        }
+    }
 
     private final PopOver popOver;
 
-    private Parent owner;
-
     private PopOverBuilder() {
         this.popOver = new PopOver();
+
+        popOver.getRoot()
+                .getStylesheets()
+                .addAll(STYLESHEETS_EXTERNAL_FORM);
     }
 
     public static PopOverBuilder build() {
         return new PopOverBuilder();
     }
 
-    public PopOverBuilder useDefault() {
-        popOver.setDetachable(false);
-        popOver.setAnimated(true);
-        popOver.setHeaderAlwaysVisible(true);
-        popOver.setStyle(DEFAULT_STYLE);
+    public PopOverBuilder setTitle(final String title) {
+        this.popOver.setTitle(title);
         return this;
     }
 
-    public PopOverBuilder setOwner(final Parent parent) {
-        this.owner = parent;
+
+    public PopOverBuilder setContent(final Node content) {
+        this.popOver.setContentNode(content);
         return this;
     }
 
-    public PopOverBuilder withTitle(final String title) {
-        Checks.notEmpty(title, "PopOver Title");
-        popOver.setTitle(title);
+    public PopOverBuilder setAnimated(final boolean animated) {
+        this.popOver.setAnimated(animated);
         return this;
     }
 
-    public PopOverBuilder withContent(final Node node) {
-        Checks.notNull(node, "PopOver Content Node");
-        popOver.setContentNode(node);
+    public PopOverBuilder setArrowLocation(final PopOver.ArrowLocation arrowLocation) {
+        this.popOver.setArrowLocation(arrowLocation);
         return this;
     }
 
-    public PopOverBuilder processPopOver(final Consumer<PopOver> popOverConsumer) {
-        popOverConsumer.accept(popOver);
+    public PopOverBuilder setDetachable(final boolean detachable) {
+        this.popOver.setDetachable(detachable);
         return this;
     }
 
-    public void show() {
-        popOver.show(owner, DEFAULT_OFFSET);
+    public PopOverBuilder setDetached(final boolean detached) {
+        this.popOver.setDetached(detached);
+        return this;
     }
 
-    public void showWithoutOffset() {
-        popOver.show(owner);
+    public PopOverBuilder process(final Function<PopOverBuilder, Node> process) {
+        final Node processedNode = process.apply(this);
+        return setContent(processedNode);
+    }
+
+    public PopOverBuilder setHideOnEscape(final boolean state) {
+        this.popOver.setHideOnEscape(state);
+        return this;
+    }
+
+    public void show(final Node owner, final int offset) {
+        this.popOver.show(owner, offset);
     }
 
     public void hide() {
-        popOver.hide();
-    }
-
-    public PopOver getPopOver() {
-        return popOver;
+        this.popOver.hide();
     }
 }

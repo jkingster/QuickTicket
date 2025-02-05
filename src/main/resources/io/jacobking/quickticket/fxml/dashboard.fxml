@@ -7,50 +7,89 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0">
-         <children>
-            <MenuBar prefHeight="25.0" prefWidth="1280.0">
-              <menus>
-                <Menu mnemonicParsing="false" text="System">
-                  <items>
-                        <MenuItem mnemonicParsing="false" onAction="#onConfiguration" text="Configuration" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSMTP" text="SMTP" />
-                        <MenuItem mnemonicParsing="false" onAction="#onSettings" text="Settings" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
-                        <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
-                  </items>
-                </Menu>
-              </menus>
-               <opaqueInsets>
-                  <Insets top="10.0" />
-               </opaqueInsets>
-            </MenuBar>
-         </children>
-      </AnchorPane>
-      <TabPane layoutY="32.0" prefHeight="768.0" prefWidth="1280.0" stylesheets="@../css/core/tab-pane.css" tabClosingPolicy="UNAVAILABLE">
-         <tabs>
-            <Tab text="Ticket">
-               <fx:include source="ticket.fxml" />
-            </Tab>
-            <Tab text="Employee">
-               <content>
-                  <fx:include source="employee.fxml" />
-               </content>
-            </Tab>
-         </tabs>
-      </TabPane>
-      <Label layoutX="1107.0" layoutY="3.0" styleClass="title" text="QuickTicket" />
-      <Label fx:id="versionLabel" layoutX="1192.0" layoutY="6.0" styleClass="version" text="undefined" />
-   </children>
-   <stylesheets>
-      <URL value="@../css/core/base.css" />
-      <URL value="@../css/screen/dashboard.css" />
-   </stylesheets>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1600.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <AnchorPane prefHeight="25.0" prefWidth="1400.0">
+            <children>
+                <MenuBar prefHeight="25.0" prefWidth="1600.0">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#onAbout" text="About" />
+                                <SeparatorMenuItem mnemonicParsing="false" />
+                                <MenuItem mnemonicParsing="false" onAction="#onExit" text="Exit" />
+                            </items>
+                        </Menu>
+                    </menus>
+                    <opaqueInsets>
+                        <Insets top="10.0" />
+                    </opaqueInsets>
+                </MenuBar>
+            </children>
+        </AnchorPane>
+        <AnchorPane layoutY="25.0" prefHeight="775.0" prefWidth="208.0" styleClass="side-menu">
+            <children>
+                <ImageView fitHeight="28.0" fitWidth="200.0" layoutX="5.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../icons/quickticket.png" />
+                    </image>
+                </ImageView>
+                <VBox alignment="TOP_CENTER" layoutX="11.0" layoutY="145.0" prefHeight="200.0" prefWidth="187.0">
+                    <children>
+                        <HBox fx:id="ticketBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="2.0">
+                            <children>
+                                <Label fx:id="ticketIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
+                                <Label fx:id="ticketDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Tickets" />
+                            </children>
+                        </HBox>
+                        <HBox fx:id="employeeBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
+                            <children>
+                                <Label fx:id="employeeIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
+                                <Label fx:id="employeeDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Employees" />
+                            </children>
+                        </HBox>
+                  <HBox fx:id="organizationBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
+                     <children>
+                        <Label fx:id="organizationIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
+                        <Label fx:id="organizationDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Organization" />
+                     </children>
+                  </HBox>
+                  <HBox fx:id="inventoryBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
+                     <children>
+                        <Label fx:id="inventoryIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
+                        <Label fx:id="inventoryDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Inventory" />
+                     </children>
+                  </HBox>
+                        <HBox fx:id="settingsBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
+                            <children>
+                                <Label fx:id="settingsIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
+                                <Label fx:id="settingsDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Settings" />
+                            </children>
+                        </HBox>
+                  <HBox fx:id="exitBox" alignment="CENTER" prefHeight="33.0" prefWidth="187.0" spacing="3.0">
+                     <children>
+                        <Label fx:id="exitIconLabel" prefHeight="33.0" prefWidth="30.0" styleClass="tab-labels" />
+                        <Label fx:id="exitDisplayLabel" prefHeight="33.0" prefWidth="110.0" styleClass="tab-labels" text="Exit" />
+                     </children>
+                  </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="contentPane" layoutX="217.0" layoutY="25.0" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="775.0" prefWidth="1384.0" styleClass="content-pane">
+            <fx:include fx:id="ticketContent" source="ticket.fxml" visible="false" />
+            <fx:include fx:id="employeeContent" source="employee.fxml" visible="false" />
+            <fx:include fx:id="settingsContent" source="settings.fxml" visible="false" />
+        </AnchorPane>
+    </children>
+    <stylesheets>
+        <URL value="@../css/core/base.css" />
+        <URL value="@../css/screen/dashboard.css" />
+    </stylesheets>
 </AnchorPane>

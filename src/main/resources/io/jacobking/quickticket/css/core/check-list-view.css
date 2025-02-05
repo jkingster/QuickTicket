@@ -1,0 +1,19 @@
+@import url("base.css");
+
+.list-view .list-cell {
+    -fx-background-color: -fx-primary;
+}
+
+.list-view .list-cell  {
+    -fx-font-weight: bolder;
+    -fx-text-fill: -fx-typography;
+    -fx-font-size: 1em;
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: derive(-fx-primary, 25%);
+}
+
+.list-view .list-cell:odd {
+    -fx-background-color: derive(-fx-primary, 50%);
+}

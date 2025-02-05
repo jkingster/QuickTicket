@@ -12,3 +12,9 @@
 .body {
     -fx-background-color: -fx-primary;
 }
+
+.content-header {
+    -fx-font-size: 2.5em;
+    -fx-text-fill: white;
+    -fx-font-weight: bolder;
+}

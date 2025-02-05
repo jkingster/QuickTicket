@@ -13,7 +13,8 @@
 }
 
 .table-view .column-header-background {
-    -fx-background-color: none;
+    -fx-background-color: derive(-fx-primary, 25%);
+    -fx-padding: 5px;
 }
 
 .table-view .column-header {

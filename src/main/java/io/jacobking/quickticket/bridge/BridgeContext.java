@@ -2,19 +2,19 @@ package io.jacobking.quickticket.bridge;
 
 import io.jacobking.quickticket.bridge.impl.*;
 import io.jacobking.quickticket.core.database.Database;
-import io.jacobking.quickticket.core.email.EmailConfig;
 
 public class BridgeContext {
 
-    private final CompanyBridge       company;
-    private final DepartmentBridge    department;
-    private final EmployeeBridge      employee;
-    private final TicketBridge        ticket;
-    private final CommentBridge       comment;
-    private final EmailBridge         email;
-    private final AlertSettingsBridge alertSettings;
-    private final FlywayBridge        flyway;
-    private final EmailConfig         emailConfig;
+    private final CompanyBridge        company;
+    private final DepartmentBridge     department;
+    private final EmployeeBridge       employee;
+    private final AlertBridge          alerts;
+    private final TicketBridge         ticket;
+    private final CommentBridge        comment;
+    private final CategoryBridge       category;
+    private final LinkBridge           ticketLink;
+    private final ModuleBridge         module;
+    private final TicketEmployeeBridge TicketEmployee;
 
     public BridgeContext(final Database database) {
         this.company = new CompanyBridge(database);
@@ -22,10 +22,11 @@ public class BridgeContext {
         this.employee = new EmployeeBridge(database);
         this.ticket = new TicketBridge(database);
         this.comment = new CommentBridge(database);
-        this.email = new EmailBridge(database);
-        this.alertSettings = new AlertSettingsBridge(database);
-        this.flyway = new FlywayBridge(database);
-        this.emailConfig = new EmailConfig();
+        this.alerts = new AlertBridge(database);
+        this.category = new CategoryBridge(database);
+        this.ticketLink = new LinkBridge(database);
+        this.module = new ModuleBridge(database);
+        this.TicketEmployee = new TicketEmployeeBridge(database, this);
     }
 
     public CompanyBridge getCompany() {
@@ -48,19 +49,25 @@ public class BridgeContext {
         return comment;
     }
 
-    public EmailBridge getEmail() {
-        return email;
+
+    public AlertBridge getAlerts() {
+        return alerts;
     }
 
-    public AlertSettingsBridge getAlertSettings() {
-        return alertSettings;
+
+    public CategoryBridge getCategory() {
+        return category;
     }
 
-    public FlywayBridge getFlyway() {
-        return flyway;
+    public LinkBridge getTicketLink() {
+        return ticketLink;
     }
 
-    public EmailConfig getEmailConfig() {
-        return emailConfig;
+    public ModuleBridge getModule() {
+        return module;
+    }
+
+    public TicketEmployeeBridge getTicketEmployee() {
+        return TicketEmployee;
     }
 }

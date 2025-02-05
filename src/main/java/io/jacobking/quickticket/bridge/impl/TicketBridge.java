@@ -4,90 +4,96 @@ import io.jacobking.quickticket.bridge.Bridge;
 import io.jacobking.quickticket.core.database.Database;
 import io.jacobking.quickticket.core.database.repository.RepoType;
 import io.jacobking.quickticket.core.type.StatusType;
-import io.jacobking.quickticket.gui.model.impl.TicketModel;
+import io.jacobking.quickticket.gui.model.TicketModel;
 import io.jacobking.quickticket.tables.pojos.Ticket;
-import javafx.collections.FXCollections;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
-import java.util.Map;
-import java.util.function.Predicate;
-
-import static io.jacobking.quickticket.Tables.TICKET;
+import java.util.Comparator;
 
 public class TicketBridge extends Bridge<Ticket, TicketModel> {
 
-    private final Map<StatusType, ObservableList<TicketModel>> ticketMap;
+    private final FilteredList<TicketModel> openTickets;
+    private final IntegerBinding openTicketCount;
 
-    public TicketBridge(final Database database) {
+    private final FilteredList<TicketModel> activeTickets;
+    private final IntegerBinding activeTicketCount;
+
+    private final FilteredList<TicketModel> pausedTickets;
+    private final IntegerBinding pausedTicketCount;
+
+    private final FilteredList<TicketModel> resolvedTickets;
+    private final IntegerBinding resolvedTicketCount;
+
+
+    public TicketBridge(Database database) {
         super(database, RepoType.TICKET);
-        this.ticketMap = FXCollections.observableHashMap();
+        this.openTickets = new FilteredList<>(getObservableList(), ticket -> ticket.statusProperty().getValue() == StatusType.OPEN);
+        this.openTicketCount = Bindings.size(openTickets);
 
-        ticketMap.put(StatusType.OPEN, FXCollections.observableArrayList(
-                getObservableList().filtered(tm -> tm.statusProperty().get() == StatusType.OPEN)
-        ));
+        this.activeTickets = new FilteredList<>(getObservableList(), ticket -> ticket.statusProperty().getValue() == StatusType.ACTIVE);
+        this.activeTicketCount = Bindings.size(activeTickets);
 
-        ticketMap.put(StatusType.ACTIVE, FXCollections.observableArrayList(
-                getObservableList().filtered(tm -> tm.statusProperty().get() == StatusType.ACTIVE)
-        ));
+        this.pausedTickets = new FilteredList<>(getObservableList(), ticket -> ticket.statusProperty().getValue() == StatusType.PAUSED);
+        this.pausedTicketCount = Bindings.size(pausedTickets);
 
-        ticketMap.put(StatusType.RESOLVED, FXCollections.observableArrayList(
-                getObservableList().filtered(tm -> tm.statusProperty().get() == StatusType.RESOLVED)
-        ));
-
-        ticketMap.put(StatusType.PAUSED, FXCollections.observableArrayList(
-                getObservableList().filtered(tm -> tm.statusProperty().get() == StatusType.PAUSED)
-        ));
-
+        this.resolvedTickets = new FilteredList<>(getObservableList(), ticket -> ticket.statusProperty().getValue() == StatusType.RESOLVED);
+        this.resolvedTicketCount = Bindings.size(resolvedTickets);
     }
 
-
-    @Override
-    public TicketModel convertEntity(Ticket entity) {
+    @Override public TicketModel convertEntity(Ticket entity) {
         return new TicketModel(entity);
     }
 
-    public TicketModel getLastViewed() {
-        final Ticket ticket = crud.getContext()
-                .selectFrom(TICKET)
-                .orderBy(TICKET.LAST_OPENED_TIMESTAMP.desc())
-                .limit(1)
-                .fetchOneInto(Ticket.class);
-        return ticket == null ? null : new TicketModel(ticket);
+    public FilteredList<TicketModel> getOpenTickets() {
+        return openTickets;
     }
 
-    @Override public TicketModel createModel(Ticket entity) {
-        final TicketModel model = super.createModel(entity);
-        final StatusType type = model.statusProperty().getValue();
-        final ObservableList<TicketModel> targetList = getListByStatus(type);
-        targetList.add(0, model);
-        return model;
+    public Number getOpenTicketCount() {
+        return openTicketCount.get();
     }
 
-    @Override public void remove(int id) {
-        final TicketModel model = super.getModel(id);
-        if (model != null) {
-            super.remove(id);
-            final StatusType type = model.statusProperty().getValue();
-            getListByStatus(type).remove(model);
-        }
+    public IntegerBinding openTicketCountProperty() {
+        return openTicketCount;
     }
 
-    public boolean update(final TicketModel model, final StatusType originalStatus) {
-        if (super.update(model)) {
-            getListByStatus(originalStatus).remove(model);
-            final StatusType newStatus = model.statusProperty().get();
-            return getListByStatus(newStatus).add(model);
-        }
-        return false;
+    public FilteredList<TicketModel> getActiveTickets() {
+        return activeTickets;
     }
 
-    public ObservableList<TicketModel> getListByStatus(final StatusType statusType) {
-        return ticketMap.get(statusType);
+    public Number getActiveTicketCount() {
+        return activeTicketCount.get();
     }
 
-    public FilteredList<TicketModel> getFilteredList(final Predicate<TicketModel> predicate) {
-        return new FilteredList<>(getObservableList(), predicate);
+    public IntegerBinding activeTicketCountProperty() {
+        return activeTicketCount;
+    }
+
+    public FilteredList<TicketModel> getPausedTickets() {
+        return pausedTickets;
+    }
+
+    public Number getPausedTicketCount() {
+        return pausedTicketCount.get();
+    }
+
+    public IntegerBinding pausedTicketCountProperty() {
+        return pausedTicketCount;
+    }
+
+    public FilteredList<TicketModel> getResolvedTickets() {
+        return resolvedTickets;
+    }
+
+    public Number getResolvedTicketCount() {
+        return resolvedTicketCount.get();
+    }
+
+    public IntegerBinding resolvedTicketCountProperty() {
+        return resolvedTicketCount;
     }
 }
 

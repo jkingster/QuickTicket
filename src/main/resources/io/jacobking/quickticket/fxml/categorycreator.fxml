@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="306.0" styleClass="body" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <stylesheets>
+      <URL value="@../css/core/base.css" />
+      <URL value="@../css/core/button.css" />
+      <URL value="@../css/core/card.css" />
+   </stylesheets>
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="44.0" layoutY="7.0" prefHeight="27.0" prefWidth="219.0" styleClass="card-header" text="Category Creator" textAlignment="CENTER" textFill="WHITE" />
+      <VBox layoutX="13.0" layoutY="40.0" prefHeight="129.0" prefWidth="280.0" spacing="7.5">
+         <children>
+            <HBox prefHeight="30.0" prefWidth="200.0" spacing="5.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="135.0" text="Name:" textAlignment="RIGHT" textFill="WHITE" />
+                  <TextField fx:id="nameField" prefHeight="25.0" prefWidth="272.0" stylesheets="@../css/core/text-field.css" />
+               </children>
+            </HBox>
+            <HBox prefHeight="29.0" prefWidth="280.0" spacing="5.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="135.0" text="Description:" textAlignment="RIGHT" textFill="WHITE" />
+                  <TextField fx:id="descriptionField" prefHeight="25.0" prefWidth="272.0" stylesheets="@../css/core/text-field.css" />
+               </children>
+            </HBox>
+            <HBox prefHeight="32.0" prefWidth="280.0" spacing="5.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="135.0" text="Color:" textAlignment="RIGHT" textFill="WHITE" />
+                  <ColorPicker fx:id="colorPicker" prefHeight="25.0" prefWidth="272.0" promptText="Category Color" styleClass="text-field" stylesheets="@../css/core/text-field.css" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="29.0" prefWidth="280.0" spacing="5.0">
+               <children>
+                  <Button fx:id="createButton" mnemonicParsing="false" onAction="#onCreate" text="Create" />
+                  <Button mnemonicParsing="false" onAction="#onReset" text="Reset" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

@@ -25,3 +25,8 @@
     -fx-font-size: 1em;
     -fx-text-fill: -fx-typography;
 }
+
+.card-secondary {
+    -fx-background-color: derive(-fx-primary, 25%);
+    -fx-background-radius: 2px;
+}

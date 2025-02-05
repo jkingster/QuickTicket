@@ -21,9 +21,19 @@
       <VBox layoutX="18.0" layoutY="47.0" prefHeight="235.0" prefWidth="316.0" spacing="10.0">
          <children>
             <TextField fx:id="titleField" promptText="Ticket Title" styleClass="text-field" />
-            <TextArea fx:id="commentField" prefHeight="200.0" prefWidth="200.0" promptText="Any initial information...." wrapText="true" />
-            <SearchableComboBox fx:id="employeeComboBox" promptText="Employee" styleClass="sear" stylesheets="@../css/core/combo-box.css" />
-            <CheckBox fx:id="emailCheckBox" mnemonicParsing="false" text="Send notification e-mail" textFill="WHITE" />
+            <TextArea fx:id="commentArea" prefHeight="200.0" prefWidth="200.0" promptText="Any initial information...." wrapText="true" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+               <children>
+                  <SearchableComboBox fx:id="employeeComboBox" prefHeight="25.0" prefWidth="305.0" promptText="Employee" stylesheets="@../css/core/combo-box.css" />
+                  <Button fx:id="assignMoreButton" mnemonicParsing="false" onAction="#onSelectMultipleEmployees" text="..." />
+               </children>
+            </HBox>
+            <SearchableComboBox fx:id="categoryComboBox" prefHeight="25.0" prefWidth="240.0" promptText="Category" stylesheets="@../css/core/combo-box.css" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+               <children>
+                  <CheckBox fx:id="openCheckBox" mnemonicParsing="false" text="Open ticket after creation" textFill="WHITE" />
+               </children>
+            </HBox>
          </children>
       </VBox>
       <HBox alignment="CENTER_RIGHT" layoutX="18.0" layoutY="286.0" prefHeight="34.0" prefWidth="316.0" spacing="5.0">

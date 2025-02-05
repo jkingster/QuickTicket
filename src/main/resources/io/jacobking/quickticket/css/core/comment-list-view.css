@@ -1,0 +1,28 @@
+@import url("base.css");
+
+.comment-list {
+    -fx-background-color: derive(-fx-primary, 25%);
+    -fx-padding: 10;
+}
+
+/* Style for each ListCell */
+.comment-list .list-cell {
+    -fx-background-color: -fx-primary;
+    -fx-background-insets: 5;
+    -fx-padding: 10;
+    -fx-background-radius: 5;
+}
+
+
+.list-cell .label {
+    -fx-text-fill: -fx-offset-blue;
+    -fx-font-weight: bolder;
+    -fx-font-size: 1.25em;
+}
+
+
+.comment-list .scroll-bar {
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+

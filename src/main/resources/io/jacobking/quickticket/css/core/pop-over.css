@@ -1,0 +1,10 @@
+@import url("base.css");
+.popover > .content {
+    -fx-background-color: -fx-primary !important;
+}
+
+.popover > .content > .title > .text {
+    -fx-text-fill: -fx-offset-blue;
+    -fx-font-weight: bolder;
+    -fx-font-size: 1em;
+}
