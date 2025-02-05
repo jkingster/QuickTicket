@@ -49,7 +49,7 @@
                <children>
                   <Button fx:id="createButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" />
                   <Button fx:id="openButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" />
-                  <Button fx:id="categoriesButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" />
+                  <Button fx:id="reloadButton" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" />
                </children>
             </HBox>
             <TableView fx:id="ticketTable" layoutX="5.0" layoutY="43.0" prefHeight="608.0" prefWidth="1354.0" stylesheets="@../css/core/table.css">

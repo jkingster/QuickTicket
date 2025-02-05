@@ -2,12 +2,22 @@ package io.jacobking.quickticket.gui.controller;
 
 
 import io.jacobking.quickticket.gui.Controller;
+import io.jacobking.quickticket.gui.Data;
+import io.jacobking.quickticket.gui.Route;
 import io.jacobking.quickticket.gui.alert.Announcements;
+import io.jacobking.quickticket.gui.misc.PopOverBuilder;
 import io.jacobking.quickticket.gui.model.AlertModel;
 import io.jacobking.quickticket.gui.model.ModuleModel;
+import io.jacobking.quickticket.gui.model.TicketCategoryModel;
+import io.jacobking.quickticket.gui.utility.FXUtility;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import org.controlsfx.control.SearchableComboBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -29,6 +39,7 @@ public class SettingsController extends Controller {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         configureAlerts();
         configureModules();
+        configureCategories();
     }
 
     private void configureAlerts() {
@@ -171,4 +182,138 @@ public class SettingsController extends Controller {
         Announcements.get().showConfirm("Success", "Module(s) states updated.");
     }
 
+    @FXML private TitledPane                              categoryPane;
+    @FXML private SearchableComboBox<TicketCategoryModel> categoryBox;
+    @FXML private TextField                               categoryName;
+    @FXML private Pane                                    colorPane;
+    @FXML private Button                                  saveDefaultCategoryButton;
+    @FXML private TextArea                                categoryDescription;
+    @FXML private Button                                  deleteCategoryButton;
+    @FXML private Button                                  updateCategoryButton;
+    @FXML private Button                                  newCategoryButton;
+    @FXML private Button                                  clearCategoryButton;
+    private final StringProperty                          colorCode = new SimpleStringProperty();
+
+    private void configureCategories() {
+        configureCategoryBox();
+        configureCategoryButtons();
+        configureColorPane();
+    }
+
+    private void configureCategoryBox() {
+        categoryBox.setItems(bridgeContext.getCategory().getObservableList());
+        categoryBox.getSelectionModel().selectedItemProperty().addListener((obs, oldCategory, newCategory) -> {
+            if (newCategory == null) {
+                FXUtility.resetFields(categoryBox);
+                colorCode.setValue("");
+                return;
+            }
+            final String rgbColor = TicketCategoryModel.getColorAsRGB(newCategory.getColorProperty());
+
+            categoryName.setText(newCategory.getNameProperty());
+            categoryDescription.setText(newCategory.getDescriptionProperty());
+            colorPane.setStyle(String.format("-fx-background-color: %s; -fx-background-border: 2px;", rgbColor));
+            colorCode.setValue(rgbColor);
+        });
+
+
+    }
+
+    private void configureCategoryButtons() {
+        deleteCategoryButton.disableProperty().bind(categoryBox.getSelectionModel().selectedItemProperty().isNull());
+        updateCategoryButton.disableProperty().bind(deleteCategoryButton.disabledProperty());
+        newCategoryButton.disableProperty().bind(categoryBox.getSelectionModel().selectedItemProperty().isNotNull());
+        newCategoryButton.setOnAction(event -> display.show(Route.CATEGORY_CREATOR, Data.of(categoryBox)));
+
+        updateCategoryButton.setOnAction(event -> onUpdateCategory());
+        deleteCategoryButton.setOnAction(event -> onDeleteCategory());
+        clearCategoryButton.setOnAction(event -> onClearCategory());
+    }
+
+    private void onUpdateCategory() {
+        final String newName = categoryName.getText();
+        final String desc = categoryDescription.getText();
+        final String color = colorCode.getValueSafe();
+
+        final TicketCategoryModel model = categoryBox.getSelectionModel().getSelectedItem();
+        if (model == null) {
+            Announcements.get().showError("Error", "Could not update category.", "No selected category.");
+            return;
+        }
+
+        final String rgbColor = TicketCategoryModel.getColorAsRGB(color);
+        model.setColorProperty(rgbColor);
+        model.setNameProperty(newName);
+        model.setDescriptionProperty(desc);
+
+        final boolean updated = bridgeContext.getCategory().update(model);
+        if (!updated) {
+            Announcements.get().showError("Error", "Could not update category.", "Update failed.");
+            return;
+        }
+
+        colorPane.setStyle(String.format("-fx-background-color: %s", rgbColor));
+        Announcements.get().showConfirm("Success", "Category Updated");
+    }
+
+    private void onDeleteCategory() {
+        final TicketCategoryModel selected = categoryBox.getSelectionModel().getSelectedItem();
+        if (selected.getId() == 0) {
+            Announcements.get().showError("Error", "You cannot delete the default category.", "Ignoring request.");
+            return;
+        }
+
+        Announcements.get().showConfirmation(() -> processCategoryDeletion(selected), "Deletion Confirmation", "Are you sure you want to delete this category?")
+                .ifPresent(type -> {
+                    if (type == ButtonType.YES) {
+                        processCategoryDeletion(selected);
+                    }
+                });
+    }
+
+    private void processCategoryDeletion(final TicketCategoryModel model) {
+        final boolean deleted = bridgeContext.getCategory().remove(model.getId());
+        if (!deleted) {
+            Announcements.get().showError("Error", "Could not delete category.", "Unknown.");
+            return;
+        }
+        Announcements.get().showConfirm("Success", "Category deleted");
+
+        bridgeContext.getTicket().getObservableList().forEach(ticket -> {
+            final int categoryId = ticket.getCategory();
+            if (categoryId == model.getId()) {
+                ticket.categoryProperty().setValue(0);
+                bridgeContext.getTicket().update(ticket);
+            }
+        });
+
+        onClearCategory();
+    }
+
+    private void configureColorPane() {
+        colorPane.setOnMousePressed(event -> {
+            PopOverBuilder.build()
+                    .setTitle("Category Color Picker")
+                    .setDetached(true)
+                    .setDetachable(true)
+                    .setAnimated(true)
+                    .setHideOnEscape(true)
+                    .process(process -> {
+                        final ColorPicker colorPicker = new ColorPicker();
+                        colorPicker.setValue(Color.web(colorCode.getValueSafe()));
+
+                        colorPicker.setOnAction(__ -> {
+                            colorCode.setValue(String.valueOf(colorPicker.getValue()));
+                        });
+                        return colorPicker;
+                    }).show(colorPane, 10);
+        });
+    }
+
+    @FXML private void onClearCategory() {
+        categoryBox.getSelectionModel().clearSelection();
+        categoryName.clear();
+        categoryDescription.clear();
+        colorPane.setStyle("-fx-background-color: none;");
+    }
 }

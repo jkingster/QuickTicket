@@ -64,8 +64,8 @@ public class TicketCategoryModel extends Model<TicketCategories> {
         this.descriptionProperty.set(descriptionProperty);
     }
 
-    public String getColorAsRGB() {
-        final Color color = Color.web(getColorProperty());
+    public static String getColorAsRGB(final String colorProperty) {
+        final Color color = Color.web(colorProperty);
         final int red = (int) (color.getRed() * 255);
         final int green = (int) (color.getGreen() * 255);
         final int blue = (int) (color.getBlue() * 255);

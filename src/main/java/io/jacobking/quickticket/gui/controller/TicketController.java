@@ -60,7 +60,7 @@ public class TicketController extends Controller {
 
     @FXML private Button createButton;
     @FXML private Button openButton;
-    @FXML private Button categoriesButton;
+    @FXML private Button reloadButton;
 
     @Override public void initialize(URL url, ResourceBundle resourceBundle) {
         this.ticketBridge = bridgeContext.getTicket();
@@ -420,8 +420,11 @@ public class TicketController extends Controller {
         createButton.setGraphic(IconLoader.getMaterialIcon(Material2AL.CREATE));
         createButton.setOnAction(event -> display.show(Route.TICKET_CREATOR, Data.of(ticketTable)));
 
-        categoriesButton.setGraphic(IconLoader.getMaterialIcon(Material2AL.CATEGORY));
-        categoriesButton.setOnAction(event -> onOpenCategories());
+        reloadButton.setGraphic(IconLoader.getMaterialIcon(Material2MZ.REFRESH));
+        reloadButton.setOnAction(event -> {
+            ticketTable.refresh();
+            Announcements.get().show("Success", "Ticket Table Refreshed");
+        });
     }
 
     private void onOpenTicket(final TicketModel ticketModel) {

@@ -39,7 +39,7 @@ public class CategoryCreatorController extends Controller {
     private void onCreate() {
         final String description = descriptionField.getText().isEmpty() ? "" : descriptionField.getText();
         final TicketCategories ticketCategories = new TicketCategories()
-                .setColor(colorPicker.getValue().toString())
+                .setColor(TicketCategoryModel.getColorAsRGB(colorPicker.getValue().toString()))
                 .setName(nameField.getText())
                 .setDescription(description);
 
